@@ -11,11 +11,30 @@ You are a technical debt cataloger for Python codebases. Your mission is to prod
 
 Analyze the scope provided. Default: the entire project.
 
+## Script-Assisted Analysis
+
+Before starting your qualitative analysis, run the debt collection script:
+
+```bash
+python <plugin_root>/scripts/collect_debt.py [scope]
+```
+
+where `<plugin_root>` is the root of the code-review-toolkit plugin directory.
+
+Parse the JSON output. This gives you all explicit debt markers with full text, file/line locations, surrounding context, git blame author/date, and age classification. Use this as your factual foundation — do not re-grep for these markers manually.
+
+Key fields:
+- `items`: complete list of markers, each with `category`, `text`, `full_line`, `context_before`, `context_after`, `age`, `author`, `date`
+- `summary.total_markers`: total count
+- `summary.by_category`: counts per category (TODO, FIXME, HACK, XXX, NOQA, TYPE_IGNORE, PRAGMA_NO_COVER, SKIP)
+- `summary.by_age`: counts per age bucket (fresh/growing/stale/ancient/unknown)
+- `summary.top_files`: files with the most debt markers
+
 ## What to Catalog
 
 ### Explicit Debt Markers
 
-Search for these patterns in source AND test files:
+The script output provides a comprehensive scan for these patterns in source AND test files:
 
 - `TODO`: Planned work that hasn't been done
 - `FIXME`: Known bugs or problems to fix
@@ -25,11 +44,7 @@ Search for these patterns in source AND test files:
 - `pragma: no cover`: Deliberately untested code
 - `@unittest.skip` / `@pytest.mark.skip`: Disabled tests
 
-For each, extract:
-- The full comment text
-- File and line number
-- Author and age (from `git blame` if available)
-- Surrounding context (what code is this attached to?)
+The script extracts full text, file/line, author/age (via git blame), and surrounding context for each marker. Review the `items` list — your role is to assess priority and context, not re-collect the data.
 
 ### Implicit Debt
 
@@ -80,7 +95,7 @@ If git is available, use `git blame` to assess debt age:
 
 [2-3 sentence summary: volume of debt, age distribution, biggest categories]
 
-### Statistics
+### Statistics (from script summary)
 - Total explicit markers: N
   - TODO: N | FIXME: N | HACK: N | XXX: N
   - type:ignore: N | noqa: N | pragma:no-cover: N | skip: N

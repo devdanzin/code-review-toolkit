@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - .gitignore (Python template).
 - Test suite for all 6 plugin scripts (116 tests).
 
+### Enhanced
+
+- 6 agent prompts now invoke their corresponding analysis scripts for precise, machine-verified data before qualitative analysis: architecture-mapper, complexity-simplifier, test-coverage-analyzer, tech-debt-inventory, type-design-analyzer, dead-code-finder.
+
 ### Fixed
 
 - Test helper `_SCRIPTS_DIR` path to point to `plugins/code-review-toolkit/scripts/`.

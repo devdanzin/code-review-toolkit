@@ -13,17 +13,35 @@ Python's type system is different from TypeScript or Java — it's gradual, opti
 
 Analyze the scope provided. Default: the entire project. Architecture-mapper output helps identify which modules form the public API (where types matter most).
 
+## Script-Assisted Analysis
+
+Before starting your qualitative analysis, run the type counting script:
+
+```bash
+python <plugin_root>/scripts/count_types.py [scope]
+```
+
+where `<plugin_root>` is the root of the code-review-toolkit plugin directory.
+
+Parse the JSON output. This gives you precise annotation coverage statistics, Any usage locations, type:ignore counts, data container inventory, and unannotated public function lists. Use this as your factual foundation — do not re-count annotations manually.
+
+Key fields:
+- `summary`: coverage percentages (`annotation_coverage_all`, `annotation_coverage_public`), counts of functions/classes/Any usages/type ignores, container type breakdown
+- `any_usages`: locations and details of every Any usage
+- `container_inventory`: categorized data containers (dataclass, TypedDict, NamedTuple, Protocol, Enum)
+- `unannotated_public_functions`: priority annotation targets (up to 50)
+- `files[]`: per-file details including per-function annotation status and class attribute analysis
+
 ## Analysis Framework
 
 ### 1. Type Hint Coverage
 
-Survey annotation status:
-- **Function signatures**: What percentage of functions have parameter and return type annotations?
-- **Module variables**: Are module-level constants and variables annotated?
-- **Class attributes**: Are class attributes annotated (especially in `__init__`)?
-- **Coverage distribution**: Is annotation concentrated in some modules and absent in others?
+The script output provides precise coverage statistics. Review `summary` for:
+- **Function signatures**: `annotation_coverage_all` and `annotation_coverage_public` give exact percentages
+- **Class attributes**: Per-class `annotated_attributes` and `unannotated_attributes` in the file details
+- **Coverage distribution**: Compare per-file data to identify modules with concentrated gaps
 
-Classify each unannotated public function as:
+Using `unannotated_public_functions` from the script, classify each as:
 - **Should annotate**: Function is part of public API or has non-obvious types
 - **Nice to annotate**: Internal function that would benefit from clarity
 - **Can skip**: Simple, obvious function where annotations add noise
@@ -54,20 +72,20 @@ For each significant type (dataclass, TypedDict, NamedTuple, Protocol, class wit
 
 ### 3. Type Anti-Patterns
 
-Flag these Python-specific issues:
+The script provides data for several anti-patterns; apply your judgment to assess which matter:
 
-- **`Any` overuse**: Where `Any` is used as an escape hatch when a more specific type is feasible
+- **`Any` overuse**: The script's `any_usages` lists every location. Review each to determine if a more specific type is feasible.
 - **`dict` as catch-all**: Using `Dict[str, Any]` when a TypedDict or dataclass would be clearer
 - **Tuple overload**: Using `Tuple[str, int, bool, str]` when a NamedTuple or dataclass would give names to fields
 - **Optional everywhere**: Excessive `Optional[X]` that could be eliminated with better API design
 - **String typing**: Using string literals where an Enum or Literal type would constrain values
-- **Type: ignore proliferation**: Many `# type: ignore` comments indicating a type system mismatch
-- **Untyped containers**: `list`, `dict`, `set` without type parameters
+- **Type: ignore proliferation**: The script's `summary.total_type_ignores` and per-file `type_ignore_count` give exact counts. Many comments indicate a type system mismatch.
+- **Untyped containers**: The script's `untyped_containers` lists bare `list`, `dict`, `set` without type parameters.
 - **Mutable defaults**: Mutable default arguments that could cause shared-state bugs
 
 ### 4. Data Container Choice Assessment
 
-For each data container type used, assess whether the right container was chosen:
+The script's `container_inventory` lists all data containers by type. For each, assess whether the right container was chosen:
 
 | Choice | Best For |
 |--------|----------|
@@ -95,11 +113,11 @@ Check whether typing patterns are consistent across the codebase:
 
 [2-3 sentence summary: type maturity level, coverage, quality of type design]
 
-### Coverage Statistics
+### Coverage Statistics (from script summary)
 - Functions with full signatures: N / N total (X%)
 - Classes with attribute annotations: N / N total (X%)
 - Modules with complete typing: N / N total (X%)
-- Uses of Any: N (list locations if <20)
+- Uses of Any: N (list locations if <20, from any_usages)
 - Type: ignore comments: N
 
 ## Type Design Reviews

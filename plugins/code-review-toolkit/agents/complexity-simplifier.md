@@ -11,39 +11,57 @@ You are an expert in code complexity analysis and simplification for Python code
 
 Analyze the scope provided. Default: the entire project. You may receive architecture-mapper output as additional context — use it to understand which complex code is in high-traffic modules (making complexity more costly) vs. isolated modules (where complexity is more tolerable).
 
+## Script-Assisted Analysis
+
+Before starting your qualitative analysis, run the complexity measurement script:
+
+```bash
+python <plugin_root>/scripts/measure_complexity.py [scope]
+```
+
+where `<plugin_root>` is the root of the code-review-toolkit plugin directory.
+
+Parse the JSON output. This gives you precise per-function metrics and pre-computed complexity scores. Use this as your factual foundation — do not re-derive these metrics manually.
+
+Key fields:
+- `hotspots`: pre-ranked list of functions scoring ≥ 5 (up to 30)
+- `summary`: aggregate statistics (total functions, hotspot counts, average scores)
+- Per-function `metrics`: `line_count`, `nesting_depth`, `parameter_count`, `branch_count`, `loop_count`, `return_count`, `local_variable_count`, `cognitive_complexity`
+- Per-function `score`: pre-computed 1-10 complexity rating
+
 ## Analysis Strategy
 
-### Step 1: Measure Complexity
+### Step 1: Review Complexity Data
 
-For each function and method in scope, assess these dimensions:
+The script output provides all structural metrics per function. Review the data, focusing on:
 
-**Structural Complexity:**
-- **Nesting depth**: Maximum indentation level within the function (if/for/try/with nesting)
-- **Function length**: Lines of code (excluding blank lines and comments)
-- **Parameter count**: Number of parameters including *args/**kwargs
-- **Branch count**: Number of if/elif/else/match-case branches
-- **Loop complexity**: Nested loops, loops with complex break/continue logic
+**Structural Complexity** (from script metrics):
+- **Nesting depth**: `metrics.nesting_depth`
+- **Function length**: `metrics.line_count` (excluding blanks and comments)
+- **Parameter count**: `metrics.parameter_count` (excluding self/cls)
+- **Branch count**: `metrics.branch_count`
+- **Loop complexity**: `metrics.loop_count`
 
-**Cognitive Complexity:**
+**Cognitive Complexity** — supplement the script's `metrics.cognitive_complexity` score with your qualitative assessment of:
 - **State tracking**: How many variables must be mentally tracked through the function?
 - **Control flow surprises**: Early returns mixed with late returns, exceptions used for control flow, deeply nested conditionals
 - **Abstraction mismatch**: Function operates at multiple levels of abstraction simultaneously (e.g., both parsing bytes and making business decisions)
 - **Boolean complexity**: Complex boolean expressions, double negations, boolean parameters that change behavior
 
-**Maintenance Complexity:**
+**Maintenance Complexity** (purely qualitative — read the code):
 - **Coupling**: How many other modules/functions does this function depend on?
 - **Side effects**: Does it modify global state, write files, make network calls?
 - **Implicit contracts**: Does it depend on specific call ordering, global state, or undocumented preconditions?
 
-### Step 2: Rank Hotspots
+### Step 2: Refine Hotspot Rankings
 
-Produce a ranked list of the most complex functions/methods. The ranking should consider:
+The script provides `hotspots` pre-ranked by score. Review the rankings to see if the scores feel right — the scoring formula is mechanical, and you may want to adjust based on context (e.g., "this function is complex but it's a parser, so that's inherent"). Consider:
 
-1. **Absolute complexity**: How complex is this function on its own?
+1. **Absolute complexity**: The script's `score` field captures this.
 2. **Relative importance**: Is it in a frequently-modified module? Is it a core function that many things depend on? (Use architecture-mapper output if available.)
 3. **Simplification potential**: Can this complexity actually be reduced, or is it inherent to the problem domain?
 
-Rate each hotspot on a 1-10 **complexity score** where:
+The score scale:
 - 1-3: Normal complexity, no action needed
 - 4-5: Moderate — worth simplifying if you're already touching this code
 - 6-7: High — should be simplified proactively
@@ -104,7 +122,7 @@ For each suggestion, verify:
 
 [2-3 sentence summary: How complex is this codebase overall? Where does complexity concentrate? Is complexity proportional to problem difficulty?]
 
-### Complexity Distribution
+### Complexity Distribution (from script summary)
 - Files analyzed: N
 - Functions/methods analyzed: N
 - Hotspots (score ≥5): N
