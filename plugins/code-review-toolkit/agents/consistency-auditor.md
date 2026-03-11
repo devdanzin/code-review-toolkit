@@ -74,9 +74,10 @@ For each pattern category, report:
 1. The **majority pattern** (what most of the codebase does)
 2. The **divergent cases** (files/functions that do it differently)
 3. The **severity** of the inconsistency:
-   - **High**: Affects readability and could cause bugs (e.g., inconsistent error handling)
-   - **Medium**: Makes the codebase harder to navigate (e.g., mixed string formatting)
-   - **Low**: Cosmetic but noticeable (e.g., mixed quote styles)
+   - **High (correctness)**: Inconsistency that could cause bugs, incorrect behavior, or masks real errors. Example: some modules check return codes, others silently ignore them.
+   - **High (readability)**: Inconsistency that makes the codebase significantly harder to navigate. Example: half the codebase uses async/await, half uses callbacks for the same pattern.
+   - **Medium**: Inconsistency that is noticeable and worth standardizing but doesn't affect correctness. Example: mixed string formatting styles (f-strings vs .format()).
+   - **Low (style)**: Cosmetic inconsistency. Example: mixed quote styles, assertTrue(len(x) > 0) vs assertGreater(len(x), 0).
 4. Whether the divergence looks **intentional** (e.g., a different pattern in test code vs. source code is often intentional)
 
 ### Phase 3: Check Against Explicit Rules
@@ -117,21 +118,25 @@ If architecture-mapper output is provided:
 
 ## Pattern Divergence
 
-### High Severity
-[Inconsistencies that affect correctness or significantly impact readability]
+### High Severity — Correctness
+[Inconsistencies that could cause bugs or mask errors. Tag each FIX/CONSIDER.]
 
 For each:
 - **Pattern**: [What category]
+- **Classification**: [FIX/CONSIDER]
 - **Majority approach**: [What most code does, with example location]
 - **Divergent cases**: [Files/functions that differ, with locations]
 - **Impact**: [Why this matters]
 - **Recommendation**: [Standardize on X because Y]
 
-### Medium Severity
-[Same structure, briefer]
+### High Severity — Readability
+[Inconsistencies that significantly impair code navigation. Tag each CONSIDER/POLICY.]
 
-### Low Severity
-[List format only, no detailed analysis unless requested]
+### Medium Severity
+[Same structure, briefer. Tag each CONSIDER/POLICY.]
+
+### Low Severity — Style
+[List format only. Classify as ACCEPTABLE unless the project explicitly wants to standardize.]
 
 ## Architecture-Aware Observations
 [Only if architecture-mapper output was provided]
@@ -144,6 +149,12 @@ For each:
 
 [Ranked list of concrete actions. Focus on high-impact, low-effort standardizations first. Note which changes could be automated (e.g., with a formatter or linter rule) vs. which require manual review.]
 ```
+
+### Classification Guide
+- **FIX**: Inconsistency that causes bugs or masks errors (e.g., some modules check return codes, others silently ignore them)
+- **CONSIDER**: Inconsistency worth standardizing for readability (e.g., mixed async patterns)
+- **POLICY**: Requires a project-level style decision (e.g., adopt f-strings everywhere, pick one docstring format)
+- **ACCEPTABLE**: Cosmetic inconsistency with no practical impact (e.g., mixed quote styles, assertion style preferences)
 
 ## Important Guidelines
 

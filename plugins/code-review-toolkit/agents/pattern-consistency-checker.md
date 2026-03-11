@@ -75,6 +75,9 @@ For each divergence found:
 - Test code vs. source code may rightly differ
 - Older code vs. newer code may reflect an evolution in approach (the newer approach may be "correct")
 
+**Are the implementations behaviorally similar?**
+Before flagging divergence, verify that the different approaches actually solve the same problem in the same context. Two functions that look similar structurally but handle different edge cases, different error conditions, or different data shapes may be intentionally different. Only flag divergence when the implementations are truly interchangeable — same inputs, same outputs, same error behavior.
+
 **What's the impact?**
 - **High**: The divergence affects external behavior or makes the codebase confusing to work in
 - **Medium**: The divergence requires developers to know multiple approaches
@@ -92,6 +95,8 @@ The most valuable finding is often a **missing abstraction**. When the same conc
 - Two implementations that are 80% similar → extract the commonality
 - Repeated boilerplate that could be factored into a decorator or context manager
 - Copy-pasted code that has diverged over time
+
+**Abstraction qualification**: Before recommending extraction, verify that unifying the implementations would actually reduce total complexity. If the "shared" abstraction would need many parameters, flags, or special cases to handle all the variations, the duplication may be preferable. The test: would a developer understand the abstracted version faster than reading two separate implementations? If the answer is no, classify the finding as ACCEPTABLE.
 
 ## Output Format
 
@@ -148,3 +153,9 @@ For each:
 - **Missing abstractions are gold**: The most valuable finding is not "these differ" but "here's the shared abstraction that would unify them."
 - **Be concrete**: Show specific files and line numbers. "Configuration loading varies" is useless; "src/runner.py loads YAML config with safe_load at line 42 while src/benchmarks.py uses a custom parser at line 15" is actionable.
 - **Cap output**: Report at most 8 significant divergences in the summary. Focus on the ones with the clearest path to improvement.
+
+### Classification Guide
+- **FIX**: Pattern divergence that causes bugs or inconsistent behavior for users (e.g., some modules validate input, others don't)
+- **CONSIDER**: Divergence worth unifying for maintainability but no correctness risk
+- **POLICY**: Requires a project-level decision on which pattern to standardize on
+- **ACCEPTABLE**: Intentional variation between modules with genuinely different requirements, or where unification would increase complexity
