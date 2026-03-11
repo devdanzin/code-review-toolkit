@@ -13,3 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - README.md with overview, quick start, and links to detailed plugin docs.
 - MIT LICENSE crediting original and adapted authors.
 - .gitignore (Python template).
+- Test suite for all 6 plugin scripts (116 tests).
+
+### Fixed
+
+- Test helper `_SCRIPTS_DIR` path to point to `plugins/code-review-toolkit/scripts/`.
