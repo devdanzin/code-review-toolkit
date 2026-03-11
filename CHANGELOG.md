@@ -18,6 +18,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Enhanced
 
 - 6 agent prompts now invoke their corresponding analysis scripts for precise, machine-verified data before qualitative analysis: architecture-mapper, complexity-simplifier, test-coverage-analyzer, tech-debt-inventory, type-design-analyzer, dead-code-finder.
+- All 11 agents now include a Classification Guide (FIX/CONSIDER/POLICY/ACCEPTABLE) for consistent finding categorization.
+- consistency-auditor: split severity into correctness vs. readability dimensions with examples.
+- complexity-simplifier: added "When NOT to Simplify" section (heterogeneous cases, intentional duplication, readable complexity) and abstraction cost validation.
+- test-coverage-analyzer: risk-weighted ratings based on failure impact, code complexity, and change frequency.
+- pattern-consistency-checker: behavioral similarity verification before flagging divergence, abstraction qualification for missing abstraction suggestions.
+- api-surface-reviewer: breaking change classification ([breaking]/[additive]/[deprecation]) with migration path guidance.
+- explore command: deduplication and conflict resolution in synthesis phase, classification-based summary template with "Tensions" section.
+- health command: calibrated scoring rubric with anchor points, FIX count column, deduplication before scoring.
+- architecture-mapper: classification tags on circular dependency findings.
 
 ### Fixed
 

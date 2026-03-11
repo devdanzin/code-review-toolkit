@@ -89,7 +89,36 @@ If `parallel` is specified, run agents within each group concurrently. Groups st
 
 ### Phase 3: Synthesis
 
-After all agents complete, produce a unified summary:
+After all agents complete, perform deduplication and conflict resolution, then produce a unified summary.
+
+#### Deduplication and Conflict Resolution
+
+Before writing the summary:
+
+1. **Merge overlapping findings**: When two or more agents flag the same file:line (or overlapping line ranges), merge them into a single finding that credits all contributing agents and combines their perspectives:
+
+   ```
+   - [consistency-auditor, pattern-consistency-checker]: Env-parsing logic
+     duplicated across 3 modules [src/runner.py:42, src/bench.py:18,
+     src/config.py:7]
+   ```
+
+   Not separate entries from each agent.
+
+2. **Surface contradictions explicitly**: When agents disagree, don't silently pick one — present the tension:
+
+   ```
+   ## Tensions
+   - **Exception breadth** at src/runner.py:142:
+     silent-failure-hunter recommends narrowing `except Exception` to
+     specific types.  complexity-simplifier notes the broad catch
+     simplifies control flow.
+     → Judgment call: narrower is safer, broader is simpler.
+   ```
+
+3. **Attribute to the most specific agent**: When a finding appears in both a general agent and a specialized agent, attribute it to the specialized agent in the summary.
+
+#### Summary Template
 
 ```markdown
 # Codebase Exploration Report
@@ -114,15 +143,25 @@ After all agents complete, produce a unified summary:
 - Tech Debt: [N markers, age distribution summary]
 - API Surface: [learnability score X/10]
 
-## Critical Issues (must address)
+## Findings by Priority
 
-[Aggregated from all agents — issues rated critical/high by any agent]
-- [agent-name]: Issue description [file:line]
+### Must Fix (FIX)
+[Unambiguously wrong — bugs, crash risks, clear violations]
+- [agent(s)]: Issue description [file:line]
 
-## Important Issues (should address)
+### Should Consider (CONSIDER)
+[Judgment calls — improvement likely but has trade-offs]
+- [agent(s)]: Issue description [file:line]
 
-[Aggregated medium-priority issues]
-- [agent-name]: Issue description [file:line]
+### Tensions
+[Where agents disagree — present both sides and the trade-off]
+
+### Policy Decisions (POLICY)
+[Require team/project-level decisions, not local fixes]
+- [agent(s)]: Issue description
+
+### Acceptable / No Action (ACCEPTABLE)
+[Count only: N items classified as acceptable across all agents]
 
 ## Strengths
 
@@ -131,16 +170,16 @@ After all agents complete, produce a unified summary:
 ## Recommended Action Plan
 
 ### Immediate (this week)
-1. [Critical issue fix]
-2. [Critical issue fix]
+1. [FIX item]
+2. [FIX item]
 
 ### Short-term (this month)
-1. [Important improvement]
-2. [Important improvement]
+1. [CONSIDER item]
+2. [CONSIDER item]
 
 ### Ongoing
-1. [Convention to establish]
-2. [Practice to adopt]
+1. [POLICY decision to make]
+2. [Convention to establish]
 ```
 
 ## Usage Examples

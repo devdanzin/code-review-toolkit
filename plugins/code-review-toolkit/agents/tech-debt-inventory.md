@@ -144,3 +144,9 @@ For each:
 - **Age is informative, not decisive**: An ancient TODO might be impossible or unimportant. A fresh FIXME might be critical. Use age to inform priority, not determine it.
 - **Don't moralize**: Tech debt is normal and often a reasonable trade-off. Catalog it without judgment — the goal is visibility, not blame.
 - **Cap output**: High priority: up to 15 items. Medium priority: up to 20 items. Low priority: aggregate counts only.
+
+### Classification Guide
+- **FIX**: Debt that causes bugs or blocks progress — FIXME items indicating known incorrect behavior, workarounds for issues that have been fixed upstream
+- **CONSIDER**: Debt worth addressing proactively — growing TODOs, stale workarounds, deprecated API usage that will break on upgrade
+- **POLICY**: Debt management decisions (e.g., establish TODO format conventions, set a maximum debt age, create a cleanup sprint cadence)
+- **ACCEPTABLE**: Fresh, intentional deferrals with clear context — recent TODOs with tracking issues, type:ignore with explanatory comments, deliberate scope limitations

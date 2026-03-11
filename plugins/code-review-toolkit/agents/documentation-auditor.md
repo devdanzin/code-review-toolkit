@@ -108,3 +108,9 @@ Check whether docstrings follow a consistent style:
 - **Type hints reduce docstring needs**: If parameters have full type annotations, the docstring doesn't need to repeat types — but should still explain semantics.
 - **Advisory only**: Report findings and suggestions. Do not modify any code or documentation.
 - **Cap output**: Report at most 10 critical issues, 15 undocumented APIs, and 10 stale docs in the summary.
+
+### Classification Guide
+- **FIX**: Documentation that is actively misleading — describes behavior that differs from the code, lists wrong parameter names/types, or could cause users to misuse the API
+- **CONSIDER**: Missing documentation on important public APIs, stale comments that should be updated or removed
+- **POLICY**: Documentation strategy decisions (e.g., adopt a docstring style, set documentation coverage targets, establish comment conventions)
+- **ACCEPTABLE**: Undocumented private functions with clear names, trivial documentation gaps on obvious code

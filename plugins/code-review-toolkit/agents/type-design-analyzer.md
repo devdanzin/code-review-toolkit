@@ -153,3 +153,9 @@ Check whether typing patterns are consistent across the codebase:
 - **Don't over-type**: Suggesting 15 Generic TypeVars for a simple utility function reduces readability. Type annotations should clarify, not obscure.
 - **Rate significant types only**: Don't rate every dataclass. Focus on types that form the core data model or appear in the public API.
 - **Consider mypy compatibility**: Note whether the codebase is mypy-checked and what strictness level, as this affects what's appropriate.
+
+### Classification Guide
+- **FIX**: Type design that allows invalid states, missing annotations on public APIs that cause type errors downstream, or `Any` usage that hides real bugs
+- **CONSIDER**: Type improvements that would catch bugs or improve IDE support — adding annotations, narrowing broad types, using Protocols
+- **POLICY**: Typing strategy decisions (e.g., enable mypy strict mode, adopt `X | None` over `Optional[X]`, set annotation coverage targets)
+- **ACCEPTABLE**: Untyped private functions with obvious types, legitimate `Any` usage for genuinely dynamic data, simple internal code where annotations add noise

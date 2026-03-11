@@ -191,3 +191,9 @@ For each:
 - **Python-specific**: Python's exception model has unique pitfalls (bare except catching SystemExit, StopIteration semantics, exception chaining). Flag these specifically.
 - **Cap output**: Report at most 10 critical, 10 high, and 15 medium issues. If there are more, note the total count and offer to provide the full list.
 - **Be actionable**: Every finding should include a specific fix, not just "handle this error better."
+
+### Classification Guide
+- **FIX**: Silent failure that hides bugs, causes data corruption, or produces silently wrong results (e.g., bare except with pass, swallowed exception in data pipeline)
+- **CONSIDER**: Error handling that works but could be improved — overly broad catches, missing traceback in logs, generic error messages
+- **POLICY**: Project-wide error handling strategy decisions (e.g., adopt a custom exception hierarchy, standardize logging levels for errors)
+- **ACCEPTABLE**: Intentional broad catches in appropriate contexts — top-level CLI handlers, cleanup code, logging utilities where suppression is the correct behavior

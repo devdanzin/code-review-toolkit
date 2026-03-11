@@ -133,3 +133,9 @@ For each finding, rate your **confidence** that it's genuinely dead:
 - **Check tests too**: Dead test code is less harmful but still worth finding — tests for removed features, tests that are skipped permanently.
 - **Commented-out code is dead code**: If it's in version control, the history preserves it. The commented-out version in the source file just creates noise.
 - **Cap output**: No more than 30 high-confidence and 15 medium-confidence items. If there's more dead code than this, the summary statistics tell the story.
+
+### Classification Guide
+- **FIX**: Dead code with high confidence (90%+) that adds maintenance burden — unused functions with complex logic, orphan files, large commented-out blocks
+- **CONSIDER**: Medium-confidence dead code that should be verified before removal — potentially dynamically referenced functions, imports that might be re-exports
+- **POLICY**: Decisions about dead code management (e.g., establish a policy on commented-out code, set up automated unused import removal)
+- **ACCEPTABLE**: Unused imports that serve as re-exports, functions referenced only via plugin/registration systems, code kept intentionally for reference

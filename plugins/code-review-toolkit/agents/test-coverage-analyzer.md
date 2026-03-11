@@ -63,14 +63,33 @@ For each source module that has tests, evaluate:
 - **Complex conditionals**: Are all significant branches covered?
 - **Error handling**: Are exception types and messages verified?
 
-### Step 3: Rate Criticality
+### Step 3: Rate Criticality (Risk-Weighted)
 
-For each coverage gap, rate 1-10:
-- **9-10**: Untested code that could cause data loss, silent corruption, or security issues
-- **7-8**: Untested business logic that could cause user-visible errors
-- **5-6**: Untested edge cases that could cause confusing behavior
-- **3-4**: Missing tests that would improve confidence but cover unlikely scenarios
-- **1-2**: Nice-to-have tests for completeness
+For each coverage gap, compute a risk-weighted rating (1-10) based on three factors:
+
+**Factor 1 — Failure Impact** (what happens if this code is wrong?):
+- Data loss, silent corruption, security issues → weight 3
+- User-visible errors, incorrect results → weight 2
+- Confusing behavior, poor UX → weight 1
+
+**Factor 2 — Code Complexity** (how likely is a bug?):
+- Complex control flow, many branches, state mutation → weight 3
+- Moderate logic, some conditionals → weight 2
+- Simple, linear, obvious correctness → weight 1
+
+**Factor 3 — Change Frequency** (how often does this code change?):
+- Frequently modified (check git log) → weight 3
+- Occasionally modified → weight 2
+- Stable, rarely touched → weight 1
+
+**Rating = max(1, round(sum of weights))**:
+- **9-10**: High impact + high complexity + high change frequency — critical gap
+- **7-8**: High impact with moderate complexity or change frequency
+- **5-6**: Moderate impact or moderate complexity with some change frequency
+- **3-4**: Low impact or simple code that rarely changes
+- **1-2**: Trivial functions with obvious correctness — classify as ACCEPTABLE
+
+Simple functions with obvious correctness (e.g., one-line property accessors, trivial delegation) should be classified as **ACCEPTABLE** even if untested.
 
 ### Step 4: Evaluate Test Organization
 
@@ -98,14 +117,16 @@ Assess the overall test suite structure:
 ### Untested Modules
 [List source modules with NO corresponding tests, ranked by criticality]
 
-## Critical Coverage Gaps (rating 8-10)
+## Critical Coverage Gaps (rating 8-10) — [FIX/CONSIDER]
 
 For each:
 - **Module**: [source file]
 - **Gap**: [What's not tested]
 - **Risk**: [What could go wrong]
-- **Rating**: X/10
+- **Rating**: X/10 — [Impact: H/M/L, Complexity: H/M/L, Change freq: H/M/L]
 - **Suggested tests**: [Specific test cases to add, described behaviorally]
+
+Note: Simple functions with obvious correctness are ACCEPTABLE even without tests.
 
 ## Important Coverage Gaps (rating 5-7)
 
@@ -140,3 +161,9 @@ For each:
 - **unittest conventions**: labeille uses unittest, not pytest. Assess against unittest idioms (TestCase subclasses, self.assert* methods, setUp/tearDown).
 - **Cap output**: Report at most 10 critical gaps and 10 important gaps in the summary. Offer to drill deeper on specific modules.
 - **Consider architecture**: If architecture-mapper output is available, prioritize coverage gaps in high fan-in modules (foundational code used by many others) over leaf modules.
+
+### Classification Guide
+- **FIX**: Untested code that handles data integrity, security, or core business logic with complex control flow
+- **CONSIDER**: Untested code with moderate risk — worth adding tests but not urgent
+- **POLICY**: Testing strategy decisions that affect the whole project (e.g., adopt integration tests, set coverage targets)
+- **ACCEPTABLE**: Simple functions with obvious correctness, trivial delegation, or one-line accessors that don't need tests

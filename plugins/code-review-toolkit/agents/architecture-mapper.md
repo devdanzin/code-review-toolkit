@@ -127,13 +127,15 @@ Structure your output as follows:
 ## Structural Issues
 
 ### Circular Dependencies
-[List any cycles found, with severity assessment]
+- **[FIX]** Runtime cycles that cause ImportError
+- **[CONSIDER]** Cycles indicating poor layering but no runtime failure
+- **[ACCEPTABLE]** TYPE_CHECKING-only cycles (no runtime impact)
 
 ### Layering Violations
-[List any cases where dependency direction is wrong]
+[Each tagged FIX/CONSIDER/ACCEPTABLE]
 
 ### Coupling Concerns
-[Flag modules that are over-coupled]
+[Each tagged FIX/CONSIDER/ACCEPTABLE]
 
 ## Architecture Assessment
 
@@ -146,6 +148,12 @@ Structure your output as follows:
 ### Recommendations
 [Specific, actionable suggestions — ranked by impact]
 ```
+
+### Classification Guide
+- **FIX**: Runtime import cycle, import that crashes, dependency that prevents the project from loading
+- **CONSIDER**: Layering violation or high coupling that complicates maintenance but doesn't break things
+- **POLICY**: Architectural decision that affects the whole project (e.g., adopt src/ layout, restructure packages)
+- **ACCEPTABLE**: TYPE_CHECKING-only cycle, intentional coupling between closely related modules
 
 ## Important Guidelines
 

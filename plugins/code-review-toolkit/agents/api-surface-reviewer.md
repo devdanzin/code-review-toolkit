@@ -94,6 +94,16 @@ Evaluate:
 - **Concept mapping**: Do API concepts map naturally to user mental models?
 - **Progressive complexity**: Can users start simple and learn advanced features incrementally?
 
+### 7. Breaking Change Classification
+
+When recommending API changes, classify each as:
+
+- **Breaking**: Changes the behavior of existing calls. Existing user code would break or produce different results. Examples: renaming a public function, removing a parameter, changing a return type, changing exception types.
+- **Additive**: Extends the API without affecting existing calls. Existing user code continues to work unchanged. Examples: adding an optional parameter with a default, adding a new function, adding a type alias.
+- **Deprecation**: Marks existing API as deprecated while maintaining backward compatibility. Existing code works but produces warnings. Should include a migration path and timeline.
+
+Tag each recommendation with `[breaking]`, `[additive]`, or `[deprecation]` so the cost of each change is immediately visible.
+
 ## Output Format
 
 ```
@@ -144,18 +154,24 @@ For each:
 ## Top Recommendations
 
 [Ranked by impact on API coherence]
-1. [Most impactful improvement]
-2. [Next]
+1. [breaking/additive/deprecation] [Most impactful improvement]
+2. [breaking/additive/deprecation] [Next]
 ...
 
-[Note which changes would be breaking vs. additive (adding aliases)]
+[Group breaking changes separately. For each breaking change, suggest a deprecation path if the project is post-1.0.]
 ```
 
 ## Guidelines
 
 - **Coherence over convention**: The goal isn't to match external style guides — it's internal consistency. A consistently "weird" API is better than an inconsistently "correct" one.
 - **User perspective**: Think from the perspective of someone reading the docs or discovering the API through autocomplete. What expectations do they form?
-- **Breaking changes awareness**: Always note whether a recommendation would break existing users. Suggest aliases or deprecation paths where appropriate.
+- **Breaking changes awareness**: Always classify recommendations as `[breaking]`, `[additive]`, or `[deprecation]`. Breaking changes should be flagged prominently and include migration paths. Never recommend breaking changes without explicitly acknowledging the cost.
 - **CLI + library alignment**: If the project has both, check that CLI command names correspond to library function names and that mental models are compatible.
 - **Respect project stage**: A pre-1.0 project can make breaking changes more freely. A mature project needs deprecation paths. Calibrate recommendations accordingly.
 - **Cap output**: Focus on the 5-8 most impactful consistency improvements. API surface changes affect every user, so quality over quantity is essential.
+
+### Classification Guide
+- **FIX**: API inconsistency that causes user confusion or incorrect usage (e.g., same concept has different names in different functions)
+- **CONSIDER**: Inconsistency worth aligning for learnability but not causing active confusion
+- **POLICY**: API design decisions that require project-level agreement (e.g., adopt consistent verb prefixes, standardize error types)
+- **ACCEPTABLE**: Minor naming variation that doesn't affect usability or where alignment would cause breaking changes disproportionate to the benefit

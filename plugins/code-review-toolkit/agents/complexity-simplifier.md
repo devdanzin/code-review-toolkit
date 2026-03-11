@@ -107,11 +107,27 @@ For each reported hotspot, suggest specific simplification strategies. Choose fr
 - Replace exception-based control flow with explicit checks
 - Use context managers for resource cleanup
 
+### When NOT to Simplify
+
+Some complex code is better left as-is.  Classify these as ACCEPTABLE:
+
+**Heterogeneous case handling**: An if/elif chain where each branch handles a genuinely different case with different logic is often MORE readable than a dispatch table or strategy pattern, because:
+- Each case is self-contained and readable top-to-bottom
+- Adding a new case means adding a new elif, not modifying a registry
+- The branches may share no common structure to factor out
+
+Flag these as ACCEPTABLE unless the branches share significant common structure that creates a real maintenance burden.
+
+**Intentional near-duplication**: Code blocks that look similar but differ in meaningful ways (different error messages, different edge case handling, different downstream effects) should NOT be unified. Before recommending extraction, verify that the "duplicated" blocks are truly identical in behavior, not just similar in structure. If they differ, classify as ACCEPTABLE with a note explaining why the duplication is intentional.
+
+**Readable complexity**: A function may score high on metrics but be perfectly clear to read. A well-organized 80-line function with clear variable names and logical flow may be easier to understand than 8 extracted helper functions that require jumping between files. The question is not "is this function long?" but "would splitting it make the code easier to understand?"
+
 ### Step 4: Validate Simplifications
 
 For each suggestion, verify:
 - **Functionality preservation**: Will the behavior remain identical? Note any edge cases.
 - **Net benefit**: Does the simplification actually reduce cognitive load, or just move complexity elsewhere?
+- **Abstraction cost**: Would the simplified version require the reader to jump between more files or functions to understand the flow? If the abstraction makes the code harder to read linearly, classify the finding as CONSIDER rather than FIX, and note the trade-off.
 - **Project consistency**: Does the simplified version follow the patterns used elsewhere in the codebase? (Use consistency-auditor findings if available.)
 - **Testability**: Will the simplified version be easier or harder to test?
 
@@ -133,7 +149,7 @@ For each suggestion, verify:
 ### Critical Complexity (score 8-10)
 
 For each:
-#### [function_name] — Score: X/10
+#### [function_name] — Score: X/10 — [FIX/CONSIDER/ACCEPTABLE]
 - **Location**: file:line (lines N-M, L lines)
 - **Dimensions**: [which complexity dimensions are elevated]
 - **Why it matters**: [impact on maintainability, bug risk, modification difficulty]
@@ -169,12 +185,18 @@ For each:
 [Note any simplifications that should be done together because they affect the same code.]
 ```
 
+### Classification Guide
+- **FIX**: Accidental complexity that obscures bugs or makes modification dangerous (e.g., 200-line function with 6 levels of nesting mixing I/O with business logic)
+- **CONSIDER**: Complexity that could be reduced but involves trade-offs (e.g., extracting helpers adds indirection)
+- **POLICY**: Complexity patterns that require project-level decisions (e.g., adopting a state machine library)
+- **ACCEPTABLE**: Inherent complexity that is well-organized and readable despite high metrics (e.g., clear if/elif handling heterogeneous cases)
+
 ## Important Guidelines
 
 - **Complexity is not always bad**: A parser, a state machine, or a complex algorithm may be inherently complex. The question is whether the code is as simple as the problem allows, not whether it's simple in absolute terms. Flag inherent complexity differently from accidental complexity.
 - **Simplification must preserve behavior**: Every suggestion must be behavior-preserving. If a simplification changes edge-case behavior, call that out explicitly.
 - **Prefer clarity over brevity**: A 10-line function with clear variable names is simpler than a 3-line function using nested comprehensions and walrus operators. Never suggest making code shorter at the expense of readability.
-- **Avoid over-abstraction**: Extracting 15 two-line helper functions can be worse than one longer function. Extraction should create meaningful, reusable, or testable units — not just move lines around.
+- **Avoid over-abstraction**: Extracting 15 two-line helper functions can be worse than one longer function. Similarly, replacing a clear if/elif chain with a dispatch table adds indirection without improving readability when the cases are heterogeneous. Always ask: would a new developer understand the code better after this change? Extraction should create meaningful, reusable, or testable units — not just move lines around.
 - **Respect test code differently**: Test functions are often long and repetitive by nature. Complexity in test code matters less than complexity in source code. Don't aggressively flag test functions unless they're genuinely hard to understand.
 - **Be concrete**: "This function is too complex" is useless. "Lines 45-72 handle three separate concerns (validation, transformation, persistence) that could be extracted into validate_input(), transform_data(), and save_result()" is actionable.
 - **Consider the cascade**: Simplifying function A might require changes to its callers. Note these downstream impacts.
