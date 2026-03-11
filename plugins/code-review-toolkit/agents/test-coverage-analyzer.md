@@ -11,16 +11,34 @@ You are an expert test coverage analyst for Python codebases. Your mission is to
 
 Analyze the scope provided. Default: the entire project. You may receive architecture-mapper output — use it to understand which modules are most critical (high fan-in modules need better coverage).
 
+## Script-Assisted Analysis
+
+Before starting your qualitative analysis, run the test correlation script:
+
+```bash
+python <plugin_root>/scripts/correlate_tests.py [scope]
+```
+
+where `<plugin_root>` is the root of the code-review-toolkit plugin directory.
+
+Parse the JSON output. This gives you the complete source↔test file mapping, test method counts, untested modules, and public API surface sizes. Use this as your factual foundation — do not re-derive the mapping manually.
+
+Key fields:
+- `untested_sources`: source files with no corresponding tests
+- `source_coverage`: per-file test correspondence with `test_method_count`, `public_surface_size`, `has_tests`
+- `summary`: aggregate statistics (source files, test files, coverage percentage, total test methods, skipped tests)
+- `test_details`: per-test-file class/method inventory including `skipped_methods`
+
 ## Analysis Strategy
 
-### Step 1: Map Source to Tests
+### Step 1: Review Source-to-Test Mapping
 
-Build a correspondence map:
-- For each source module, identify its corresponding test file(s)
-- Note the mapping convention (e.g., `src/runner.py` → `tests/test_runner.py`)
-- Identify source modules with **no corresponding test file**
-- Identify test files that don't correspond to a specific source module (integration tests, end-to-end tests)
-- Count test classes and test methods per source module
+The script output provides the complete correspondence map. Review `source_coverage` and `untested_sources` for:
+- The mapping convention used (e.g., `src/runner.py` → `tests/test_runner.py`)
+- Source modules with **no corresponding test file** (from `untested_sources`)
+- Test files that don't correspond to a specific source module (integration tests, end-to-end tests — check `test_details` for unmatched test files)
+- Test classes and test methods per source module (from `source_coverage[].test_method_count`)
+- Skipped test counts (from `summary.total_skipped_tests` and per-class `skipped_methods`)
 
 ### Step 2: Assess Coverage Quality
 
@@ -70,7 +88,7 @@ Assess the overall test suite structure:
 
 [2-3 sentence summary: overall coverage quality, biggest gaps, testing maturity level]
 
-### Source/Test Correspondence
+### Source/Test Correspondence (from script summary)
 - Source modules: N
 - Test files: N
 - Modules with tests: N (X%)

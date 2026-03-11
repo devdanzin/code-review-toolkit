@@ -13,42 +13,58 @@ Dead code is dangerous not because it runs, but because it doesn't: developers w
 
 Analyze the scope provided. Default: the entire project. Architecture-mapper output helps identify module boundaries and import patterns.
 
+## Script-Assisted Analysis
+
+Before starting your qualitative analysis, run the dead symbol finder script:
+
+```bash
+python <plugin_root>/scripts/find_dead_symbols.py [scope]
+```
+
+where `<plugin_root>` is the root of the code-review-toolkit plugin directory.
+
+Parse the JSON output. This gives you unused imports, unreferenced functions/classes, orphan files, and commented-out code blocks — all with confidence ratings. Use this as your factual foundation, then focus your effort on **verification and false-positive filtering**.
+
+Key fields:
+- `unused_imports`: with `confidence` ratings, accounting for `__all__` and `__init__.py` re-exports
+- `unreferenced_symbols`: with `confidence` ratings, accounting for magic methods, test discovery, and `__main__` guards
+- `orphan_files`: with `confidence` ratings
+- `commented_code_blocks`: with line ranges and previews
+- `summary`: aggregate counts for each category plus high/medium confidence totals
+
 ## What to Search For
 
 ### Unused Imports
-- Imports at the top of a file that are never referenced in the file body
-- Note: `TYPE_CHECKING`-guarded imports are only used by type checkers — verify they're referenced in annotations
-- Note: `__init__.py` imports may be re-exports — check if they're in `__all__` or used by external modules
+The script's `unused_imports` identifies imports never referenced in the file body, already accounting for `__all__` re-exports and `__init__.py` patterns. Review the findings — especially medium-confidence items where `TYPE_CHECKING`-guarded imports may need verification against annotations.
 
 ### Unreferenced Functions and Classes
-- Functions/methods defined but never called from anywhere in the codebase
-- Classes defined but never instantiated or subclassed
-- Check: entry points (CLI commands, test cases, __main__) — these won't have callers but aren't dead
-- Check: `__all__` exports — listed items are part of the public API even without internal callers
-- Check: registered callbacks, decorators, and plugin hooks — these may be called dynamically
+The script's `unreferenced_symbols` lists functions/classes defined but never referenced anywhere in the codebase. The script already excludes magic methods, test methods, setUp/tearDown, `__all__` entries, and `__main__`-guarded functions. Review medium-confidence items especially for:
+- Registered callbacks, decorators, and plugin hooks — these may be called dynamically
+- Classes that may be instantiated by deserializers or frameworks
 
 ### Orphan Files
-- Python files that are never imported by any other file in the project
-- Exceptions: entry points, test files, __main__.py, scripts referenced in pyproject.toml/setup.cfg
+The script's `orphan_files` lists Python files never imported by any other file, already excluding entry points, test files, `__init__.py`, and setup files. Review each to confirm they're genuinely unused.
 
 ### Unreachable Code
+Not covered by the script — check manually:
 - Code after unconditional `return`, `raise`, `break`, `continue`
 - Branches guarded by always-true or always-false conditions (if constants are deterministic)
 - `else` branches after `if` blocks that always return/raise
 
 ### Stale Conditional Code
+Not covered by the script — check manually:
 - `if False:` blocks or `if 0:` blocks
 - Feature flags or environment variable checks for features that appear to be always on/off
 - Platform checks for platforms the project doesn't support
 - Version checks for Python versions below the project's minimum
 
 ### Unused Variables
+Not covered by the script — check manually:
 - Variables assigned but never read (especially in loops or conditional blocks)
 - Caught exception variables that are never used (`except SomeError as e:` where `e` is unused)
 
 ### Commented-Out Code
-- Significant blocks of commented-out code (as opposed to documentation comments)
-- Code in triple-quoted strings that looks like it was disabled rather than documented
+The script's `commented_code_blocks` identifies significant blocks of commented-out code (3+ consecutive lines matching code patterns). Review each block — the script distinguishes code from documentation comments.
 
 ## False Positive Avoidance
 
@@ -78,11 +94,11 @@ For each finding, rate your **confidence** that it's genuinely dead:
 
 [2-3 sentence overview: How clean is the codebase? Estimated volume of dead code.]
 
-### Statistics
+### Statistics (from script summary, plus manual checks)
 - Unused imports: N (across N files)
 - Unreferenced functions/classes: N
 - Orphan files: N
-- Unreachable code blocks: N
+- Unreachable code blocks: N (manual check)
 - Commented-out code blocks: N
 
 ## High Confidence (safe to remove)
