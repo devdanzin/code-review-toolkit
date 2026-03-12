@@ -4,7 +4,7 @@ A comprehensive collection of specialized agents for exploring and analyzing exi
 
 ## Overview
 
-This plugin bundles 11 expert analysis agents and 4 commands. Each agent focuses on a specific aspect of code quality and is designed for codebase-scale analysis — scanning entire modules or projects rather than reviewing diffs.
+This plugin bundles 12 expert analysis agents and 4 commands. Each agent focuses on a specific aspect of code quality and is designed for codebase-scale analysis — scanning entire modules or projects rather than reviewing diffs.
 
 ### Key Design Principles
 
@@ -20,7 +20,7 @@ This plugin bundles 11 expert analysis agents and 4 commands. Each agent focuses
 The primary command. Runs the architecture-mapper first, then dispatches selected agents with architecture context.
 
 ```bash
-# Full exploration (all 11 agents)
+# Full exploration (all 12 agents)
 /code-review-toolkit:explore
 
 # Specific directory
@@ -33,7 +33,7 @@ The primary command. Runs the architecture-mapper first, then dispatches selecte
 /code-review-toolkit:explore . all summary
 ```
 
-**Aspects**: `architecture`, `consistency`, `complexity`, `tests`, `errors`, `docs`, `types`, `dead-code`, `tech-debt`, `patterns`, `api`, `all`
+**Aspects**: `architecture`, `consistency`, `complexity`, `tests`, `errors`, `docs`, `project-docs`, `types`, `dead-code`, `tech-debt`, `patterns`, `api`, `all`
 
 **Options**: `deep` (full detail), `summary` (top-level only), `parallel` (concurrent agents)
 
@@ -90,6 +90,7 @@ Quick health dashboard — all agents in summary mode, producing a scored table 
 | **dead-code-finder** | Unused imports, unreferenced functions, orphan files | New |
 | **tech-debt-inventory** | TODOs/FIXMEs, deprecated usage, debt age analysis | New |
 | **api-surface-reviewer** | Public API naming consistency, parameter conventions, learnability | New |
+| **project-docs-auditor** | README/docs accuracy, cross-file consistency, reference validation | New |
 
 ## Recommended Workflows
 
@@ -113,7 +114,7 @@ Quick health dashboard — all agents in summary mode, producing a scored table 
 ### Before a Release
 
 ```
-1. /code-review-toolkit:explore . api docs types  → Public surface quality
+1. /code-review-toolkit:explore . api docs project-docs types  → Public surface quality
 2. Fix API inconsistencies and documentation gaps
 3. /code-review-toolkit:explore . errors tests     → Reliability check
 ```
@@ -158,7 +159,7 @@ All agents use `model: opus` for highest analysis quality. Each agent:
 | **Discovery** | Knows what changed | Must discover structure first |
 | **Output** | All findings shown | Ranked, capped, drill-down available |
 | **Architecture** | Not needed (small diff) | Foundation for all analysis |
-| **Agents** | 6 | 11 |
+| **Agents** | 6 | 12 |
 | **Use when** | Before creating a PR | Exploring, planning cleanup, health checks |
 
 ## Tips
@@ -188,7 +189,8 @@ code-review-toolkit/
 │   ├── type-design-analyzer.md
 │   ├── dead-code-finder.md
 │   ├── tech-debt-inventory.md
-│   └── api-surface-reviewer.md
+│   ├── api-surface-reviewer.md
+│   └── project-docs-auditor.md
 └── commands/
     ├── explore.md
     ├── map.md

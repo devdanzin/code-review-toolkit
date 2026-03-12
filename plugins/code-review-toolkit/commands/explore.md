@@ -32,6 +32,7 @@ Parse arguments into three categories:
 - `tech-debt` → tech-debt-inventory
 - `patterns` → pattern-consistency-checker
 - `api` → api-surface-reviewer
+- `project-docs` → project-docs-auditor
 - `all` → all agents (default)
 
 **Options**:
@@ -79,11 +80,12 @@ Based on the requested aspects (default: all), launch the appropriate agents. Ea
 **Group C — Interface and documentation**:
 6. test-coverage-analyzer
 7. documentation-auditor
-8. type-design-analyzer
-9. api-surface-reviewer
+8. project-docs-auditor
+9. type-design-analyzer
+10. api-surface-reviewer
 
 **Group D — Inventory**:
-10. tech-debt-inventory
+11. tech-debt-inventory
 
 If `parallel` is specified, run agents within each group concurrently. Groups still execute sequentially because later groups may benefit from earlier findings.
 
@@ -138,6 +140,7 @@ Before writing the summary:
 - Test Coverage: [N modules untested, N critical gaps]
 - Error Handling: [N silent failures, N critical]
 - Documentation: [X% coverage, N accuracy issues]
+- Project Docs: [N broken references, N contradictions]
 - Type System: [X% annotated, N design issues]
 - Dead Code: [N items identified]
 - Tech Debt: [N markers, age distribution summary]
@@ -227,6 +230,8 @@ The above is the architecture analysis of this project. Use it to:
 - Prioritize findings in high-traffic/high-fan-in modules
 - Identify when an issue is localized vs. cross-cutting
 - Calibrate severity based on where code sits in the dependency graph
+
+The project-docs-auditor also benefits from consistency-auditor output when checking whether CLAUDE.md conventions match actual code patterns. If running both, dispatch consistency-auditor (Group A) before project-docs-auditor (Group C) — this is already the case in the dispatch order.
 ```
 
 ## Tips

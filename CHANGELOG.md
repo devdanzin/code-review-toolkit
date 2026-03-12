@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - MIT LICENSE crediting original and adapted authors.
 - .gitignore (Python template).
 - Test suite for all 6 plugin scripts (116 tests).
+- project-docs-auditor agent for auditing out-of-code documentation (README, CLAUDE.md, config files) accuracy against the codebase.
 
 ### Enhanced
 

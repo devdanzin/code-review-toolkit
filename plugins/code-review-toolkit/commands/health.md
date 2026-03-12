@@ -29,6 +29,7 @@ Run all agents in summary mode to produce a quick health dashboard. Each agent r
 | Test Coverage    | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 | Error Handling   | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 | Documentation    | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
+| Project Docs     | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 | Type System      | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 | Dead Code        | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 | Tech Debt        | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
