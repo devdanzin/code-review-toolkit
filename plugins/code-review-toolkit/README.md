@@ -4,12 +4,12 @@ A comprehensive collection of specialized agents for exploring and analyzing exi
 
 ## Overview
 
-This plugin bundles 12 expert analysis agents and 4 commands. Each agent focuses on a specific aspect of code quality and is designed for codebase-scale analysis — scanning entire modules or projects rather than reviewing diffs.
+This plugin bundles 14 expert analysis agents and 4 commands. Each agent focuses on a specific aspect of code quality and is designed for codebase-scale analysis — scanning entire modules or projects rather than reviewing diffs.
 
 ### Key Design Principles
 
 - **Discovery-first**: Agents do a broad sweep, then offer ranked findings for drill-down
-- **Architecture-aware**: The architecture-mapper runs first and feeds its output to other agents, so findings are contextualized by module importance
+- **Context-aware**: Two foundational agents — architecture-mapper (structural) and git-history-context (temporal) — run first and feed their output to all other agents, so findings are contextualized by module importance and change patterns
 - **Prioritized output**: Each agent caps its output to avoid overwhelming reports, ranking by severity and offering deeper analysis on request
 - **Python-calibrated**: All agents are tuned for Python idioms (gradual typing, unittest, dynamic dispatch, `__init__.py` conventions, etc.)
 
@@ -17,10 +17,10 @@ This plugin bundles 12 expert analysis agents and 4 commands. Each agent focuses
 
 ### `/code-review-toolkit:explore [scope] [aspects] [options]`
 
-The primary command. Runs the architecture-mapper first, then dispatches selected agents with architecture context.
+The primary command. Runs the foundational context providers (architecture-mapper + git-history-context) first, then dispatches selected agents with both structural and temporal context.
 
 ```bash
-# Full exploration (all 12 agents)
+# Full exploration (all 14 agents)
 /code-review-toolkit:explore
 
 # Specific directory
@@ -33,7 +33,7 @@ The primary command. Runs the architecture-mapper first, then dispatches selecte
 /code-review-toolkit:explore . all summary
 ```
 
-**Aspects**: `architecture`, `consistency`, `complexity`, `tests`, `errors`, `docs`, `project-docs`, `types`, `dead-code`, `tech-debt`, `patterns`, `api`, `all`
+**Aspects**: `architecture`, `history-context`, `history`, `history-full`, `consistency`, `complexity`, `tests`, `errors`, `docs`, `project-docs`, `types`, `dead-code`, `tech-debt`, `patterns`, `api`, `all`
 
 **Options**: `deep` (full detail), `summary` (top-level only), `parallel` (concurrent agents)
 
@@ -48,7 +48,7 @@ Quick architecture mapping only. The fastest way to get oriented.
 
 ### `/code-review-toolkit:hotspots [scope]`
 
-Find cleanup targets: complexity hotspots, dead code, and tech debt. Answers "where should I focus my cleanup efforts?"
+Find cleanup targets: churn hotspots, complexity hotspots, dead code, and tech debt. Answers "where should I focus my cleanup efforts?"
 
 ```bash
 /code-review-toolkit:hotspots
@@ -70,6 +70,7 @@ Quick health dashboard — all agents in summary mode, producing a scored table 
 | Agent | Focus | Adapted From |
 |-------|-------|-------------|
 | **architecture-mapper** | Module structure, dependency graph, layering, circular deps | New |
+| **git-history-context** | Churn metrics, change velocity, co-change clusters, module stability | New |
 | **consistency-auditor** | Pattern divergence across codebase, convention discovery | code-reviewer |
 | **complexity-simplifier** | Complexity hotspots ranked by severity, with simplification strategies | code-simplifier |
 
@@ -80,6 +81,7 @@ Quick health dashboard — all agents in summary mode, producing a scored table 
 | **test-coverage-analyzer** | Source↔test correlation, undertested modules, coverage gaps | pr-test-analyzer |
 | **pattern-consistency-checker** | Same concern solved different ways across modules | New |
 | **silent-failure-hunter** | Swallowed exceptions, bare except, silent error patterns | silent-failure-hunter |
+| **git-history-analyzer** | Fix completeness, similar bug detection, churn×quality risk matrix, historical context | New |
 
 ### Tier 3: Specific Concerns
 
@@ -116,7 +118,7 @@ Quick health dashboard — all agents in summary mode, producing a scored table 
 ```
 1. /code-review-toolkit:explore . api docs project-docs types  → Public surface quality
 2. Fix API inconsistencies and documentation gaps
-3. /code-review-toolkit:explore . errors tests     → Reliability check
+3. /code-review-toolkit:explore . errors tests history  → Reliability + fix completeness
 ```
 
 ### Ongoing Maintenance
@@ -132,14 +134,19 @@ Quick health dashboard — all agents in summary mode, producing a scored table 
 /code-review-toolkit:explore . tech-debt dead-code
 ```
 
-## How Architecture Context Works
+## How Foundational Context Works
 
-The architecture-mapper produces a structural model of the codebase: module boundaries, dependency graph, fan-in/fan-out metrics, and layering. When other agents receive this context, they can:
+Two agents provide foundational context for all other agents:
 
+**architecture-mapper** produces a structural model: module boundaries, dependency graph, fan-in/fan-out metrics, and layering. Other agents use it to:
 - **Prioritize**: Findings in high fan-in modules (used by many others) are more critical
 - **Contextualize**: A broad except in a CLI entry point is different from one in a core library module
 - **Detect cross-cutting issues**: Patterns that span module boundaries vs. localized concerns
-- **Calibrate recommendations**: Architectural improvements vs. function-level fixes
+
+**git-history-context** produces a temporal model: churn metrics, change velocity, co-change clusters, and module stability. Other agents use it to:
+- **Prioritize by volatility**: Findings in high-churn code are more urgent (and more likely to regress)
+- **Detect recent changes**: Code flagged by another agent may have been recently changed intentionally
+- **Focus testing effort**: High-churn + low-coverage areas are the highest-risk testing gaps
 
 ## Agent Configuration
 
@@ -159,7 +166,7 @@ All agents use `model: opus` for highest analysis quality. Each agent:
 | **Discovery** | Knows what changed | Must discover structure first |
 | **Output** | All findings shown | Ranked, capped, drill-down available |
 | **Architecture** | Not needed (small diff) | Foundation for all analysis |
-| **Agents** | 6 | 12 |
+| **Agents** | 6 | 14 |
 | **Use when** | Before creating a PR | Exploring, planning cleanup, health checks |
 
 ## Tips
@@ -190,7 +197,9 @@ code-review-toolkit/
 │   ├── dead-code-finder.md
 │   ├── tech-debt-inventory.md
 │   ├── api-surface-reviewer.md
-│   └── project-docs-auditor.md
+│   ├── project-docs-auditor.md
+│   ├── git-history-context.md
+│   └── git-history-analyzer.md
 └── commands/
     ├── explore.md
     ├── map.md

@@ -13,8 +13,8 @@ Run all agents in summary mode to produce a quick health dashboard. Each agent r
 ## Workflow
 
 1. Identify project root and confirm scope
-2. Run **architecture-mapper** (produces context for all other agents)
-3. Run all remaining agents with architecture context, requesting summary-tier output only
+2. Run **architecture-mapper** and **git-history-context** (produce structural and temporal context for all other agents)
+3. Run all remaining agents with both context outputs, requesting summary-tier output only
 4. Deduplicate before scoring: when the same issue is flagged by multiple agents, count it once. Do not let duplicate findings inflate the problem count.
 5. Synthesize into a health dashboard:
 
@@ -35,6 +35,8 @@ Run all agents in summary mode to produce a quick health dashboard. Each agent r
 | Tech Debt        | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 | Pattern Consistency | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 | API Surface      | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
+| Change Velocity  | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
+| Fix Quality      | 🟢/🟡/🔴 | X/10 | N  | [1-line summary] |
 
 ## Overall Health: X/10
 
