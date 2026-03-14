@@ -1,6 +1,5 @@
 """Tests for analyze_imports.py."""
 
-import json
 import unittest
 from pathlib import Path
 

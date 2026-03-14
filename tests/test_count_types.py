@@ -1,7 +1,6 @@
 """Tests for count_types.py."""
 
 import unittest
-from pathlib import Path
 
 from helpers import TempProject, import_script
 

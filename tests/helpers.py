@@ -1,8 +1,6 @@
 """Helpers for importing scripts as modules and creating test fixtures."""
 
 import importlib.util
-import os
-import sys
 import tempfile
 from pathlib import Path
 

@@ -38,4 +38,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `typing_extensions` removed from `_STDLIB_TOP_LEVEL` in `analyze_imports.py` — it is a third-party package, not stdlib.
+- Dead `elif` branch in `correlate_tests.py` `_match_test_to_source` — duplicate condition made subpackage matching unreachable.
+- Missing trailing newline after `json.dump` in `analyze_history.py` output (6/7 scripts had it).
+- Missing `.egg-info` directory exclusion in `analyze_history.py` `compute_function_churn_level2`.
+- Unused variable `scores` removed from `measure_complexity.py`.
+- 10 unused imports removed across `correlate_tests.py`, `helpers.py`, and 6 test files.
+- Dead `"*.egg-info"` entry removed from `analyze_imports.py` exclude set (glob pattern in set intersection never matches).
+- Unprotected `int()` calls in `analyze_history.py` `parse_args` now catch `ValueError` with clear error messages.
+- Unknown CLI flags in `analyze_history.py` now produce a warning instead of being silently ignored.
+- Broken `../pr-review-toolkit/` links removed from plugin README.
 - Test helper `_SCRIPTS_DIR` path to point to `plugins/code-review-toolkit/scripts/`.

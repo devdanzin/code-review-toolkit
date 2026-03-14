@@ -281,6 +281,8 @@ def compute_function_churn_level2(
             continue
         if rel_parts & exclude:
             continue
+        if any(part.endswith(".egg-info") for part in pf.relative_to(project_root).parts):
+            continue
         rel_path = str(pf.relative_to(project_root))
         boundaries = get_function_boundaries(pf)
         if boundaries:
@@ -483,7 +485,12 @@ def parse_args(argv: list[str]) -> dict:
     while i < len(argv):
         arg = argv[i]
         if arg == "--days" and i + 1 < len(argv):
-            args["days"] = int(argv[i + 1])
+            try:
+                args["days"] = int(argv[i + 1])
+            except ValueError:
+                print(f"Error: --days requires an integer, got '{argv[i + 1]}'",
+                      file=sys.stderr)
+                sys.exit(2)
             i += 2
         elif arg == "--since" and i + 1 < len(argv):
             args["since"] = argv[i + 1]
@@ -492,10 +499,22 @@ def parse_args(argv: list[str]) -> dict:
             args["until"] = argv[i + 1]
             i += 2
         elif arg == "--last" and i + 1 < len(argv):
-            args["last"] = int(argv[i + 1])
+            try:
+                args["last"] = int(argv[i + 1])
+            except ValueError:
+                print(f"Error: --last requires an integer, got '{argv[i + 1]}'",
+                      file=sys.stderr)
+                sys.exit(2)
             i += 2
         elif arg == "--max-commits" and i + 1 < len(argv):
-            args["max_commits"] = int(argv[i + 1])
+            try:
+                args["max_commits"] = int(argv[i + 1])
+            except ValueError:
+                print(
+                    f"Error: --max-commits requires an integer, got '{argv[i + 1]}'",
+                    file=sys.stderr,
+                )
+                sys.exit(2)
             i += 2
         elif arg == "--no-function":
             args["no_function"] = True
@@ -504,6 +523,7 @@ def parse_args(argv: list[str]) -> dict:
             args["path"] = arg
             i += 1
         else:
+            print(f"Warning: unknown flag '{arg}', ignoring", file=sys.stderr)
             i += 1
 
     return args
@@ -629,8 +649,10 @@ def main() -> None:
     result = analyze()
     if "error" in result:
         json.dump(result, sys.stdout, indent=2)
+        sys.stdout.write("\n")
         sys.exit(1)
     json.dump(result, sys.stdout, indent=2)
+    sys.stdout.write("\n")
 
 
 if __name__ == "__main__":

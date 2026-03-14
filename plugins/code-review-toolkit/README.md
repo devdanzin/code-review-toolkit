@@ -1,6 +1,6 @@
 # Code Review Toolkit
 
-A comprehensive collection of specialized agents for exploring and analyzing existing codebases. While [pr-review-toolkit](../pr-review-toolkit/) reviews changes in a PR, this toolkit answers a different question: **where are the problems in this codebase, and what should I fix first?**
+A comprehensive collection of specialized agents for exploring and analyzing existing codebases. While a PR review toolkit reviews changes in a PR, this toolkit answers a different question: **where are the problems in this codebase, and what should I fix first?**
 
 ## Overview
 
@@ -274,4 +274,4 @@ code-review-toolkit/
 
 ## Author
 
-Danzin — adapted from Daisy's [pr-review-toolkit](../pr-review-toolkit/)
+Danzin — adapted from Daisy's pr-review-toolkit

@@ -1,8 +1,6 @@
 """Tests for correlate_tests.py."""
 
-import json
 import unittest
-from pathlib import Path
 
 from helpers import TempProject, import_script
 
