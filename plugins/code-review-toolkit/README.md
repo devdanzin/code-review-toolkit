@@ -53,20 +53,14 @@ Copy the `plugins/code-review-toolkit/` directory to one of:
 
 ### Using without installing
 
-You can use the agents and commands without installing by referencing them directly. Clone the repo and tell Claude Code about the agents:
+Load the plugin for a single session using `--plugin-dir` — nothing is persisted:
 
 ```bash
 git clone https://github.com/devdanzin/code-review-toolkit.git
+claude --plugin-dir code-review-toolkit/plugins/code-review-toolkit
 ```
 
-Then in Claude Code, reference agents by path:
-
-```
-Read the agent at code-review-toolkit/plugins/code-review-toolkit/agents/architecture-mapper.md
-and use it to analyze this project
-```
-
-This is less convenient than installation (no slash commands, no automatic agent triggering) but useful for one-off analysis or evaluation.
+All slash commands and agents work for that session. Nothing is written to your Claude Code configuration.
 
 ### Prerequisites
 

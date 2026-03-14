@@ -35,17 +35,15 @@ claude plugin install code-review-toolkit --source github:devdanzin/code-review-
 
 ### Without installing (try it first)
 
-Clone the repo and point Claude Code at it manually — useful for trying the toolkit before committing to installation, or for development:
+Clone the repo and launch Claude Code with `--plugin-dir` — the plugin is loaded for that session only, nothing is installed:
 
 ```bash
 # Clone the repository
 git clone https://github.com/devdanzin/code-review-toolkit.git
 
-# In Claude Code, install from the local path
-/plugin install plugins/code-review-toolkit
+# Run Claude Code with the plugin loaded for this session
+claude --plugin-dir code-review-toolkit/plugins/code-review-toolkit
 ```
-
-Or simply copy the `plugins/code-review-toolkit/` directory into your project's `.claude/plugins/` directory.
 
 ## Quick Start
 
