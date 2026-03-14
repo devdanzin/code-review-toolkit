@@ -453,7 +453,6 @@ def main() -> None:
     all_functions.sort(key=lambda f: -f["score"])
 
     # Summary statistics.
-    scores = [f["score"] for f in all_functions]
     source_funcs = [f for f in all_functions if not f["is_test"]]
     test_funcs = [f for f in all_functions if f["is_test"]]
 

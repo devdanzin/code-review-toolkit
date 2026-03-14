@@ -2,7 +2,6 @@
 
 import unittest
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 
 from helpers import TempProject, import_script
 

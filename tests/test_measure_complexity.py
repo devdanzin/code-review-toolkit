@@ -1,7 +1,6 @@
 """Tests for measure_complexity.py."""
 
 import unittest
-from pathlib import Path
 
 from helpers import TempProject, import_script
 

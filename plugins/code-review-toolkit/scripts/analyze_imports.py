@@ -61,7 +61,6 @@ _STDLIB_TOP_LEVEL = frozenset({
     "zoneinfo", "_ast", "_collections_abc", "_compat_pickle", "_compression",
     "_markupbase", "_osx_support", "_pydecimal", "_pyio", "_sitebuiltins",
     "_strptime", "_threading_local", "_weakrefset", "antigravity", "this",
-    "typing_extensions",
 })
 
 
@@ -76,7 +75,7 @@ def _is_stdlib(top_level_name: str) -> bool:
 def discover_python_files(root: Path) -> list[Path]:
     """Find all .py files under *root*, excluding common non-source dirs."""
     exclude = {".git", ".tox", ".venv", "venv", "__pycache__", "node_modules",
-               ".eggs", "*.egg-info", "build", "dist"}
+               ".eggs", "build", "dist"}
     results: list[Path] = []
     if root.is_file():
         if root.suffix == ".py":

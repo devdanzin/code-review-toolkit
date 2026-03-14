@@ -10,7 +10,6 @@ Usage:
 
 import ast
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -199,16 +198,18 @@ def _match_test_to_source(
         # Direct stem match.
         if sf.stem == source_stem:
             matches.append(str(sf_rel))
+            continue
         # Also try matching subpackage structure.
-        # e.g. tests/benchmarks/test_runner.py → labeille/benchmarks/runner.py
-        elif sf.stem == source_stem:
-            test_parts = list(test_rel.parts[:-1])  # directory parts of test
-            source_parts = list(sf_rel.parts[:-1])
-            # Check if the non-test/tests parts match.
-            test_clean = [p for p in test_parts if p not in ("test", "tests")]
-            source_clean = [p for p in source_parts if p not in ("src",)]
-            if test_clean and source_clean and test_clean[-len(source_clean):] == source_clean[-len(test_clean):]:
-                matches.append(str(sf_rel))
+        # e.g. tests/benchmarks/test_runner.py → package/benchmarks/runner.py
+        test_parts = list(test_rel.parts[:-1])  # directory parts of test
+        source_parts = list(sf_rel.parts[:-1])
+        # Check if the non-test/tests parts match.
+        test_clean = [p for p in test_parts if p not in ("test", "tests")]
+        source_clean = [p for p in source_parts if p not in ("src",)]
+        if (sf.stem == source_stem
+                and test_clean and source_clean
+                and test_clean[-len(source_clean):] == source_clean[-len(test_clean):]):
+            matches.append(str(sf_rel))
 
     # Deduplicate preserving order.
     seen: set[str] = set()
