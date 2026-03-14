@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Marketplace file (`.claude-plugin/marketplace.json`) for plugin discovery and installation.
+- Installation instructions in both top-level README and plugin README (marketplace, direct, local, and manual methods).
+- Prerequisites section documenting Python 3.10+ and Git requirements.
 - Task-workflow skill for standardized development workflow (issue, branch, code, test, commit, PR, merge).
 - CHANGELOG.md to track all notable changes.
 - README.md with overview, quick start, and links to detailed plugin docs.
