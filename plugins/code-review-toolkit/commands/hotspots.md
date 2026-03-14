@@ -6,15 +6,15 @@ allowed-tools: ["Bash", "Glob", "Grep", "Read", "Task"]
 
 # Cleanup Hotspots
 
-Run the three agents most useful for planning cleanup work: complexity-simplifier, dead-code-finder, and tech-debt-inventory. Answers the question: "Where should I focus my cleanup efforts?"
+Run the four agents most useful for planning cleanup work: git-history-context (churn data), complexity-simplifier, dead-code-finder, and tech-debt-inventory. Answers the question: "Where should I focus my cleanup efforts?"
 
 **Scope:** "$ARGUMENTS" (default: entire project)
 
 ## Workflow
 
 1. Identify project root and confirm scope
-2. Run **architecture-mapper** first (provides context for complexity scoring)
-3. Run in parallel, feeding architecture output to each:
+2. Run **architecture-mapper** and **git-history-context** first (provide structural and temporal context)
+3. Run in parallel, feeding both context outputs to each:
    - **complexity-simplifier** — find the hardest-to-maintain code
    - **dead-code-finder** — find code to remove
    - **tech-debt-inventory** — find accumulated debt markers
@@ -31,6 +31,9 @@ Run the three agents most useful for planning cleanup work: complexity-simplifie
 
 ## Larger Refactors (> 4 hours)
 [Structural simplifications, major debt paydown]
+
+## Churn Hotspots (high modification frequency)
+[Files/functions that change frequently — these benefit most from simplification, better tests, and better documentation because every future modification is cheaper if the code is cleaner]
 ```
 
 ## Usage

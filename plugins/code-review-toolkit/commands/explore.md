@@ -6,7 +6,7 @@ allowed-tools: ["Bash", "Glob", "Grep", "Read", "Task"]
 
 # Comprehensive Codebase Exploration
 
-Run a comprehensive analysis of an existing codebase using multiple specialized agents, each focusing on a different aspect of code quality. The architecture-mapper always runs first, and its output is fed to subsequent agents as context.
+Run a comprehensive analysis of an existing codebase using multiple specialized agents, each focusing on a different aspect of code quality. Two foundational context providers run first — architecture-mapper (structural context) and git-history-context (temporal context) — and their output is fed to all subsequent agents.
 
 **Arguments:** "$ARGUMENTS"
 
@@ -33,6 +33,9 @@ Parse arguments into three categories:
 - `patterns` → pattern-consistency-checker
 - `api` → api-surface-reviewer
 - `project-docs` → project-docs-auditor
+- `history-context` → git-history-context
+- `history` → git-history-analyzer
+- `history-full` → both git-history-context AND git-history-analyzer
 - `all` → all agents (default)
 
 **Options**:
@@ -51,19 +54,26 @@ Before launching any agents:
 4. Determine project language(s) and framework(s)
 5. Print a brief project summary to confirm scope
 
-### Phase 1: Architecture Mapping (always runs first)
+### Phase 1: Foundational Context (always runs first)
 
-Launch the **architecture-mapper** agent with the specified scope.
+Launch both foundational context providers with the specified scope:
 
-This is the foundation — its output provides module boundaries, dependency relationships, and structural context that enriches every subsequent agent.
+**Group 0 — Foundational context (always runs first)**:
+0a. **architecture-mapper** (structural context) — module boundaries, dependency graph, layering
+0b. **git-history-context** (temporal context) — churn metrics, change velocity, co-change clusters
 
-Store the architecture-mapper output for injection into Phase 2 agents.
+Both are foundational — architecture-mapper provides structural context and git-history-context provides temporal context. Their output is fed to ALL subsequent agents.
+
+If `parallel` is specified, run both concurrently since they are independent.
+
+Store both outputs for injection into Phase 2 agents.
 
 ### Phase 2: Targeted Analysis
 
 Based on the requested aspects (default: all), launch the appropriate agents. Each agent receives:
 - The specified scope
-- The architecture-mapper output as additional context
+- The architecture-mapper output as structural context
+- The git-history-context output as temporal context
 - Any relevant CLAUDE.md content
 
 **Agent dispatch order** (sequential by default):
@@ -87,7 +97,10 @@ Based on the requested aspects (default: all), launch the appropriate agents. Ea
 **Group D — Inventory**:
 11. tech-debt-inventory
 
-If `parallel` is specified, run agents within each group concurrently. Groups still execute sequentially because later groups may benefit from earlier findings.
+**Group E — Temporal analysis (runs last)**:
+12. git-history-analyzer
+
+If `parallel` is specified, run agents within each group concurrently. Groups still execute sequentially because later groups may benefit from earlier findings. Group E runs last because it cross-references all other agents' output.
 
 ### Phase 3: Synthesis
 
@@ -134,6 +147,7 @@ Before writing the summary:
 [3-5 sentence overview of codebase health across all dimensions analyzed]
 
 ## Key Metrics
+- Change Velocity: [active/maintenance/low] — [fix:feature ratio]
 - Architecture: [healthy/concerning/problematic] — [1-line summary]
 - Consistency: [healthy/concerning/problematic] — [1-line summary]
 - Complexity: [N hotspots found, N critical]
@@ -145,6 +159,7 @@ Before writing the summary:
 - Dead Code: [N items identified]
 - Tech Debt: [N markers, age distribution summary]
 - API Surface: [learnability score X/10]
+- Fix Quality: [N fixes reviewed, N incomplete, N propagation gaps]
 
 ## Findings by Priority
 
@@ -173,6 +188,7 @@ Before writing the summary:
 ## Recommended Action Plan
 
 ### Immediate (this week)
+[Prioritize items from the git-history-analyzer risk matrix — highest risk items first]
 1. [FIX item]
 2. [FIX item]
 
@@ -218,9 +234,9 @@ Before writing the summary:
 # All agents, full detail, single file
 ```
 
-## How Architecture Context Flows
+## How Foundational Context Flows
 
-When the explore command passes architecture-mapper output to other agents, frame it as:
+When the explore command passes foundational context to other agents, frame it as:
 
 ```
 [Include architecture-mapper output]
@@ -230,6 +246,14 @@ The above is the architecture analysis of this project. Use it to:
 - Prioritize findings in high-traffic/high-fan-in modules
 - Identify when an issue is localized vs. cross-cutting
 - Calibrate severity based on where code sits in the dependency graph
+
+[Include git-history-context output]
+
+The above is the git history analysis of this project. Use it to:
+- Prioritize findings in high-churn code (recently volatile code is more likely to have bugs and more likely to be modified again)
+- Note when code you're flagging was recently changed (it may have been changed intentionally)
+- Pay extra attention to modules flagged as "volatile"
+- Consider co-change patterns when assessing coupling
 
 The project-docs-auditor also benefits from consistency-auditor output when checking whether CLAUDE.md conventions match actual code patterns. If running both, dispatch consistency-auditor (Group A) before project-docs-auditor (Group C) — this is already the case in the dispatch order.
 ```
