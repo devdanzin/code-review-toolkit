@@ -13,6 +13,69 @@ This plugin bundles 14 expert analysis agents and 4 commands. Each agent focuses
 - **Prioritized output**: Each agent caps its output to avoid overwhelming reports, ranking by severity and offering deeper analysis on request
 - **Python-calibrated**: All agents are tuned for Python idioms (gradual typing, unittest, dynamic dispatch, `__init__.py` conventions, etc.)
 
+## Installation
+
+### Marketplace install
+
+This is the recommended method. It registers the repository as a Claude Code marketplace so you can install and update the plugin through the built-in plugin manager.
+
+```bash
+# Add the marketplace (one-time)
+claude plugin marketplace add devdanzin/code-review-toolkit
+
+# Install the plugin
+claude plugin install code-review-toolkit@code-review-toolkit
+
+# Update when new versions are available
+claude plugin marketplace update
+/plugin  # Go to Updates tab
+```
+
+### Local install (for development or testing)
+
+```bash
+git clone https://github.com/devdanzin/code-review-toolkit.git
+cd code-review-toolkit
+```
+
+Then in Claude Code:
+
+```bash
+/plugin install plugins/code-review-toolkit
+```
+
+### Manual install
+
+Copy the `plugins/code-review-toolkit/` directory to one of:
+
+- **User scope** (available in all projects): `~/.claude/plugins/code-review-toolkit/`
+- **Project scope** (available in one project): `<project>/.claude/plugins/code-review-toolkit/`
+
+### Using without installing
+
+You can use the agents and commands without installing by referencing them directly. Clone the repo and tell Claude Code about the agents:
+
+```bash
+git clone https://github.com/devdanzin/code-review-toolkit.git
+```
+
+Then in Claude Code, reference agents by path:
+
+```
+Read the agent at code-review-toolkit/plugins/code-review-toolkit/agents/architecture-mapper.md
+and use it to analyze this project
+```
+
+This is less convenient than installation (no slash commands, no automatic agent triggering) but useful for one-off analysis or evaluation.
+
+### Prerequisites
+
+- **Claude Code**: The plugin requires Claude Code to be installed and running.
+- **Python 3.10+**: The analysis scripts use AST features and type syntax from Python 3.10+.
+- **Git**: Required for the git-history-context and git-history-analyzer agents, and for tech-debt-inventory's age analysis.
+
+No third-party Python packages are required — all scripts use only the standard library.
+
 ## Commands
 
 ### `/code-review-toolkit:explore [scope] [aspects] [options]`
@@ -186,25 +249,33 @@ code-review-toolkit/
 │   └── plugin.json
 ├── README.md
 ├── agents/
-│   ├── architecture-mapper.md
-│   ├── consistency-auditor.md
-│   ├── complexity-simplifier.md
-│   ├── test-coverage-analyzer.md
-│   ├── pattern-consistency-checker.md
-│   ├── silent-failure-hunter.md
-│   ├── documentation-auditor.md
-│   ├── type-design-analyzer.md
-│   ├── dead-code-finder.md
-│   ├── tech-debt-inventory.md
 │   ├── api-surface-reviewer.md
-│   ├── project-docs-auditor.md
+│   ├── architecture-mapper.md
+│   ├── complexity-simplifier.md
+│   ├── consistency-auditor.md
+│   ├── dead-code-finder.md
+│   ├── documentation-auditor.md
+│   ├── git-history-analyzer.md
 │   ├── git-history-context.md
-│   └── git-history-analyzer.md
-└── commands/
-    ├── explore.md
-    ├── map.md
-    ├── hotspots.md
-    └── health.md
+│   ├── pattern-consistency-checker.md
+│   ├── project-docs-auditor.md
+│   ├── silent-failure-hunter.md
+│   ├── tech-debt-inventory.md
+│   ├── test-coverage-analyzer.md
+│   └── type-design-analyzer.md
+├── commands/
+│   ├── explore.md
+│   ├── health.md
+│   ├── hotspots.md
+│   └── map.md
+└── scripts/
+    ├── analyze_history.py
+    ├── analyze_imports.py
+    ├── collect_debt.py
+    ├── correlate_tests.py
+    ├── count_types.py
+    ├── find_dead_symbols.py
+    └── measure_complexity.py
 ```
 
 ## Author
