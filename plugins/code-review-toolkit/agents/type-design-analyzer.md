@@ -32,6 +32,50 @@ Key fields:
 - `unannotated_public_functions`: priority annotation targets (up to 50)
 - `files[]`: per-file details including per-function annotation status and class attribute analysis
 
+## External Tool Integration
+
+If external tool output is available (from `run_external_tools.py`), incorporate mypy's type error findings.
+
+### Mypy Type Errors
+
+mypy findings are in the `mypy.findings` array, each with a `code`, `severity`, `file`, `line`, and `message`.
+
+These are actual type errors — places where the type checker determined that the code's type annotations are incorrect or inconsistent with usage. This is a fundamentally different signal from count_types.py (which measures coverage) and your qualitative analysis (which assesses design).
+
+**Integration approach**:
+
+1. **Type errors validate your design assessment**: If your qualitative analysis rated a type's Invariant Enforcement at 8/10 but mypy found 3 type errors in its constructor, the enforcement is weaker than it appeared. Adjust your rating.
+
+2. **Type errors reveal annotation accuracy**: Your coverage analysis from count_types.py counts how many functions are annotated. mypy reveals how many of those annotations are *correct*. A function with 100% annotation coverage that has type errors is worse than an unannotated function.
+
+3. **Severity mapping**:
+   - mypy `error` → classify as FIX (actual type error)
+   - mypy `warning` → classify as CONSIDER
+   - mypy `note` → typically informational, classify as ACCEPTABLE
+
+4. **Config awareness**: Check `mypy.config_source` in the tool output. If the project has its own mypy config (`"project"`), these are errors the project cares about. If we used curated defaults (`"curated"`), some errors may be stricter than the project intends — classify those as CONSIDER rather than FIX.
+
+**Add to output format**: After the existing "Anti-Patterns Found" section, add:
+
+```
+## Type Errors (from mypy)
+
+[Only present when mypy output is available]
+
+### Errors (FIX)
+- file:line — [error code]: [message]
+
+### Warnings (CONSIDER)
+- file:line — [warning code]: [message]
+
+### Summary
+- Total type errors: N
+- Config used: [project / curated]
+- Annotation accuracy: [N functions annotated, M with type errors]
+```
+
+If external tool output is not available, proceed with your standard analysis unchanged. Do not suggest the user install specific tools unless they explicitly ask about improving analysis depth.
+
 ## Analysis Framework
 
 ### 1. Type Hint Coverage

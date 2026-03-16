@@ -29,6 +29,31 @@ Key fields:
 - Per-function `metrics`: `line_count`, `nesting_depth`, `parameter_count`, `branch_count`, `loop_count`, `return_count`, `local_variable_count`, `cognitive_complexity`
 - Per-function `score`: pre-computed 1-10 complexity rating
 
+## External Tool Integration
+
+If external tool output is available (from `run_external_tools.py`), use ruff's simplification findings as concrete targets for your analysis.
+
+### Ruff Simplification Findings
+
+Filter the ruff output for `category: "simplification"` and `category: "performance"` findings:
+
+- **`SIM` rules**: Collapsible if statements, reimplemented builtins, yoda conditions, if-else-block-instead-of-dict-lookup, unnecessary else after return. These are concrete, specific simplification opportunities with exact line numbers.
+- **`RET` rules**: Unnecessary else/elif after return, superfluous variable assignment before return. These feed directly into the "Flatten Nesting" and "Simplify Conditionals" strategies.
+- **`PERF` rules**: Unnecessary list() in iteration, try-except in loop body, dict.items() when only keys/values needed. These are performance-related simplifications.
+
+**How to use**: Treat ruff findings as STARTING POINTS for your analysis, not conclusions. For each ruff simplification finding:
+
+1. Read the flagged code in context
+2. Assess whether the simplification actually improves readability (ruff doesn't consider context — a SIM rule may fire on code where the current form is more readable)
+3. If the simplification improves readability → include in your output, noting ruff as the source
+4. If the simplification would hurt readability → classify as ACCEPTABLE with a note: "Ruff suggests X but the current form is more readable because Y"
+
+This is especially important for `SIM` rules, which can recommend changes that are technically simpler but less clear (e.g., replacing an explicit if/else with a ternary).
+
+**Auto-fixable findings** (significance: "reduced"): Many SIM and RET findings are auto-fixable. These are typically the simplest mechanical transformations. Include them but don't let them dominate your recommendations — focus your output on the harder, judgment-requiring simplifications where you add value beyond what ruff can do alone.
+
+If external tool output is not available, proceed with your standard analysis unchanged. Do not suggest the user install specific tools unless they explicitly ask about improving analysis depth.
+
 ## Analysis Strategy
 
 ### Step 1: Review Complexity Data

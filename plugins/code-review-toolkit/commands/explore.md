@@ -43,6 +43,11 @@ Parse arguments into three categories:
 - `summary` → summary tier only (faster)
 - `parallel` → run agents concurrently where possible
 
+**Tool options** (passed to run_external_tools.py):
+- `--skip-tools` → skip external tool analysis entirely
+- `--skip-tools TOOL[,TOOL]` → skip specific external tools
+- `--tools TOOL[,TOOL]` → run only specific external tools
+
 ## Execution Workflow
 
 ### Phase 0: Project Discovery
@@ -53,6 +58,30 @@ Before launching any agents:
 3. Check for CLAUDE.md or equivalent project documentation
 4. Determine project language(s) and framework(s)
 5. Print a brief project summary to confirm scope
+
+### Phase 0.5: External Tool Analysis (optional)
+
+If external analysis tools are available on the system, run them to gather additional data for subsequent agents:
+
+```bash
+python <plugin_root>/scripts/run_external_tools.py [scope]
+```
+
+This phase is OPTIONAL — if no external tools are installed, skip it silently. Do not warn the user about missing tools unless they specifically request external tool analysis.
+
+Pass the output to relevant agents in Phases 1-3:
+- ruff `dead-code` findings → dead-code-finder
+- ruff `bug-risk` + `security` findings → silent-failure-hunter
+- ruff `simplification` + `performance` findings → complexity-simplifier
+- ruff `deprecated` findings → tech-debt-inventory
+- mypy findings → type-design-analyzer
+- coverage data → test-coverage-analyzer
+- vulture findings → dead-code-finder
+
+If the output includes `configured_but_not_installed` entries, mention them once in the Phase 0 Project Discovery summary:
+"Note: This project is configured for [ruff, mypy] but these tools are not installed. Install them for deeper analysis."
+
+If `--skip-tools` is specified with no arguments, skip this phase entirely. If `--skip-tools TOOL` or `--tools TOOL` is specified, pass the corresponding `--skip` or `--tools` flag to `run_external_tools.py`.
 
 ### Phase 1: Foundational Context (always runs first)
 
@@ -132,6 +161,11 @@ Before writing the summary:
    ```
 
 3. **Attribute to the most specific agent**: When a finding appears in both a general agent and a specialized agent, attribute it to the specialized agent in the summary.
+
+4. **External tool findings**: When merging findings from external tools with agent findings:
+   - Findings sourced from external tools should note their source (e.g., "Source: ruff F821")
+   - When an external tool and an agent's script flag the same issue, merge into one finding noting both sources
+   - Auto-fixable findings (significance: "reduced") should appear in the summary but not dominate the action plan — prioritize findings that require human judgment
 
 #### Summary Template
 

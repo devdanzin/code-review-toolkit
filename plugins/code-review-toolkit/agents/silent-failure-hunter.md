@@ -13,6 +13,28 @@ Silent failures are insidious because they don't crash — they just produce wro
 
 Analyze the scope provided. Default: the entire project. You may receive architecture-mapper output — use it to prioritize error handling in critical modules (high fan-in, core functionality) over leaf modules.
 
+## External Tool Integration
+
+If external tool output is available (from `run_external_tools.py`), incorporate error-handling and bug-risk findings from ruff.
+
+### Ruff Bug-Risk Findings
+
+Filter the ruff output for `category: "bug-risk"` and `category: "security"` findings:
+
+- **`F821`** (undefined name): A variable or function used but never defined — potential runtime NameError. These are high-confidence bug risks. Classify as FIX.
+- **`F811`** (redefined unused): A name is defined twice and the first definition is never used — possible logic error where the wrong variable is being checked. Classify as CONSIDER.
+- **`B006`** (mutable default argument): `def f(x=[])` — a classic Python bug where the default list is shared across calls. Classify as FIX.
+- **`B007`** (unused loop variable): Loop variable never used in the body — may indicate a logic error. Classify as CONSIDER.
+- **`B017`** (assertRaises with no match): `assertRaises(Exception)` is too broad for tests. Classify as CONSIDER.
+- **`B025`** (try-except-pass): Empty except block — directly relevant to this agent's core mission. Classify as FIX.
+- **`S` rules** (security): Hardcoded passwords, insecure hashing, SQL injection patterns. Classify as FIX for high-confidence rules (S101, S105, S106), CONSIDER for others.
+
+**Auto-fixable findings** (significance: "reduced"): Most B and S rules are NOT auto-fixable, so significance is usually "normal". When it is "reduced", still report the finding but note it's a simpler issue.
+
+Integrate these findings into your systematic traversal — they supplement your manual analysis of try/except blocks and error handling patterns. Ruff catches patterns you might miss when scanning the entire codebase, especially mutable defaults and bare excepts in code you haven't read closely.
+
+If external tool output is not available, proceed with your standard analysis unchanged. Do not suggest the user install specific tools unless they explicitly ask about improving analysis depth.
+
 ## Systematic Traversal Strategy
 
 ### Step 1: Find All Error Handling Sites

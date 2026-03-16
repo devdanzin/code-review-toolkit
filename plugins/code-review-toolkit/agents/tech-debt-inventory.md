@@ -30,6 +30,33 @@ Key fields:
 - `summary.by_age`: counts per age bucket (fresh/growing/stale/ancient/unknown)
 - `summary.top_files`: files with the most debt markers
 
+## External Tool Integration
+
+If external tool output is available (from `run_external_tools.py`), incorporate deprecated-pattern findings from ruff.
+
+### Ruff Deprecated-Pattern Findings
+
+Filter the ruff output for `category: "deprecated"` findings:
+
+- **`UP` rules**: Outdated syntax for the project's minimum Python version — old-style string formatting, deprecated typing imports, unnecessary encoding arguments, legacy super() calls, etc.
+
+These are a specific category of tech debt: the codebase uses older Python syntax when a modern equivalent exists for its minimum supported version.
+
+Add these to the **Implicit Debt** section of your inventory under a new sub-category:
+
+```
+### Deprecated Syntax (from ruff UP rules)
+- N findings across M files
+- Most common: [list top 3 rules by count]
+- Example: UP007 — Use `X | Y` instead of `Union[X, Y]` (N occurrences)
+```
+
+**Classification**: Most UP findings are CONSIDER — they're real debt but typically low-impact. Flag them as FIX only if the deprecated syntax causes actual problems (e.g., incompatibility with the minimum Python version declared in pyproject.toml).
+
+**Auto-fixable findings** (significance: "reduced"): Most UP rules are auto-fixable. Note this in the inventory — these are quick wins that can be batch-fixed with `ruff --fix`.
+
+If external tool output is not available, proceed with your standard analysis unchanged. Do not suggest the user install specific tools unless they explicitly ask about improving analysis depth.
+
 ## What to Catalog
 
 ### Explicit Debt Markers
