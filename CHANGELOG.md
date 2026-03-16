@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Enhanced
+
+- Memory reduction: all 7 file-processing scripts now accept `--max-files N` to cap file processing (default: unlimited).
+- Memory reduction: `discover_python_files` converted to generators across 6 scripts.
+- Memory reduction: `analyze_history.py` streams git log output instead of buffering.
+- Memory reduction: `analyze_history.py` uses `-U0` diffs for function churn (zero context lines).
+- Memory reduction: `analyze_imports.py` prunes intermediate fields after graph building.
+- Memory reduction: `find_dead_symbols.py` drops per-file referenced_names after global accumulation.
+- Memory reduction: `run_external_tools.py` early-stops parsing at max_findings limit.
+- Memory reduction: explore/health/hotspots commands default to max 2 concurrent agents.
+- Memory reduction: git-history-analyzer reuses git-history-context output instead of re-running script.
+
 ## [1.2.0] - 2026-03-16
 
 ### Enhanced

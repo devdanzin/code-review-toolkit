@@ -863,5 +863,47 @@ class TestBuildSkippedReport(unittest.TestCase):
         self.assertEqual(reasons["coverage"], "not installed")
 
 
+class TestEarlyStopParsing(unittest.TestCase):
+    """Test early-stop parsing at max_findings limit."""
+
+    def test_mypy_early_stop(self):
+        lines = "\n".join(
+            [f"a.py:{i}: error: Bad [misc]" for i in range(100)]
+        )
+        findings = mod.parse_mypy_output(lines, max_findings=5)
+        self.assertEqual(len(findings), 5)
+
+    def test_mypy_no_limit(self):
+        lines = "\n".join(
+            [f"a.py:{i}: error: Bad [misc]" for i in range(10)]
+        )
+        findings = mod.parse_mypy_output(lines, max_findings=0)
+        self.assertEqual(len(findings), 10)
+
+    def test_vulture_early_stop(self):
+        lines = "\n".join(
+            [
+                f"a.py:{i}: unused function 'f{i}' (90% confidence)"
+                for i in range(100)
+            ]
+        )
+        findings = mod.parse_vulture_output(
+            lines, Path("/project"), max_findings=5,
+        )
+        self.assertEqual(len(findings), 5)
+
+    def test_vulture_no_limit(self):
+        lines = "\n".join(
+            [
+                f"a.py:{i}: unused function 'f{i}' (90% confidence)"
+                for i in range(10)
+            ]
+        )
+        findings = mod.parse_vulture_output(
+            lines, Path("/project"), max_findings=0,
+        )
+        self.assertEqual(len(findings), 10)
+
+
 if __name__ == "__main__":
     unittest.main()

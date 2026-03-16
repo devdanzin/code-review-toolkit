@@ -23,6 +23,7 @@ import subprocess
 import sys
 import time
 from collections import defaultdict
+from collections.abc import Iterable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -89,6 +90,19 @@ def _run_git(
     )
 
 
+def _run_git_streaming(
+    args: list[str], cwd: Path,
+) -> subprocess.Popen[str]:
+    """Run a git command with streaming stdout."""
+    return subprocess.Popen(
+        ["git"] + args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        cwd=str(cwd),
+    )
+
+
 def _is_git_repo(path: Path) -> bool:
     """Check if path is inside a git repository."""
     try:
@@ -104,38 +118,22 @@ def _check_script_timeout() -> bool:
 
 
 def parse_git_log(
-    project_root: Path,
-    scan_root: Path,
-    since: str,
-    until: str,
+    lines: Iterable[str],
     max_commits: int,
-    last_n: int | None = None,
+    project_root: Path | None = None,
 ) -> tuple[list[dict], list[dict]]:
-    """Parse git log with numstat to get commits and per-file stats.
+    """Parse git log with numstat from an iterable of lines.
 
     Returns (commits, file_stats) where commits is a list of commit dicts
     and file_stats is accumulated per-file change data.
     """
-    args = ["log", "--numstat", "--format=COMMIT:%H|%aI|%an|%s"]
-    if last_n is not None:
-        args.append(f"-{last_n}")
-    else:
-        args.extend([f"--since={since}", f"--until={until}"])
-    args.append("--")
-    rel = _relative_scope(scan_root, project_root)
-    if rel != ".":
-        args.append(rel)
-
-    result = _run_git(args, project_root)
-    if result.returncode != 0:
-        return [], []
-
     commits: list[dict] = []
     file_changes: dict[str, dict] = {}
     current_commit: dict | None = None
     commit_count = 0
 
-    for line in result.stdout.splitlines():
+    for line in lines:
+        line = line.rstrip("\n")
         if line.startswith("COMMIT:"):
             if current_commit is not None:
                 commits.append(current_commit)
@@ -197,7 +195,10 @@ def parse_git_log(
     # Build file_stats list.
     file_stats: list[dict] = []
     for filepath, fc in file_changes.items():
-        line_count = _get_file_line_count(project_root / filepath)
+        if project_root is not None:
+            line_count = _get_file_line_count(project_root / filepath)
+        else:
+            line_count = 0
         churn_rate = (
             round((fc["lines_added"] + fc["lines_removed"]) / line_count, 2)
             if line_count > 0
@@ -260,6 +261,7 @@ def compute_function_churn_level2(
     commits: list[dict],
     scan_root: Path,
     project_root: Path,
+    max_files: int = 0,
 ) -> list[dict]:
     """Level 2: Map diff hunks to function boundaries using AST.
 
@@ -274,6 +276,7 @@ def compute_function_churn_level2(
 
     exclude = {".git", ".tox", ".venv", "venv", "__pycache__",
                "node_modules", ".eggs", "build", "dist"}
+    filtered_py: list[Path] = []
     for pf in py_files:
         try:
             rel_parts = set(pf.relative_to(project_root).parts)
@@ -281,8 +284,17 @@ def compute_function_churn_level2(
             continue
         if rel_parts & exclude:
             continue
-        if any(part.endswith(".egg-info") for part in pf.relative_to(project_root).parts):
+        if any(
+            part.endswith(".egg-info")
+            for part in pf.relative_to(project_root).parts
+        ):
             continue
+        filtered_py.append(pf)
+
+    if max_files > 0 and len(filtered_py) > max_files:
+        filtered_py = filtered_py[:max_files]
+
+    for pf in filtered_py:
         rel_path = str(pf.relative_to(project_root))
         boundaries = get_function_boundaries(pf)
         if boundaries:
@@ -478,6 +490,7 @@ def parse_args(argv: list[str]) -> dict:
         "until": None,
         "last": None,
         "max_commits": 2000,
+        "max_files": 0,
         "no_function": False,
     }
 
@@ -512,6 +525,17 @@ def parse_args(argv: list[str]) -> dict:
             except ValueError:
                 print(
                     f"Error: --max-commits requires an integer, got '{argv[i + 1]}'",
+                    file=sys.stderr,
+                )
+                sys.exit(2)
+            i += 2
+        elif arg == "--max-files" and i + 1 < len(argv):
+            try:
+                args["max_files"] = int(argv[i + 1])
+            except ValueError:
+                print(
+                    f"Error: --max-files requires an integer, "
+                    f"got '{argv[i + 1]}'",
                     file=sys.stderr,
                 )
                 sys.exit(2)
@@ -556,9 +580,23 @@ def analyze(argv: list[str] | None = None) -> dict:
     max_commits = args["max_commits"]
 
     # Parse git log.
+    git_args = [
+        "log", "--numstat", "--format=COMMIT:%H|%aI|%an|%s",
+    ]
+    if last_n is not None:
+        git_args.append(f"-{last_n}")
+    else:
+        git_args.extend([f"--since={since}", f"--until={until}"])
+    git_args.append("--")
+    rel_scope = _relative_scope(scan_root, project_root)
+    if rel_scope != ".":
+        git_args.append(rel_scope)
+
+    proc = _run_git_streaming(git_args, project_root)
     commits, file_churn = parse_git_log(
-        project_root, scan_root, since, until, max_commits, last_n
+        proc.stdout, max_commits, project_root,
     )
+    proc.wait()
 
     # If using --last, derive time range from actual commits.
     commit_cap_applied = len(commits) >= max_commits
@@ -592,7 +630,8 @@ def analyze(argv: list[str] | None = None) -> dict:
     else:
         # Count total functions to decide strategy.
         function_churn = compute_function_churn_level2(
-            commits, scan_root, project_root
+            commits, scan_root, project_root,
+            max_files=args["max_files"],
         )
         if _check_script_timeout():
             function_churn_note = (

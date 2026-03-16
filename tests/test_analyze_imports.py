@@ -1,5 +1,6 @@
 """Tests for analyze_imports.py."""
 
+import json
 import unittest
 from pathlib import Path
 
@@ -261,9 +262,12 @@ class TestEndToEnd(unittest.TestCase):
                 "        self.assertIsNotNone(main())\n"
             ),
         }) as root:
-            files = mod.discover_python_files(root)
+            files = sorted(mod.discover_python_files(root))
             project_packages = mod.identify_project_packages(root)
-            analyses = [mod.analyze_file(f, root, project_packages) for f in files]
+            analyses = [
+                mod.analyze_file(f, root, project_packages)
+                for f in files
+            ]
 
             self.assertEqual(len(analyses), 4)
 
@@ -279,6 +283,35 @@ class TestEndToEnd(unittest.TestCase):
             # No cycles in this project.
             cycles = mod.detect_cycles(graph)
             self.assertEqual(len(cycles), 0)
+
+
+class TestMaxFiles(unittest.TestCase):
+    """Test --max-files caps file processing."""
+
+    def test_max_files_caps_output(self):
+        files = {
+            f"pkg/mod{i}.py": f"x{i} = {i}\n" for i in range(10)
+        }
+        files["pkg/__init__.py"] = ""
+        with TempProject(files) as root:
+            import io
+            import sys
+            old_stdout = sys.stdout
+            sys.stdout = io.StringIO()
+            old_argv = sys.argv
+            sys.argv = [
+                "analyze_imports.py", str(root),
+                "--max-files", "3",
+            ]
+            try:
+                mod.main()
+                output = json.loads(sys.stdout.getvalue())
+            finally:
+                sys.stdout = old_stdout
+                sys.argv = old_argv
+            self.assertEqual(output["files_analyzed"], 3)
+            self.assertTrue(output["files_capped"])
+            self.assertGreater(output["files_total"], 3)
 
 
 if __name__ == "__main__":

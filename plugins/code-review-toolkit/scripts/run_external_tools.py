@@ -406,7 +406,9 @@ def parse_mypy_text_line(line: str) -> dict | None:
     }
 
 
-def parse_mypy_output(stdout: str) -> list[dict]:
+def parse_mypy_output(
+    stdout: str, max_findings: int = 0,
+) -> list[dict]:
     """Parse mypy output, trying JSON first then text fallback."""
     findings: list[dict] = []
     for line in stdout.strip().splitlines():
@@ -419,6 +421,8 @@ def parse_mypy_output(stdout: str) -> list[dict]:
             parsed = parse_mypy_text_line(line)
             if parsed:
                 findings.append(parsed)
+        if max_findings > 0 and len(findings) >= max_findings:
+            break
     return findings
 
 
@@ -458,7 +462,9 @@ def run_mypy(
         timeout=_TOOL_TIMEOUTS["mypy"],
     )
 
-    findings = parse_mypy_output(result.stdout)
+    findings = parse_mypy_output(
+        result.stdout, max_findings=args.max_findings,
+    )
 
     normalized = [
         normalize_mypy_finding(f, project_root)
@@ -483,7 +489,11 @@ _VULTURE_RE = re.compile(
 )
 
 
-def parse_vulture_output(stdout: str, project_root: Path) -> list[dict]:
+def parse_vulture_output(
+    stdout: str,
+    project_root: Path,
+    max_findings: int = 0,
+) -> list[dict]:
     """Parse vulture's text output into normalized findings."""
     findings: list[dict] = []
     for line in stdout.strip().splitlines():
@@ -499,6 +509,8 @@ def parse_vulture_output(stdout: str, project_root: Path) -> list[dict]:
                 "fixable": False,
                 "significance": "normal",
             })
+            if max_findings > 0 and len(findings) >= max_findings:
+                break
     return findings
 
 
@@ -519,7 +531,10 @@ def run_vulture(
         timeout=_TOOL_TIMEOUTS["vulture"],
     )
 
-    findings = parse_vulture_output(result.stdout, project_root)
+    findings = parse_vulture_output(
+        result.stdout, project_root,
+        max_findings=args.max_findings,
+    )
     normalized = findings[:args.max_findings]
 
     return {

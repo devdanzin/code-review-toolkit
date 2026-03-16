@@ -12,6 +12,7 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Generator
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,20 +36,24 @@ _SKIP_PATTERN = re.compile(
 )
 
 
-def discover_python_files(root: Path) -> list[Path]:
-    exclude = {".git", ".tox", ".venv", "venv", "__pycache__", "node_modules",
-               ".eggs", "build", "dist"}
-    results: list[Path] = []
+def discover_python_files(root: Path) -> Generator[Path, None, None]:
+    """Yield .py files under *root*, excluding common non-source dirs."""
+    exclude = {".git", ".tox", ".venv", "venv", "__pycache__",
+               "node_modules", ".eggs", "build", "dist"}
     if root.is_file():
-        return [root] if root.suffix == ".py" else []
+        if root.suffix == ".py":
+            yield root
+        return
     for p in sorted(root.rglob("*.py")):
         parts = set(p.relative_to(root).parts)
         if parts & exclude:
             continue
-        if any(part.endswith(".egg-info") for part in p.relative_to(root).parts):
+        if any(
+            part.endswith(".egg-info")
+            for part in p.relative_to(root).parts
+        ):
             continue
-        results.append(p)
-    return results
+        yield p
 
 
 def find_project_root(start: Path) -> Path:
@@ -186,16 +191,32 @@ def scan_file(
 
 
 def main() -> None:
-    target = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
+    max_files = 0  # 0 = no limit
+    positional: list[str] = []
+    argv = sys.argv[1:]
+    i = 0
+    while i < len(argv):
+        if argv[i] == "--max-files" and i + 1 < len(argv):
+            max_files = int(argv[i + 1])
+            i += 2
+        elif argv[i].startswith("--"):
+            i += 1
+        else:
+            positional.append(argv[i])
+            i += 1
+    target = Path(positional[0]) if positional else Path(".")
     target = target.resolve()
 
     project_root = find_project_root(target)
     scan_root = target if target.is_dir() else project_root
-    files = discover_python_files(scan_root)
+    all_files = sorted(discover_python_files(scan_root))
+    files_total = len(all_files)
+    if max_files > 0 and files_total > max_files:
+        all_files = all_files[:max_files]
     use_git = _has_git(project_root)
 
     all_items: list[dict] = []
-    for f in files:
+    for f in all_files:
         all_items.extend(scan_file(f, project_root, use_git))
 
     # Aggregate stats.
@@ -215,6 +236,9 @@ def main() -> None:
     output = {
         "project_root": str(project_root),
         "scan_root": str(scan_root),
+        "files_total": files_total,
+        "files_analyzed": len(all_files),
+        "files_capped": max_files > 0 and files_total > max_files,
         "git_available": use_git,
         "summary": {
             "total_markers": len(all_items),

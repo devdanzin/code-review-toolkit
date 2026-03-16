@@ -14,7 +14,7 @@ Run all agents in summary mode to produce a quick health dashboard. Each agent r
 
 1. Identify project root and confirm scope
 2. Run **architecture-mapper** and **git-history-context** (produce structural and temporal context for all other agents)
-3. Run all remaining agents with both context outputs, requesting summary-tier output only
+3. Run all remaining agents with both context outputs, requesting summary-tier output only. When dispatching agents, run at most 2 concurrently to limit memory usage.
 4. Deduplicate before scoring: when the same issue is flagged by multiple agents, count it once. Do not let duplicate findings inflate the problem count.
 5. Synthesize into a health dashboard:
 

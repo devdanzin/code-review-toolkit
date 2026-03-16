@@ -18,6 +18,13 @@ This agent needs:
 
 If these aren't available, note reduced analysis depth and focus on capabilities that only need git history.
 
+### Reusing Existing Data
+
+If git-history-context output is already available (e.g., from Phase 1
+of explore), use that data directly — do NOT re-run
+`analyze_history.py`. The script output is identical. Only run the
+script yourself if git-history-context output was not provided.
+
 ## Scope
 
 Analyze the scope provided. Default: the entire project.

@@ -18,26 +18,28 @@ Usage:
 import ast
 import json
 import sys
+from collections.abc import Generator
 from pathlib import Path
 
 
-def discover_python_files(root: Path) -> list[Path]:
-    """Find all .py files under *root*, excluding common non-source dirs."""
-    exclude = {".git", ".tox", ".venv", "venv", "__pycache__", "node_modules",
-               ".eggs", "build", "dist"}
-    results: list[Path] = []
+def discover_python_files(root: Path) -> Generator[Path, None, None]:
+    """Yield .py files under *root*, excluding common non-source dirs."""
+    exclude = {".git", ".tox", ".venv", "venv", "__pycache__",
+               "node_modules", ".eggs", "build", "dist"}
     if root.is_file():
         if root.suffix == ".py":
-            return [root]
-        return []
+            yield root
+        return
     for p in sorted(root.rglob("*.py")):
         parts = set(p.relative_to(root).parts)
         if parts & exclude:
             continue
-        if any(part.endswith(".egg-info") for part in p.relative_to(root).parts):
+        if any(
+            part.endswith(".egg-info")
+            for part in p.relative_to(root).parts
+        ):
             continue
-        results.append(p)
-    return results
+        yield p
 
 
 def find_project_root(start: Path) -> Path:
@@ -435,14 +437,30 @@ def analyze_file(filepath: Path, project_root: Path) -> dict:
 
 
 def main() -> None:
-    target = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
+    max_files = 0  # 0 = no limit
+    positional: list[str] = []
+    argv = sys.argv[1:]
+    i = 0
+    while i < len(argv):
+        if argv[i] == "--max-files" and i + 1 < len(argv):
+            max_files = int(argv[i + 1])
+            i += 2
+        elif argv[i].startswith("--"):
+            i += 1
+        else:
+            positional.append(argv[i])
+            i += 1
+    target = Path(positional[0]) if positional else Path(".")
     target = target.resolve()
 
     project_root = find_project_root(target)
     scan_root = target if target.is_dir() else project_root
-    files = discover_python_files(scan_root)
+    all_files = sorted(discover_python_files(scan_root))
+    files_total = len(all_files)
+    if max_files > 0 and files_total > max_files:
+        all_files = all_files[:max_files]
 
-    file_analyses = [analyze_file(f, project_root) for f in files]
+    file_analyses = [analyze_file(f, project_root) for f in all_files]
 
     # Collect all functions and rank by score.
     all_functions = []
@@ -461,19 +479,31 @@ def main() -> None:
     output = {
         "project_root": str(project_root),
         "scan_root": str(scan_root),
+        "files_total": files_total,
+        "files_analyzed": len(all_files),
+        "files_capped": max_files > 0 and files_total > max_files,
         "summary": {
             "total_functions": len(all_functions),
             "source_functions": len(source_funcs),
             "test_functions": len(test_funcs),
             "hotspots_score_5_plus": len(hotspots),
-            "hotspots_score_8_plus": len([f for f in hotspots if f["score"] >= 8.0]),
+            "hotspots_score_8_plus": len(
+                [f for f in hotspots if f["score"] >= 8.0]
+            ),
             "avg_score_source": (
-                round(sum(f["score"] for f in source_funcs) / len(source_funcs), 1)
+                round(
+                    sum(f["score"] for f in source_funcs)
+                    / len(source_funcs),
+                    1,
+                )
                 if source_funcs else 0
             ),
             "avg_cognitive_complexity_source": (
                 round(
-                    sum(f["metrics"]["cognitive_complexity"] for f in source_funcs)
+                    sum(
+                        f["metrics"]["cognitive_complexity"]
+                        for f in source_funcs
+                    )
                     / len(source_funcs),
                     1,
                 )

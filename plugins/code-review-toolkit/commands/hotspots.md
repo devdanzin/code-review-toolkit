@@ -14,7 +14,7 @@ Run the four agents most useful for planning cleanup work: git-history-context (
 
 1. Identify project root and confirm scope
 2. Run **architecture-mapper** and **git-history-context** first (provide structural and temporal context)
-3. Run in parallel, feeding both context outputs to each:
+3. Run with at most 2 agents in parallel to limit memory usage, feeding both context outputs to each:
    - **complexity-simplifier** — find the hardest-to-maintain code
    - **dead-code-finder** — find code to remove
    - **tech-debt-inventory** — find accumulated debt markers
