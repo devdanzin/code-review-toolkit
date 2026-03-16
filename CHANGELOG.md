@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-03-16
+
+### Enhanced
+
+- External tool integration: 6 agents now incorporate findings from ruff, mypy, vulture, and coverage.py artifacts when available. Tools are optional — all agents work fully without them.
+- explore command: Phase 0.5 runs external tools when available, with --skip-tools and --tools flags for control.
+- dead-code-finder: merges ruff F401/F811/F841 and vulture findings with script output, deduplicating overlaps.
+- silent-failure-hunter: incorporates ruff B (bugbear) and S (security) findings as additional bug-risk signals.
+- complexity-simplifier: uses ruff SIM/RET/PERF findings as concrete simplification targets, with readability override.
+- tech-debt-inventory: adds ruff UP (pyupgrade) deprecated-syntax findings to debt inventory.
+- type-design-analyzer: incorporates mypy type errors to validate annotation accuracy and type design ratings.
+- test-coverage-analyzer: uses coverage.py artifacts (XML/JSON) for precise line-level coverage when available, with freshness assessment.
+
 ## [1.1.0] - 2026-03-16
 
 ### Added

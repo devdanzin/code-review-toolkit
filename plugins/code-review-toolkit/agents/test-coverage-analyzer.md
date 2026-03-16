@@ -29,6 +29,56 @@ Key fields:
 - `summary`: aggregate statistics (source files, test files, coverage percentage, total test methods, skipped tests)
 - `test_details`: per-test-file class/method inventory including `skipped_methods`
 
+## External Tool Integration
+
+If external tool output includes coverage data, use it to supplement the structural analysis from correlate_tests.py with actual line-level coverage information.
+
+### Coverage Data
+
+Check the external tool output for a `coverage` section. If present, it contains per-file coverage data: statement counts, covered lines, missing lines, and coverage percentages.
+
+**Freshness**: Check `coverage.freshness.status`:
+- `"fresh"` — Data is newer than the codebase. Use with confidence.
+- `"slightly_stale"` — Data is up to 3 days older than recent source changes. Use it but note: "Coverage data may not reflect the most recent changes."
+- `"stale"` — Data is significantly older than the codebase. Use it for general patterns but caveat: "Coverage data is stale — N days older than the latest source changes. Re-run tests with coverage for accurate results."
+
+**How to use**:
+
+1. **Replace structural correlation with actual data**: For files where actual coverage data exists, report the precise coverage percentage and missing line ranges instead of the structural "has tests / no tests" classification from correlate_tests.py.
+
+2. **Identify precisely undertested functions**: Cross-reference missing lines with function boundaries (from measure_complexity.py output if available) to identify which specific functions lack coverage.
+
+3. **Recalibrate risk ratings**: A function that correlate_tests.py says "has tests" but actual coverage shows 20% covered is undertested — rate it higher than structural analysis alone would.
+
+4. **Report coverage alongside structural analysis**: Don't discard the structural analysis — it tells you about test organization and design quality. Coverage data tells you about execution paths. Both are valuable.
+
+**Add to output format**: When coverage data is available, enhance the "Coverage Overview" section:
+
+```
+### Actual Coverage Data
+Source: [coverage file name]
+Freshness: [fresh / slightly_stale / stale — with details]
+
+| File | Statements | Covered | Missing | Coverage % |
+|------|-----------|---------|---------|------------|
+[Per-file data, sorted by coverage % ascending (least covered first)]
+
+### Precisely Undertested Functions
+[Functions where coverage data shows < 50% execution]
+- file:function (lines N-M) — X% covered, missing lines: [list]
+```
+
+When coverage data is NOT available, proceed with structural analysis only and add a note:
+
+```
+Note: No coverage.py artifacts found. Analysis is based on structural
+source↔test correlation. For precise line-level coverage, run your
+test suite with `coverage run -m pytest` (or `coverage run -m unittest`)
+and re-run this analysis.
+```
+
+If external tool output is not available, proceed with your standard analysis unchanged. Do not suggest the user install specific tools unless they explicitly ask about improving analysis depth.
+
 ## Analysis Strategy
 
 ### Step 1: Review Source-to-Test Mapping

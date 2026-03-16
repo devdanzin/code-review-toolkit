@@ -32,6 +32,37 @@ Key fields:
 - `commented_code_blocks`: with line ranges and previews
 - `summary`: aggregate counts for each category plus high/medium confidence totals
 
+## External Tool Integration
+
+If external tool output is available (from `run_external_tools.py`), incorporate its findings into your analysis.
+
+### Ruff Dead-Code Findings
+
+Filter the ruff output for `category: "dead-code"` findings:
+- `F401`: Unused imports — merge with the script's `unused_imports`. Ruff may catch imports our script missed (e.g., imports used only in string annotations without `from __future__ import annotations`).
+- `F811`: Redefined unused names — these are names assigned twice where the first assignment is dead. Not covered by our script.
+- `F841`: Unused local variables — not covered by our script (which only checks top-level symbols). These are valuable findings.
+- `PIE` rules: Unnecessary pass, no-op expressions — simple dead code inside function bodies.
+
+**Deduplication**: When ruff `F401` and our script's `unused_imports` flag the same import, merge into one finding. Trust the script's confidence rating and note ruff as corroboration:
+```
+- **[FIX]** Unused import `json` at core.py:3
+  Sources: find_dead_symbols.py (high confidence), ruff F401
+```
+
+**Auto-fixable findings** (significance: "reduced"): ruff can auto-fix `F401` and some `F841` findings. Include these but classify as CONSIDER rather than FIX unless our script also flags them with high confidence (in which case classify as FIX — the double detection increases confidence).
+
+### Vulture Findings
+
+Filter vulture output for all findings:
+- Merge vulture's unused functions/variables with the script's output
+- Vulture catches unused code inside function bodies that our script misses (unused local variables, unreachable code after returns)
+- Vulture uses confidence percentages — map 90%+ to high confidence, 80-89% to medium confidence
+
+**Deduplication**: When vulture and our script flag the same symbol, merge and note both sources. When they disagree (one flags, the other doesn't), investigate the discrepancy and use your judgment.
+
+If external tool output is not available, proceed with your standard analysis unchanged. Do not suggest the user install specific tools unless they explicitly ask about improving analysis depth.
+
 ## What to Search For
 
 ### Unused Imports
