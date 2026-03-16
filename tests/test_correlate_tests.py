@@ -1,5 +1,6 @@
 """Tests for correlate_tests.py."""
 
+import json
 import unittest
 
 from helpers import TempProject, import_script
@@ -245,6 +246,36 @@ class TestEndToEnd(unittest.TestCase):
                 any(f.name == "test_core.py" for f in test_files),
                 "test_core.py should be in test files"
             )
+
+
+class TestMaxFiles(unittest.TestCase):
+    """Test --max-files caps file processing."""
+
+    def test_max_files_caps_output(self):
+        files = {
+            f"pkg/mod{i}.py": f"def func{i}():\n    return {i}\n"
+            for i in range(10)
+        }
+        files["pkg/__init__.py"] = ""
+        with TempProject(files) as root:
+            import io
+            import sys
+            old_stdout = sys.stdout
+            sys.stdout = io.StringIO()
+            old_argv = sys.argv
+            sys.argv = [
+                "correlate_tests.py", str(root),
+                "--max-files", "3",
+            ]
+            try:
+                mod.main()
+                output = json.loads(sys.stdout.getvalue())
+            finally:
+                sys.stdout = old_stdout
+                sys.argv = old_argv
+            self.assertEqual(output["files_analyzed"], 3)
+            self.assertTrue(output["files_capped"])
+            self.assertGreater(output["files_total"], 3)
 
 
 if __name__ == "__main__":

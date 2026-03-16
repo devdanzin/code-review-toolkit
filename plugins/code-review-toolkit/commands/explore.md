@@ -42,6 +42,7 @@ Parse arguments into three categories:
 - `deep` → full detail, no output truncation
 - `summary` → summary tier only (faster)
 - `parallel` → run agents concurrently where possible
+- `--max-parallel N` → cap concurrent agents per group (default: 2)
 
 **Tool options** (passed to run_external_tools.py):
 - `--skip-tools` → skip external tool analysis entirely
@@ -129,7 +130,7 @@ Based on the requested aspects (default: all), launch the appropriate agents. Ea
 **Group E — Temporal analysis (runs last)**:
 12. git-history-analyzer
 
-If `parallel` is specified, run agents within each group concurrently. Groups still execute sequentially because later groups may benefit from earlier findings. Group E runs last because it cross-references all other agents' output.
+If `parallel` is specified, run agents within each group concurrently. Run at most `--max-parallel` agents concurrently within each group (default: 2). On memory-constrained systems, use `--max-parallel 1` to run agents sequentially. Groups still execute sequentially because later groups may benefit from earlier findings. Group E runs last because it cross-references all other agents' output.
 
 ### Phase 3: Synthesis
 

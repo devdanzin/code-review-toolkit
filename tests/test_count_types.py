@@ -1,5 +1,6 @@
 """Tests for count_types.py."""
 
+import json
 import unittest
 
 from helpers import TempProject, import_script
@@ -232,6 +233,36 @@ class TestTypeIgnoreCount(unittest.TestCase):
         }) as root:
             result = mod.analyze_file(root / "mod.py", root)
             self.assertEqual(result["type_ignore_count"], 2)
+
+
+class TestMaxFiles(unittest.TestCase):
+    """Test --max-files caps file processing."""
+
+    def test_max_files_caps_output(self):
+        files = {
+            f"pkg/mod{i}.py": f"def func{i}() -> int:\n    return {i}\n"
+            for i in range(10)
+        }
+        files["pkg/__init__.py"] = ""
+        with TempProject(files) as root:
+            import io
+            import sys
+            old_stdout = sys.stdout
+            sys.stdout = io.StringIO()
+            old_argv = sys.argv
+            sys.argv = [
+                "count_types.py", str(root),
+                "--max-files", "3",
+            ]
+            try:
+                mod.main()
+                output = json.loads(sys.stdout.getvalue())
+            finally:
+                sys.stdout = old_stdout
+                sys.argv = old_argv
+            self.assertEqual(output["files_analyzed"], 3)
+            self.assertTrue(output["files_capped"])
+            self.assertGreater(output["files_total"], 3)
 
 
 if __name__ == "__main__":

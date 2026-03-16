@@ -484,5 +484,48 @@ class TestGitIntegration(unittest.TestCase):
             self.assertGreater(churn_map["a.py"]["churn_rate"], 0)
 
 
+class TestParseGitLogStreaming(unittest.TestCase):
+    """Test that parse_git_log works with a list of lines (iterable)."""
+
+    def test_parse_from_list(self):
+        lines = [
+            "COMMIT:abc123|2025-01-01T12:00:00+00:00|Alice|Add feature\n",
+            "3\t1\ta.py\n",
+            "\n",
+            "COMMIT:def456|2025-01-02T12:00:00+00:00|Bob|Fix bug\n",
+            "1\t1\tb.py\n",
+        ]
+        commits, file_stats = mod.parse_git_log(lines, max_commits=2000)
+        self.assertEqual(len(commits), 2)
+        self.assertEqual(commits[0]["hash"], "abc123")
+        self.assertEqual(commits[0]["author"], "Alice")
+        self.assertEqual(commits[1]["hash"], "def456")
+        # File stats should have a.py and b.py.
+        stat_files = {s["file"] for s in file_stats}
+        self.assertIn("a.py", stat_files)
+        self.assertIn("b.py", stat_files)
+
+    def test_parse_respects_max_commits(self):
+        lines = [
+            f"COMMIT:hash{i}|2025-01-{i+1:02d}T12:00:00+00:00"
+            f"|Author|Commit {i}\n"
+            for i in range(10)
+        ]
+        commits, _ = mod.parse_git_log(lines, max_commits=3)
+        self.assertLessEqual(len(commits), 3)
+
+
+class TestMaxFilesArg(unittest.TestCase):
+    """Test --max-files argument parsing."""
+
+    def test_max_files_default(self):
+        args = mod.parse_args([])
+        self.assertEqual(args["max_files"], 0)
+
+    def test_max_files_set(self):
+        args = mod.parse_args(["--max-files", "50"])
+        self.assertEqual(args["max_files"], 50)
+
+
 if __name__ == "__main__":
     unittest.main()
