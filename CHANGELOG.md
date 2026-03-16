@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `run_external_tools.py` script: detects, runs, and normalizes output from ruff, mypy, vulture, and reads coverage artifacts. Works when no tools are installed.
+- Test suite for `run_external_tools.py` with coverage XML/JSON parsing, freshness assessment, tool detection, and CLI tests.
 - Marketplace file (`.claude-plugin/marketplace.json`) for plugin discovery and installation.
 - Installation instructions in both top-level README and plugin README (marketplace, direct, local, and manual methods).
 - Prerequisites section documenting Python 3.10+ and Git requirements.
