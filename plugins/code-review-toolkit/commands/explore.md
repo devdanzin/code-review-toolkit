@@ -30,6 +30,7 @@ Parse arguments into three categories:
 - `types` → type-design-analyzer
 - `dead-code` → dead-code-finder
 - `tech-debt` → tech-debt-inventory
+- `test-invariants` → test-investigation-agent
 - `patterns` → pattern-consistency-checker
 - `api` → api-surface-reviewer
 - `project-docs` → project-docs-auditor
@@ -124,11 +125,12 @@ Based on the requested aspects (default: all), launch the appropriate agents. Ea
 9. type-design-analyzer
 10. api-surface-reviewer
 
-**Group D — Inventory**:
+**Group D — Inventory and investigation**:
 11. tech-debt-inventory
+12. test-investigation-agent
 
 **Group E — Temporal analysis (runs last)**:
-12. git-history-analyzer
+13. git-history-analyzer
 
 If `parallel` is specified, run agents within each group concurrently. Run at most `--max-parallel` agents concurrently within each group (default: 2). On memory-constrained systems, use `--max-parallel 1` to run agents sequentially. Groups still execute sequentially because later groups may benefit from earlier findings. Group E runs last because it cross-references all other agents' output.
 
