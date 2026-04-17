@@ -9,12 +9,21 @@ Usage:
 """
 
 import json
+import os
 import re
 import subprocess
 import sys
 from collections.abc import Generator
 from datetime import datetime, timezone
 from pathlib import Path
+
+# Allow importing the sibling scan_common module when this script is
+# invoked directly (not via the test helpers).
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _THIS_DIR not in sys.path:
+    sys.path.insert(0, _THIS_DIR)
+
+from scan_common import extract_nearby_comments, has_safety_annotation  # noqa: E402
 
 
 # Patterns to search for, grouped by category.
@@ -126,7 +135,8 @@ def scan_file(
 ) -> list[dict]:
     """Scan a file for debt markers."""
     try:
-        lines = filepath.read_text(encoding="utf-8", errors="replace").splitlines()
+        source = filepath.read_text(encoding="utf-8", errors="replace")
+        lines = source.splitlines()
     except OSError:
         return []
 
@@ -144,6 +154,25 @@ def scan_file(
                 context_before = lines[i - 2].strip() if i > 1 else ""
                 context_after = lines[i].strip() if i < len(lines) else ""
 
+                # Comment-aware triage: inspect nearby comments for
+                # safety annotations. A noqa suppresses the item entirely;
+                # other safety annotations downgrade confidence.
+                nearby_comments = extract_nearby_comments(source, i)
+                # Exclude the marker line itself so the NOQA/TODO keyword
+                # in `text` doesn't trivially match itself.
+                other_comments = [
+                    c for c in nearby_comments
+                    if c.strip() != line.strip().lstrip("#").strip()
+                ]
+                confidence = "high"
+                if category != "NOQA" and any(
+                    "noqa" in c.lower() for c in other_comments
+                ):
+                    # A sibling noqa on an adjacent line suppresses this item.
+                    continue
+                if has_safety_annotation(other_comments):
+                    confidence = "low"
+
                 item: dict = {
                     "file": rel,
                     "line": i,
@@ -152,6 +181,7 @@ def scan_file(
                     "full_line": line.rstrip(),
                     "context_before": context_before,
                     "context_after": context_after,
+                    "confidence": confidence,
                 }
 
                 if use_git:
@@ -169,6 +199,14 @@ def scan_file(
 
         # Check skip decorators.
         if _SKIP_PATTERN.search(line):
+            # Comment-aware triage for skip decorators too.
+            nearby_comments = extract_nearby_comments(source, i)
+            confidence = "high"
+            if any("noqa" in c.lower() for c in nearby_comments):
+                continue
+            if has_safety_annotation(nearby_comments):
+                confidence = "low"
+
             item = {
                 "file": rel,
                 "line": i,
@@ -178,6 +216,7 @@ def scan_file(
                 "context_before": lines[i - 2].strip() if i > 1 else "",
                 "context_after": lines[i].strip() if i < len(lines) else "",
                 "age": "unknown",
+                "confidence": confidence,
             }
             if use_git:
                 blame = _git_blame_line(filepath, i, project_root)

@@ -170,3 +170,34 @@ For each finding, rate your **confidence** that it's genuinely dead:
 - **CONSIDER**: Medium-confidence dead code that should be verified before removal — potentially dynamically referenced functions, imports that might be re-exports
 - **POLICY**: Decisions about dead code management (e.g., establish a policy on commented-out code, set up automated unused import removal)
 - **ACCEPTABLE**: Unused imports that serve as re-exports, functions referenced only via plugin/registration systems, code kept intentionally for reference
+
+## Annotations
+
+The underlying `find_dead_symbols.py` scanner is comment-aware. When a candidate finding has a nearby comment (within ±5 lines) containing one of the annotations below, the scanner either downgrades its confidence to `low` or suppresses the finding entirely. Honor these annotations in your triage — treat them as an author asserting intent.
+
+| Annotation | Effect |
+|------------|--------|
+| `# noqa` (alone or with codes) | **Suppressed entirely** (explicit lint waiver) |
+| `# SAFETY: ...` | Downgrade to `confidence: low` |
+| `# safe because ...` | Downgrade to `confidence: low` |
+| `# intentional` / `# by design` / `# deliberately` | Downgrade to `confidence: low` |
+| `# nolint` | Downgrade to `confidence: low` |
+| `# checked: ...` / `# correct because ...` | Downgrade to `confidence: low` |
+| `# this is safe` / `# not a bug` / `# expected` | Downgrade to `confidence: low` |
+
+When reporting findings, prefer to elide the low-confidence entries from your top-level list; mention only the aggregate count ("N suppressed by author annotation"). This keeps the summary focused on findings that still need human judgment.
+
+## Running the script
+
+- Call the script with a Bash timeout of **300000 ms** (5 min). The default 120s kills on large repos.
+- Use a **unique temp filename** for the JSON output, e.g. `/tmp/<agent-slug>_<scope>_$$.json` — the `$$` PID suffix prevents collisions when multiple agents run concurrently.
+- Forward `--max-files N` and (where supported) `--workers N` from the caller.
+- If the script **times out or errors, do NOT retry it.** Fall back to Grep/Read for the same question. Long-running runs should use `run_in_background`.
+
+## Confidence
+
+- **HIGH** — structurally identical to a known-bad pattern, or exact signature match; ≥90% likelihood of being a true positive.
+- **MEDIUM** — similar with differences that require human verification; 70–89%.
+- **LOW** — superficially similar; requires code-context reading; 50–69%.
+
+Findings below LOW are not reported.

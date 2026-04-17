@@ -527,5 +527,61 @@ class TestMaxFilesArg(unittest.TestCase):
         self.assertEqual(args["max_files"], 50)
 
 
+class TestWorkersArg(unittest.TestCase):
+    """Test --workers argument parsing for ThreadPoolExecutor tuning."""
+
+    def test_workers_default(self):
+        args = mod.parse_args([])
+        self.assertEqual(args["workers"], 8)
+
+    def test_workers_set(self):
+        args = mod.parse_args(["--workers", "4"])
+        self.assertEqual(args["workers"], 4)
+
+    def test_workers_with_path_and_other_flags(self):
+        args = mod.parse_args(["src/", "--workers", "2", "--no-function"])
+        self.assertEqual(args["workers"], 2)
+        self.assertEqual(args["path"], "src/")
+        self.assertTrue(args["no_function"])
+
+
+class TestAnalyzeSmokeNoHang(unittest.TestCase):
+    """Smoke test that ``analyze`` returns quickly without hanging on the pipe."""
+
+    def test_analyze_small_repo_terminates(self):
+        # One tiny commit — the pipe-deadlock fix should guarantee this
+        # returns promptly even when we cap commits.
+        import signal
+
+        with GitTempProject([
+            {
+                "files": {"a.py": "x = 1\n"},
+                "message": "Add a",
+                "date": "2025-01-01T12:00:00+00:00",
+            },
+        ]) as root:
+            # Defensive alarm: if analyze hangs, fail loudly instead of
+            # hanging the whole test suite.
+            if hasattr(signal, "SIGALRM"):
+                def _timeout(signum, frame):
+                    raise AssertionError("analyze() hung — pipe deadlock?")
+                old = signal.signal(signal.SIGALRM, _timeout)
+                signal.alarm(30)
+            try:
+                result = mod.analyze([
+                    str(root),
+                    "--since", "2024-12-01",
+                    "--until", "2025-02-01",
+                    "--max-commits", "1",
+                    "--workers", "2",
+                ])
+            finally:
+                if hasattr(signal, "SIGALRM"):
+                    signal.alarm(0)
+                    signal.signal(signal.SIGALRM, old)
+            self.assertNotIn("error", result)
+            self.assertEqual(result["summary"]["total_commits"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()

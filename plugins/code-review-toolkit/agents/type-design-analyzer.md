@@ -203,3 +203,10 @@ Check whether typing patterns are consistent across the codebase:
 - **CONSIDER**: Type improvements that would catch bugs or improve IDE support — adding annotations, narrowing broad types, using Protocols
 - **POLICY**: Typing strategy decisions (e.g., enable mypy strict mode, adopt `X | None` over `Optional[X]`, set annotation coverage targets)
 - **ACCEPTABLE**: Untyped private functions with obvious types, legitimate `Any` usage for genuinely dynamic data, simple internal code where annotations add noise
+
+## Running the script
+
+- Call the script with a Bash timeout of **300000 ms** (5 min). The default 120s kills on large repos.
+- Use a **unique temp filename** for the JSON output, e.g. `/tmp/<agent-slug>_<scope>_$$.json` — the `$$` PID suffix prevents collisions when multiple agents run concurrently.
+- Forward `--max-files N` and (where supported) `--workers N` from the caller.
+- If the script **times out or errors, do NOT retry it.** Fall back to Grep/Read for the same question. Long-running runs should use `run_in_background`.

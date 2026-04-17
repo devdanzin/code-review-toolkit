@@ -171,3 +171,10 @@ Structure your output as follows:
 - `if TYPE_CHECKING:` imports exist solely for type checkers and don't create runtime dependencies.
 - Some projects use lazy imports for performance — note these but don't flag them as issues.
 - `__all__` explicitly defines public API — respect it when assessing what a module exposes.
+
+## Running the script
+
+- Call the script with a Bash timeout of **300000 ms** (5 min). The default 120s kills on large repos.
+- Use a **unique temp filename** for the JSON output, e.g. `/tmp/<agent-slug>_<scope>_$$.json` — the `$$` PID suffix prevents collisions when multiple agents run concurrently.
+- Forward `--max-files N` and (where supported) `--workers N` from the caller.
+- If the script **times out or errors, do NOT retry it.** Fall back to Grep/Read for the same question. Long-running runs should use `run_in_background`.

@@ -11,10 +11,19 @@ Usage:
 
 import ast
 import json
+import os
 import re
 import sys
 from collections.abc import Generator
 from pathlib import Path
+
+# Allow importing the sibling scan_common module when this script is
+# invoked directly (not via the test helpers).
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _THIS_DIR not in sys.path:
+    sys.path.insert(0, _THIS_DIR)
+
+from scan_common import extract_nearby_comments, has_safety_annotation  # noqa: E402
 
 
 def discover_python_files(root: Path) -> Generator[Path, None, None]:
@@ -100,6 +109,9 @@ def analyze_file(filepath: Path, project_root: Path) -> dict:
     except SyntaxError as exc:
         result["parse_error"] = f"SyntaxError: {exc.msg} (line {exc.lineno})"
         return result
+
+    # Retain source for comment-aware triage (dropped in main() to save memory).
+    result["source"] = source
 
     # Check for __all__.
     for node in ast.walk(tree):
@@ -206,6 +218,7 @@ def find_unused_imports(file_analysis: dict) -> list[dict]:
     unused = []
     refs = file_analysis["referenced_names"]
     all_decl = file_analysis["all_declaration"]
+    source = file_analysis.get("source", "")
 
     for imp in file_analysis["imports"]:
         local_name = imp["local_name"]
@@ -219,12 +232,23 @@ def find_unused_imports(file_analysis: dict) -> list[dict]:
         if file_analysis["is_init"]:
             continue
 
+        # Comment-aware triage: check for safety annotations near the line.
+        confidence = "high"
+        nearby_comments: list[str] = []
+        if source:
+            nearby_comments = extract_nearby_comments(source, imp["line"])
+            if any("noqa" in c.lower() for c in nearby_comments):
+                # Skip entirely — explicit lint suppression.
+                continue
+            if has_safety_annotation(nearby_comments):
+                confidence = "low"
+
         unused.append({
             "file": file_analysis["file"],
             "line": imp["line"],
             "name": local_name,
             "module": imp["module"],
-            "confidence": "high",
+            "confidence": confidence,
         })
 
     return unused
@@ -286,6 +310,16 @@ def find_unreferenced_symbols(
                 # dynamically dispatched.
                 if sym["type"] == "class" and sym["is_public"]:
                     confidence = "medium"  # Classes may be instantiated dynamically.
+
+                # Comment-aware triage: suppress or downgrade if a nearby
+                # safety annotation indicates the symbol is intentionally kept.
+                source = fa.get("source", "")
+                if source:
+                    nearby_comments = extract_nearby_comments(source, sym["line"])
+                    if any("noqa" in c.lower() for c in nearby_comments):
+                        continue
+                    if has_safety_annotation(nearby_comments):
+                        confidence = "low"
 
                 unreferenced.append({
                     "file": fa["file"],
@@ -430,9 +464,10 @@ def main() -> None:
 
     unreferenced = find_unreferenced_symbols(file_analyses)
 
-    # Drop per-file referenced_names to free memory.
+    # Drop per-file referenced_names and source to free memory.
     for fa in file_analyses:
         fa.pop("referenced_names", None)
+        fa.pop("source", None)
 
     orphans = find_orphan_files(file_analyses, project_root)
 

@@ -29,6 +29,10 @@ script yourself if git-history-context output was not provided.
 
 Analyze the scope provided. Default: the entire project.
 
+## Effort Allocation
+
+Default split across the capabilities below: **60% similar-bug detection / 15% fix-completeness review / 25% churn-risk matrix** (plus incidental effort on feature review, historical annotation, and co-change coupling). Similar-bug detection is the highest-value output of this agent; fix-completeness is narrower but tractable; the churn-risk matrix is most useful when cross-referenced with other agents. Reallocate only if the caller specifies a different priority or if one phase yields no signal.
+
 ## Capability 1: Fix Completeness Review
 
 For each recent fix commit (from git-history-context's script data):
@@ -42,6 +46,16 @@ For each recent fix commit (from git-history-context's script data):
    - Was only one occurrence fixed when the pattern appears multiple times in the same file?
    - Was the symptom fixed but not the root cause?
    - Could the fix introduce a regression?
+
+### Python-specific completeness checks
+
+A fix for a Python bug is rarely complete unless it covers every branch that could reach the faulty state. Validate each recent fix against the following, not just the root cause:
+
+- **All error branches**: every `try`/`except` arm, bare `except:`, `except Exception:` fallback, and explicit error-return path (`return None`, `return False`, `return -1`, sentinel values) in the affected function. A fix that patches the happy path but leaves the `except` branch with the same bug is incomplete.
+- **All conditional branches**: platform guards (`if sys.platform == "win32":`, `if os.name == "nt":`), Python-version guards (`if sys.version_info >= (3, 11):`), feature flags, and `@unittest.skipIf` equivalents in production code. Fixes often land in one branch and miss the sibling.
+- **All affected variables**: if a fix adds validation or cleanup for `var_a`, check that `var_b` with the same pattern in the same function receives the same treatment. Refcount-style leaks, un-closed file handles, and un-released locks frequently repeat across variables within one scope.
+- **Finally/cleanup blocks**: verify that `finally` clauses and context manager `__exit__` methods also see the fix when the bug involved resource handling.
+- **Async variants**: if the fixed function has an `async def` sibling (or vice versa), check whether the async path has the same bug; `await`-based flows often diverge silently from the sync version.
 
 When the diff is truncated, use `git show HASH` to get more context if needed.
 
@@ -240,3 +254,11 @@ For each:
 - **CONSIDER**: Potentially incomplete fix, possibly vulnerable analogous code, or feature gaps (no tests, no docs)
 - **POLICY**: New feature introduces a pattern requiring a project-level decision, or co-change coupling suggests architectural restructuring
 - **ACCEPTABLE**: Fix is complete and correct, similar code is already properly handled, or co-change is natural for the module structure
+
+## Confidence
+
+- **HIGH** — structurally identical to a known-bad pattern, or exact signature match; ≥90% likelihood of being a true positive.
+- **MEDIUM** — similar with differences that require human verification; 70–89%.
+- **LOW** — superficially similar; requires code-context reading; 50–69%.
+
+Findings below LOW are not reported.
