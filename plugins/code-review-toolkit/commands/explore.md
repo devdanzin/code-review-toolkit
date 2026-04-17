@@ -200,23 +200,40 @@ Before writing the summary:
 
 ## Findings by Priority
 
-### Must Fix (FIX)
-[Unambiguously wrong — bugs, crash risks, clear violations]
-- [agent(s)]: Issue description [file:line]
+**Use global non-restarting numbering**: number ALL findings sequentially across all sections. FIX findings first (1..N), then CONSIDER (N+1..M), then POLICY (M+1..P), then ACCEPTABLE (P+1..Q). Use these same numbers in the action plan. This makes it easy to reference "Finding 37" in issue trackers, code review comments, and follow-up discussions.
 
-### Should Consider (CONSIDER)
+### Must Fix (FIX) — N
+[Unambiguously wrong — bugs, crash risks, clear violations]
+
+| # | Finding | File:Line | Agents |
+|---|---------|-----------|--------|
+| 1 | [Description] | [file:line] | [which agents found it] |
+| 2 | [Description] | [file:line] | [which agents found it] |
+
+### Should Consider (CONSIDER) — M
 [Judgment calls — improvement likely but has trade-offs]
-- [agent(s)]: Issue description [file:line]
+
+| # | Finding | File:Line | Agents |
+|---|---------|-----------|--------|
+| N+1 | [Description] | [file:line] | [which agents found it] |
+| N+2 | [Description] | [file:line] | [which agents found it] |
 
 ### Tensions
 [Where agents disagree — present both sides and the trade-off]
 
-### Policy Decisions (POLICY)
+### Policy Decisions (POLICY) — P
 [Require team/project-level decisions, not local fixes]
-- [agent(s)]: Issue description
 
-### Acceptable / No Action (ACCEPTABLE)
-[Count only: N items classified as acceptable across all agents]
+| # | Finding | Agents |
+|---|---------|--------|
+| M+1 | [Description] | [which agents found it] |
+
+### Acceptable / No Action (ACCEPTABLE) — Q
+[Enumerate briefly — these are intentional deferrals, re-exports, etc.]
+
+| # | Finding | File:Line |
+|---|---------|-----------|
+| P+1 | [Description] | [file:line] |
 
 ## Strengths
 
@@ -224,17 +241,19 @@ Before writing the summary:
 
 ## Recommended Action Plan
 
+Reference findings by their global number from the tables above.
+
 ### Immediate (this week)
 [Prioritize items from the git-history-analyzer risk matrix — highest risk items first]
-1. [FIX item]
-2. [FIX item]
+1. [Fix Finding N — description]
+2. [Fix Finding M — description]
 
 ### Short-term (this month)
-1. [CONSIDER item]
-2. [CONSIDER item]
+1. [Finding N+1 — description]
+2. [Finding N+2 — description]
 
 ### Ongoing
-1. [POLICY decision to make]
+1. [Finding M+1 — policy decision to make]
 2. [Convention to establish]
 ```
 

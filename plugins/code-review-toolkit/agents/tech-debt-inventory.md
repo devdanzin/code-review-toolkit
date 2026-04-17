@@ -177,3 +177,19 @@ For each:
 - **CONSIDER**: Debt worth addressing proactively — growing TODOs, stale workarounds, deprecated API usage that will break on upgrade
 - **POLICY**: Debt management decisions (e.g., establish TODO format conventions, set a maximum debt age, create a cleanup sprint cadence)
 - **ACCEPTABLE**: Fresh, intentional deferrals with clear context — recent TODOs with tracking issues, type:ignore with explanatory comments, deliberate scope limitations
+
+## Annotations
+
+The underlying `collect_debt.py` scanner is comment-aware. When a debt marker has a nearby comment (within ±5 lines) containing one of the annotations below, the scanner either downgrades its confidence to `low` or suppresses the item entirely. Treat these as author assertions of intent during triage.
+
+| Annotation | Effect |
+|------------|--------|
+| `# noqa` on an adjacent line | **Suppresses the item** (explicit waiver) |
+| `# SAFETY: ...` | Downgrade to `confidence: low` |
+| `# safe because ...` | Downgrade to `confidence: low` |
+| `# intentional` / `# by design` / `# deliberately` | Downgrade to `confidence: low` |
+| `# nolint` | Downgrade to `confidence: low` |
+| `# checked: ...` / `# correct because ...` | Downgrade to `confidence: low` |
+| `# this is safe` / `# not a bug` / `# expected` | Downgrade to `confidence: low` |
+
+Items emitted with `confidence: low` are almost always classified as ACCEPTABLE in your report — the author has explicitly documented why the marker stays. Prefer to aggregate them as a single line ("N annotated markers acknowledged by authors") rather than listing them individually.

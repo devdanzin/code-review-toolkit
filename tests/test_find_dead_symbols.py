@@ -82,6 +82,27 @@ class TestUnusedImports(unittest.TestCase):
         self.assertEqual(len(unused), 1)
         self.assertEqual(unused[0]["name"], "np")
 
+    def test_noqa_suppresses_unused_import(self):
+        """An adjacent ``# noqa`` should suppress the finding entirely."""
+        unused = self._find_unused(
+            "# noqa: F401\n"
+            "import json\n"
+            "\n"
+            "x = 1\n"
+        )
+        self.assertEqual(len(unused), 0)
+
+    def test_safety_comment_downgrades_confidence(self):
+        """A ``# SAFETY: ...`` comment downgrades confidence to low."""
+        unused = self._find_unused(
+            "# SAFETY: reviewed — imported for side effects\n"
+            "import json\n"
+            "\n"
+            "x = 1\n"
+        )
+        self.assertEqual(len(unused), 1)
+        self.assertEqual(unused[0]["confidence"], "low")
+
 
 class TestUnreferencedSymbols(unittest.TestCase):
     """Test detection of defined-but-never-referenced symbols."""

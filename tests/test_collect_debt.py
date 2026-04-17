@@ -213,5 +213,38 @@ class TestMaxFiles(unittest.TestCase):
             self.assertGreater(output["files_total"], 3)
 
 
+class TestAnnotationAwareTriage(unittest.TestCase):
+    """Tests for comment-aware triage of debt markers."""
+
+    def _scan(self, source: str, filename: str = "mod.py") -> list[dict]:
+        with TempProject({filename: source}) as root:
+            return mod.scan_file(root / filename, root, use_git=False)
+
+    def test_safety_comment_downgrades_confidence(self):
+        # A SAFETY comment adjacent to a FIXME should downgrade confidence.
+        items = self._scan(
+            "# SAFETY: reviewed — left intentional\n"
+            "x = 1  # FIXME: tighten later\n"
+        )
+        fixmes = [i for i in items if i["category"] == "FIXME"]
+        self.assertEqual(len(fixmes), 1)
+        self.assertEqual(fixmes[0]["confidence"], "low")
+
+    def test_no_annotation_keeps_confidence_high(self):
+        items = self._scan("x = 1  # FIXME: tighten later\n")
+        fixmes = [i for i in items if i["category"] == "FIXME"]
+        self.assertEqual(len(fixmes), 1)
+        self.assertEqual(fixmes[0]["confidence"], "high")
+
+    def test_sibling_noqa_suppresses_todo(self):
+        # A sibling noqa comment should suppress the TODO entirely.
+        items = self._scan(
+            "# noqa: review approved\n"
+            "x = 1  # TODO: revisit\n"
+        )
+        todos = [i for i in items if i["category"] == "TODO"]
+        self.assertEqual(len(todos), 0)
+
+
 if __name__ == "__main__":
     unittest.main()
