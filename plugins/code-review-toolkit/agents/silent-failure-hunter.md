@@ -219,3 +219,11 @@ For each:
 - **CONSIDER**: Error handling that works but could be improved — overly broad catches, missing traceback in logs, generic error messages
 - **POLICY**: Project-wide error handling strategy decisions (e.g., adopt a custom exception hierarchy, standardize logging levels for errors)
 - **ACCEPTABLE**: Intentional broad catches in appropriate contexts — top-level CLI handlers, cleanup code, logging utilities where suppression is the correct behavior
+
+## Confidence
+
+- **HIGH** — structurally identical to a known-bad pattern, or exact signature match; ≥90% likelihood of being a true positive.
+- **MEDIUM** — similar with differences that require human verification; 70–89%.
+- **LOW** — superficially similar; requires code-context reading; 50–69%.
+
+Findings below LOW are not reported.

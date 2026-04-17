@@ -233,3 +233,10 @@ For each:
 - **Decorator stacking**: More than 3 decorators on a function is a code smell. Consider whether the function has too many cross-cutting concerns.
 - **Property complexity**: `@property` methods should be trivial. Complex property getters should be explicit methods.
 - **Magic method complexity**: `__init__` should be simple assignment. Complex initialization should use classmethods as alternative constructors.
+
+## Running the script
+
+- Call the script with a Bash timeout of **300000 ms** (5 min). The default 120s kills on large repos.
+- Use a **unique temp filename** for the JSON output, e.g. `/tmp/<agent-slug>_<scope>_$$.json` — the `$$` PID suffix prevents collisions when multiple agents run concurrently.
+- Forward `--max-files N` and (where supported) `--workers N` from the caller.
+- If the script **times out or errors, do NOT retry it.** Fall back to Grep/Read for the same question. Long-running runs should use `run_in_background`.

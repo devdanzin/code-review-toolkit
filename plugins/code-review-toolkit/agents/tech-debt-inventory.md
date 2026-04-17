@@ -193,3 +193,18 @@ The underlying `collect_debt.py` scanner is comment-aware. When a debt marker ha
 | `# this is safe` / `# not a bug` / `# expected` | Downgrade to `confidence: low` |
 
 Items emitted with `confidence: low` are almost always classified as ACCEPTABLE in your report — the author has explicitly documented why the marker stays. Prefer to aggregate them as a single line ("N annotated markers acknowledged by authors") rather than listing them individually.
+
+## Running the script
+
+- Call the script with a Bash timeout of **300000 ms** (5 min). The default 120s kills on large repos.
+- Use a **unique temp filename** for the JSON output, e.g. `/tmp/<agent-slug>_<scope>_$$.json` — the `$$` PID suffix prevents collisions when multiple agents run concurrently.
+- Forward `--max-files N` and (where supported) `--workers N` from the caller.
+- If the script **times out or errors, do NOT retry it.** Fall back to Grep/Read for the same question. Long-running runs should use `run_in_background`.
+
+## Confidence
+
+- **HIGH** — structurally identical to a known-bad pattern, or exact signature match; ≥90% likelihood of being a true positive.
+- **MEDIUM** — similar with differences that require human verification; 70–89%.
+- **LOW** — superficially similar; requires code-context reading; 50–69%.
+
+Findings below LOW are not reported.
