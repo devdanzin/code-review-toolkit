@@ -527,5 +527,100 @@ class TestMaxFilesArg(unittest.TestCase):
         self.assertEqual(args["max_files"], 50)
 
 
+def _latin1_repo(testcase) -> Path:
+    """A one-commit git repo whose diff payload is not valid UTF-8."""
+    import shutil
+    import tempfile
+
+    tmpdir = tempfile.mkdtemp(prefix="crt_latin1_")
+    testcase.addCleanup(shutil.rmtree, tmpdir, True)
+    root = Path(tmpdir)
+    # git never transcodes diff payload, so latin-1 bytes in file *content* are
+    # what actually reach the decoder.
+    (root / "mod.py").write_bytes(
+        b"# Alejandro L\xf3pez-Ortiz\ndef f():\n    return 1\n"
+    )
+    for args in (
+        ["init", "-q"],
+        ["config", "user.name", "Test Author"],
+        ["config", "user.email", "test@example.invalid"],
+        ["config", "commit.gpgsign", "false"],
+        ["add", "-A"],
+        ["commit", "-q", "-m", "gh-1: Fix segfault in listsort"],
+    ):
+        subprocess.run(
+            ["git", *args], cwd=tmpdir, check=True,
+            capture_output=True, text=True, errors="replace",
+        )
+    return root
+
+
+class TestNonUtf8History(unittest.TestCase):
+    """A non-UTF-8 byte anywhere in a diff must not abort the analysis.
+
+    Both git subprocess sites pass errors="replace". Without it, one pre-UTF-8
+    commit raises UnicodeDecodeError and takes down the whole run — observed on
+    CPython, where a single 2015 commit killed a 9,203-commit analysis.
+    """
+
+    def test_strict_decoding_would_have_failed(self):
+        # Guard the guard: if this stops raising, the fixture no longer
+        # exercises the bug and the tests below prove nothing.
+        root = _latin1_repo(self)
+        with self.assertRaises(UnicodeDecodeError):
+            subprocess.run(
+                ["git", "show", "--format=", "--patch", "HEAD"],
+                cwd=str(root), capture_output=True, text=True, check=False,
+            )
+
+    def test_run_git_survives_non_utf8_diff(self):
+        root = _latin1_repo(self)
+        result = mod._run_git(["show", "--format=", "--patch", "HEAD"], root)
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("Alejandro", result.stdout)
+
+    def test_run_git_streaming_survives_non_utf8_diff(self):
+        root = _latin1_repo(self)
+        proc = mod._run_git_streaming(["log", "--patch"], root)
+        try:
+            text = "".join(proc.stdout)
+        finally:
+            proc.wait(timeout=10)
+            for stream in (proc.stdout, proc.stderr):
+                if stream is not None:
+                    stream.close()
+        self.assertIn("Alejandro", text)
+
+
+class TestUnknownArgumentsAndCommitCap(unittest.TestCase):
+    """Silent truncation must be visible in the envelope, not only on stderr."""
+
+    def test_unknown_flag_is_collected(self):
+        args = mod.parse_args(["src/", "--months", "420"])
+        self.assertIn("--months", args["unknown_args"])
+        self.assertEqual(args["days"], 90)
+
+    def test_known_flags_leave_unknown_args_empty(self):
+        self.assertEqual(mod.parse_args(["src/", "--days", "30"])["unknown_args"], [])
+
+    def test_unknown_flag_reaches_the_envelope(self):
+        root = _latin1_repo(self)
+        result = mod.analyze([str(root), "--months", "420", "--no-function"])
+        self.assertIn("--months", result["unknown_args"])
+        self.assertTrue(
+            any("Unrecognized argument" in n for n in result["notes"]),
+            result.get("notes"),
+        )
+
+    def test_commit_cap_is_noted(self):
+        root = _latin1_repo(self)
+        result = mod.analyze([str(root), "--max-commits", "1", "--no-function"])
+        self.assertTrue(result["time_range"]["commit_cap_applied"])
+        self.assertTrue(
+            any("COMMIT CAP APPLIED" in n for n in result["notes"]),
+            result.get("notes"),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

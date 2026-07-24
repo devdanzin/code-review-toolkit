@@ -81,10 +81,16 @@ def _run_git(
     timeout: int = _GIT_TIMEOUT,
 ) -> subprocess.CompletedProcess[str]:
     """Run a git command with timeout handling."""
+    # errors="replace": commit messages and diffs are not guaranteed UTF-8.
+    # Under the default strict decoding a single pre-UTF-8 commit anywhere in
+    # the window raises UnicodeDecodeError and takes down the entire analysis
+    # (observed on CPython: one 2015 commit killed a 9,203-commit run). A
+    # mangled character in one old subject line is the better trade.
     return subprocess.run(
         ["git"] + args,
         capture_output=True,
         text=True,
+        errors="replace",
         cwd=str(cwd),
         timeout=timeout,
     )
@@ -94,11 +100,13 @@ def _run_git_streaming(
     args: list[str], cwd: Path,
 ) -> subprocess.Popen[str]:
     """Run a git command with streaming stdout."""
+    # See _run_git: a non-UTF-8 commit message must not kill the stream.
     return subprocess.Popen(
         ["git"] + args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        errors="replace",
         cwd=str(cwd),
     )
 
@@ -492,6 +500,7 @@ def parse_args(argv: list[str]) -> dict:
         "max_commits": 2000,
         "max_files": 0,
         "no_function": False,
+        "unknown_args": [],
     }
 
     i = 0
@@ -547,7 +556,12 @@ def parse_args(argv: list[str]) -> dict:
             args["path"] = arg
             i += 1
         else:
+            # A stderr warning alone is easy to lose in an agent transcript, so
+            # also carry the flag into the JSON envelope: a silently-ignored
+            # window flag otherwise yields a confident, wrong analysis at the
+            # default window.
             print(f"Warning: unknown flag '{arg}', ignoring", file=sys.stderr)
+            args["unknown_args"].append(arg)
             i += 1
 
     return args
@@ -675,10 +689,33 @@ def analyze(argv: list[str] | None = None) -> dict:
         "recent_features": recent_features,
         "recent_refactors": recent_refactors,
         "co_change_clusters": co_change_clusters,
+        "notes": [],
     }
 
     if function_churn_note:
         result["function_churn_note"] = function_churn_note
+        result["notes"].append(
+            "Function-level churn was skipped -- `function_churn` is empty by "
+            "request, not because nothing changed."
+        )
+
+    if args["unknown_args"]:
+        result["unknown_args"] = args["unknown_args"]
+        result["notes"].append(
+            "Unrecognized argument(s) IGNORED: "
+            + ", ".join(args["unknown_args"])
+            + ". The analysis below ran with default values for whatever those "
+            "flags were meant to set -- re-run with the correct flag before "
+            "trusting any temporal claim."
+        )
+
+    if commit_cap_applied:
+        result["notes"].append(
+            f"COMMIT CAP APPLIED: analysis stopped at --max-commits "
+            f"{max_commits}; the window contains at least that many commits, "
+            "so everything below is a truncated prefix of the real history. "
+            "Raise --max-commits or narrow the window."
+        )
 
     return result
 
