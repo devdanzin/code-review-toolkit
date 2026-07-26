@@ -666,5 +666,49 @@ class TestRaiseWithoutFrom(unittest.TestCase):
         self.assertNotIn("raise-without-from-in-except", shapes(src))
 
 
+class TestFlagNotResetOnEarlyExit(unittest.TestCase):
+    """idlelib pyshell.py:488 -- a stuck guard flag wedges the component."""
+
+    def test_early_return_skips_reset(self):
+        src = (
+            "class C:\n    def go(self):\n        if self.busy:\n            return\n"
+            "        self.busy = True\n        if not self.ready():\n            return\n"
+            "        self.work()\n        self.busy = False\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "flag-not-reset-on-early-exit"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_finally_reset_is_silent(self):
+        src = (
+            "class C:\n    def go(self):\n        try:\n            self.busy = True\n"
+            "            if not self.ready():\n                return\n            self.work()\n"
+            "        finally:\n            self.busy = False\n"
+        )
+        self.assertNotIn("flag-not-reset-on-early-exit", shapes(src))
+
+    def test_no_early_exit_is_silent(self):
+        src = (
+            "class C:\n    def go(self):\n        self.busy = True\n"
+            "        self.work()\n        self.busy = False\n"
+        )
+        self.assertNotIn("flag-not-reset-on-early-exit", shapes(src))
+
+    def test_local_variable_is_silent(self):
+        # A bare local dies with the frame -- rebinding it wedges nothing.
+        src = (
+            "def f(t):\n    line = t.get()\n    if not line:\n        return None\n"
+            "    line = ''\n    return line\n"
+        )
+        self.assertNotIn("flag-not-reset-on-early-exit", shapes(src))
+
+    def test_same_value_twice_is_silent(self):
+        src = (
+            "class C:\n    def go(self):\n        self.x = True\n"
+            "        if self.q():\n            return\n        self.x = True\n"
+        )
+        self.assertNotIn("flag-not-reset-on-early-exit", shapes(src))
+
+
 if __name__ == "__main__":
     unittest.main()

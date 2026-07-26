@@ -351,13 +351,36 @@
       "hunt": "Every `raise` inside an `except` in the module; the convention is applied per-codebase, so a module that chains in one place and not another has a real inconsistency.",
       "expected": "the traceback shows the original cause, explicitly marked as cause or deliberately suppressed.",
       "caught_as": "Visible in the traceback as 'During handling of the above exception, another exception occurred' rather than 'The above exception was the direct cause' -- confusing rather than silent, but it degrades every downstream diagnosis.",
-      "confirmed_examples": [],
-      "validation": "documented",
+      "confirmed_examples": [
+        "CPython idlelib (6080c86): ALL SIX raise-inside-except sites lack `from` -- config.py:211, pyshell.py:12, rpc.py:345, rpc.py:361, run.py:360, zoomheight.py:74. rpc.py:361 (`except OSError: raise EOFError`) is the costly one: it discards the errno, so there is no record of whether IDLE restarted because the peer exited or because the kernel ran out of buffers. Found by reports/idlelib_v1."
+      ],
+      "validation": "confirmed",
       "references": [
         "Derived from a 40-bug audit of CPython's pure-Python stdlib (gist 3198710e3c0128fda5e0a7b4e0768e5f), where this family accounted for the pickle.py instance, where a traceback object is passed as a constructor argument instead of being chained.",
         "ruff B904 raise-without-from-inside-except"
       ],
       "differential": "Not a defect when the new exception is genuinely unrelated to the caught one and `from None` would be noise, or in code targeting Python 2 compatibility. Judge by whether the original would help someone debugging.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "flag-not-reset-on-early-exit",
+      "title": "Guard flag set at entry but reset only on the success path",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A method sets a persistent guard flag (`self.busy = True`, `self.restarting = True`) to mark work in progress, then resets it (`= False`) as the last statement -- with one or more `return`/`raise` between them that skip the reset. The flag stays set for the object's lifetime.",
+      "guarded_twin": "`try: self.busy = True; ...work... finally: self.busy = False`. This twin is almost always already present on a sibling method, because the author got it right somewhere else.",
+      "hunt": "Grep every `self.<name> = True`/`= False` pair in the class, then every early `return` between them. Also check the guard's READERS: the damage is proportional to how many entry points consult the flag.",
+      "expected": "the flag reflects reality on every path, so a later call proceeds normally.",
+      "caught_as": "SILENT and PERMANENT -- every subsequent call takes the 'already in progress' branch and returns immediately, doing nothing and reporting nothing. Looks like a frozen or unresponsive component, not an error.",
+      "confirmed_examples": [
+        "CPython idlelib pyshell.py:488 (6080c86) -- `self.restarting` set at 488, reset only at 526; a TimeoutError from `rpcclt.accept()` returns at 508, so IDLE can never restart its subprocess again: Run Module, Restart Shell and the auto-restart all hit the guard and silently do nothing. Found by reports/idlelib_v1.",
+        "CPython idlelib autocomplete_w.py:238 -- `self.is_configuring` set at 238, reset only at 284; `if not self.is_active(): return` at 240 skips it, permanently disabling the <Configure> handler for that completion window."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "idlelib contains five correct twins of this idiom: debugger.py:153 (self.interacting), colorizer.py:265 (self.colorizing), run.py:588 (interruptible), pyshell.py:1174 (self.reading), sidebar.py:57 (temp_enable_text_widget)."
+      ],
+      "differential": "Only state that OUTLIVES the call matters -- an attribute or a qualified global. Re-binding a bare LOCAL is ordinary computation, not a missed reset. Also fine if a `finally` elsewhere in the function restores it, or if the early exit happens BEFORE the flag is set.",
       "detected_by": "scan_python_pitfalls.py"
     }
   ]

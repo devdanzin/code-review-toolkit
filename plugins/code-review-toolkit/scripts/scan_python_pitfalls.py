@@ -1230,6 +1230,85 @@ def _check_raise_without_from(tree: ast.AST) -> list[dict]:
     return out
 
 
+def _flag_assignments(fn: ast.AST) -> dict[str, list[tuple[int, ast.AST]]]:
+    """Map `self.attr` / bare-name targets to their constant assignments."""
+    found: dict[str, list[tuple[int, ast.AST]]] = {}
+    for node in _walk_same_scope(fn):
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        if not isinstance(node.value, ast.Constant):
+            continue
+        target = node.targets[0]
+        name = _dotted_name(target)
+        # Only state that OUTLIVES the call can wedge anything -- an attribute
+        # (`self.busy`) or a qualified global. A bare local dies with the frame,
+        # so re-binding it is ordinary computation, not a missed reset.
+        if not name or "." not in name:
+            continue
+        found.setdefault(name, []).append((node.lineno, node))
+    return found
+
+
+def _check_flag_not_reset_on_early_exit(tree: ast.AST) -> list[dict]:
+    """A guard flag set at entry but reset only on the success path.
+
+    `self.busy = True` ... early `return` ... `self.busy = False` at the end
+    leaves the flag stuck for the object's lifetime, so every later call takes
+    the "already busy" branch and silently does nothing. The correct form --
+    `try: ... finally: self.busy = False` -- usually exists on a sibling method
+    already (idlelib has five, e.g. `Debugger.run`'s `self.interacting`).
+    """
+    out: list[dict] = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        # A finally that touches the flag discharges the obligation.
+        guarded_in_finally: set[str] = set()
+        for node in ast.walk(fn):
+            if isinstance(node, ast.Try):
+                for stmt in node.finalbody:
+                    for inner in ast.walk(stmt):
+                        if isinstance(inner, ast.Assign):
+                            for tgt in inner.targets:
+                                nm = _dotted_name(tgt)
+                                if nm:
+                                    guarded_in_finally.add(nm)
+        for name, assigns in _flag_assignments(fn).items():
+            if name in guarded_in_finally or len(assigns) < 2:
+                continue
+            set_line, set_node = assigns[0]
+            reset_line, _reset_node = assigns[-1]
+            if reset_line <= set_line:
+                continue
+            # Different values: a set/reset pair, not two writes of the same value.
+            values = {a[1].value.value for a in (assigns[0], assigns[-1])}  # type: ignore[attr-defined]
+            if len(values) < 2:
+                continue
+            # An exit between them skips the reset.
+            exits = [
+                n
+                for n in _walk_same_scope(fn)
+                if isinstance(n, (ast.Return, ast.Raise))
+                and set_line < n.lineno < reset_line
+            ]
+            if not exits:
+                continue
+            out.append(
+                _finding(
+                    "flag-not-reset-on-early-exit",
+                    "FIX",
+                    "high",
+                    set_node,
+                    f"`{name}` is set at line {set_line} but reset only at line "
+                    f"{reset_line}; {len(exits)} earlier exit(s) skip the reset",
+                    "the flag stays set for the object's lifetime, so every later "
+                    "call takes the guarded branch and silently does nothing -- "
+                    "use `try: ... finally:` to restore it on every path",
+                )
+            )
+    return out
+
+
 _CHECKS = {
     "mutable-default-argument": _check_mutable_default,
     "late-binding-closure-in-loop": _check_late_binding_closure,
@@ -1250,6 +1329,7 @@ _CHECKS = {
     "error-reported-below-warning": _check_error_reported_below_warning,
     "except-in-loop-without-exit": _check_except_in_loop_without_exit,
     "raise-without-from-in-except": _check_raise_without_from,
+    "flag-not-reset-on-early-exit": _check_flag_not_reset_on_early_exit,
 }
 
 
