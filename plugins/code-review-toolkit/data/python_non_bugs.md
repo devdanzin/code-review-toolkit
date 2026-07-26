@@ -206,3 +206,37 @@ run that produced it, so the evidence is traceable.
   genuine instance was `except OSError: pass` around a directory scan in
   `importlib._bootstrap_external`, which spins forever if the directory is gone. The discriminator is
   the exception's *meaning*, not the loop shape.
+
+### 22. Codec-varying test suite *(CPython `test_io.py`, `test_tarfile.py`)*
+- **Symptom:** the same path opened for reading and for writing with different `encoding=`/`errors=`,
+  flagged as an asymmetric round-trip.
+- **Why non-bug:** the module is *varying the codec on purpose* — that is the thing under test. The
+  raw stdlib pass produced **876 findings of which 543 came from one file**, purely from pairing
+  every reader against every writer of `TESTFN`.
+- **Real bug:** "the two sides disagree" presupposes each side has *one* answer. Require exactly one
+  distinct codec per side; a path opened under three or more is deliberate variation, not asymmetry.
+  Two different *variable* names are not evidence either — they may hold the same value.
+
+### 23. Predicate read as a lifecycle hook *(asyncio `tasks.py`, `taskgroups.py`)*
+- **Symptom:** `self.done()` inside `Task.cancel` flagged as a commit-semantic hook on an abort path.
+- **Why non-bug:** `Future.done()` is a **query returning a bool**, not a hook. It appears in
+  expression position — `if self.done(): return False`.
+- **Real bug:** a hook *invoked as a statement*. Statement-vs-expression position separates the two
+  cleanly, and without it asyncio alone supplied the largest false-positive class in the raw pass.
+
+### 24. Lifecycle hook parameterized by outcome *(`tkinter/dnd.py:183`)*
+- **Symptom:** `cancel()` calling `self.finish(...)` flagged as the abort path invoking the
+  success hook.
+- **Why non-bug:** the hook takes an explicit outcome flag and implements **both** meanings —
+  `finish(self, event, commit=0)`, where `on_release` passes `1` and `cancel` passes `0`. This is
+  the *guarded twin* of the shape, sitting in the stdlib.
+- **Real bug:** the abort path and the success path calling the hook with **identical** arguments, so
+  nothing tells it which meaning to use (`_pyrepl/commands.py`: both call a bare `reader.finish()`).
+
+### 25. Self-written header round-tripped by a test *(CPython `test_zipfile`, `xpickle_worker.py`)*
+- **Symptom:** a signed `struct.unpack` field used as a length, with no negative check.
+- **Why non-bug:** the header was constructed by the same test moments earlier. The shape is about
+  *untrusted* input; a value the program itself just wrote cannot be hostile.
+- **Real bug:** the bytes come from a file, a socket, or an environment the caller does not control.
+  Also beware two near-misses that look like validation and are not: `if size == -1` is a **sentinel**
+  test that excludes exactly one negative value, and `if not size` only tests zero.

@@ -119,6 +119,94 @@ _DATACLASS_DECORATORS = frozenset(
     {"dataclass", "attrs", "define", "frozen", "total_ordering"}
 )
 
+# struct format codes that decode as SIGNED integers. The uppercase twin of each
+# is the unsigned form, which is the fix for a header field that cannot be
+# negative. 'n' is ssize_t (native-only) and is signed as well.
+_SIGNED_STRUCT_CODES = frozenset("bhilqn")
+
+# Substrings that mark a name as an extent -- something used to size, offset, or
+# index into a buffer, where a negative value silently re-anchors a slice instead
+# of raising.
+_EXTENT_HINTS = (
+    "size",
+    "len",
+    "count",
+    "offset",
+    "num",
+    "width",
+    "height",
+    "pos",
+    "index",
+    "idx",
+    "total",
+)
+_EXTENT_NAMES = frozenset({"n", "nb", "cnt"})
+
+# Calls whose arguments are consumed as an extent.
+_EXTENT_CALLS = frozenset(
+    {"range", "read", "seek", "recv", "unpack_from", "iter_unpack", "truncate"}
+)
+
+# Functions that open a stream. `Path.open` is handled separately, since its
+# path is the receiver rather than the first argument.
+_OPEN_MODULES = frozenset({"io", "codecs", "gzip", "bz2", "lzma", "tarfile"})
+
+# `errors=` values that silently substitute rather than fail. Pairing one of
+# these on the read side with a strict write is what destroys data.
+_LENIENT_ERRORS = frozenset(
+    {"replace", "ignore", "backslashreplace", "xmlcharrefreplace"}
+)
+
+# Hooks that mark the end of an object's lifecycle. The commit subset carries
+# "the operation completed" semantics, so calling one on an abort path records
+# work that was abandoned; the rest usually mean "release resources", which is
+# legitimate on both paths.
+_COMMIT_HOOKS = frozenset(
+    {"finish", "commit", "save", "accept", "submit", "done", "complete", "finalize"}
+)
+
+# Receivers whose lifecycle hook usually means "release this resource" rather
+# than "the operation completed".
+_RESOURCE_RECEIVERS = frozenset(
+    {
+        "console",
+        "screen",
+        "display",
+        "term",
+        "terminal",
+        "window",
+        "socket",
+        "sock",
+        "conn",
+        "connection",
+        "stream",
+        "file",
+        "fd",
+        "proc",
+        "process",
+        "pool",
+        "thread",
+    }
+)
+
+# Scope names that mark an abort path -- the operation is being abandoned, not
+# completed.
+_ABORT_HINTS = (
+    "cancel",
+    "abort",
+    "interrupt",
+    "ctrl_c",
+    "sigint",
+    "discard",
+    "rollback",
+    "reject",
+    "revert",
+    "escape",
+    "undo",
+    "kill",
+    "terminate",
+)
+
 
 def _exception_ancestors() -> dict[str, set[str]]:
     """Map each builtin exception name to the set of its ancestor names.
@@ -1845,6 +1933,477 @@ def _check_duplicated_guard(tree: ast.AST) -> list[dict]:
     return out
 
 
+def _iter_scopes(tree: ast.AST):
+    """Yield the module and every function scope inside it."""
+    yield tree
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            yield node
+
+
+def _struct_field_codes(fmt: str) -> list[str]:
+    """One type code per value a struct format produces, in order.
+
+    Needed to tell WHICH name in a tuple unpack got the signed field: in
+    `'<4sBBHH8xIIHH8shhQQx4s'` only two of fifteen values are signed, and
+    flagging the other thirteen by association is pure noise. Repeat counts
+    multiply ordinary codes, but `Ns`/`Np` consume N bytes for ONE value and
+    `Nx` is padding that produces none.
+    """
+    codes: list[str] = []
+    count = ""
+    for char in fmt:
+        if char in "@=<>!":
+            continue
+        if char.isdigit():
+            count += char
+            continue
+        repeat = int(count) if count else 1
+        count = ""
+        if char in "sp":
+            codes.append(char)
+        elif char == "x":
+            continue
+        else:
+            codes.extend(char * repeat)
+    return codes
+
+
+def _unpack_field_codes(node: ast.AST) -> list[str] | None:
+    """Per-value type codes of a `struct.unpack*` call, else None.
+
+    Handles `struct.unpack(fmt, buf)` and `struct.unpack(fmt, buf)[i]`, and the
+    f-string form `f"<{n}h"` that builds a repeat count at runtime (whose length
+    is unknowable statically, so alignment is skipped for it).
+    """
+    index: int | None = None
+    if isinstance(node, ast.Subscript):
+        if isinstance(node.slice, ast.Constant) and isinstance(node.slice.value, int):
+            index = node.slice.value
+        node = node.value
+    if not isinstance(node, ast.Call) or not node.args:
+        return None
+    tail = (_call_name(node) or "").split(".")[-1]
+    if tail not in {"unpack", "unpack_from", "iter_unpack"}:
+        return None
+    fmt = node.args[0]
+    if isinstance(fmt, ast.Constant) and isinstance(fmt.value, str):
+        codes = _struct_field_codes(fmt.value)
+    elif isinstance(fmt, ast.JoinedStr):
+        # f"<{count}h" -- only the literal segments carry type codes, and the
+        # runtime repeat count means the produced length is unknown.
+        literal = "".join(
+            v.value
+            for v in fmt.values
+            if isinstance(v, ast.Constant) and isinstance(v.value, str)
+        )
+        return _struct_field_codes(literal) or None
+    else:
+        return None
+    if index is not None:
+        return [codes[index]] if -len(codes) <= index < len(codes) else None
+    return codes
+
+
+def _bound_names(targets: list[ast.expr]) -> list[tuple[str, ast.expr]]:
+    """Flatten assignment targets to (name, node) pairs, including tuple targets."""
+    out: list[tuple[str, ast.expr]] = []
+    for target in targets:
+        for node in ast.walk(target):
+            if isinstance(node, ast.Name):
+                out.append((node.id, node))
+    return out
+
+
+def _looks_like_extent(name: str) -> bool:
+    lowered = name.lower()
+    return lowered in _EXTENT_NAMES or any(h in lowered for h in _EXTENT_HINTS)
+
+
+def _lower_bound_checked(name: str, nodes: list[ast.AST]) -> bool:
+    """True if *name* is anywhere compared against 0/1, or clamped.
+
+    Deliberately broad: the goal is to stay silent whenever the author showed ANY
+    awareness that the value could be negative, even via a comparison this check
+    does not model precisely.
+    """
+    for node in nodes:
+        if isinstance(node, ast.Compare):
+            operands = [node.left, *node.comparators]
+            has_name = any(name in _names_used(o) for o in operands)
+            has_zero = any(
+                isinstance(o, ast.Constant) and o.value in (0, 1) for o in operands
+            )
+            if has_name and has_zero:
+                return True
+        elif isinstance(node, ast.Call):
+            tail = (_call_name(node) or "").split(".")[-1]
+            if tail in {"max", "abs"} and any(
+                name in _names_used(a) for a in node.args
+            ):
+                return True
+    return False
+
+
+def _extent_names(nodes: list[ast.AST]) -> set[str]:
+    """Names that reach a slice, an index, or an extent-consuming call.
+
+    Propagates backwards through assignment: once `offset` is known to index a
+    buffer, the `name_size` in `offset += name_size` is an extent too.
+    """
+    seed: set[str] = set()
+    for node in nodes:
+        if isinstance(node, ast.Subscript):
+            seed |= _names_used(node.slice)
+        elif isinstance(node, ast.Call):
+            # Strip the private-method underscore: `self._recv(size)` consumes an
+            # extent exactly as `sock.recv(size)` does.
+            tail = (_call_name(node) or "").split(".")[-1].lstrip("_")
+            if tail in _EXTENT_CALLS:
+                for arg in node.args:
+                    seed |= _names_used(arg)
+    # Fixpoint over assignments, bounded -- chains this long do not occur.
+    for _ in range(5):
+        grown = set(seed)
+        for node in nodes:
+            if isinstance(node, (ast.Assign, ast.AugAssign, ast.AnnAssign)):
+                targets = (
+                    node.targets if isinstance(node, ast.Assign) else [node.target]
+                )
+                names = {n for t in targets for n, _ in _bound_names([t])}
+                if names & seed and node.value is not None:
+                    grown |= _names_used(node.value)
+        if grown == seed:
+            break
+        seed = grown
+    return seed
+
+
+def _check_signed_length_from_header(tree: ast.AST) -> list[dict]:
+    """A length/offset unpacked SIGNED from a binary header and never checked
+    for negativity.
+
+    In C this is the classic signed-overflow read. In Python it is harder to
+    spot, and worse in one respect: a negative bound does not raise. Negative
+    slicing re-anchors from the end of the buffer, so a crafted file parses
+    cleanly and yields attacker-chosen bytes instead of an error.
+    """
+    out: list[dict] = []
+    for scope in _iter_scopes(tree):
+        nodes = list(_walk_same_scope(scope))
+        extents = _extent_names(nodes)
+        for stmt in nodes:
+            if not isinstance(stmt, ast.Assign):
+                continue
+            codes = _unpack_field_codes(stmt.value)
+            if not codes or not any(c in _SIGNED_STRUCT_CODES for c in codes):
+                continue
+            bound = _bound_names(stmt.targets)
+            # Align names with fields so only the names that actually received a
+            # signed field are flagged; without this, one signed field in a wide
+            # header taints every name in the tuple.
+            if len(bound) == len(codes):
+                bound = [
+                    pair
+                    for pair, code in zip(bound, codes)
+                    if code in _SIGNED_STRUCT_CODES
+                ]
+            signed = "".join(c for c in codes if c in _SIGNED_STRUCT_CODES)
+            for name, node in bound:
+                if not _looks_like_extent(name):
+                    continue
+                if _lower_bound_checked(name, nodes):
+                    continue
+                reaches = name in extents
+                out.append(
+                    _finding(
+                        "signed-length-from-untrusted-header",
+                        "FIX",
+                        "high" if reaches else "medium",
+                        node,
+                        f"'{name}' is unpacked with a signed struct code "
+                        f"('{signed}') and never checked for a negative value",
+                        (
+                            "it reaches a slice, index, or read length, where a "
+                            "negative value re-anchors instead of raising"
+                            if reaches
+                            else "no extent use found in this scope; the value may be "
+                            "validated or consumed elsewhere (see differential)"
+                        ),
+                    )
+                )
+    return out
+
+
+def _open_target(node: ast.Call) -> tuple[str, ast.Call] | None:
+    """Normalized identity of the path a stream-opening call operates on."""
+    func = node.func
+    if isinstance(func, ast.Name) and func.id == "open":
+        return (ast.dump(node.args[0]), node) if node.args else None
+    if isinstance(func, ast.Attribute) and func.attr == "open":
+        receiver = _dotted_name(func.value)
+        if receiver and receiver.split(".")[-1] in _OPEN_MODULES:
+            return (ast.dump(node.args[0]), node) if node.args else None
+        # A path object: `p.open("w", encoding=...)`.
+        return (ast.dump(func.value), node)
+    return None
+
+
+def _render_codec(node: ast.AST) -> str:
+    """Render a codec argument, collapsing every computed form to one token.
+
+    Two different variable names are not evidence of a codec mismatch -- they may
+    hold the same value -- so all non-literals compare equal.
+    """
+    if isinstance(node, ast.Constant):
+        return str(node.value)
+    return "<expr>"
+
+
+def _keyword_value(node: ast.Call, name: str) -> str | None:
+    for kw in node.keywords:
+        if kw.arg == name:
+            return _render_codec(kw.value)
+    return None
+
+
+def _open_mode(node: ast.Call) -> str:
+    """The literal mode of an open call, defaulting to 'r'. '' if not literal."""
+    positional = node.args[1] if len(node.args) > 1 else None
+    if positional is not None:
+        if isinstance(positional, ast.Constant) and isinstance(positional.value, str):
+            return positional.value
+        return ""
+    for kw in node.keywords:
+        if kw.arg == "mode":
+            if isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, str):
+                return kw.value.value
+            return ""
+    return "r"
+
+
+def _manual_codec(nodes: list[ast.AST], method: str) -> tuple[str | None, str | None]:
+    """Codec of the first `.decode()`/`.encode()` in a scope.
+
+    A binary open carries no codec of its own; the conversion is done by hand,
+    and that is where the asymmetry usually hides -- a `errors='replace'` on the
+    decode side paired with a default-strict encode on the way back out.
+    """
+    for node in nodes:
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        if not isinstance(func, ast.Attribute) or func.attr != method:
+            continue
+        # `self.encode(text)` is a method of the enclosing class taking DATA, not
+        # the str/bytes builtin taking a codec name. Reading its first argument
+        # as an encoding is how this check invented a mismatch in idlelib.
+        if _dotted_name(func.value) in {"self", "cls"}:
+            continue
+        positional: list[str | None] = [_render_codec(a) for a in node.args[:2]]
+        while len(positional) < 2:
+            positional.append(None)
+        return (
+            _keyword_value(node, "encoding") or positional[0],
+            _keyword_value(node, "errors") or positional[1],
+        )
+    return (None, None)
+
+
+def _check_asymmetric_encode_decode(tree: ast.AST) -> list[dict]:
+    """The same path opened for read and for write with different text codecs.
+
+    A lenient read (`errors='replace'`) paired with a strict write means the
+    program's own round-trip destroys data: the substitution characters the read
+    produced are what the write persists, so the original bytes are gone after
+    one cycle.
+    """
+    readers: dict[str, list[tuple[ast.Call, str | None, str | None]]] = {}
+    writers: dict[str, list[tuple[ast.Call, str | None, str | None]]] = {}
+    for scope in _iter_scopes(tree):
+        nodes = list(_walk_same_scope(scope))
+        decoded: tuple[str | None, str | None] | None = None
+        encoded: tuple[str | None, str | None] | None = None
+        for node in nodes:
+            if not isinstance(node, ast.Call):
+                continue
+            target = _open_target(node)
+            if target is None:
+                continue
+            key, call = target
+            mode = _open_mode(call)
+            if not mode:
+                continue
+            writing = any(c in mode for c in "wax")
+            if "b" in mode:
+                # Binary: the codec lives in a hand-written encode/decode nearby.
+                if writing:
+                    if encoded is None:
+                        encoded = _manual_codec(nodes, "encode")
+                    codec = encoded
+                else:
+                    if decoded is None:
+                        decoded = _manual_codec(nodes, "decode")
+                    codec = decoded
+                if codec == (None, None):
+                    continue
+            else:
+                codec = (
+                    _keyword_value(call, "encoding"),
+                    _keyword_value(call, "errors"),
+                )
+            bucket = writers if writing else readers
+            bucket.setdefault(key, []).append((call, *codec))
+
+    out: list[dict] = []
+    for key, writes in writers.items():
+        reads = readers.get(key)
+        if not reads:
+            continue
+        # One codec per side is what "the two sides disagree" presupposes. A path
+        # opened under three different codecs is a module VARYING the codec on
+        # purpose -- which is what codec test suites do, and they dominated the
+        # raw output by two orders of magnitude.
+        r_codecs = {(enc, err) for _, enc, err in reads}
+        w_codecs = {(enc, err) for _, enc, err in writes}
+        if len(r_codecs) > 1 or len(w_codecs) > 1:
+            continue
+        (r_enc, r_err), (w_enc, w_err) = r_codecs.pop(), w_codecs.pop()
+        if (r_enc, r_err) == (w_enc, w_err):
+            continue
+        reader, writer = reads[0][0], writes[0][0]
+        lenient_read = r_err in _LENIENT_ERRORS and w_err not in _LENIENT_ERRORS
+        detail = (
+            f"read uses errors={r_err!r}, write uses errors={w_err!r} -- what "
+            f"the read substituted is what the write persists"
+            if lenient_read
+            else f"read uses encoding={r_enc!r}/errors={r_err!r}, write uses "
+            f"encoding={w_enc!r}/errors={w_err!r}"
+        )
+        out.append(
+            _finding(
+                "asymmetric-encode-decode-pair",
+                "FIX",
+                "high" if lenient_read else "medium",
+                writer,
+                f"this write and the read at line {reader.lineno} open the same "
+                f"path with different text codecs, so a round-trip is lossy",
+                detail,
+            )
+        )
+    return out
+
+
+def _walk_with_scope(node: ast.AST, names: tuple[str, ...] = ()):
+    """Yield (node, enclosing scope names) for every descendant."""
+    for child in ast.iter_child_nodes(node):
+        if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            yield from _walk_with_scope(child, names + (child.name,))
+        else:
+            yield child, names
+            yield from _walk_with_scope(child, names)
+
+
+def _is_abort_scope(names: tuple[str, ...]) -> bool:
+    return any(h in n.lower() for n in names for h in _ABORT_HINTS)
+
+
+def _is_test_name(name: str) -> bool:
+    lowered = name.lower()
+    return lowered.startswith("test") or lowered.endswith(("test", "tests", "testcase"))
+
+
+def _call_args_key(node: ast.Call) -> str:
+    """Structural signature of a call's arguments, for comparing two call sites."""
+    return ast.dump(
+        ast.Call(
+            func=ast.Name(id="_", ctx=ast.Load()),
+            args=node.args,
+            keywords=node.keywords,
+        )
+    )
+
+
+def _check_lifecycle_hook_two_meanings(tree: ast.AST) -> list[dict]:
+    """A commit-semantic lifecycle hook invoked from an abort path.
+
+    `finish`/`commit`/`save` read as "the operation completed", and the override
+    is written to match -- it persists something. Calling one to tear down an
+    ABANDONED operation therefore records work the user cancelled. The hook is
+    doing double duty, and only one of its two meanings is implemented.
+
+    Release-semantic hooks (`close`, `cleanup`, `flush`) are deliberately NOT
+    checked: they mean "let go of the resource", which is correct on both paths,
+    and including them buries the real signal.
+    """
+    abort_sites: list[tuple[ast.Call, tuple[str, ...], str, str]] = []
+    normal_hooks: dict[str, tuple[ast.Call, tuple[str, ...]]] = {}
+    for stmt, scope in _walk_with_scope(tree):
+        # Statement context only. `if self.done():` is a PREDICATE being read,
+        # not a hook being invoked -- asyncio's Future.done() made that the
+        # single largest false-positive class in the raw pass.
+        if not isinstance(stmt, ast.Expr) or not isinstance(stmt.value, ast.Call):
+            continue
+        node = stmt.value
+        func = node.func
+        if not isinstance(func, ast.Attribute) or func.attr not in _COMMIT_HOOKS:
+            continue
+        receiver = _dotted_name(func.value)
+        if not receiver:
+            continue
+        # Test scopes name the path they exercise, so `test_cancel` and
+        # `InterruptedSendTimeoutTest` read as abort paths for any hook they call.
+        if any(_is_test_name(n) for n in scope):
+            continue
+        if _is_abort_scope(scope):
+            abort_sites.append((node, scope, receiver, func.attr))
+        else:
+            normal_hooks.setdefault(func.attr, (node, scope))
+
+    out: list[dict] = []
+    for node, scope, receiver, hook in abort_sites:
+        sibling = normal_hooks.get(hook)
+        # The guarded twin: if the normal path passes DIFFERENT arguments, the
+        # hook is being told which outcome it is handling and implements both
+        # meanings. tkinter's dnd.py is the stdlib's model of this -- `cancel`
+        # calls `self.finish(event, 0)` where `on_release` calls
+        # `self.finish(event, 1)`. That is the fix, not the bug.
+        if sibling is not None and _call_args_key(node) != _call_args_key(sibling[0]):
+            continue
+        tail = receiver.split(".")[-1].lower()
+        # On a resource-like object the hook usually means "tear down", not
+        # "commit" -- real ambiguity, so report it lower rather than suppress it.
+        release_reading = tail in _RESOURCE_RECEIVERS and hook not in {
+            "commit",
+            "save",
+            "submit",
+            "accept",
+        }
+        confidence = "medium" if release_reading or sibling is None else "high"
+        where = f"'{'.'.join(scope)}'" if scope else "an abort path"
+        detail = (
+            f"'{hook}' reads as 'the operation completed'; if the override persists "
+            f"anything, the abandoned operation is recorded as done"
+        )
+        if sibling is not None:
+            detail += f" -- the same hook is called on a normal path at line {sibling[0].lineno}"
+        if release_reading:
+            detail += (
+                f" (on a '{tail}' the hook may just mean tear-down; check the override)"
+            )
+        out.append(
+            _finding(
+                "one-lifecycle-hook-two-meanings",
+                "FIX",
+                confidence,
+                node,
+                f"{receiver}.{hook}() is called from {where}, an abort path",
+                detail,
+            )
+        )
+    return out
+
+
 _CHECKS = {
     "mutable-default-argument": _check_mutable_default,
     "late-binding-closure-in-loop": _check_late_binding_closure,
@@ -1871,6 +2430,9 @@ _CHECKS = {
     "test-cannot-fail": _check_test_cannot_fail,
     "self-referential-accumulate": _check_self_referential_accumulate,
     "duplicated-guard-wrong-operand": _check_duplicated_guard,
+    "signed-length-from-untrusted-header": _check_signed_length_from_header,
+    "asymmetric-encode-decode-pair": _check_asymmetric_encode_decode,
+    "one-lifecycle-hook-two-meanings": _check_lifecycle_hook_two_meanings,
 }
 
 
