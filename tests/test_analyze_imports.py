@@ -370,5 +370,70 @@ class TestRelativeImportResolution(unittest.TestCase):
         self.assertEqual(mod.detect_cycles(graph), [])
 
 
+class TestFanInResolution(unittest.TestCase):
+    """Found by the coverage.py benchmark: `coverage/__init__.py` reported a
+    fan-in of 209 in a 44-file package where the true figure is 24. A prefix
+    match made a package's __init__ absorb every import of every module inside
+    it -- the same fallback detect_cycles had already dropped, never propagated."""
+
+    FILES = ["pkg/__init__.py", "pkg/a.py", "pkg/b.py", "pkg/c.py"]
+
+    def test_package_init_does_not_absorb_every_submodule_import(self):
+        graph = {
+            "pkg/__init__.py": [{"target": "pkg.a"}],
+            "pkg/a.py": [{"target": "pkg.b"}],
+            "pkg/c.py": [{"target": "pkg.b"}],
+        }
+        fan_in = mod.compute_metrics(graph, self.FILES)["fan_in"]
+        self.assertEqual(fan_in["pkg/b.py"], 2)
+        self.assertEqual(fan_in["pkg/__init__.py"], 0)
+
+    def test_bare_package_import_counts_against_init(self):
+        graph = {"pkg/a.py": [{"target": "pkg"}]}
+        fan_in = mod.compute_metrics(graph, self.FILES)["fan_in"]
+        self.assertEqual(fan_in["pkg/__init__.py"], 1)
+
+    def test_unresolvable_target_is_not_attributed(self):
+        graph = {"pkg/a.py": [{"target": "third_party.thing"}]}
+        fan_in = mod.compute_metrics(graph, self.FILES)["fan_in"]
+        self.assertEqual(sum(fan_in.values()), 0)
+
+
+class TestCyclePathShape(unittest.TestCase):
+    """Found by the coverage.py benchmark: ALL 26 reported cycles had a
+    duplicated node, because the reconstruction seeded the list with the closing
+    node and then walked back onto it."""
+
+    def test_two_cycle_has_exactly_two_nodes(self):
+        graph = {
+            "a.py": [{"target": "b", "type_checking_only": False}],
+            "b.py": [{"target": "a", "type_checking_only": False}],
+        }
+        cycles = mod.detect_cycles(graph)
+        self.assertEqual(len(cycles), 1)
+        self.assertEqual(len(cycles[0]), 2)
+        self.assertEqual(len(cycles[0]), len(set(cycles[0])))
+
+    def test_three_cycle_has_no_duplicate(self):
+        graph = {
+            "a.py": [{"target": "b", "type_checking_only": False}],
+            "b.py": [{"target": "c", "type_checking_only": False}],
+            "c.py": [{"target": "a", "type_checking_only": False}],
+        }
+        for cycle in mod.detect_cycles(graph):
+            self.assertEqual(len(cycle), len(set(cycle)), cycle)
+
+    def test_type_checking_only_cycle_is_not_a_cycle(self):
+        # A TYPE_CHECKING import does not run -- avoiding the cycle is exactly
+        # why the guard is there. coverage.py had 20 such edges.
+        graph = {
+            "a.py": [{"target": "b", "type_checking_only": False}],
+            "b.py": [{"target": "a", "type_checking_only": True}],
+        }
+        self.assertEqual(mod.detect_cycles(graph), [])
+        self.assertEqual(len(mod.detect_cycles(graph, include_type_checking=True)), 1)
+
+
 if __name__ == "__main__":
     unittest.main()
+

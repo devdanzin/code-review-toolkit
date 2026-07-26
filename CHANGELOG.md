@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Fixed — three bugs found by the coverage.py benchmark
+
+- **`analyze_imports` fan-in absorbed every submodule import into the package `__init__`.** The
+  prefix match `t.startswith(f_module + ".")` made `coverage/__init__.py` match every `coverage.*`
+  target, reporting a fan-in of **209 in a 44-file package where the true figure is 24**. This is the
+  same prefix fallback that `detect_cycles` had already dropped after the `_pyrepl` run — the fix was
+  never propagated to its sibling function, which is exactly the shape the toolkit's own
+  `git-history-analyzer` hunts.
+- **Every reported import cycle carried a duplicated node.** The reconstruction seeded the path with
+  the closing node and then walked back onto it, so each cycle came out one element too long and a
+  2-cycle rendered as three nodes (`a -> b -> b`). **All 26** cycles reported for coverage.py were
+  affected.
+- **`TYPE_CHECKING`-only imports were counted as runtime cycles.** A guarded import does not run —
+  avoiding the cycle is precisely why the guard is there. coverage.py has 20 such edges, and dropping
+  them takes its cycle count from 26 to 20. `detect_cycles` already parsed the flag and then ignored
+  it; `include_type_checking=True` keeps the type-time graph available.
+- **`correlate_tests` reported 0% for any package whose tests live in a sibling tree.** Second
+  occurrence of this gap (`_pyrepl` was the first), and it reads as a finding about the project when
+  it is an artefact of the scope. It now searches the project root *and* the scanned tree's own
+  parent, preferring a `test_<package>/` subdirectory. coverage.py: 0% → **61.4%** (101 test files);
+  `_pyrepl`: 0% → **36.0%** via `Lib/test/test_pyrepl`; idlelib unchanged at 84.8%. The new
+  `external_test_roots` field distinguishes "no tests" from "tests found elsewhere".
+
 ## [1.5.0]
 
 ### Added

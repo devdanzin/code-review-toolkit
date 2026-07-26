@@ -246,6 +246,39 @@ def main() -> None:
 
     source_files, test_files = classify_files(files, project_root)
 
+    # A package is very often reviewed on its own (`coverage/`, `Lib/_pyrepl`)
+    # while its tests live in a SIBLING tree. Scanning only the target then finds
+    # zero test files and reports 0% coverage for a well-tested project -- which
+    # reads as a finding about the project when it is an artefact of the scope.
+    external_test_roots: list[str] = []
+    if not test_files and scan_root != project_root:
+        package = scan_root.name
+        # Search the project root AND the scanned tree's own parent: CPython puts
+        # `Lib/test/` beside `Lib/_pyrepl/`, not at the repository root.
+        for base in (project_root, scan_root.parent):
+            for name in ("tests", "test", "testing"):
+                root = base / name
+                if not root.is_dir():
+                    continue
+                # Prefer a subdirectory dedicated to this package -- scanning all
+                # of CPython's Lib/test to review one package would be both slow
+                # and wrong.
+                targets = [
+                    root / f"test_{package}",
+                    root / f"test_{package.lstrip('_')}",
+                    root / package,
+                ]
+                candidate = next((c for c in targets if c.is_dir()), root)
+                found = sorted(discover_python_files(candidate))
+                _, discovered = classify_files(found, project_root)
+                if not discovered:
+                    continue
+                test_files.extend(discovered)
+                external_test_roots.append(str(candidate.relative_to(project_root)))
+                break
+            if external_test_roots:
+                break
+
     # Analyze source files.
     source_info: dict[str, dict] = {}
     for sf in source_files:
@@ -327,6 +360,10 @@ def main() -> None:
             "total_skipped_tests": sum(
                 sc["skipped_test_count"] for sc in source_coverage
             ),
+            # Non-empty when the tests were found OUTSIDE the scanned tree, so a
+            # reader can tell "this package has no tests" from "the tests live
+            # somewhere else and the scope missed them".
+            "external_test_roots": external_test_roots,
         },
         "untested_sources": sorted(untested),
         "source_coverage": source_coverage,

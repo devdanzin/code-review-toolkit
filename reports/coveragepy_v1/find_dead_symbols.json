@@ -1,0 +1,441 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "files_total": 44,
+  "files_analyzed": 44,
+  "files_capped": false,
+  "summary": {
+    "unused_imports": 42,
+    "unreferenced_symbols": 9,
+    "orphan_files": 2,
+    "commented_code_blocks": 6,
+    "high_confidence_items": 51,
+    "medium_confidence_items": 2
+  },
+  "unused_imports": [
+    {
+      "file": "coverage/__main__.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/annotate.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/bytecode.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/cmdline.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/collector.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/context.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/control.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/core.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/data.py",
+      "line": 13,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/debug.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/disposition.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/env.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/exceptions.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/files.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/html.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/inorout.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/jsonreport.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/lcovreport.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/misc.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/multiproc.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/numbits.py",
+      "line": 17,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/parser.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/patch.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/phystokens.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/plugin.py",
+      "line": 115,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/plugin_support.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/python.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/pytracer.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/regions.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/report.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/report_core.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/results.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/sqldata.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/sqlitedb.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/templite.py",
+      "line": 13,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/tomlconfig.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/types.py",
+      "line": 8,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/version.py",
+      "line": 7,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/xmlreport.py",
+      "line": 6,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    }
+  ],
+  "unreferenced_symbols": [
+    {
+      "file": "coverage/cmdline.py",
+      "line": 1200,
+      "name": "main_deprecated",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/debug.py",
+      "line": 360,
+      "name": "pp",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/debug.py",
+      "line": 576,
+      "name": "break_in_debugger",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "line": 271,
+      "name": "run_python_module",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "line": 285,
+      "name": "run_python_file",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/files.py",
+      "line": 47,
+      "name": "relative_directory",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/misc.py",
+      "line": 293,
+      "name": "import_local_file",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/numbits.py",
+      "line": 112,
+      "name": "register_sqlite_functions",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    },
+    {
+      "file": "coverage/sqldata.py",
+      "line": 1205,
+      "name": "good_filename_match",
+      "type": "function",
+      "is_public": true,
+      "confidence": "high"
+    }
+  ],
+  "orphan_files": [
+    {
+      "file": "coverage/__main__.py",
+      "module": "coverage.__main__",
+      "confidence": "medium"
+    },
+    {
+      "file": "coverage/pth_file.py",
+      "module": "coverage.pth_file",
+      "confidence": "medium"
+    }
+  ],
+  "commented_code_blocks": [
+    {
+      "file": "coverage/cmdline.py",
+      "line_start": 750,
+      "line_end": 754,
+      "line_count": 5,
+      "preview": "# entry_points={\"console_scripts\":...} on Windows makes files"
+    },
+    {
+      "file": "coverage/collector.py",
+      "line_start": 282,
+      "line_end": 284,
+      "line_count": 3,
+      "preview": "# for running code before the thread main is the tracing function.  So we"
+    },
+    {
+      "file": "coverage/control.py",
+      "line_start": 403,
+      "line_end": 405,
+      "line_count": 3,
+      "preview": "# self.config will do. Choosing randomly stops people from doing"
+    },
+    {
+      "file": "coverage/env.py",
+      "line_start": 67,
+      "line_end": 72,
+      "line_count": 6,
+      "preview": "#    with ("
+    },
+    {
+      "file": "coverage/phystokens.py",
+      "line_start": 44,
+      "line_end": 46,
+      "line_count": 3,
+      "preview": "#   usage = \"\"\"\\"
+    },
+    {
+      "file": "coverage/phystokens.py",
+      "line_start": 64,
+      "line_end": 66,
+      "line_count": 3,
+      "preview": "#   a = [\"aaa\",\\ # there may be zero or more blanks between \",\" and \"\\\"."
+    }
+  ]
+}

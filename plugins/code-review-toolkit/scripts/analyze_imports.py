@@ -290,8 +290,27 @@ def build_internal_graph(
     return graph
 
 
+def module_name_for(path: str) -> str:
+    """Dotted module name a project-relative file path denotes."""
+    module = path.replace("/", ".").replace("\\", ".")
+    if module.endswith(".py"):
+        module = module[:-3]
+    if module.endswith(".__init__"):
+        module = module[:-9]
+    return module
+
+
 def compute_metrics(graph: dict[str, list[dict]], all_files: list[str]) -> dict:
-    """Compute fan-in and fan-out per file."""
+    """Compute fan-in and fan-out per file.
+
+    Fan-in resolves each target to EXACTLY one file. The previous prefix match
+    (`t.startswith(f_module + ".")`) made a package's `__init__.py` match every
+    module inside it, so `coverage/__init__.py` reported a fan-in of 209 in a
+    44-file package where the true figure is 24. That is the same prefix
+    fallback `detect_cycles` had already dropped -- the fix was never propagated
+    to its sibling.
+    """
+    index = {module_name_for(f): f for f in all_files}
     fan_out: dict[str, int] = {}
     fan_in: dict[str, int] = {}
 
@@ -303,16 +322,9 @@ def compute_metrics(graph: dict[str, list[dict]], all_files: list[str]) -> dict:
         targets = {e["target"] for e in edges}
         fan_out[source] = len(targets)
         for t in targets:
-            # Fan-in: find files that match this target module path.
-            for f in all_files:
-                # Rough match: does the file path correspond to the target?
-                f_module = f.replace("/", ".").replace("\\", ".")
-                if f_module.endswith(".py"):
-                    f_module = f_module[:-3]
-                if f_module.endswith(".__init__"):
-                    f_module = f_module[:-9]
-                if f_module == t or t.startswith(f_module + "."):
-                    fan_in[f] = fan_in.get(f, 0) + 1
+            resolved = index.get(t)
+            if resolved is not None:
+                fan_in[resolved] = fan_in.get(resolved, 0) + 1
 
     return {
         "fan_out": dict(sorted(fan_out.items(), key=lambda x: -x[1])),
@@ -320,16 +332,27 @@ def compute_metrics(graph: dict[str, list[dict]], all_files: list[str]) -> dict:
     }
 
 
-def detect_cycles(graph: dict[str, list[dict]]) -> list[list[str]]:
+def detect_cycles(
+    graph: dict[str, list[dict]], include_type_checking: bool = False
+) -> list[list[str]]:
     """Detect circular dependencies using DFS.
 
     Normalises targets to file paths so that cycles between files can be
     detected even when the graph edges use dotted module names.
+
+    A `TYPE_CHECKING`-guarded import does NOT run, so a cycle that exists only
+    through such edges is not an import cycle -- avoiding it is precisely why
+    the guard is there. Those edges are excluded by default; the flag keeps the
+    type-time graph available for callers that want it.
     """
     # Build a simplified adjacency list: file -> set of target module strings.
     adj: dict[str, set[str]] = {}
     for source, edges in graph.items():
-        adj[source] = {e["target"] for e in edges}
+        adj[source] = {
+            e["target"]
+            for e in edges
+            if include_type_checking or not e.get("type_checking_only")
+        }
 
     # Collect all known file-stem identifiers so we can map dotted targets
     # back to concrete files.
@@ -373,8 +396,12 @@ def detect_cycles(graph: dict[str, list[dict]]) -> list[list[str]]:
             if v not in color:
                 color[v] = WHITE
             if color[v] == GRAY:
-                # Found a cycle — reconstruct it.
-                cycle = [v, u]
+                # Found a cycle -- reconstruct it. The walk back from `u` ends ON
+                # `v`, so seeding the list with `v` as well repeated it: every
+                # cycle came out one element too long, and a 2-cycle rendered as
+                # three nodes ("a -> b -> b"). All 26 cycles reported for
+                # coverage.py had a duplicated node.
+                cycle = [u]
                 node = u
                 while node != v and parent.get(node) is not None:
                     node = parent[node]  # type: ignore[assignment]
