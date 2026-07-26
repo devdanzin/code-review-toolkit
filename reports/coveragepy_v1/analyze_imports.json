@@ -13132,8 +13132,8 @@
       "coverage/version.py": 0
     },
     "fan_in": {
-      "coverage/__init__.py": 209,
       "coverage/types.py": 29,
+      "coverage/__init__.py": 24,
       "coverage/exceptions.py": 23,
       "coverage/misc.py": 22,
       "coverage/plugin.py": 15,
@@ -13180,174 +13180,118 @@
   },
   "cycles": [
     [
-      "coverage/plugin.py",
-      "coverage/types.py",
-      "coverage/types.py"
-    ],
-    [
-      "coverage/misc.py",
-      "coverage/types.py",
-      "coverage/plugin.py",
-      "coverage/misc.py"
+      "coverage/__init__.py",
+      "coverage/plugin.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/data.py",
-      "coverage/files.py",
-      "coverage/misc.py",
-      "coverage/types.py",
-      "coverage/plugin.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/data.py",
-      "coverage/files.py",
-      "coverage/__init__.py"
+      "coverage/files.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/data.py",
       "coverage/sqldata.py",
-      "coverage/sqlitedb.py",
-      "coverage/debug.py",
-      "coverage/__init__.py"
+      "coverage/debug.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/control.py",
-      "coverage/report_core.py",
-      "coverage/__init__.py"
+      "coverage/xmlreport.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/control.py",
-      "coverage/multiproc.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/parser.py",
-      "coverage/python.py",
-      "coverage/python.py"
+      "coverage/jsonreport.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/control.py",
-      "coverage/core.py",
-      "coverage/sysmon.py",
-      "coverage/python.py",
-      "coverage/parser.py",
-      "coverage/phystokens.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/core.py",
-      "coverage/sysmon.py",
-      "coverage/python.py",
-      "coverage/parser.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/core.py",
-      "coverage/sysmon.py",
-      "coverage/python.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/core.py",
-      "coverage/sysmon.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/core.py",
-      "coverage/pytracer.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/core.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/core.py",
       "coverage/config.py",
-      "coverage/tomlconfig.py",
-      "coverage/__init__.py"
+      "coverage/tomlconfig.py"
     ],
     [
       "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/report.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/annotate.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/control.py",
-      "coverage/patch.py",
       "coverage/control.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/control.py",
-      "coverage/patch.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/xmlreport.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/jsonreport.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/inorout.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/html.py",
-      "coverage/__init__.py"
-    ],
-    [
-      "coverage/__init__.py",
-      "coverage/control.py",
-      "coverage/__init__.py"
+      "coverage/collector.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/control.py",
       "coverage/collector.py",
-      "coverage/__init__.py"
+      "coverage/core.py"
     ],
     [
       "coverage/__init__.py",
       "coverage/control.py",
-      "coverage/lcovreport.py",
-      "coverage/__init__.py"
+      "coverage/collector.py",
+      "coverage/core.py",
+      "coverage/sysmon.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/collector.py",
+      "coverage/core.py",
+      "coverage/sysmon.py",
+      "coverage/parser.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/collector.py",
+      "coverage/core.py",
+      "coverage/sysmon.py",
+      "coverage/parser.py",
+      "coverage/phystokens.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/collector.py",
+      "coverage/core.py",
+      "coverage/sysmon.py",
+      "coverage/parser.py",
+      "coverage/python.py"
+    ],
+    [
+      "coverage/parser.py",
+      "coverage/python.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/collector.py",
+      "coverage/core.py",
+      "coverage/pytracer.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/multiproc.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/inorout.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/html.py"
+    ],
+    [
+      "coverage/__init__.py",
+      "coverage/control.py",
+      "coverage/patch.py"
+    ],
+    [
+      "coverage/control.py",
+      "coverage/patch.py"
     ]
   ],
   "re_exports": [

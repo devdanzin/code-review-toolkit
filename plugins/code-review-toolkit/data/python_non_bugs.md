@@ -281,3 +281,21 @@ run that produced it, so the evidence is traceable.
   result is genuinely *tested* (an `if`/`while`/`assert` test or a comparison). Counting every
   non-statement position also counted `f(Foo())` and inflated the sibling count until the argument
   meant nothing.
+
+### 31. Import cycle through a package facade via a submodule import *(coverage.py)*
+- **Symptom:** a reported import cycle whose closing edge is `from pkg import submodule`
+  (`from coverage import env`, at 12+ sites).
+- **Why non-bug:** that statement binds the **submodule**, not a name in `__init__.py` — Python's
+  `_handle_fromlist` falls back to importing `pkg.submodule` when the attribute is missing on the
+  partially-initialised package. The dependency is on `pkg/submodule.py`. Attributing it to the
+  package manufactures a cycle through the facade: **16 of the 20 cycles first reported for
+  coverage.py were this one idiom**, and none was real.
+- **Real bug:** `from pkg import SomeName` where `SomeName` is genuinely *bound* in `__init__.py`.
+  That one is order-sensitive — coverage.py's `jsonreport.py:14` / `xmlreport.py:16` do
+  `from coverage import __version__`, which works only because `__init__.py` binds `__version__`
+  before importing `control`. Reordering those two blocks — a change no reviewer would flag —
+  raises `ImportError` at import time.
+- **Second-order lesson:** the phantom edges came from an **incomplete index**, not a bad matching
+  rule. A leaf module with no imports of its own is absent from the graph's keys, so indexing from
+  those alone leaves it unresolvable and the bare-package fallback blames the facade. Index every
+  file. This is the same root cause as the prefix fallback removed after the `_pyrepl` run.

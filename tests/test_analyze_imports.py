@@ -434,6 +434,51 @@ class TestCyclePathShape(unittest.TestCase):
         self.assertEqual(len(mod.detect_cycles(graph, include_type_checking=True)), 1)
 
 
+class TestSubmoduleVsBoundName(unittest.TestCase):
+    """`from pkg import submodule` binds the SUBMODULE, so the dependency is on
+    that file -- not on pkg/__init__.py. Attributing it to the package
+    manufactured a cycle through the facade: 16 of the 20 cycles first reported
+    for coverage.py were this one idiom (`from coverage import env`)."""
+
+    INDEX = {"pkg": "pkg/__init__.py", "pkg.env": "pkg/env.py"}
+
+    def test_submodule_import_resolves_to_the_submodule(self):
+        edge = {"target": "pkg", "names": [{"name": "env"}]}
+        self.assertEqual(
+            mod.resolve_edge_targets(edge, self.INDEX), {"pkg/env.py"}
+        )
+
+    def test_bound_name_import_resolves_to_the_package(self):
+        # `Coverage` is bound in __init__.py, so this edge IS on the package
+        # and is order-sensitive.
+        edge = {"target": "pkg", "names": [{"name": "Coverage"}]}
+        self.assertEqual(
+            mod.resolve_edge_targets(edge, self.INDEX), {"pkg/__init__.py"}
+        )
+
+    def test_mixed_import_resolves_to_both(self):
+        edge = {"target": "pkg", "names": [{"name": "env"}, {"name": "Coverage"}]}
+        self.assertEqual(
+            mod.resolve_edge_targets(edge, self.INDEX),
+            {"pkg/env.py", "pkg/__init__.py"},
+        )
+
+    def test_bare_package_import_resolves_to_the_package(self):
+        edge = {"target": "pkg", "names": []}
+        self.assertEqual(
+            mod.resolve_edge_targets(edge, self.INDEX), {"pkg/__init__.py"}
+        )
+
+    def test_leaf_module_is_indexed_even_with_no_imports_of_its_own(self):
+        # env.py has fan-out 0, so it is absent from the graph KEYS. Indexing
+        # from those alone left `pkg.env` unresolvable and the bare-package
+        # fallback then blamed the facade -- the same root cause as the prefix
+        # fallback removed earlier: an incomplete index, not a bad matching rule.
+        graph = {"pkg/a.py": [{"target": "pkg", "names": [{"name": "env"}]}]}
+        all_files = ["pkg/__init__.py", "pkg/a.py", "pkg/env.py"]
+        self.assertEqual(mod.detect_cycles(graph, all_files=all_files), [])
+
+
 if __name__ == "__main__":
     unittest.main()
 
