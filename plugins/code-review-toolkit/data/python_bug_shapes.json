@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "_comment": "Python bug-SHAPE catalog for the informed-explore loop. PROJECT-INDEPENDENT: each entry is a reusable code SHAPE (not a file:line), its guarded twin (= the fix pattern), a sibling-hunt directive, `expected` (the behaviour the fix should produce), and `caught_as` (how the defect surfaces at runtime -- most of these are SILENT, which is exactly why a reviewer must look for them). `agent` names the owning agent (agents/<name>.md) and `detected_by` the script whose check implements the shape 1:1 (so a finding traces back to its template); `severity` is the DEFAULT before triage. `validation` records how well-grounded the shape is: `documented` = the semantics are specified in the Python docs/FAQ or enforced by a mainstream linter rule, so the shape is real even though this toolkit has not yet confirmed an instance; `confirmed` = a validation run in reports/ found a true positive (cite it in confirmed_examples). Promote shapes from `documented` to `confirmed` as reports land -- that promotion IS the calibration loop. build_informed_briefing.py turns these into per-run agent briefings.",
+  "shapes": [
+    {
+      "id": "mutable-default-argument",
+      "title": "Mutable object as a default parameter value -- shared across every call",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A `def`/`async def` whose default is a mutable literal or call: `def f(items=[])`, `def f(opts={})`, `def f(s=set())`, `def f(now=datetime.now())`. The default is evaluated ONCE at function-definition time, so every call that mutates it sees the accumulated state of all prior calls.",
+      "guarded_twin": "The `None` sentinel: `def f(items=None): items = [] if items is None else items`. In most codebases the correct twin already exists on a sibling function -- find it and match it.",
+      "hunt": "For each confirmed instance, check every other function in the same module and every override/implementation of the same interface; this shape is copy-pasted along a family of similar signatures.",
+      "expected": "each call with the argument omitted starts from a fresh empty container (or a freshly-evaluated timestamp).",
+      "caught_as": "SILENT -- results that grow across calls, stale timestamps, or test pollution that only appears when tests run in a particular order. Never raises.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python docs, 'Default parameter values are evaluated ... once' (tutorial 4.8.1)",
+        "ruff B006 / flake8-bugbear: mutable-argument-default"
+      ],
+      "differential": "A mutable default that is only ever READ (never mutated, never returned) is a style issue, not a bug -- do not report it as FIX. Read the body before classifying.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "late-binding-closure-in-loop",
+      "title": "Closure captures the loop variable by reference, not by value",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A `lambda` or nested `def` created inside a loop that references the loop variable: `handlers = [lambda: process(i) for i in items]`, or `for name in names: register(lambda: use(name))`. Every closure shares one cell and sees the FINAL value after the loop ends.",
+      "guarded_twin": "Bind at creation time via a default argument (`lambda i=i: process(i)`) or `functools.partial(process, i)`. A sibling loop in the same file that already does this is the fix pattern.",
+      "hunt": "Grep every loop body that constructs a callable -- callbacks, event handlers, retry wrappers, click/argparse command registration, and thread/task targets are the recurring hosts.",
+      "expected": "each closure operates on the loop value that was current when it was created.",
+      "caught_as": "SILENT -- every callback behaves as if it were the last iteration. Often mistaken for a race or a caching bug.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python Programming FAQ, 'Why do lambdas defined in a loop with different values all return the same result?'",
+        "ruff B023 / flake8-bugbear: function-uses-loop-variable"
+      ],
+      "differential": "Safe when the closure is CALLED inside the same iteration (immediately consumed), or when the loop variable is not referenced in the closure body. Trace whether the callable escapes the iteration.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "except-clause-ordering-unreachable",
+      "title": "A broad `except` precedes a narrower one, making the specific handler dead",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "In one `try` statement, an `except` naming a base class appears BEFORE an `except` naming its subclass -- `except Exception:` then `except ValueError:`, or `except OSError:` then `except FileNotFoundError:`. Python matches clauses top-to-bottom, so the specific branch can never run.",
+      "guarded_twin": "Most-specific-first ordering. The correct order usually already exists in a neighbouring try/except in the same module.",
+      "hunt": "For each hit, audit every try/except in the same error-handling layer -- ordering mistakes cluster where handlers were appended over time rather than inserted.",
+      "expected": "the specific handler runs for its exception type; the broad handler only catches what the specific ones did not.",
+      "caught_as": "SILENT -- the specialized recovery path (retry, fallback, targeted cleanup) is quietly replaced by the generic one.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python reference, 'the try statement': clauses are tested in order",
+        "pylint E0701 bad-except-order"
+      ],
+      "differential": "Not a bug if the earlier clause re-raises unconditionally, or if the two types are unrelated (no subclass relationship) -- verify the MRO, do not assume from the names.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "return-or-break-in-finally",
+      "title": "`return`/`break`/`continue` inside `finally` discards the in-flight exception",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A `finally:` block containing `return`, `break`, or `continue`. Any exception propagating through the `try` is silently dropped when the `finally` transfers control, so the caller sees a normal return instead of the error.",
+      "guarded_twin": "Do the cleanup in `finally` but let control flow continue; put the `return` after the try/finally, or use a context manager.",
+      "hunt": "Audit every `finally` in the module; also check `__exit__` methods that `return True` unconditionally -- that is the same defect expressed through the context-manager protocol.",
+      "expected": "the original exception propagates to the caller; cleanup still runs.",
+      "caught_as": "SILENT -- errors vanish. A function that should have raised returns a normal (often `None`) value; failures surface far downstream as an unexpected `None`.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python reference, 'the try statement': a return/break/continue in finally discards the pending exception",
+        "ruff B012 / flake8-bugbear; PEP 765 (3.14 warns on return-in-finally)"
+      ],
+      "differential": "`__exit__` returning a computed truthy value for a SPECIFIC exception type is a legitimate suppression idiom; an unconditional `return True` is the bug.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "eq-without-hash",
+      "title": "`__eq__` defined without `__hash__` -- instances become unhashable or hash inconsistently",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "pattern": "A class defining `__eq__` but not `__hash__`. Python 3 sets `__hash__ = None`, so instances can no longer go in a `set` or be used as `dict` keys. The mirror defect: a class defining BOTH where `__hash__` does not agree with `__eq__` (equal objects hashing differently), which corrupts set/dict membership.",
+      "guarded_twin": "Define `__hash__` over the same fields `__eq__` compares, or use `@dataclass(frozen=True)`/`eq=True, frozen=True` which derives both consistently.",
+      "hunt": "Check every class in the module hierarchy that defines `__eq__`; also check whether instances are ever placed in a set, used as dict keys, or deduplicated -- that is where the breakage surfaces.",
+      "expected": "equal objects hash equally and can be used in hash-based containers.",
+      "caught_as": "`TypeError: unhashable type` at the first set/dict use (loud), OR -- when both are defined inconsistently -- SILENT duplicate entries and failed lookups.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python data model, object.__hash__: 'If a class that overrides __eq__() needs to retain the hash ...'",
+        "pylint W1641 eq-without-hash"
+      ],
+      "differential": "Intentional for deliberately-unhashable mutable value objects. Only report when the type is actually used (or plausibly used) in a hash-based container.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "mutation-during-iteration",
+      "title": "A container is mutated while being iterated",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "`for k in d:` with `del d[k]` / `d[new] = v` in the body; `for x in lst:` with `lst.remove(x)` / `lst.append(...)`; iterating a set while adding to it. Dict/set raise `RuntimeError: dictionary changed size during iteration`; LISTS DO NOT -- they silently skip elements as indices shift.",
+      "guarded_twin": "Iterate over a snapshot (`for k in list(d)`) or build a new container via comprehension and rebind.",
+      "hunt": "For each hit, check every loop in the same module that mutates its own iteration target; the list variant is the dangerous one because it never raises.",
+      "expected": "every element is visited exactly once, and the intended removals all happen.",
+      "caught_as": "`RuntimeError` for dict/set (loud); SILENT element-skipping for lists -- roughly every other element is missed.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python docs, dict view objects: 'Iterating views while adding or deleting entries ... may raise RuntimeError'"
+      ],
+      "differential": "Safe when the mutation happens after a `break`, or when the loop iterates an explicit copy (`list(...)`, `.copy()`, a slice). Confirm the iterated expression is the SAME object being mutated.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "asyncio-fire-and-forget-task",
+      "title": "`asyncio.create_task()` result is discarded -- the task can be garbage-collected mid-flight",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "`asyncio.create_task(coro())` / `loop.create_task(...)` / `ensure_future(...)` whose return value is not stored, awaited, or added to a set. The event loop keeps only a WEAK reference, so the task may be collected before it completes -- and any exception it raised is swallowed.",
+      "guarded_twin": "Retain a strong reference: keep a module/instance-level `set`, `add()` the task, and `task.add_done_callback(tasks.discard)`; or `await` it; or gather it.",
+      "hunt": "Grep every `create_task`/`ensure_future` call site; also check whether a task-exception handler exists at all -- a project with one retained-task set usually has other sites that forgot it.",
+      "expected": "the task runs to completion and its exception surfaces (logged or re-raised), not silently dropped.",
+      "caught_as": "SILENT and NONDETERMINISTIC -- work intermittently does not happen under load; exceptions never appear. Sometimes an 'Task was destroyed but it is pending!' warning.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "asyncio docs, asyncio.create_task: 'Save a reference to the result ... the event loop only keeps weak references to tasks'"
+      ],
+      "differential": "Fine when the call is immediately awaited, gathered, or the returned task is assigned. A task stored ONLY in a local that goes out of scope is still the bug.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "blocking-call-in-async-function",
+      "title": "A synchronous blocking call inside `async def` stalls the whole event loop",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "Inside an `async def`: `time.sleep(...)`, `requests.get(...)`, `open(...).read()` on a large file, `subprocess.run(...)`, a blocking DB driver call, or `socket` I/O. The coroutine holds the single event-loop thread, so every other task stops.",
+      "guarded_twin": "`await asyncio.sleep(...)`, an async client (`aiohttp`/`httpx.AsyncClient`), or `await asyncio.to_thread(fn, ...)` / `run_in_executor` for unavoidable blocking work. A sibling coroutine already doing this is the fix.",
+      "hunt": "Audit every `async def` in the module for imports of known-blocking libraries; a project mixing sync and async clients usually has several.",
+      "expected": "the coroutine yields to the loop while waiting; concurrent tasks continue.",
+      "caught_as": "SILENT -- manifests as latency, timeouts, and apparent deadlock under concurrency, never as an exception. Easily misread as a performance problem rather than a defect.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "asyncio developer guide, 'Running Blocking Code'"
+      ],
+      "differential": "Acceptable at startup/shutdown before the loop is serving, or in a coroutine documented as running in an executor. Check whether the call is on the hot path.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "unawaited-coroutine",
+      "title": "A coroutine function is called without `await` -- the body never runs",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "Calling an `async def` and discarding the result, or using it in a boolean/truthiness context: `self.flush()` where `flush` is async; `if self.check():`. A coroutine object is truthy, so guards silently take the wrong branch and the work never executes.",
+      "guarded_twin": "`await self.flush()`, or `asyncio.create_task(...)` WITH a retained reference (see asyncio-fire-and-forget-task).",
+      "hunt": "For each async method, grep every call site; the shape appears when a previously-sync method is converted to async and one caller is missed. Check git history for the sync->async commit and audit all callers touched (or not touched) by it.",
+      "expected": "the coroutine body executes and its result/exception is observed.",
+      "caught_as": "A `RuntimeWarning: coroutine '...' was never awaited` (easily lost in log noise, and only if the object is collected); otherwise SILENT no-op.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "CPython emits RuntimeWarning 'coroutine ... was never awaited'",
+        "ruff RUF006 / ASYNC family"
+      ],
+      "differential": "Deliberate when the coroutine object is passed to `gather`/`wait`/`create_task` or returned to a caller that awaits it. Follow the value.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "lru-cache-on-method",
+      "title": "`@lru_cache` on an instance method keeps every `self` alive forever",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "pattern": "`@functools.lru_cache` / `@cache` applied to a method taking `self`. The cache is stored on the CLASS and keys include `self`, so every instance ever passed is strongly referenced for the process lifetime -- an unbounded leak -- and cache entries are shared across instances.",
+      "guarded_twin": "`functools.cached_property` for per-instance memoization, a per-instance cache dict built in `__init__`, or making the function a `@staticmethod`/module-level function keyed only on the real inputs.",
+      "hunt": "Grep every `lru_cache`/`cache` decorator and check whether the first parameter is `self`/`cls`; long-lived services accumulate these.",
+      "expected": "cached values are released when the instance is; memory is stable across instance churn.",
+      "caught_as": "SILENT -- steadily growing RSS in a long-running process; instances that should be collected never are.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "functools docs, lru_cache note on methods and object lifetimes",
+        "ruff B019 / flake8-bugbear: cached-instance-method"
+      ],
+      "differential": "Harmless for singletons or classes with a small fixed instance count. Judge by instance lifecycle, not by the decorator alone.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "class-level-mutable-attribute",
+      "title": "A mutable class attribute is shared by every instance",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "`class C: items = []` (or `{}`/`set()`) where instances mutate `self.items.append(...)`. Because the attribute lives on the class, all instances share one object; only REBINDING (`self.items = [...]`) creates a per-instance copy.",
+      "guarded_twin": "Initialize in `__init__` (`self.items = []`), or use `dataclasses.field(default_factory=list)`.",
+      "hunt": "Audit every class-body assignment to a mutable literal in the module; also check dataclasses for a bare mutable default (which raises at class-creation time and so is self-correcting -- the plain-class form is the silent one).",
+      "expected": "each instance owns its own container.",
+      "caught_as": "SILENT -- state bleeds between instances; frequently first noticed as cross-test contamination.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python tutorial 9.3.5, 'Class and Instance Variables' (shared mutable warning)"
+      ],
+      "differential": "Correct and idiomatic for CONSTANTS that are never mutated (and better expressed as a tuple/frozenset). Confirm a mutation exists before reporting.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "bare-except-swallows-control-flow",
+      "title": "`except:` / `except BaseException:` swallows KeyboardInterrupt and SystemExit",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A bare `except:` or `except BaseException:` whose handler does not re-raise. These catch `KeyboardInterrupt`, `SystemExit`, and `GeneratorExit` -- so Ctrl-C is ignored, `sys.exit()` is neutralized, and shutdown hangs. Worse inside a retry loop, which will spin forever against Ctrl-C.",
+      "guarded_twin": "`except Exception:` (which excludes the control-flow exceptions), or a bare except that re-raises after cleanup.",
+      "hunt": "Every bare except in the codebase; prioritize those inside loops, signal handlers, and long-running worker/daemon bodies.",
+      "expected": "Ctrl-C interrupts promptly; `sys.exit()` terminates the process.",
+      "caught_as": "SILENT until an operator tries to stop the process and cannot -- then it looks like a hang, not an exception-handling bug.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python docs, exception hierarchy: KeyboardInterrupt/SystemExit derive from BaseException, not Exception",
+        "ruff E722 bare-except; pylint W0702"
+      ],
+      "differential": "Legitimate in a top-level crash-reporting boundary that logs and RE-RAISES, and in `__del__`/atexit cleanup. The discriminator is whether control flow continues as if nothing happened.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "exception-in-del-or-finalizer",
+      "title": "`__del__` raises or resurrects -- the exception is discarded and cleanup is skipped",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "pattern": "A `__del__` that performs failure-prone work (I/O, network close, dict lookups on possibly-torn-down module globals) with no guard. Exceptions in `__del__` are printed and ignored -- never propagated -- so the remainder of the finalizer silently does not run. At interpreter shutdown module globals may already be `None`.",
+      "guarded_twin": "`weakref.finalize` or an explicit `close()`/context manager; if `__del__` is unavoidable, wrap the whole body in try/except and hold direct references to anything it needs.",
+      "hunt": "Every `__del__` in the codebase, plus classes owning an OS resource (file, socket, subprocess, lock) that rely on `__del__` for release.",
+      "expected": "resources are released deterministically; failures are visible.",
+      "caught_as": "SILENT -- 'Exception ignored in: <function C.__del__>' on stderr at best; leaked file descriptors/sockets at worst.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Python data model, object.__del__: exceptions that occur are ignored; warnings about interpreter shutdown"
+      ],
+      "differential": "A trivially-safe `__del__` (pure attribute assignment) is fine. Rank by what the body can actually raise.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "is-comparison-with-literal",
+      "title": "Identity comparison against a literal -- works only by interning accident",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "pattern": "`x is 0`, `x is 'name'`, `x is 256`, `status is ''`. `is` compares identity; small-int caching and string interning make this appear to work in testing and then fail for computed or large values.",
+      "guarded_twin": "`==` for value comparison; keep `is` for `None`, `True`, `False`, and genuine sentinels.",
+      "hunt": "Grep `is` / `is not` followed by a numeric or string literal across the codebase.",
+      "expected": "comparison is by value and holds for every equal value, not just interned ones.",
+      "caught_as": "`SyntaxWarning: \"is\" with a literal` at compile time on modern CPython; otherwise SILENT and input-dependent -- passes for small values, fails for large ones.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "CPython emits SyntaxWarning for `is` with a literal (3.8+)",
+        "ruff F632 is-literal"
+      ],
+      "differential": "`is None` / `is True` / `is False` and sentinel-object comparisons are correct and must not be flagged.",
+      "detected_by": "scan_python_pitfalls.py"
+    }
+  ]
+}

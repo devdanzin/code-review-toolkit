@@ -12,9 +12,15 @@ import json
 import re
 import subprocess
 import sys
-from collections.abc import Generator
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from scan_common import (  # noqa: E402
+    discover_python_files,
+    find_project_root,
+)
 
 
 # Patterns to search for, grouped by category.
@@ -34,36 +40,6 @@ _MARKER_PATTERNS: dict[str, re.Pattern[str]] = {
 _SKIP_PATTERN = re.compile(
     r"@(?:unittest\.)?skip(?:If|Unless)?\s*\(", re.IGNORECASE
 )
-
-
-def discover_python_files(root: Path) -> Generator[Path, None, None]:
-    """Yield .py files under *root*, excluding common non-source dirs."""
-    exclude = {".git", ".tox", ".venv", "venv", "__pycache__",
-               "node_modules", ".eggs", "build", "dist"}
-    if root.is_file():
-        if root.suffix == ".py":
-            yield root
-        return
-    for p in sorted(root.rglob("*.py")):
-        parts = set(p.relative_to(root).parts)
-        if parts & exclude:
-            continue
-        if any(
-            part.endswith(".egg-info")
-            for part in p.relative_to(root).parts
-        ):
-            continue
-        yield p
-
-
-def find_project_root(start: Path) -> Path:
-    markers = {"pyproject.toml", "setup.cfg", "setup.py", ".git"}
-    current = start if start.is_dir() else start.parent
-    while current != current.parent:
-        if any((current / m).exists() for m in markers):
-            return current
-        current = current.parent
-    return start if start.is_dir() else start.parent
 
 
 def _has_git(project_root: Path) -> bool:

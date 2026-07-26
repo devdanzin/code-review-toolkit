@@ -17,42 +17,17 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from scan_common import (  # noqa: E402
+    discover_python_files,
+    find_project_root,
+)
+
 
 # ---------------------------------------------------------------------------
 # Project discovery (adapted from correlate_tests.py)
 # ---------------------------------------------------------------------------
-
-_EXCLUDE_DIRS = {
-    ".git", ".tox", ".venv", "venv", "__pycache__",
-    "node_modules", ".eggs", "build", "dist",
-}
-
-
-def find_project_root(start: Path) -> Path:
-    """Walk up from *start* looking for project markers."""
-    markers = {"pyproject.toml", "setup.cfg", "setup.py", ".git"}
-    current = start if start.is_dir() else start.parent
-    while current != current.parent:
-        if any((current / m).exists() for m in markers):
-            return current
-        current = current.parent
-    return start if start.is_dir() else start.parent
-
-
-def discover_python_files(root: Path) -> list[Path]:
-    """Return .py files under *root*, excluding common non-source dirs."""
-    if root.is_file():
-        return [root] if root.suffix == ".py" else []
-    result: list[Path] = []
-    for p in sorted(root.rglob("*.py")):
-        parts = set(p.relative_to(root).parts)
-        if parts & _EXCLUDE_DIRS:
-            continue
-        if any(part.endswith(".egg-info") for part in p.relative_to(root).parts):
-            continue
-        result.append(p)
-    return result
-
 
 def classify_files(
     files: list[Path], project_root: Path
@@ -589,7 +564,10 @@ def _extract_all_test_info(
                 "behavioral_assertion_count": sum(
                     1 for a in assertions if not a.get("is_implementation_detail")
                 ),
-                "invariant_types": list({a["invariant_type"] for a in assertions}),
+                # Sorted: set iteration order varies with PYTHONHASHSEED, which
+                # would make output non-reproducible across runs and defeat
+                # cross-run deduplication (see explore's --runs option).
+                "invariant_types": sorted({a["invariant_type"] for a in assertions}),
                 "tested_function": tested_func,
             }
             all_tests.append(info)
@@ -603,7 +581,7 @@ def analyze(target: str, *, max_files: int = 0, with_git: bool = False) -> dict:
     project_root = find_project_root(target_path)
     scan_root = target_path if target_path.is_dir() else target_path.parent
 
-    all_files = discover_python_files(scan_root)
+    all_files = list(discover_python_files(scan_root))
     if max_files > 0:
         all_files = all_files[:max_files]
 

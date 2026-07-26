@@ -26,6 +26,7 @@ Parse arguments into three categories:
 - `complexity` → complexity-simplifier
 - `tests` → test-coverage-analyzer
 - `errors` → silent-failure-hunter
+- `pitfalls` → python-pitfall-scanner (concrete correctness defects)
 - `docs` → documentation-auditor
 - `types` → type-design-analyzer
 - `dead-code` → dead-code-finder
@@ -44,6 +45,28 @@ Parse arguments into three categories:
 - `summary` → summary tier only (faster)
 - `parallel` → run agents concurrently where possible
 - `--max-parallel N` → cap concurrent agents per group (default: 2)
+- `--runs N` → run each agent N times (default: 1). Runs 2+ are **independent naive passes**: each
+  starts cold, with no knowledge of what earlier runs found. Deduplicate findings across runs by
+  `(file, line, finding type)`. If run 2 surfaces nothing new, report "high confidence — converged on
+  the first pass"; if it surfaces a lot, the analysis is under-saturated and a third run is warranted.
+- `--informed-reruns` → with `--runs 3`, the third pass receives a summary of runs 1–2 and this
+  instruction: *"These findings are already established. Look at ADJACENT code, unexplored error
+  paths, and patterns structurally similar to the confirmed findings that the prior passes missed."*
+  Targets fix-propagation rather than re-discovery.
+
+**On multi-pass reviews.** Independent naive passes work because a single pass saturates — one agent
+run explores one path through the codebase and stops. A second cold pass takes a different path.
+Only after the independent passes should an informed pass run, because a briefing biases toward what
+is already known; running it first would cost the independence that makes passes 1 and 2 worth doing.
+For a full audit the recommended shape is **2 naive passes + 1 informed pass**, synthesized into a
+single combined report:
+
+```
+/code-review-toolkit:explore . all --runs 3 --informed-reruns
+```
+
+If you want the informed pass seeded from the toolkit's shape catalog rather than only from this
+run's own findings, use [`informed-explore`](informed-explore.md) for the third pass instead.
 
 **Tool options** (passed to run_external_tools.py):
 - `--skip-tools` → skip external tool analysis entirely
@@ -113,24 +136,25 @@ Based on the requested aspects (default: all), launch the appropriate agents. Ea
 1. consistency-auditor
 2. pattern-consistency-checker
 
-**Group B — Code quality analysis**:
-3. complexity-simplifier
+**Group B — Correctness and code quality** (highest-value findings):
+3. **python-pitfall-scanner** — concrete correctness defects (runs first in this group: its findings are behavioural bugs, not smells)
 4. silent-failure-hunter
-5. dead-code-finder
+5. complexity-simplifier
+6. dead-code-finder
 
 **Group C — Interface and documentation**:
-6. test-coverage-analyzer
-7. documentation-auditor
-8. project-docs-auditor
-9. type-design-analyzer
-10. api-surface-reviewer
+7. test-coverage-analyzer
+8. documentation-auditor
+9. project-docs-auditor
+10. type-design-analyzer
+11. api-surface-reviewer
 
 **Group D — Inventory and investigation**:
-11. tech-debt-inventory
-12. test-investigation-agent
+12. tech-debt-inventory
+13. test-investigation-agent
 
 **Group E — Temporal analysis (runs last)**:
-13. git-history-analyzer
+14. git-history-analyzer
 
 If `parallel` is specified, run agents within each group concurrently. Run at most `--max-parallel` agents concurrently within each group (default: 2). On memory-constrained systems, use `--max-parallel 1` to run agents sequentially. Groups still execute sequentially because later groups may benefit from earlier findings. Group E runs last because it cross-references all other agents' output.
 
