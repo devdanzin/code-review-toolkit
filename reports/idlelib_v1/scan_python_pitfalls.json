@@ -5,39 +5,54 @@
   "files_analyzed": 125,
   "files_capped": false,
   "summary": {
-    "total_findings": 58,
+    "total_findings": 79,
     "by_shape": {
       "bare-except-swallows-control-flow": 28,
       "class-level-mutable-attribute": 18,
+      "cleanup-only-on-success-path": 3,
       "eq-without-hash": 1,
+      "error-reported-below-warning": 1,
+      "except-exception-too-broad": 4,
       "exception-in-del-or-finalizer": 4,
+      "falsy-check-for-none-default": 2,
+      "flag-not-reset-on-early-exit": 3,
+      "guard-rechecks-call-receiver": 1,
       "late-binding-closure-in-loop": 1,
-      "mutable-default-argument": 6
+      "mutable-default-argument": 6,
+      "raise-without-from-in-except": 7
     },
     "by_severity": {
-      "CONSIDER": 5,
-      "FIX": 53
+      "CONSIDER": 15,
+      "FIX": 64
     },
     "by_confidence": {
-      "high": 28,
-      "medium": 30
+      "high": 36,
+      "medium": 43
     },
     "by_directory": {
-      "Lib": 58
+      "Lib": 79
     },
     "checks_run": [
       "asyncio-fire-and-forget-task",
       "bare-except-swallows-control-flow",
       "blocking-call-in-async-function",
       "class-level-mutable-attribute",
+      "cleanup-only-on-success-path",
       "eq-without-hash",
+      "error-reported-below-warning",
       "except-clause-ordering-unreachable",
+      "except-exception-too-broad",
+      "except-in-loop-without-exit",
       "exception-in-del-or-finalizer",
+      "falsy-check-for-none-default",
+      "flag-not-reset-on-early-exit",
+      "guard-rechecks-call-receiver",
       "is-comparison-with-literal",
       "late-binding-closure-in-loop",
       "lru-cache-on-method",
       "mutable-default-argument",
       "mutation-during-iteration",
+      "raise-without-from-in-except",
       "return-or-break-in-finally",
       "unawaited-coroutine"
     ],
@@ -67,6 +82,28 @@
       "file": "Lib/idlelib/autocomplete.py"
     },
     {
+      "shape": "flag-not-reset-on-early-exit",
+      "type": "flag-not-reset-on-early-exit",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 238,
+      "column": 8,
+      "message": "`self.is_configuring` is set at line 238 but reset only at line 284; 1 earlier exit(s) skip the reset",
+      "detail": "the flag stays set for the object's lifetime, so every later call takes the guarded branch and silently does nothing -- use `try: ... finally:` to restore it on every path",
+      "file": "Lib/idlelib/autocomplete_w.py"
+    },
+    {
+      "shape": "flag-not-reset-on-early-exit",
+      "type": "flag-not-reset-on-early-exit",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 332,
+      "column": 12,
+      "message": "`self.lastkey_was_tab` is set at line 332 but reset only at line 417; 6 earlier exit(s) skip the reset",
+      "detail": "the flag stays set for the object's lifetime, so every later call takes the guarded branch and silently does nothing -- use `try: ... finally:` to restore it on every path",
+      "file": "Lib/idlelib/autocomplete_w.py"
+    },
+    {
       "shape": "bare-except-swallows-control-flow",
       "type": "bare-except-swallows-control-flow",
       "severity": "FIX",
@@ -75,6 +112,17 @@
       "column": 8,
       "message": "`except BaseException:` without re-raise also swallows KeyboardInterrupt and SystemExit",
       "detail": "use `except Exception:` so Ctrl-C and sys.exit() still work",
+      "file": "Lib/idlelib/calltip.py"
+    },
+    {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 141,
+      "column": 8,
+      "message": "`except BaseException:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
       "file": "Lib/idlelib/calltip.py"
     },
     {
@@ -89,6 +137,17 @@
       "file": "Lib/idlelib/calltip.py"
     },
     {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 166,
+      "column": 4,
+      "message": "`except BaseException:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
+      "file": "Lib/idlelib/calltip.py"
+    },
+    {
       "shape": "exception-in-del-or-finalizer",
       "type": "exception-in-del-or-finalizer",
       "severity": "CONSIDER",
@@ -98,6 +157,17 @@
       "message": "__del__ performs calls without a try/except; an exception here is printed and ignored, silently skipping the rest of the finalizer",
       "detail": "prefer weakref.finalize or an explicit close(); module globals may already be None at interpreter shutdown",
       "file": "Lib/idlelib/codecontext.py"
+    },
+    {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 211,
+      "column": 16,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
+      "file": "Lib/idlelib/config.py"
     },
     {
       "shape": "class-level-mutable-attribute",
@@ -120,6 +190,28 @@
       "message": "closure created in a loop captures ['element'] by reference; every instance will see the final value",
       "detail": "safe if the callable is consumed within the same iteration -- check whether it escapes the loop",
       "file": "Lib/idlelib/configdialog.py"
+    },
+    {
+      "shape": "cleanup-only-on-success-path",
+      "type": "cleanup-only-on-success-path",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 161,
+      "column": 12,
+      "message": "`self.quit()` runs only when the try body succeeds; an exception above it leaks the resource",
+      "detail": "move it to a `finally:` block, or use a `with` statement",
+      "file": "Lib/idlelib/debugger.py"
+    },
+    {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 162,
+      "column": 8,
+      "message": "`except Exception:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
+      "file": "Lib/idlelib/debugger.py"
     },
     {
       "shape": "bare-except-swallows-control-flow",
@@ -298,6 +390,39 @@
       "file": "Lib/idlelib/idle_test/test_run.py"
     },
     {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 29,
+      "column": 16,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
+      "file": "Lib/idlelib/idle_test/test_run.py"
+    },
+    {
+      "shape": "falsy-check-for-none-default",
+      "type": "falsy-check-for-none-default",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 81,
+      "column": 15,
+      "message": "`not editFile` tests falsiness, but `editFile` defaults to None -- the check also fires for 0, '', [] and False",
+      "detail": "use `editFile is None` if the intent is 'argument omitted'; this matters whenever a falsy value is legitimate input",
+      "file": "Lib/idlelib/iomenu.py"
+    },
+    {
+      "shape": "falsy-check-for-none-default",
+      "type": "falsy-check-for-none-default",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 111,
+      "column": 11,
+      "message": "`not editFile` tests falsiness, but `editFile` defaults to None -- the check also fires for 0, '', [] and False",
+      "detail": "use `editFile is None` if the intent is 'argument omitted'; this matters whenever a falsy value is legitimate input",
+      "file": "Lib/idlelib/iomenu.py"
+    },
+    {
       "shape": "exception-in-del-or-finalizer",
       "type": "exception-in-del-or-finalizer",
       "severity": "CONSIDER",
@@ -375,6 +500,17 @@
       "file": "Lib/idlelib/pathbrowser.py"
     },
     {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 12,
+      "column": 4,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
+      "file": "Lib/idlelib/pyshell.py"
+    },
+    {
       "shape": "class-level-mutable-attribute",
       "type": "class-level-mutable-attribute",
       "severity": "FIX",
@@ -430,6 +566,17 @@
       "file": "Lib/idlelib/pyshell.py"
     },
     {
+      "shape": "flag-not-reset-on-early-exit",
+      "type": "flag-not-reset-on-early-exit",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 488,
+      "column": 8,
+      "message": "`self.restarting` is set at line 488 but reset only at line 526; 1 earlier exit(s) skip the reset",
+      "detail": "the flag stays set for the object's lifetime, so every later call takes the guarded branch and silently does nothing -- use `try: ... finally:` to restore it on every path",
+      "file": "Lib/idlelib/pyshell.py"
+    },
+    {
       "shape": "bare-except-swallows-control-flow",
       "type": "bare-except-swallows-control-flow",
       "severity": "FIX",
@@ -438,6 +585,28 @@
       "column": 12,
       "message": "`except:` without re-raise also swallows KeyboardInterrupt and SystemExit",
       "detail": "use `except Exception:` so Ctrl-C and sys.exit() still work",
+      "file": "Lib/idlelib/pyshell.py"
+    },
+    {
+      "shape": "cleanup-only-on-success-path",
+      "type": "cleanup-only-on-success-path",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 539,
+      "column": 12,
+      "message": "`self.rpcclt.listening_sock.close()` runs only when the try body succeeds; an exception above it leaks the resource",
+      "detail": "move it to a `finally:` block, or use a `with` statement",
+      "file": "Lib/idlelib/pyshell.py"
+    },
+    {
+      "shape": "cleanup-only-on-success-path",
+      "type": "cleanup-only-on-success-path",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 543,
+      "column": 12,
+      "message": "`self.rpcclt.close()` runs only when the try body succeeds; an exception above it leaks the resource",
+      "detail": "move it to a `finally:` block, or use a `with` statement",
       "file": "Lib/idlelib/pyshell.py"
     },
     {
@@ -529,6 +698,17 @@
       "file": "Lib/idlelib/query.py"
     },
     {
+      "shape": "guard-rechecks-call-receiver",
+      "type": "guard-rechecks-call-receiver",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 214,
+      "column": 8,
+      "message": "the guard tests `prog` -- the call receiver -- instead of `m`, the result just assigned",
+      "detail": "`prog` was already used successfully as a call target, so this branch is dead; `m` is never checked and flows on possibly-None",
+      "file": "Lib/idlelib/replace.py"
+    },
+    {
       "shape": "class-level-mutable-attribute",
       "type": "class-level-mutable-attribute",
       "severity": "FIX",
@@ -551,6 +731,17 @@
       "file": "Lib/idlelib/rpc.py"
     },
     {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 207,
+      "column": 8,
+      "message": "`except Exception:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
+      "file": "Lib/idlelib/rpc.py"
+    },
+    {
       "shape": "bare-except-swallows-control-flow",
       "type": "bare-except-swallows-control-flow",
       "severity": "FIX",
@@ -559,6 +750,39 @@
       "column": 8,
       "message": "`except:` without re-raise also swallows KeyboardInterrupt and SystemExit",
       "detail": "an earlier clause re-raises ['KeyboardInterrupt', 'SystemExit'], but this one still swallows ['GeneratorExit']",
+      "file": "Lib/idlelib/rpc.py"
+    },
+    {
+      "shape": "error-reported-below-warning",
+      "type": "error-reported-below-warning",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 286,
+      "column": 8,
+      "message": "the only report of this failure is self.debug(...), which default logging configuration discards",
+      "detail": "an operator running with defaults sees nothing; use warning/exception if the condition is actionable",
+      "file": "Lib/idlelib/rpc.py"
+    },
+    {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 345,
+      "column": 16,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
+      "file": "Lib/idlelib/rpc.py"
+    },
+    {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 361,
+      "column": 16,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
       "file": "Lib/idlelib/rpc.py"
     },
     {
@@ -592,6 +816,17 @@
       "column": 12,
       "message": "`except:` without re-raise also swallows KeyboardInterrupt and SystemExit",
       "detail": "use `except Exception:` so Ctrl-C and sys.exit() still work",
+      "file": "Lib/idlelib/run.py"
+    },
+    {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 360,
+      "column": 12,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
       "file": "Lib/idlelib/run.py"
     },
     {
@@ -669,6 +904,17 @@
       "column": 4,
       "message": "ZoomHeight._max_height_and_y_coords is a mutable class attribute shared by every instance",
       "detail": "the shared object is mutated in this module -- state bleeds between instances",
+      "file": "Lib/idlelib/zoomheight.py"
+    },
+    {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 74,
+      "column": 16,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
       "file": "Lib/idlelib/zoomheight.py"
     },
     {
