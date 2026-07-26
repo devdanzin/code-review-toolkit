@@ -8,9 +8,59 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **New agent + script: `python-pitfall-scanner` / `scan_python_pitfalls.py`** — the toolkit's first
+  dedicated bug-finding capability. Fourteen AST checks mapping 1:1 to the shapes in
+  `python_bug_shapes.json`, each emitting a confidence level (`high`/`medium`/`low`) derived from that
+  shape's differential. The builtin exception hierarchy is read from the running interpreter rather
+  than a hardcoded table, so `except`-ordering analysis is always correct for the Python in use.
+  Options: `--check ID[,ID...]` to select shapes and `--exclude PAT[,PAT...]` to drop generated trees.
+  Output includes a `by_directory` breakdown, because real-world runs showed generated content
+  (report artifacts, golden fixtures) is the dominant false-positive source and is best triaged a
+  directory at a time.
+- Registered the `pitfalls` aspect in `explore`, and put `python-pitfall-scanner` first in Group B —
+  behavioural bugs rank above code smells.
+- New shared module: `scan_common.py` — the utilities every analysis script needs (project-root
+  detection, file discovery, AST parsing, CLI parsing, the JSON envelope, finding deduplication).
+  Every script now imports from it. Previously `find_project_root` was byte-identical in all nine
+  scripts and `discover_python_files` had drifted into three divergent variants.
+- New data catalog: `data/python_bug_shapes.json` — 14 reusable Python bug *shapes* (not file:line),
+  each with its guarded twin (the fix pattern), a sibling-hunt directive, expected behavior, how the
+  defect surfaces, and a differential for when *not* to flag it. Covers mutable default arguments,
+  late-binding closures, unreachable `except` ordering, `return`-in-`finally`, `__eq__` without
+  `__hash__`, mutation during iteration, the asyncio family (fire-and-forget tasks, blocking calls in
+  `async def`, un-awaited coroutines), `lru_cache` on methods, shared class-level mutable attributes,
+  bare `except`, exceptions in `__del__`, and `is`-with-a-literal.
+- New data catalog: `data/python_non_bugs.md` — false-positive taxonomy in 15 classes, each stating
+  the symptom, why it is a non-bug, and what the real bug looks like so genuine instances are never
+  suppressed.
+- New script: `build_informed_briefing.py` — assembles the informed-review briefing (bug shapes
+  scoped per agent + false-positive taxonomy + cross-cutting triage rules) as Markdown. Folds in a
+  target project's accumulated findings memory from `.code-review/findings.json` when present, using
+  a schema wire-compatible with the `*-review-findings` companion repositories.
+- New command: `informed-explore` — same coverage as `explore`, but every agent reads the briefing
+  first, so a run hunts un-found siblings of established shapes instead of re-deriving basics.
+  Records confirmed findings to `.code-review/findings.json` for the next run.
 - New agent: `test-investigation-agent` — finds bugs by treating tests as invariant specifications. Reads existing tests to extract what developers believe should be true, maps those beliefs to structurally similar code, and checks whether the invariants hold everywhere they should.
 - New script: `extract_test_invariants.py` — supporting script that extracts assertions from test files, classifies invariant types, maps tests to source functions, and finds structurally similar functions using name-pattern and signature matching. Three-tier test selection (bug-fix tests, error/boundary tests, churn-guided) with 30-test budget cap.
 - Added `test-invariants` aspect to the explore command (Group D).
+- `explore` now supports `--runs N` (independent naive passes, deduplicated across runs) and
+  `--informed-reruns` (with `--runs 3`, the third pass targets adjacent code and structural siblings
+  of what the earlier passes confirmed). Documents the 2-naive-plus-1-informed review shape.
+- `CLAUDE.md` — development guide covering architecture, conventions, the data catalogs and their
+  `validation` grades, gotchas, and an explicit list of known gaps.
+
+### Fixed
+
+- `--max-files` with a non-integer argument now exits with a JSON error instead of an unhandled
+  `ValueError` traceback.
+- Documentation drift: both READMEs claimed 14 agents / 4 commands / 7 helper scripts; the actual
+  counts are 16 / 5 / 12 as of this release.
+- `correlate_tests.py` omitted `scan_root` from its JSON envelope, unlike every other script.
+- `scan_python_pitfalls.py` scopes a single-file target to that file. Several sibling scripts instead
+  fall back to the project root, silently turning "scan this file" into "scan everything".
+- `extract_test_invariants.py` emitted `invariant_types` in set-iteration order, so output varied
+  between runs with `PYTHONHASHSEED`. Output is now sorted and reproducible — non-reproducible output
+  would otherwise defeat cross-run deduplication under `explore --runs N`.
 
 ## [1.3.0] - 2026-03-16
 

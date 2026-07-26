@@ -4,7 +4,7 @@ A comprehensive collection of specialized agents for exploring and analyzing exi
 
 ## Overview
 
-This plugin bundles 14 expert analysis agents and 4 commands. Each agent focuses on a specific aspect of code quality and is designed for codebase-scale analysis — scanning entire modules or projects rather than reviewing diffs.
+This plugin bundles 16 expert analysis agents and 5 commands. Each agent focuses on a specific aspect of code quality and is designed for codebase-scale analysis — scanning entire modules or projects rather than reviewing diffs.
 
 ### Key Design Principles
 
@@ -77,7 +77,7 @@ No third-party Python packages are required — all scripts use only the standar
 The primary command. Runs the foundational context providers (architecture-mapper + git-history-context) first, then dispatches selected agents with both structural and temporal context.
 
 ```bash
-# Full exploration (all 14 agents)
+# Full exploration (all 16 agents)
 /code-review-toolkit:explore
 
 # Specific directory
@@ -90,9 +90,32 @@ The primary command. Runs the foundational context providers (architecture-mappe
 /code-review-toolkit:explore . all summary
 ```
 
-**Aspects**: `architecture`, `history-context`, `history`, `history-full`, `consistency`, `complexity`, `tests`, `errors`, `docs`, `project-docs`, `types`, `dead-code`, `tech-debt`, `patterns`, `api`, `all`
+**Aspects**: `architecture`, `history-context`, `history`, `history-full`, `consistency`, `complexity`, `tests`, `pitfalls`, `errors`, `docs`, `project-docs`, `types`, `dead-code`, `tech-debt`, `test-invariants`, `patterns`, `api`, `all`
 
-**Options**: `deep` (full detail), `summary` (top-level only), `parallel` (concurrent agents)
+**Options**: `deep` (full detail), `summary` (top-level only), `parallel` (concurrent agents), `--runs N` (independent naive passes, deduplicated), `--informed-reruns` (with `--runs 3`, the third pass targets adjacent code and siblings of what runs 1–2 confirmed)
+
+### `/code-review-toolkit:informed-explore [scope] [aspects] [options]`
+
+Same coverage as `explore`, but every agent first reads a briefing assembled from the toolkit's
+catalogs: recurring Python bug **shapes** (each with its *guarded twin* — the fix pattern — and a
+sibling-hunt directive), the false-positive taxonomy, and the cross-cutting triage rules.
+
+The effect is fix-propagation: instead of re-deriving that a mutable default argument is a defect,
+the agent starts from the shape and hunts every un-found sibling of it.
+
+```bash
+# Thorough audit, or a re-review of a codebase already analyzed
+/code-review-toolkit:informed-explore
+
+# Just check whether the known shapes are present
+/code-review-toolkit:informed-explore . --shapes-only
+```
+
+Use `explore` for a first, unbiased look; use `informed-explore` when fix-propagation matters more
+than independence. For a high-stakes review, run both — naive passes first, informed pass last.
+
+Confirmed findings are recorded to `<scope>/.code-review/findings.json`, so the next informed run
+verifies them and moves on rather than re-litigating.
 
 ### `/code-review-toolkit:map [scope]`
 
@@ -137,6 +160,7 @@ Quick health dashboard — all agents in summary mode, producing a scored table 
 |-------|-------|-------------|
 | **test-coverage-analyzer** | Source↔test correlation, undertested modules, coverage gaps | pr-test-analyzer |
 | **pattern-consistency-checker** | Same concern solved different ways across modules | New |
+| **python-pitfall-scanner** | Concrete correctness defects: mutable defaults, late-binding closures, `except` ordering, `return`-in-`finally`, asyncio pitfalls, mutation-during-iteration | New |
 | **silent-failure-hunter** | Swallowed exceptions, bare except, silent error patterns | silent-failure-hunter |
 | **git-history-analyzer** | Fix completeness, similar bug detection, churn×quality risk matrix, historical context | New |
 

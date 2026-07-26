@@ -26,6 +26,12 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from scan_common import (  # noqa: E402
+    find_project_root,
+)
+
 _KNOWN_TOOLS = ("ruff", "mypy", "vulture", "coverage")
 
 _TOOL_TIMEOUTS = {
@@ -52,17 +58,6 @@ _RUFF_CATEGORY_BY_PREFIX: dict[str, str] = {
 # ---------------------------------------------------------------------------
 # Utility helpers
 # ---------------------------------------------------------------------------
-
-def find_project_root(start: Path) -> Path:
-    """Walk upward from *start* looking for project root markers."""
-    markers = {"pyproject.toml", "setup.cfg", "setup.py", ".git"}
-    current = start if start.is_dir() else start.parent
-    while current != current.parent:
-        if any((current / m).exists() for m in markers):
-            return current
-        current = current.parent
-    return start if start.is_dir() else start.parent
-
 
 def make_relative(filepath: str, project_root: Path) -> str:
     """Make *filepath* relative to *project_root*."""

@@ -27,6 +27,12 @@ from collections.abc import Iterable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from scan_common import (  # noqa: E402
+    find_project_root,
+)
+
 # Commit classification rules — first match wins.
 CLASSIFICATION_RULES: list[tuple[str, list[str]]] = [
     ("fix", ["fix", "bug", "patch", "resolve", "issue", "crash",
@@ -52,17 +58,6 @@ _SCRIPT_TIMEOUT = 300  # 5 minutes
 _MAX_DIFF_LINES_FIX = 150
 _MAX_DIFF_LINES_REFACTOR = 80
 _FUNCTION_COUNT_THRESHOLD = 500
-
-
-def find_project_root(start: Path) -> Path:
-    """Walk up to find the project root (directory containing .git)."""
-    markers = {"pyproject.toml", "setup.cfg", "setup.py", ".git"}
-    current = start if start.is_dir() else start.parent
-    while current != current.parent:
-        if any((current / m).exists() for m in markers):
-            return current
-        current = current.parent
-    return start if start.is_dir() else start.parent
 
 
 def classify_commit(message: str) -> str:

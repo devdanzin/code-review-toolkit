@@ -18,8 +18,14 @@ Usage:
 import ast
 import json
 import sys
-from collections.abc import Generator
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from scan_common import (  # noqa: E402
+    discover_python_files,
+    find_project_root,
+)
 
 
 # Comprehensive stdlib module list (Python 3.10+).  Used to distinguish
@@ -71,27 +77,6 @@ def _is_stdlib(top_level_name: str) -> bool:
     if hasattr(sys, "stdlib_module_names"):
         return top_level_name in sys.stdlib_module_names
     return top_level_name in _STDLIB_TOP_LEVEL
-
-
-def discover_python_files(root: Path) -> "Generator[Path, None, None]":
-    """Yield .py files under *root*, excluding common non-source dirs."""
-    exclude = {".git", ".tox", ".venv", "venv", "__pycache__",
-               "node_modules", ".eggs", "build", "dist"}
-    if root.is_file():
-        if root.suffix == ".py":
-            yield root
-        return
-    for p in sorted(root.rglob("*.py")):
-        parts = set(p.relative_to(root).parts)
-        if parts & exclude:
-            continue
-        # Skip egg-info directories (glob pattern matching).
-        if any(
-            part.endswith(".egg-info")
-            for part in p.relative_to(root).parts
-        ):
-            continue
-        yield p
 
 
 def _resolve_relative_import(
@@ -259,17 +244,6 @@ def analyze_file(
             })
 
     return result
-
-
-def find_project_root(start: Path) -> Path:
-    """Walk upward to find project root (dir with pyproject.toml, setup.cfg, .git)."""
-    markers = {"pyproject.toml", "setup.cfg", "setup.py", ".git"}
-    current = start if start.is_dir() else start.parent
-    while current != current.parent:
-        if any((current / m).exists() for m in markers):
-            return current
-        current = current.parent
-    return start if start.is_dir() else start.parent
 
 
 def identify_project_packages(root: Path) -> set[str]:
