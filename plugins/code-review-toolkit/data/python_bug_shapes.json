@@ -420,6 +420,26 @@
       ],
       "differential": "Fine when the parameter is reassigned from its default before the test (no longer a sentinel test), or when every falsy value should genuinely take the same branch as None. This check already skips reassigned parameters.",
       "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "test-cannot-fail",
+      "title": "A test that passes regardless of what the code under test does",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A `unittest.TestCase` method that cannot fail: an empty body (`pass`/`...`/docstring only); an assertion over constants (`assertTrue(True)`, `assertEqual(1, 1)`); `assertTrue(all(filter(pred, xs)))`, where `filter` has already dropped everything the predicate rejects so the predicate is never tested; a method that asserts but lost its `test` prefix, so unittest never runs it; a class with fixtures but no tests; or a test with no assertion at all.",
+      "guarded_twin": "The sibling test that does the same setup and then asserts on a value the code under test produced. For the `all(filter(...))` form the twin is `all(pred(x) for x in xs)`.",
+      "hunt": "Scan the whole test module: these cluster, because they come from the same habits (a placeholder left behind, an extraction that dropped a prefix, a copy-paste of an assertion idiom that was already wrong).",
+      "expected": "the test fails when the behaviour it names regresses.",
+      "caught_as": "NEVER -- by construction. Worse than no test: it reports as coverage, consumes review attention, and makes every other invariant the suite claims less trustworthy.",
+      "confirmed_examples": [
+        "CPython idlelib (6080c86): test_autocomplete.py:241-242 `assertTrue(all(filter(lambda x: x.startswith('_'), s)))` -- true whether s has none or all such names; the intent (per line 242's twin) was assertFalse(any(...)). test_editor.py:236 RMenuTest.test_rclick and test_configdialog.py:55 test_deactivate_current_config are `pass`. Independently found by both an agent and this check in reports/idlelib_v1."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Calibrated on idlelib: raw output was 133 findings, of which ~85% were two false-positive classes -- assertions aliased to locals (`Equal = self.assertEqual`, ubiquitous in CPython's tests) and DRY assertion helpers called from real tests. After encoding both, 21 findings with all 5 high-confidence hits matching an agent's independent findings."
+      ],
+      "differential": "An asserting method that is CALLED from a test is correct DRY design, not an orphan -- only flag one nothing calls. A test with no assertion may be a deliberate does-not-raise smoke test (`test_init` constructing an object) -- that is why it is medium, not high. Assertions aliased to locals and tests delegating to an in-class asserting helper both count as assertions.",
+      "detected_by": "scan_python_pitfalls.py"
     }
   ]
 }

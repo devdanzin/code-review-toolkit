@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- New shape `test-cannot-fail` — tests that pass regardless of what the code under test does: empty
+  bodies, constant-only assertions, `assertTrue(all(filter(...)))` (where `filter` already dropped
+  everything the predicate rejects), asserting methods that lost their `test` prefix, and classes with
+  fixtures but no tests. Calibrated on idlelib, where the raw pass was 133 findings and ~85% were two
+  false-positive classes: assertions aliased to locals (`Equal = self.assertEqual`, ubiquitous in
+  CPython's tests) and DRY assertion helpers called from real tests. After encoding both, 21 findings
+  with all five high-confidence hits matching an agent's independent findings.
 - **Three more shapes from the idlelib agent benchmark**: `flag-not-reset-on-early-exit` (a guard
   flag set at entry but reset only on the success path, so every later call silently no-ops),
   `guard-rechecks-call-receiver` (`m = prog.match(...)` followed by `if not prog:` — the guard names
