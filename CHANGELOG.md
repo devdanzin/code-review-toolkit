@@ -71,6 +71,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `analyze_imports.py`: `from .X import Y` resolved to the *parent* package instead of the containing
+  one (`Lib.terminfo` rather than `Lib._pyrepl.terminfo`), so resolved targets matched no file and
+  **`fan_in` was zero for every file** in any project using relative imports. On `_pyrepl`, 0 of 25
+  files had a nonzero fan-in; after the fix, 22 do. The four existing tests asserted the wrong values —
+  rewritten against ground truth obtained by building the package layout on disk and importing it.
+- `analyze_imports.py`: `detect_cycles` fabricated edges. `module_to_file` covers only files that have
+  imports, so a target naming an import-free module fell through to a prefix match that resolved it to
+  the enclosing package's `__init__`. A three-file DAG reported a phantom cycle. On `_pyrepl`, reported
+  cycles went from 15 phantom to 1 real.
+- `scan_python_pitfalls.py`: `except-in-loop-without-exit` no longer fires when the handler reports
+  loudly (the shape's complaint is "no diagnostic"), and reserves `high` for a `while True:` whose
+  entire body is the guarded operation. A REPL or accept loop that does other work each iteration makes
+  progress even when one operation keeps failing.
+
 - `--max-files` with a non-integer argument now exits with a JSON error instead of an unhandled
   `ValueError` traceback.
 - Documentation drift: both READMEs claimed 14 agents / 4 commands / 7 helper scripts; the actual

@@ -94,14 +94,14 @@ def _resolve_relative_import(
 
     parts = list(rel.parts[:-1])  # directory components (package path)
 
-    # Go up *level* packages.
-    if level > len(parts):
+    # `from .X import Y` (level=1) means "X in MY package", so level=1 keeps the
+    # containing package; each extra dot strips one more. Resolving level=1 to
+    # the PARENT package (the previous behaviour) silently produced module paths
+    # that match no file, which zeroed every fan_in metric for any project using
+    # relative imports -- i.e. most of them.
+    if level > len(parts) + 1:
         return None
-    base_parts = parts[: len(parts) - level + 1] if level <= len(parts) else []
-    if level > 0:
-        base_parts = parts[: len(parts) - level]
-        # For level=1 inside a package, base_parts is the parent package.
-        # For level=2, we go two levels up, etc.
+    base_parts = parts[: len(parts) - (level - 1)] if level > 0 else parts
 
     dotted = ".".join(base_parts)
     if module:
@@ -351,11 +351,13 @@ def detect_cycles(graph: dict[str, list[dict]]) -> list[list[str]]:
         for t in targets:
             if t in module_to_file:
                 resolved.add(module_to_file[t])
-            else:
-                # Try prefix match.
-                for mod, mf in module_to_file.items():
-                    if t.startswith(mod + ".") or mod.startswith(t + "."):
-                        resolved.add(mf)
+            # No prefix fallback. `module_to_file` only covers files that have
+            # imports of their own, so a target naming an import-free module
+            # (mypkg.utils) is absent from it; a prefix match then resolved it to
+            # the enclosing package's __init__, fabricating an edge and with it a
+            # phantom cycle. An unresolvable target is simply not a file-level
+            # edge -- `from . import X` yields the exact target `mypkg`, so real
+            # package-level cycles still resolve.
         resolved.discard(f)  # ignore self-imports
         file_adj[f] = resolved
 
