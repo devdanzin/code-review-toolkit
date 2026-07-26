@@ -240,3 +240,44 @@ run that produced it, so the evidence is traceable.
 - **Real bug:** the bytes come from a file, a socket, or an environment the caller does not control.
   Also beware two near-misses that look like validation and are not: `if size == -1` is a **sentinel**
   test that excludes exactly one negative value, and `if not size` only tests zero.
+
+### 26. Setter that correctly returns None *(CPython `_pydatetime.py`, `_pydecimal.py`)*
+- **Symptom:** a call whose result is discarded, flagged against "sibling calls that check theirs".
+- **Why non-bug:** a *setter* returning `None` is the convention, not an oversight. Keying the family
+  on get/set stems collapsed `self.__setstate` and `self.state` into one bucket and produced **1414
+  findings across the stdlib**, almost all of them setters.
+- **Real bug:** a **foreign-function binding** whose status return is dropped where its siblings' are
+  checked. The convention argument only holds inside a module that imports `ctypes`/`_winapi` — without
+  that gate, 720 of 787 findings were test modules constructing CamelCase objects.
+
+### 27. Type guard followed by a subscript *(CPython `collections/__init__.py` Counter)*
+- **Symptom:** `isinstance(other, Counter)` flagged because `other[elem]` appears in the same scope.
+- **Why non-bug:** the guard comes **first** — `if not isinstance(other, Counter): return NotImplemented`
+  — and the subscript is safe *because of it*. Counter alone supplied eight findings.
+- **Real bug:** a subscript that **precedes** the test, proving the name already held a sequence
+  (`cmd[0]` at line 658, `isinstance(cmd, digit_arg)` at 675). Order is the whole discriminator; a
+  subscript inside a conditional body proves nothing either, since it usually sits under its own guard.
+
+### 28. Local list managed by one algorithm *(CPython `glob.py`, `inspect.py`, `_pylong.py`)*
+- **Symptom:** `parts.pop()` unguarded while some `parts.append()` elsewhere is inside an `if`.
+- **Why non-bug:** generic local names (`parts`, `lines`, `stack`, `cands`) recur everywhere, so
+  matching on the name paired `glob.py` against `argparse.py`. A local list is managed by a single
+  algorithm, and its `if` is a data condition, not a policy.
+- **Real bug:** a collection **owned by an object** (`reader.history`), whose add is guarded by a
+  **policy flag** (`should_auto_add_history`), with the inverse in a *different function*. All three
+  filters are load-bearing — dropping any one takes the count from 7 to 164.
+
+### 29. Initialization and context entry snapshotting state *(CPython `_pyio.py`, `asyncio/base_events.py`)*
+- **Symptom:** `__init__` storing `self._saved = get_something()` flagged as a clobberable snapshot.
+- **Why non-bug:** `__init__` and `__enter__` are *supposed* to snapshot, and cannot be re-entered on
+  the same object. Including them gave 60 findings dominated by ordinary attribute assignment.
+- **Real bug:** an ordinary method that snapshots via `Xget…` and modifies via the matching `Xset…`,
+  reachable twice — across a signal, a suspend/resume, or a retry.
+
+### 30. Constructing an object as a bare statement *(CPython `test_zstd.py`, `test_winreg.py`)*
+- **Symptom:** `_ProactorSocketTransport(...)` as an expression statement, flagged for discarding a result.
+- **Why non-bug:** constructing for side effects is normal, and a constructor has no status to return.
+- **Real bug:** see class 26 — restrict to FFI modules, and count a sibling as "checked" only when its
+  result is genuinely *tested* (an `if`/`while`/`assert` test or a comparison). Counting every
+  non-statement position also counted `f(Foo())` and inflated the sibling count until the argument
+  meant nothing.
