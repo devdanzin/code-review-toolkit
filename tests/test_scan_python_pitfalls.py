@@ -836,6 +836,25 @@ class TestTestCannotFail(unittest.TestCase):
         src = "class Helper:\n    def test_thing(self):\n        pass\n"
         self.assertNotIn("test-cannot-fail", shapes(src))
 
+    def test_loop_over_empty_literal(self):
+        # CPython test_keymap.py:37 builds 60 cases and runs zero.
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def test_thing(self):\n"
+            "        cases = [(k, k) for k in []]\n"
+            "        for a, b in cases:\n            self.assertEqual(a, b)\n"
+        )
+        f = [x for x in scan(src) if "literal empty container" in x["message"]]
+        self.assertEqual(len(f), 1)
+
+    def test_loop_over_real_iterable_is_silent(self):
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def test_thing(self):\n"
+            "        for k in ['a', 'b']:\n            self.assertTrue(k)\n"
+        )
+        self.assertNotIn("test-cannot-fail", shapes(src))
+
 
 class TestSelfReferentialAccumulate(unittest.TestCase):
     """_pyrepl unix_console.py:545 -- `e.raw += e.raw` beside `e.data += e2.data`."""
