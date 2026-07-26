@@ -82,7 +82,7 @@ candidates, and prints JSON to stdout.
 | Script | Purpose |
 |---|---|
 | `scan_common.py` | **Shared utilities — every other script imports from here** |
-| `scan_python_pitfalls.py` | Correctness defects; 19 checks mapping 1:1 to `data/python_bug_shapes.json` |
+| `scan_python_pitfalls.py` | Correctness defects; 22 checks mapping 1:1 to `data/python_bug_shapes.json` |
 | `analyze_imports.py` | Import graph, module boundaries, circular dependencies |
 | `analyze_history.py` | Git history: churn, co-change, fix density |
 | `measure_complexity.py` | Per-function complexity metrics |
@@ -197,8 +197,8 @@ Tracked honestly so the next session does not have to re-derive them:
 1. **One validation run** (`reports/idlelib_v1/`), against sibling toolkits' 1–67. It produced five
    false-positive classes and three scanner fixes, which is the loop working — but a single run on
    an old, careful codebase is thin evidence. An async-heavy target is the right next one.
-2. **1 of 14 shapes is `confirmed`; 13 remain `documented`.** The catalog is still mostly grounded
-   in Python's documented semantics rather than in this toolkit's own findings.
+2. **4 of 22 shapes are `confirmed`; 18 remain `documented`.** Improving, but most of the catalog is
+   still grounded in documented semantics rather than in this toolkit's own findings.
 3. ~~All 14 bug shapes owned by one agent~~ **Done** — `python-pitfall-scanner` now owns them, backed
    by `scan_python_pitfalls.py`, so every shape is executable rather than prompt-only.
 4. **No companion findings repository.** Every mature sibling has a `*-review-findings` repo. The

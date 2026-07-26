@@ -382,6 +382,44 @@
       ],
       "differential": "Only state that OUTLIVES the call matters -- an attribute or a qualified global. Re-binding a bare LOCAL is ordinary computation, not a missed reset. Also fine if a `finally` elsewhere in the function restores it, or if the early exit happens BEFORE the flag is set.",
       "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "guard-rechecks-call-receiver",
+      "title": "A NULL-guard tests the call receiver instead of the result",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "`m = prog.match(...)` immediately followed by `if not prog:` (or `if prog is None:`). The guard names the RECEIVER of the call rather than the freshly-bound result. The receiver was just used successfully as a call target, so the branch is dead; the result is never checked and flows on possibly-None.",
+      "guarded_twin": "The same guard spelled with the result name -- `if not m:`. Sibling methods performing the same match/lookup almost always have it right; this is a one-character class of typo that survives review because it LOOKS like a guard.",
+      "hunt": "For each instance, check every sibling that performs the same call. In idlelib, `replace_all` and `do_find` both guard their match correctly and only `do_replace` misspells it -- three near-identical guards, one wrong.",
+      "expected": "a failed match returns early instead of reaching code that dereferences the result.",
+      "caught_as": "AttributeError on the None result, raised somewhere DOWNSTREAM of the guard that was supposed to prevent it -- so the traceback points away from the actual defect.",
+      "confirmed_examples": [
+        "CPython idlelib replace.py:213-214 (6080c86) -- `m = prog.match(chars, col)` then `if not prog:` (already proven non-None at :201). With Regular-expression on, Find `\\Z`, Replace: search_forward matches the line without its newline, do_replace re-matches WITH the newline, `m` is None, and `m.expand()` raises AttributeError. Found by reports/idlelib_v1."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Zero false positives across idlelib's 125 files -- the shape is highly specific."
+      ],
+      "differential": "Not a defect if the receiver is genuinely re-tested for a different reason (e.g. it is reassigned between the call and the check). Confirm the receiver is unchanged and was already known non-None.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "falsy-check-for-none-default",
+      "title": "`if not param:` where the parameter defaults to None conflates None with 0/''/[]",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "pattern": "A parameter declared `def f(x=None)` and then tested with `if not x:`. The author means 'argument omitted', but the test also fires for every legitimate falsy value a caller may pass -- `0`, `''`, `[]`, `{}`, `False`.",
+      "guarded_twin": "`if x is None:` -- explicit, and the standard idiom paired with a None sentinel default.",
+      "hunt": "Every parameter with a None default in the module, then every truthiness test of it. Also check int-valued flags drawn from a constant set that includes 0: `ATTRS, FILES = 0, 1` makes `not mode` true for ATTRS, silently disabling a mode filter.",
+      "expected": "the branch runs only when the argument was actually omitted.",
+      "caught_as": "SILENT and input-dependent -- correct for every caller until one passes a falsy value, then the function behaves as if the argument were missing.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Related instance found in idlelib autocomplete.py:117/134 -- `ATTRS, FILES = 0, 1` with `not mode`, so the ATTRS-mode restriction never applies and a `.` inside a string pops a directory listing. NOT caught by this check (mode is reassigned in the body); recorded as a known limitation."
+      ],
+      "differential": "Fine when the parameter is reassigned from its default before the test (no longer a sentinel test), or when every falsy value should genuinely take the same branch as None. This check already skips reassigned parameters.",
+      "detected_by": "scan_python_pitfalls.py"
     }
   ]
 }

@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Three more shapes from the idlelib agent benchmark**: `flag-not-reset-on-early-exit` (a guard
+  flag set at entry but reset only on the success path, so every later call silently no-ops),
+  `guard-rechecks-call-receiver` (`m = prog.match(...)` followed by `if not prog:` — the guard names
+  the receiver, not the result), and `falsy-check-for-none-default`. Catalog is now 22 shapes, 4 of
+  them `confirmed` against real findings.
 - **Five new bug shapes derived from a 40-bug audit of CPython's pure-Python stdlib** — the catalog
   previously covered *none* of that audit's pattern families. Added `except-exception-too-broad`
   (~50% of the audit's confirmed findings: `except Exception:` around a narrow operation with a

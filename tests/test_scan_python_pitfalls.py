@@ -710,5 +710,60 @@ class TestFlagNotResetOnEarlyExit(unittest.TestCase):
         self.assertNotIn("flag-not-reset-on-early-exit", shapes(src))
 
 
+class TestGuardRechecksCallReceiver(unittest.TestCase):
+    """idlelib replace.py:214 -- `m = prog.match(..)` then `if not prog:`."""
+
+    def test_receiver_checked_instead_of_result(self):
+        src = (
+            "def f(prog, chars):\n    m = prog.match(chars)\n"
+            "    if not prog:\n        return None\n    return m.expand()\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "guard-rechecks-call-receiver"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_is_none_form_also_caught(self):
+        src = (
+            "def f(prog, chars):\n    m = prog.match(chars)\n"
+            "    if prog is None:\n        return None\n    return m\n"
+        )
+        self.assertIn("guard-rechecks-call-receiver", shapes(src))
+
+    def test_correct_guard_is_silent(self):
+        src = (
+            "def f(prog, chars):\n    m = prog.match(chars)\n"
+            "    if not m:\n        return None\n    return m.expand()\n"
+        )
+        self.assertNotIn("guard-rechecks-call-receiver", shapes(src))
+
+    def test_unrelated_name_is_silent(self):
+        src = (
+            "def f(prog, chars, other):\n    m = prog.match(chars)\n"
+            "    if not other:\n        return None\n    return m\n"
+        )
+        self.assertNotIn("guard-rechecks-call-receiver", shapes(src))
+
+
+class TestFalsyCheckForNoneDefault(unittest.TestCase):
+    def test_not_on_none_default(self):
+        src = "def f(path=None):\n    if not path:\n        return 'default'\n    return path\n"
+        self.assertIn("falsy-check-for-none-default", shapes(src))
+
+    def test_is_none_is_silent(self):
+        src = "def f(path=None):\n    if path is None:\n        return 'default'\n    return path\n"
+        self.assertNotIn("falsy-check-for-none-default", shapes(src))
+
+    def test_non_none_default_is_silent(self):
+        src = "def f(path=''):\n    if not path:\n        return 'default'\n    return path\n"
+        self.assertNotIn("falsy-check-for-none-default", shapes(src))
+
+    def test_reassigned_parameter_is_silent(self):
+        src = (
+            "def f(path=None):\n    path = path or compute()\n"
+            "    if not path:\n        return 'd'\n    return path\n"
+        )
+        self.assertNotIn("falsy-check-for-none-default", shapes(src))
+
+
 if __name__ == "__main__":
     unittest.main()

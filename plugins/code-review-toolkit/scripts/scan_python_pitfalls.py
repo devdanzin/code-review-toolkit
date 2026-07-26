@@ -1309,6 +1309,121 @@ def _check_flag_not_reset_on_early_exit(tree: ast.AST) -> list[dict]:
     return out
 
 
+def _check_guard_rechecks_call_receiver(tree: ast.AST) -> list[dict]:
+    """`m = prog.match(...)` followed by `if not prog:` -- the guard tests the
+    receiver instead of the result, so the result is never checked.
+
+    The receiver was just used successfully as a call target, so re-testing it
+    is dead code; meanwhile the freshly-bound result can be None and flows on.
+    """
+    out: list[dict] = []
+    for parent in ast.walk(tree):
+        body = getattr(parent, "body", None)
+        if not isinstance(body, list):
+            continue
+        for assign, following in zip(body, body[1:]):
+            if not isinstance(assign, ast.Assign) or len(assign.targets) != 1:
+                continue
+            target = assign.targets[0]
+            if not isinstance(target, ast.Name):
+                continue
+            if not (
+                isinstance(assign.value, ast.Call)
+                and isinstance(assign.value.func, ast.Attribute)
+                and isinstance(assign.value.func.value, ast.Name)
+            ):
+                continue
+            receiver = assign.value.func.value.id
+            if not isinstance(following, ast.If):
+                continue
+            test = following.test
+            checked = None
+            if isinstance(test, ast.UnaryOp) and isinstance(test.op, ast.Not):
+                if isinstance(test.operand, ast.Name):
+                    checked = test.operand.id
+            elif (
+                isinstance(test, ast.Compare)
+                and isinstance(test.left, ast.Name)
+                and len(test.ops) == 1
+                and isinstance(test.ops[0], ast.Is)
+                and isinstance(test.comparators[0], ast.Constant)
+                and test.comparators[0].value is None
+            ):
+                checked = test.left.id
+            if checked is None or checked != receiver or checked == target.id:
+                continue
+            out.append(
+                _finding(
+                    "guard-rechecks-call-receiver",
+                    "FIX",
+                    "high",
+                    following,
+                    f"the guard tests `{receiver}` -- the call receiver -- instead of "
+                    f"`{target.id}`, the result just assigned",
+                    f"`{receiver}` was already used successfully as a call target, so "
+                    f"this branch is dead; `{target.id}` is never checked and flows on "
+                    f"possibly-None",
+                )
+            )
+    return out
+
+
+def _check_falsy_check_for_none_default(tree: ast.AST) -> list[dict]:
+    """`def f(x=None)` with `if not x:` -- conflates None with 0/''/[]/False.
+
+    The author means "argument omitted", but the test also fires for every
+    legitimate falsy value the caller may pass.
+    """
+    out: list[dict] = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        args = fn.args
+        none_defaults: set[str] = set()
+        pairs = list(
+            zip(
+                args.args[-len(args.defaults) :] if args.defaults else [], args.defaults
+            )
+        )
+        pairs += [
+            (a, d) for a, d in zip(args.kwonlyargs, args.kw_defaults) if d is not None
+        ]
+        for arg, default in pairs:
+            if isinstance(default, ast.Constant) and default.value is None:
+                none_defaults.add(arg.arg)
+        if not none_defaults:
+            continue
+        # A parameter reassigned from its default is no longer a sentinel test.
+        reassigned = {
+            t.id
+            for n in _walk_same_scope(fn)
+            if isinstance(n, ast.Assign)
+            for t in n.targets
+            if isinstance(t, ast.Name)
+        }
+        for node in _walk_same_scope(fn):
+            if not isinstance(node, ast.UnaryOp) or not isinstance(node.op, ast.Not):
+                continue
+            if not isinstance(node.operand, ast.Name):
+                continue
+            name = node.operand.id
+            if name not in none_defaults or name in reassigned:
+                continue
+            out.append(
+                _finding(
+                    "falsy-check-for-none-default",
+                    "CONSIDER",
+                    "medium",
+                    node,
+                    f"`not {name}` tests falsiness, but `{name}` defaults to None -- "
+                    f"the check also fires for 0, '', [] and False",
+                    f"use `{name} is None` if the intent is 'argument omitted'; this "
+                    f"matters whenever a falsy value is legitimate input",
+                )
+            )
+    return out
+
+
 _CHECKS = {
     "mutable-default-argument": _check_mutable_default,
     "late-binding-closure-in-loop": _check_late_binding_closure,
@@ -1330,6 +1445,8 @@ _CHECKS = {
     "except-in-loop-without-exit": _check_except_in_loop_without_exit,
     "raise-without-from-in-except": _check_raise_without_from,
     "flag-not-reset-on-early-exit": _check_flag_not_reset_on_early_exit,
+    "guard-rechecks-call-receiver": _check_guard_rechecks_call_receiver,
+    "falsy-check-for-none-default": _check_falsy_check_for_none_default,
 }
 
 
