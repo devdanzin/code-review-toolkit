@@ -191,6 +191,74 @@ def _decorator_names(
     return found
 
 
+# Methods that change a container's SIZE. Only these are unsafe during
+# iteration -- reassigning an existing key/index leaves the size untouched and
+# is explicitly safe (CPython raises only on a size change).
+_RESIZING_METHODS = frozenset(
+    {
+        "append",
+        "extend",
+        "insert",
+        "remove",
+        "pop",
+        "clear",
+        "update",
+        "add",
+        "discard",
+        "setdefault",
+        "popitem",
+    }
+)
+
+
+def _resizes_during_iteration(
+    name: str, loop_vars: set[str], body: list[ast.stmt]
+) -> bool:
+    """True if *name* may change SIZE inside a loop iterating over it.
+
+    The discriminator that matters: ``d[k] = v`` where ``k`` is the loop
+    variable rewrites an existing entry and is safe; ``del d[k]``, a resizing
+    method call, or ``d[something_else] = v`` (which can insert a new key) is
+    not. Getting this wrong flags idiomatic in-place value updates -- observed
+    on CPython's own idlelib, where all four raw hits were safe rewrites.
+    """
+    for stmt in body:
+        for node in ast.walk(stmt):
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr in _RESIZING_METHODS
+                and isinstance(node.func.value, ast.Name)
+                and node.func.value.id == name
+            ):
+                return True
+            if isinstance(node, ast.Delete):
+                for tgt in node.targets:
+                    if (
+                        isinstance(tgt, ast.Subscript)
+                        and isinstance(tgt.value, ast.Name)
+                        and tgt.value.id == name
+                    ):
+                        return True
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = (
+                    node.targets if isinstance(node, ast.Assign) else [node.target]
+                )
+                for tgt in targets:
+                    if not (
+                        isinstance(tgt, ast.Subscript)
+                        and isinstance(tgt.value, ast.Name)
+                        and tgt.value.id == name
+                    ):
+                        continue
+                    # Subscript by the loop variable -> existing entry -> safe.
+                    key = tgt.slice
+                    if isinstance(key, ast.Name) and key.id in loop_vars:
+                        continue
+                    return True
+    return False
+
+
 def _mutates(name: str, body: list[ast.stmt]) -> bool:
     """True if *name* is mutated (method call, item/attr assignment, del) in *body*."""
     for stmt in body:
@@ -495,7 +563,8 @@ def _check_mutation_during_iteration(tree: ast.AST) -> list[dict]:
         if not isinstance(iterated, ast.Name):
             continue
         name = iterated.id
-        if _mutates(name, loop.body):
+        loop_vars = {n.id for n in ast.walk(loop.target) if isinstance(n, ast.Name)}
+        if _resizes_during_iteration(name, loop_vars, loop.body):
             out.append(
                 _finding(
                     "mutation-during-iteration",
@@ -640,6 +709,40 @@ def _check_lru_cache_on_method(tree: ast.AST) -> list[dict]:
     return out
 
 
+def _attribute_mutated_anywhere(tree: ast.AST, attr: str) -> bool:
+    """True if ``<anything>.attr`` is mutated anywhere in this module.
+
+    A class-level mutable that is never mutated is declarative configuration
+    (the `menu_specs`/`Meta`-style pattern), not shared-state corruption. This
+    is a whole-module check because the mutation, if any, lives in a method far
+    from the class-body assignment.
+    """
+    for node in ast.walk(tree):
+        # obj.attr.append(...) / obj.attr.update(...)
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr in _MUTATING_METHODS
+            and isinstance(node.func.value, ast.Attribute)
+            and node.func.value.attr == attr
+        ):
+            return True
+        # obj.attr[k] = v  /  del obj.attr[k]
+        targets: list[ast.expr] = []
+        if isinstance(node, (ast.Assign, ast.AugAssign)):
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+        elif isinstance(node, ast.Delete):
+            targets = node.targets
+        for tgt in targets:
+            if (
+                isinstance(tgt, ast.Subscript)
+                and isinstance(tgt.value, ast.Attribute)
+                and tgt.value.attr == attr
+            ):
+                return True
+    return False
+
+
 def _check_class_level_mutable(tree: ast.AST) -> list[dict]:
     out: list[dict] = []
     for cls in ast.walk(tree):
@@ -659,8 +762,31 @@ def _check_class_level_mutable(tree: ast.AST) -> list[dict]:
             for tgt in targets:
                 if not isinstance(tgt, ast.Name):
                     continue
-                # ALL_CAPS reads as a constant; downgrade rather than drop.
-                conf = "medium" if tgt.id.isupper() else "high"
+                # The defect requires an actual mutation. ALL_CAPS reads as a
+                # constant, and an attribute never mutated in this module is
+                # declarative class config (the menu_specs/Meta pattern seen
+                # throughout idlelib) -- downgrade rather than drop, since the
+                # mutation could live in another module.
+                mutated = _attribute_mutated_anywhere(tree, tgt.id)
+                if mutated:
+                    conf, why = (
+                        "high",
+                        "the shared object is mutated in this module -- state bleeds "
+                        "between instances",
+                    )
+                elif tgt.id.isupper():
+                    conf, why = (
+                        "low",
+                        "ALL_CAPS and no mutation seen: reads as a constant (prefer a "
+                        "tuple/frozenset to make that explicit)",
+                    )
+                else:
+                    conf, why = (
+                        "medium",
+                        "no mutation seen in this module: likely declarative class "
+                        "config, possibly overridden by subclasses -- confirm nothing "
+                        "elsewhere mutates it",
+                    )
                 out.append(
                     _finding(
                         "class-level-mutable-attribute",
@@ -669,15 +795,49 @@ def _check_class_level_mutable(tree: ast.AST) -> list[dict]:
                         stmt,
                         f"{cls.name}.{tgt.id} is a mutable class attribute shared by every "
                         f"instance",
-                        "initialize in __init__ (or use field(default_factory=...)); "
-                        "acceptable only if never mutated",
+                        why,
                     )
                 )
     return out
 
 
+_CONTROL_FLOW_EXCEPTIONS = frozenset(
+    {"SystemExit", "KeyboardInterrupt", "GeneratorExit"}
+)
+
+
+def _guarded_by_earlier_reraise(
+    try_node: ast.Try, handler: ast.ExceptHandler
+) -> set[str]:
+    """Control-flow exceptions already re-raised by an earlier clause of *try_node*.
+
+    ``except SystemExit: raise`` followed by a bare ``except:`` discharges the
+    obligation for SystemExit -- the bare clause can no longer swallow it. The
+    idiom appears in CPython's own idlelib (`rpc.py`).
+    """
+    covered: set[str] = set()
+    for clause in try_node.handlers:
+        if clause is handler:
+            break
+        if not any(isinstance(n, ast.Raise) for n in ast.walk(clause)):
+            continue
+        names: list[str] = []
+        if isinstance(clause.type, ast.Name):
+            names = [clause.type.id]
+        elif isinstance(clause.type, ast.Tuple):
+            names = [e.id for e in clause.type.elts if isinstance(e, ast.Name)]
+        covered |= {n for n in names if n in _CONTROL_FLOW_EXCEPTIONS}
+    return covered
+
+
 def _check_bare_except(tree: ast.AST) -> list[dict]:
     out: list[dict] = []
+    # Map each handler to its owning Try so sibling clauses can be inspected.
+    owner: dict[int, ast.Try] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Try):
+            for clause in node.handlers:
+                owner[id(clause)] = node
     for node in ast.walk(tree):
         if not isinstance(node, ast.ExceptHandler):
             continue
@@ -697,7 +857,18 @@ def _check_bare_except(tree: ast.AST) -> list[dict]:
             for n in ast.walk(stmt)
         )
         label = "except:" if is_bare else "except BaseException:"
-        if captured:
+        try_node = owner.get(id(node))
+        covered = _guarded_by_earlier_reraise(try_node, node) if try_node else set()
+        remaining = sorted(_CONTROL_FLOW_EXCEPTIONS - covered)
+        if not remaining:
+            continue  # every control-flow exception re-raised by an earlier clause
+        if covered:
+            conf = "medium"
+            detail = (
+                f"an earlier clause re-raises {sorted(covered)}, but this one still "
+                f"swallows {remaining}"
+            )
+        elif captured:
             conf = "medium"
             detail = (
                 f"the exception is captured as '{node.name}' -- legitimate if the caller "

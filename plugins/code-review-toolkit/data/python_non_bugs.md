@@ -143,3 +143,55 @@ like** (so a genuine instance is never suppressed).
   license-header change — high line counts, zero semantic risk.
 - **Real bug:** churn concentrated in *bug-fix* commits touching the same function repeatedly. Read
   the commit subjects before ranking; `fix:`/`hotfix` density is the signal, not raw line count.
+
+---
+
+## Learned from validation runs
+
+Classes below were confirmed by triaging real findings, not anticipated in advance. Each names the
+run that produced it, so the evidence is traceable.
+
+### 16. Value rewrite during iteration *(idlelib, 4 instances)*
+- **Symptom:** `for k in d: d[k] = transform(d[k])` flagged as mutation-during-iteration.
+- **Why non-bug:** assigning to a key **already present** does not change the container's size, and
+  CPython raises only on a size change. Rewriting values in place while iterating is correct and
+  idiomatic.
+- **Real bug:** anything that changes size — `del d[k]`, `d[new_key] = v`, `lst.append/remove/pop`.
+  *(The scanner now encodes this discriminator; it is documented here because a reviewer reading
+  the raw pattern will otherwise re-flag it.)*
+
+### 17. Mutable default as a deliberate counter cell *(idlelib `multicall.py:426`)*
+- **Symptom:** `def bindseq(seq, n=[0]): ... n[0] += 1` flagged as a mutable default argument.
+- **Why non-bug:** the shared-across-calls behaviour is exactly what the author wants — a
+  pre-`nonlocal` mutable cell used as a persistent counter. The function is *correct only because*
+  the default persists.
+- **Real bug:** the caller expects a fresh container per call. The tell: a single-element
+  list/dict mutated by index (`n[0] += 1`) is a cell; `items.append(x)` on a list that grows
+  unboundedly across calls is the defect.
+
+### 18. Declarative class configuration *(idlelib, 14 instances)*
+- **Symptom:** `class EditorWindow: menu_specs = [...]` flagged as a shared mutable class attribute.
+- **Why non-bug:** it is declarative configuration read by the framework and **overridden in
+  subclasses** (`PyShell.menu_specs = [...]`), never mutated. The same shape as Django's `Meta`,
+  DRF's `fields`, or Tk widget specs.
+- **Real bug:** the attribute is actually mutated somewhere (`self.items.append(...)`), so state
+  bleeds between instances. Search the whole project for a mutation before reporting — absence of
+  mutation in one module is not proof, but presence is proof of the defect.
+
+### 19. Documented boundary around user-supplied code *(idlelib `calltip.py:141`)*
+- **Symptom:** `except BaseException:` around `eval(expression, namespace)` flagged.
+- **Why non-bug (arguably):** the handler carries a comment explaining that an uncaught exception
+  would close the IDE and that user code can raise anything. It is a deliberate, documented
+  containment boundary at a genuine trust edge.
+- **Real bug:** the same shape with no rationale, or one that also swallows the interrupt a user
+  needs in order to *stop* long-running user code. Treat a documented boundary as **POLICY** for the
+  maintainer, not as a defect to fix — but do say that Ctrl-C is caught too.
+
+### 20. Control-flow exception re-raised by an earlier clause *(idlelib `rpc.py:109`)*
+- **Symptom:** a bare `except:` flagged for swallowing `SystemExit`/`KeyboardInterrupt`.
+- **Why non-bug (partly):** an earlier clause in the same `try` already handles and re-raises it —
+  `except SystemExit: raise` then `except:`. The obligation is discharged for whatever the earlier
+  clause covers.
+- **Real bug:** the *remaining* control-flow exceptions. In the `rpc.py` shape `SystemExit` is
+  re-raised but `KeyboardInterrupt` is still swallowed, so the finding is real but narrower than it
+  first appears. Name precisely which exceptions remain swallowed.

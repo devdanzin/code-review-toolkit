@@ -175,6 +175,30 @@ class TestMutationDuringIteration(unittest.TestCase):
             shapes("def f(lst):\n    for x in lst[:]:\n        lst.remove(x)\n"),
         )
 
+    def test_rewriting_existing_key_is_silent(self):
+        # d[k] = v with k from the iteration rewrites an existing entry: the
+        # size is unchanged, so CPython does not raise. Observed on idlelib,
+        # where all four raw hits were this safe pattern.
+        self.assertNotIn(
+            "mutation-during-iteration",
+            shapes("def f(d):\n    for k in d:\n        d[k] = transform(d[k])\n"),
+        )
+
+    def test_rewriting_via_items_is_silent(self):
+        src = "def f(d):\n    for k, v in d.items():\n        d[k] = v + 1\n"
+        self.assertNotIn("mutation-during-iteration", shapes(src))
+
+    def test_inserting_a_new_key_is_flagged(self):
+        # A different key can insert -> size change -> RuntimeError.
+        self.assertIn(
+            "mutation-during-iteration",
+            shapes("def f(d):\n    for k in d:\n        d[k + '_x'] = 1\n"),
+        )
+
+    def test_list_index_assignment_is_silent(self):
+        src = "def f(lst):\n    for i, x in enumerate(lst):\n        lst[i] = x * 2\n"
+        self.assertNotIn("mutation-during-iteration", shapes(src))
+
     def test_mutating_a_different_container_silent(self):
         self.assertNotIn(
             "mutation-during-iteration",
@@ -254,11 +278,24 @@ class TestClassLevelMutable(unittest.TestCase):
     def test_class_list(self):
         f = scan("class C:\n    items = []\n")
         self.assertEqual(f[0]["shape"], "class-level-mutable-attribute")
-        self.assertEqual(f[0]["confidence"], "high")
 
-    def test_all_caps_downgraded(self):
+    def test_all_caps_unmutated_is_low(self):
         f = scan("class C:\n    DEFAULTS = {}\n")
+        self.assertEqual(f[0]["confidence"], "low")
+
+    def test_declarative_config_downgraded(self):
+        # Never mutated in the module: the menu_specs/Meta pattern, seen
+        # throughout idlelib. Real, but not a shared-state defect.
+        f = scan("class C:\n    specs = [('a', 1), ('b', 2)]\n")
         self.assertEqual(f[0]["confidence"], "medium")
+
+    def test_mutated_attribute_is_high(self):
+        src = (
+            "class C:\n    items = []\n"
+            "    def add(self, x):\n        self.items.append(x)\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "class-level-mutable-attribute"]
+        self.assertEqual(f[0]["confidence"], "high")
 
     def test_instance_attribute_is_silent(self):
         src = "class C:\n    def __init__(self):\n        self.items = []\n"
@@ -293,6 +330,24 @@ class TestBareExcept(unittest.TestCase):
         src = "def f(errs):\n    try:\n        pass\n    except BaseException as e:\n        errs.append(e)\n"
         f = [x for x in scan(src) if x["shape"] == "bare-except-swallows-control-flow"]
         self.assertEqual(f[0]["confidence"], "medium")
+
+    def test_earlier_systemexit_reraise_downgrades(self):
+        # `except SystemExit: raise` then bare except -- the idlelib rpc.py idiom.
+        src = (
+            "def f():\n    try:\n        pass\n    except SystemExit:\n"
+            "        raise\n    except:\n        log()\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "bare-except-swallows-control-flow"]
+        self.assertEqual(f[0]["confidence"], "medium")
+        self.assertIn("KeyboardInterrupt", f[0]["detail"])
+
+    def test_all_control_flow_reraised_is_silent(self):
+        src = (
+            "def f():\n    try:\n        pass\n"
+            "    except (SystemExit, KeyboardInterrupt, GeneratorExit):\n        raise\n"
+            "    except:\n        log()\n"
+        )
+        self.assertNotIn("bare-except-swallows-control-flow", shapes(src))
 
     def test_except_exception_is_silent(self):
         src = "def f():\n    try:\n        pass\n    except Exception:\n        pass\n"

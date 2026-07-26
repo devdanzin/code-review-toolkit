@@ -217,8 +217,10 @@
       "hunt": "Every bare except in the codebase; prioritize those inside loops, signal handlers, and long-running worker/daemon bodies.",
       "expected": "Ctrl-C interrupts promptly; `sys.exit()` terminates the process.",
       "caught_as": "SILENT until an operator tries to stop the process and cannot -- then it looks like a hang, not an exception-handling bug.",
-      "confirmed_examples": [],
-      "validation": "documented",
+      "confirmed_examples": [
+        "CPython idlelib autocomplete.py:175 (6080c86, 3.14) -- `try: rpcclt = self.editwin.flist.pyshell.interp.rpcclt / except: rpcclt = None` catches everything to guard an attribute chain; `except AttributeError:` is the intended narrow form. Found by reports/idlelib_v1."
+      ],
+      "validation": "confirmed",
       "references": [
         "Python docs, exception hierarchy: KeyboardInterrupt/SystemExit derive from BaseException, not Exception",
         "ruff E722 bare-except; pylint W0702"
