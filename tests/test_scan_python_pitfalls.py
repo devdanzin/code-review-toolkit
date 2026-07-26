@@ -1137,5 +1137,334 @@ class TestLifecycleHookTwoMeanings(unittest.TestCase):
         self.assertNotIn("one-lifecycle-hook-two-meanings", shapes(src))
 
 
+# --------------------------------------------------------------------------
+# Shapes banked from the _pyrepl benchmark
+# --------------------------------------------------------------------------
+
+
+class TestApiValueDomain(unittest.TestCase):
+    """_pyrepl input.py:94 -- category(k) == "C" can never be true."""
+
+    def test_coarser_value_than_the_api_returns(self):
+        src = (
+            "import unicodedata\n"
+            "def f(k):\n    if unicodedata.category(k) == 'C':\n        return 1\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "api-value-domain-mismatch"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+        self.assertIn("'Cc'", f[0]["detail"])
+
+    def test_valid_value_is_silent(self):
+        src = "import unicodedata\ndef f(k):\n    return unicodedata.category(k) == 'Cc'\n"
+        self.assertNotIn("api-value-domain-mismatch", shapes(src))
+
+    def test_startswith_is_silent(self):
+        # The guarded twin: startswith is how you test a category CLASS.
+        src = (
+            "import unicodedata\n"
+            "def f(k):\n    return unicodedata.category(k).startswith('C')\n"
+        )
+        self.assertNotIn("api-value-domain-mismatch", shapes(src))
+
+    def test_value_bound_to_a_local(self):
+        src = (
+            "import unicodedata\n"
+            "def f(k):\n    cat = unicodedata.category(k)\n    return cat == 'C'\n"
+        )
+        self.assertIn("api-value-domain-mismatch", shapes(src))
+
+    def test_open_domain_is_medium(self):
+        src = "import sys\ndef f():\n    return sys.platform == 'linux2'\n"
+        f = [x for x in scan(src) if x["shape"] == "api-value-domain-mismatch"]
+        self.assertEqual(f[0]["confidence"], "medium")
+
+
+class TestIsinstanceOnContainer(unittest.TestCase):
+    """_pyrepl reader.py:675 -- isinstance on the spec tuple, not the object."""
+
+    def test_subscripted_before_the_test(self):
+        src = (
+            "def f(self, cmd):\n"
+            "    if isinstance(cmd[0], str):\n        t = self.get(cmd[0])\n"
+            "    command = t(self, *cmd)\n"
+            "    if not isinstance(cmd, commands.digit_arg):\n        self.last = t\n"
+        )
+        f = [
+            x for x in scan(src) if x["shape"] == "isinstance-on-container-not-element"
+        ]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_guard_then_subscript_is_silent(self):
+        # Counter.__add__: the guard comes FIRST, which is the correct idiom.
+        src = (
+            "def add(self, other):\n"
+            "    if not isinstance(other, Counter):\n        return NotImplemented\n"
+            "    return other['x']\n"
+        )
+        self.assertNotIn("isinstance-on-container-not-element", shapes(src))
+
+    def test_subscript_under_a_type_guard_is_silent(self):
+        src = (
+            "def f(value):\n"
+            "    if isinstance(value, str):\n        return value[0]\n"
+            "    if isinstance(value, int):\n        return value\n"
+        )
+        self.assertNotIn("isinstance-on-container-not-element", shapes(src))
+
+    def test_container_type_is_silent(self):
+        src = "def f(x):\n    y = x[0]\n    return isinstance(x, tuple)\n"
+        self.assertNotIn("isinstance-on-container-not-element", shapes(src))
+
+
+class TestMockCallableAsSpec(unittest.TestCase):
+    """_pyrepl test_unix_console.py -- MagicMock(lambda...) is inert at 7 sites."""
+
+    def test_lambda_as_first_positional(self):
+        src = "from unittest.mock import MagicMock\ndef f(h, w):\n    return MagicMock(lambda _: (h, w))\n"
+        f = [x for x in scan(src) if x["shape"] == "mock-callable-as-spec"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_side_effect_keyword_is_silent(self):
+        src = "from unittest.mock import MagicMock\ndef f(h, w):\n    return MagicMock(side_effect=lambda _: (h, w))\n"
+        self.assertNotIn("mock-callable-as-spec", shapes(src))
+
+    def test_spec_class_is_silent(self):
+        src = "from unittest.mock import MagicMock\ndef f():\n    return MagicMock(SomeClass)\n"
+        self.assertNotIn("mock-callable-as-spec", shapes(src))
+
+
+class TestDecodeErrorAsIncomplete(unittest.TestCase):
+    """_pyrepl base_eventqueue.py:104 -- one bad byte wedges the queue."""
+
+    def test_bare_return_on_decode_error(self):
+        src = (
+            "def push(self, c):\n    self.buf.append(c)\n    try:\n"
+            "        d = bytes(self.buf).decode(self.encoding)\n"
+            "    except UnicodeError:\n        return\n    self.insert(d)\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "decode-error-treated-as-incomplete"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_handler_that_recovers_is_silent(self):
+        src = (
+            "def push(self, c):\n    try:\n"
+            "        d = bytes(self.buf).decode(self.encoding)\n"
+            "    except UnicodeError:\n        self.buf.clear()\n        return\n"
+        )
+        self.assertNotIn("decode-error-treated-as-incomplete", shapes(src))
+
+    def test_non_decode_try_is_silent(self):
+        src = "def f(x):\n    try:\n        return int(x)\n    except ValueError:\n        return\n"
+        self.assertNotIn("decode-error-treated-as-incomplete", shapes(src))
+
+
+class TestUnvalidatedEnvNumeric(unittest.TestCase):
+    """_pyrepl unix_console.py:471 -- COLUMNS=0 spins the REPL forever."""
+
+    def test_env_branch_unvalidated_beside_a_validated_twin(self):
+        src = (
+            "import os\n"
+            "def getheightwidth(self):\n    try:\n"
+            "        return int(os.environ['LINES']), int(os.environ['COLUMNS'])\n"
+            "    except (KeyError, ValueError):\n"
+            "        size = ioctl(self.fd, TIOCGWINSZ, b'')\n"
+            "        height, width = struct.unpack('hhhh', size)[0:2]\n"
+            "        if not height:\n            return 25, 80\n"
+            "        return height, width\n"
+        )
+        f = [
+            x for x in scan(src) if x["shape"] == "unvalidated-numeric-from-environment"
+        ]
+        self.assertTrue(f)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_validated_env_value_is_silent(self):
+        src = (
+            "import os\n"
+            "def f():\n    n = int(os.environ['COLUMNS'])\n"
+            "    if n <= 0:\n        return 80\n    return n\n"
+        )
+        self.assertNotIn("unvalidated-numeric-from-environment", shapes(src))
+
+    def test_non_env_int_is_silent(self):
+        src = "def f(s):\n    return int(s)\n"
+        self.assertNotIn("unvalidated-numeric-from-environment", shapes(src))
+
+
+class TestReturnIgnoredAgainstFamily(unittest.TestCase):
+    """_pyrepl windows_console.py:152,156 -- the only unchecked Win32 calls."""
+
+    CHECKED = (
+        "    if not ReadConsoleInput(a):\n        raise WinError()\n"
+        "    if not WriteConsoleW(b):\n        raise WinError()\n"
+        "    if not ScrollConsoleScreenBuffer(c):\n        raise WinError()\n"
+    )
+
+    def test_discarded_beside_checked_siblings(self):
+        src = (
+            "import ctypes\ndef f(a, b, c, h):\n"
+            + self.CHECKED
+            + "    GetConsoleMode(h)\n"
+        )
+        f = [
+            x
+            for x in scan(src)
+            if x["shape"] == "return-ignored-against-checked-family"
+        ]
+        self.assertEqual(len(f), 1)
+
+    def test_non_ffi_module_is_silent(self):
+        # Without a ctypes/winapi import the convention argument does not hold;
+        # 720 of 787 raw findings were test modules constructing objects.
+        src = "def f(a, b, c, h):\n" + self.CHECKED + "    GetConsoleMode(h)\n"
+        self.assertNotIn("return-ignored-against-checked-family", shapes(src))
+
+    def test_all_checked_is_silent(self):
+        src = (
+            "import ctypes\ndef f(a, b, c, h):\n"
+            + self.CHECKED
+            + "    if not GetConsoleMode(h):\n        raise WinError()\n"
+        )
+        self.assertNotIn("return-ignored-against-checked-family", shapes(src))
+
+
+class TestWrapperMutatesForeignCollection(unittest.TestCase):
+    """_pyrepl readline.py -- del history[:] past historical_reader's bookkeeping."""
+
+    def test_mutation_through_an_accessor(self):
+        src = "class W:\n    def clear(self):\n        self.get_reader().history.append(1)\n"
+        self.assertIn("wrapper-mutates-foreign-collection", shapes(src))
+
+    def test_own_attribute_is_silent(self):
+        src = "class W:\n    def add(self, x):\n        self.history.append(x)\n"
+        self.assertNotIn("wrapper-mutates-foreign-collection", shapes(src))
+
+    def test_using_the_returned_object_is_silent(self):
+        src = "class W:\n    def add(self, x):\n        self.get_list().append(x)\n"
+        self.assertNotIn("wrapper-mutates-foreign-collection", shapes(src))
+
+
+class TestSaveStateClobbered(unittest.TestCase):
+    """_pyrepl unix_console.py -- Ctrl-Z, fg, exit leaves the terminal raw."""
+
+    def test_snapshot_then_modify_without_a_guard(self):
+        src = (
+            "class C:\n"
+            "    def prepare(self):\n        self.__svtermstate = tcgetattr(self.fd)\n"
+            "        raw = self.__svtermstate\n        tcsetattr(self.fd, raw)\n"
+            "    def restore(self):\n        tcsetattr(self.fd, self.__svtermstate)\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "save-state-clobbered-by-reentry"]
+        self.assertEqual(len(f), 1)
+
+    def test_idempotence_guard_is_silent(self):
+        src = (
+            "class C:\n"
+            "    def prepare(self):\n        if self.__svtermstate is None:\n"
+            "            self.__svtermstate = tcgetattr(self.fd)\n"
+            "        tcsetattr(self.fd, raw)\n"
+            "    def restore(self):\n        tcsetattr(self.fd, self.__svtermstate)\n"
+        )
+        self.assertNotIn("save-state-clobbered-by-reentry", shapes(src))
+
+    def test_dunder_init_is_silent(self):
+        # Initialization is SUPPOSED to snapshot; it cannot be re-entered.
+        src = (
+            "class C:\n"
+            "    def __init__(self):\n        self.saved = tcgetattr(self.fd)\n"
+            "        tcsetattr(self.fd, raw)\n"
+            "    def restore(self):\n        tcsetattr(self.fd, self.saved)\n"
+        )
+        self.assertNotIn("save-state-clobbered-by-reentry", shapes(src))
+
+
+class TestProjectLevelShapes(unittest.TestCase):
+    """Two shapes compare files against each other, so they need a corpus."""
+
+    def scan_project(self, files):
+        with TempProject(files) as root:
+            return mod.analyze(str(root))["findings"]
+
+    def test_divergent_sentinel_across_parallel_modules(self):
+        f = self.scan_project(
+            {
+                "unix_console.py": "def get(self):\n    return Event('key', None)\n",
+                "windows_console.py": "def get(self):\n    return Event('key', '')\n",
+            }
+        )
+        f = [x for x in f if x["shape"] == "divergent-sentinel-across-parallel-modules"]
+        self.assertEqual(len(f), 2)
+        self.assertEqual({x["confidence"] for x in f}, {"high"})
+
+    def test_matching_sentinels_are_silent(self):
+        f = self.scan_project(
+            {
+                "unix_console.py": "def get(self):\n    return Event('key', '')\n",
+                "windows_console.py": "def get(self):\n    return Event('key', '')\n",
+            }
+        )
+        self.assertNotIn(
+            "divergent-sentinel-across-parallel-modules", [x["shape"] for x in f]
+        )
+
+    def test_unrelated_modules_are_silent(self):
+        # No parallel-platform prefix means no parallel-pair relation.
+        f = self.scan_project(
+            {
+                "alpha.py": "def get(self):\n    return Event('key', None)\n",
+                "beta.py": "def get(self):\n    return Event('key', '')\n",
+            }
+        )
+        self.assertNotIn(
+            "divergent-sentinel-across-parallel-modules", [x["shape"] for x in f]
+        )
+
+    def test_unguarded_inverse_of_guarded_operation(self):
+        f = self.scan_project(
+            {
+                "historical_reader.py": (
+                    "class H:\n    def finish(self, ret):\n"
+                    "        if ret and should_auto_add_history:\n"
+                    "            self.history.append(ret)\n"
+                ),
+                "simple_interact.py": ("def run(reader):\n    reader.history.pop()\n"),
+            }
+        )
+        f = [x for x in f if x["shape"] == "unguarded-inverse-of-guarded-operation"]
+        self.assertEqual(len(f), 1)
+        self.assertIn("simple_interact.py", f[0]["file"])
+
+    def test_bare_local_collection_is_silent(self):
+        # `parts`/`lines` are generic locals managed by one algorithm; matching
+        # them paired glob.py against argparse.py.
+        f = self.scan_project(
+            {
+                "a.py": "def f(flag):\n    parts = []\n    if flag:\n        parts.append(1)\n",
+                "b.py": "def g():\n    parts = [1]\n    parts.pop()\n",
+            }
+        )
+        self.assertNotIn(
+            "unguarded-inverse-of-guarded-operation", [x["shape"] for x in f]
+        )
+
+    def test_same_function_add_and_remove_is_silent(self):
+        f = self.scan_project(
+            {
+                "a.py": (
+                    "def f(self, flag):\n"
+                    "    if flag:\n        self.cands.add(1)\n"
+                    "    self.cands.remove(1)\n"
+                )
+            }
+        )
+        self.assertNotIn(
+            "unguarded-inverse-of-guarded-operation", [x["shape"] for x in f]
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

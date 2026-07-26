@@ -4,6 +4,71 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.0]
+
+### Added
+
+- **The remaining banked shapes from the `_pyrepl` benchmark** — catalog is now **40 shapes, 21 of
+  them `confirmed`**. Ten are executable checks; two are git-shaped and assigned to
+  `git-history-analyzer` with no backing script, which is the honest classification rather than a
+  forced AST approximation.
+  - `api-value-domain-mismatch` — a guard compared against a value the API can never return
+    (`unicodedata.category(k) == "C"`; the API returns two-letter subclasses). The guard reads like
+    validation and never fires.
+  - `isinstance-on-container-not-element` — `isinstance(cmd, T)` where `cmd` was subscripted earlier
+    in the same scope, so it holds the spec tuple, not the object.
+  - `mock-callable-as-spec` — `MagicMock(lambda ...)`; the first positional parameter is `spec`, so
+    the callable is never called and every assertion downstream passes vacuously.
+  - `decode-error-treated-as-incomplete` — a decode failure handled as "need more bytes", so invalid
+    input grows the buffer forever and the stream goes permanently deaf. A silent hang, not an error.
+  - `unvalidated-numeric-from-environment` — `int(os.environ[...])` used as a dimension with no range
+    check, typically the branch that got less scrutiny than the syscall beside it.
+  - `wrapper-mutates-foreign-collection` — mutating a collection reached through another object,
+    leaving the owner's bookkeeping stale.
+  - `save-state-clobbered-by-reentry` — a snapshot-then-modify method with no idempotence guard, so a
+    second call saves the already-modified state as the "original".
+  - `return-ignored-against-checked-family` — an FFI status return discarded where its siblings are
+    all checked.
+  - `divergent-sentinel-across-parallel-modules` — **project-level**: parallel per-platform modules
+    constructing one type with different empty-value sentinels.
+  - `unguarded-inverse-of-guarded-operation` — **project-level**: an add guarded by a policy flag with
+    its inverse unguarded.
+  - `coverage-claiming-commit-that-reduced-coverage` and `incomplete-fix-residue-at-an-answered-todo`
+    — catalogued for `git-history-analyzer`; both need a diff, not a tree.
+- **Project-level checks.** `analyze()` now collects the parsed corpus and runs `_PROJECT_CHECKS`
+  after the per-file pass, so a shape can compare files against each other. `analyze_file` is
+  unchanged for callers that do not want it.
+- Five more false-positive classes in `data/python_non_bugs.md` (now 30).
+
+### Fixed
+
+- `_call_name` returns `""` when a call sits in the receiver chain, so `bytes(buf).decode(...)` — the
+  archetypal instance of `decode-error-treated-as-incomplete` — was invisible to its own check. Method
+  names are now read off the `Attribute` directly.
+- The env-numeric check looked for the validating comparison on the *call expression* rather than on
+  the name the value was bound to, so every correctly-guarded instance was reported.
+- Resolving a handler's parent `Try` by walking the tree per handler is quadratic; on stdlib-sized
+  files it alone added minutes to a full run. Same for marking conditional bodies with a per-`if`
+  `ast.walk`, now a single flag-carrying DFS.
+
+### Calibration
+
+Calibrated over CPython's `Lib/` (1847 files) across five passes: **1962 raw → 56**. Every runaway
+was a mechanical defect in the check rather than a bad shape, and each fix is now a regression test:
+
+| Check | raw | final | what was wrong |
+|---|---|---|---|
+| `return-ignored-against-checked-family` | 1414 | 9 | keyed on get/set stems, collapsing `self.__setstate` and `self.state` into one family; 720 of the survivors were test modules constructing objects |
+| `unguarded-inverse-of-guarded-operation` | 341 | 7 | matched bare local names, pairing `glob.py` against `argparse.py` |
+| `wrapper-mutates-foreign-collection` | 77 | 2 | any call in the receiver chain counted, including ordinary use of a returned object |
+| `save-state-clobbered-by-reentry` | 60 | 0 | fired on `__init__`/`__enter__`, which are supposed to snapshot |
+| `isinstance-on-container-not-element` | 40 | 8 | ignored ordering, so `Counter.__add__`'s guard-then-subscript matched |
+
+The `isinstance` shape was also **reframed**: the original "second argument is not a type" form is
+undecidable statically — 31 of 40 matches at stdlib scale were legitimate lowercase class names — so
+the transposed-argument variant is now catalogued for the agent and the scanner checks only the
+decidable container-vs-element form.
+
 ## [1.4.0]
 
 ### Added

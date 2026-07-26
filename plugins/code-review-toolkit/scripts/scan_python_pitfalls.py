@@ -165,6 +165,145 @@ _COMMIT_HOOKS = frozenset(
     {"finish", "commit", "save", "accept", "submit", "done", "complete", "finalize"}
 )
 
+# APIs with a KNOWN return domain, so a comparison against anything else is a
+# dead guard. The bool records whether the domain is closed (Unicode general
+# categories are fixed by the standard) or merely well-known (new platforms
+# appear), which is the difference between high and medium confidence.
+_UNICODE_CATEGORIES = frozenset(
+    {
+        "Cc",
+        "Cf",
+        "Cn",
+        "Co",
+        "Cs",
+        "Ll",
+        "Lm",
+        "Lo",
+        "Lt",
+        "Lu",
+        "Mc",
+        "Me",
+        "Mn",
+        "Nd",
+        "Nl",
+        "No",
+        "Pc",
+        "Pd",
+        "Pe",
+        "Pf",
+        "Pi",
+        "Po",
+        "Ps",
+        "Sc",
+        "Sk",
+        "Sm",
+        "So",
+        "Zl",
+        "Zp",
+        "Zs",
+    }
+)
+_API_VALUE_DOMAINS: dict[str, tuple[frozenset[str], bool]] = {
+    "unicodedata.category": (_UNICODE_CATEGORIES, True),
+    "category": (_UNICODE_CATEGORIES, True),
+    "unicodedata.east_asian_width": (frozenset({"F", "H", "W", "Na", "A", "N"}), True),
+    "unicodedata.bidirectional": (
+        frozenset(
+            {
+                "L",
+                "R",
+                "AL",
+                "EN",
+                "ES",
+                "ET",
+                "AN",
+                "CS",
+                "NSM",
+                "BN",
+                "B",
+                "S",
+                "WS",
+                "ON",
+                "LRE",
+                "LRO",
+                "RLE",
+                "RLO",
+                "PDF",
+                "LRI",
+                "RLI",
+                "FSI",
+                "PDI",
+                "",
+            }
+        ),
+        True,
+    ),
+    "os.name": (frozenset({"posix", "nt", "java"}), True),
+    "sys.platform": (
+        frozenset(
+            {
+                "linux",
+                "darwin",
+                "win32",
+                "cygwin",
+                "aix",
+                "sunos5",
+                "freebsd",
+                "openbsd",
+                "netbsd",
+                "emscripten",
+                "wasi",
+                "android",
+                "ios",
+                "vxworks",
+            }
+        ),
+        False,
+    ),
+}
+
+# Names that denote a type without being capitalized.
+_BUILTIN_TYPES = frozenset(
+    {
+        "int",
+        "str",
+        "bytes",
+        "bytearray",
+        "float",
+        "complex",
+        "bool",
+        "list",
+        "dict",
+        "set",
+        "frozenset",
+        "tuple",
+        "type",
+        "object",
+        "slice",
+        "range",
+        "memoryview",
+        "property",
+        "staticmethod",
+        "classmethod",
+    }
+)
+
+# Filename prefixes that mark parallel per-platform implementations of one
+# interface. A sentinel that differs across such a pair is the shape.
+_PARALLEL_PREFIXES = (
+    "unix_",
+    "windows_",
+    "win32_",
+    "win_",
+    "posix_",
+    "nt_",
+    "linux_",
+    "darwin_",
+    "mac_",
+    "macos_",
+    "bsd_",
+)
+
 # Receivers whose lifecycle hook usually means "release this resource" rather
 # than "the operation completed".
 _RESOURCE_RECEIVERS = frozenset(
@@ -1305,9 +1444,10 @@ def _check_except_in_loop_without_exit(tree: ast.AST) -> list[dict]:
 
 def _check_raise_without_from(tree: ast.AST) -> list[dict]:
     out: list[dict] = []
-    for handler in ast.walk(tree):
-        if not isinstance(handler, ast.ExceptHandler):
+    for candidate in ast.walk(tree):
+        if not isinstance(candidate, ast.ExceptHandler):
             continue
+        handler = candidate
         for node in ast.walk(handler):
             if not isinstance(node, ast.Raise):
                 continue
@@ -2404,6 +2544,821 @@ def _check_lifecycle_hook_two_meanings(tree: ast.AST) -> list[dict]:
     return out
 
 
+# --------------------------------------------------------------------------
+# Shapes banked from the _pyrepl benchmark
+# --------------------------------------------------------------------------
+
+
+def _check_api_value_domain(tree: ast.AST) -> list[dict]:
+    """A comparison against a value the API can never return.
+
+    The guard is DEAD -- it looks like validation, reviews like validation, and
+    never fires. `unicodedata.category(k)` returns two-letter subclasses, so
+    `== "C"` is false for every input, and the control characters the branch was
+    written to reject fall through into the accepting branch.
+    """
+    out: list[dict] = []
+    for scope in _iter_scopes(tree):
+        nodes = list(_walk_same_scope(scope))
+        # Names bound directly from one of the tabulated APIs.
+        bound: dict[str, str] = {}
+        for node in nodes:
+            if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+                api = _call_name(node.value)
+                if api in _API_VALUE_DOMAINS:
+                    for name, _ in _bound_names(node.targets):
+                        bound[name] = api
+        for node in nodes:
+            if not isinstance(node, ast.Compare):
+                continue
+            if not all(isinstance(op, (ast.Eq, ast.NotEq)) for op in node.ops):
+                continue
+            api = ""
+            if isinstance(node.left, ast.Call):
+                api = _call_name(node.left)
+            elif isinstance(node.left, ast.Name):
+                api = bound.get(node.left.id, "")
+            elif isinstance(node.left, ast.Attribute):
+                api = _dotted_name(node.left)
+            if api not in _API_VALUE_DOMAINS:
+                continue
+            domain, closed = _API_VALUE_DOMAINS[api]
+            for comparator in node.comparators:
+                if not isinstance(comparator, ast.Constant) or not isinstance(
+                    comparator.value, str
+                ):
+                    continue
+                if comparator.value in domain:
+                    continue
+                prefixes = sorted(v for v in domain if v.startswith(comparator.value))
+                out.append(
+                    _finding(
+                        "api-value-domain-mismatch",
+                        "FIX",
+                        "high" if closed else "medium",
+                        node,
+                        f"{api}() never returns {comparator.value!r}, so this "
+                        f"comparison is always "
+                        f"{'False' if isinstance(node.ops[0], ast.Eq) else 'True'}",
+                        (
+                            f"the API returns finer-grained values -- did you mean one of "
+                            f"{', '.join(repr(p) for p in prefixes[:6])}?"
+                            if prefixes
+                            else f"documented domain: {', '.join(sorted(domain)[:8])}..."
+                        ),
+                    )
+                )
+    return out
+
+
+_CONTAINER_TYPES = frozenset(
+    {
+        "tuple",
+        "list",
+        "dict",
+        "set",
+        "frozenset",
+        "str",
+        "bytes",
+        "bytearray",
+        "Sequence",
+        "Iterable",
+        "Collection",
+        "Mapping",
+        "MutableSequence",
+        "MutableMapping",
+        "Container",
+        "Sized",
+        "Reversible",
+        "AbstractSet",
+    }
+)
+
+
+def _check_isinstance_on_container(tree: ast.AST) -> list[dict]:
+    """`isinstance(seq, T)` where `seq` is provably a sequence, not a `T`.
+
+    The scope subscripts the same name -- `cmd[0]` -- so `cmd` holds the spec
+    TUPLE while the object built from it lives in a neighbouring variable. The
+    test is therefore always false and the branch it guards is dead.
+
+    (The related transposed-argument form, `issubclass(cls, self.last_command)`,
+    is NOT checked here: at stdlib scale 31 of 40 matches were legitimate
+    lowercase class names, so it is undecidable statically and belongs to the
+    agent rather than the scanner.)
+    """
+    out: list[dict] = []
+    conditional = _conditional_body_ids(tree)
+    for scope in _iter_scopes(tree):
+        nodes = list(_walk_same_scope(scope))
+        # A subscript inside a conditional BODY proves nothing -- it usually sits
+        # under an `isinstance(value, str)` guard, which is exactly why the name
+        # is a sequence there and not elsewhere.
+        # Earliest unconditional subscript per name. It must come BEFORE the
+        # isinstance: `if not isinstance(other, Counter): return NotImplemented`
+        # followed by `other[elem]` is the CORRECT idiom, and matching it made
+        # Counter alone supply eight findings.
+        subscripted: dict[str, int] = {}
+        for n in nodes:
+            if not isinstance(n, ast.Subscript) or id(n) in conditional:
+                continue
+            name = _dotted_name(n.value)
+            if name:
+                subscripted[name] = min(subscripted.get(name, n.lineno), n.lineno)
+        if not subscripted:
+            continue
+        for node in nodes:
+            if not isinstance(node, ast.Call) or len(node.args) < 2:
+                continue
+            if _call_name(node) not in {"isinstance", "issubclass"}:
+                continue
+            subject = _dotted_name(node.args[0])
+            if subject not in subscripted or subscripted[subject] >= node.lineno:
+                continue
+            tested = _dotted_name(node.args[1])
+            tail = tested.split(".")[-1] if tested else ""
+            # Testing a sequence AGAINST a sequence type is the normal idiom.
+            if not tail or tail in _CONTAINER_TYPES:
+                continue
+            if isinstance(node.args[1], (ast.Tuple, ast.List)):
+                continue
+            out.append(
+                _finding(
+                    "isinstance-on-container-not-element",
+                    "FIX",
+                    "high",
+                    node,
+                    f"'{subject}' is subscripted elsewhere in this scope, so it holds a "
+                    f"sequence -- testing it against {tested} is always False",
+                    "the object built from the sequence is usually in a neighbouring "
+                    "variable; the guard names the container, so the branch is dead",
+                )
+            )
+    return out
+
+
+def _check_mock_callable_as_spec(tree: ast.AST) -> list[dict]:
+    """`MagicMock(lambda ...)` -- the first positional parameter is `spec`.
+
+    The callable is used to derive the mock's ATTRIBUTE SET and is never called,
+    so the stub silently returns a `Mock` instead of the value it appears to
+    supply. Every assertion downstream then passes vacuously.
+    """
+    out: list[dict] = []
+    lambdas_bound = {
+        name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Lambda)
+        for name, _ in _bound_names(node.targets)
+    }
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call) or not node.args:
+            continue
+        tail = (_call_name(node) or "").split(".")[-1]
+        if tail not in {"Mock", "MagicMock", "AsyncMock", "NonCallableMock"}:
+            continue
+        first = node.args[0]
+        callable_arg = isinstance(first, ast.Lambda) or (
+            isinstance(first, ast.Name) and first.id in lambdas_bound
+        )
+        if not callable_arg:
+            continue
+        out.append(
+            _finding(
+                "mock-callable-as-spec",
+                "FIX",
+                "high",
+                node,
+                f"{tail}()'s first positional parameter is 'spec', not "
+                f"'side_effect' -- this callable is never called",
+                "the mock returns a fresh Mock instead of the value the callable "
+                "appears to supply, so assertions on it pass vacuously; pass "
+                "side_effect=... or return_value=...",
+            )
+        )
+    return out
+
+
+def _check_decode_error_as_incomplete(tree: ast.AST) -> list[dict]:
+    """A decode failure handled as "need more bytes", with no invalid case.
+
+    `except UnicodeError: return` cannot tell an INCOMPLETE multi-byte sequence
+    from an INVALID one. On invalid input the buffer is never drained, so it
+    grows forever and the stream goes permanently deaf -- an unrecoverable hang
+    rather than an error.
+    """
+    out: list[dict] = []
+    # One pass to map each handler to its Try. Resolving the parent by walking
+    # the tree per handler is quadratic, and on stdlib-sized files with hundreds
+    # of handlers that alone made a full run take minutes.
+    owner: dict[int, ast.Try] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Try):
+            for handler in node.handlers:
+                owner[id(handler)] = node
+    for candidate in ast.walk(tree):
+        if not isinstance(candidate, ast.ExceptHandler):
+            continue
+        handler = candidate
+        caught: set[str] = set()
+        if handler.type is not None:
+            for n in ast.walk(handler.type):
+                dotted = _dotted_name(n)
+                if dotted:
+                    caught.add(dotted.split(".")[-1])
+        if not caught & {"UnicodeError", "UnicodeDecodeError", "ValueError"}:
+            continue
+        # The handler must simply give up: return / pass / break / continue.
+        body = [s for s in handler.body if not _is_docstring(s)]
+        if len(body) != 1 or not isinstance(
+            body[0], (ast.Return, ast.Pass, ast.Break, ast.Continue)
+        ):
+            continue
+        if isinstance(body[0], ast.Return) and body[0].value is not None:
+            continue
+        parent_try = owner.get(id(handler))
+        if parent_try is None:
+            continue
+        # Read the method name off the Attribute directly: `_dotted_name`
+        # returns "" when a CALL sits in the receiver chain, and
+        # `bytes(self.buf).decode(...)` -- the exact exemplar -- is that shape.
+        decodes = any(
+            isinstance(n, ast.Call)
+            and isinstance(n.func, ast.Attribute)
+            and n.func.attr in {"decode", "decodebytes"}
+            for stmt in parent_try.body
+            for n in ast.walk(stmt)
+        )
+        if not decodes:
+            continue
+        out.append(
+            _finding(
+                "decode-error-treated-as-incomplete",
+                "FIX",
+                "high",
+                handler,
+                "this handler gives up on a decode error without distinguishing "
+                "an INCOMPLETE sequence from an INVALID one",
+                "on invalid input the buffer is never drained, so it grows without "
+                "bound and the stream goes permanently deaf -- a silent hang, not "
+                "an error; validate with an incremental decoder or drop the byte",
+            )
+        )
+    return out
+
+
+def _check_unvalidated_env_numeric(tree: ast.AST) -> list[dict]:
+    """`int(os.environ[...])` used as a dimension with no range check.
+
+    The environment is user-controlled, and the branch that reads it is usually
+    the one that got LESS scrutiny -- the author debugged the syscall path,
+    which is the failure they actually hit, and validated only that one.
+    """
+    out: list[dict] = []
+    for scope in _iter_scopes(tree):
+        nodes = list(_walk_same_scope(scope))
+        env_calls: list[tuple[ast.Call, str]] = []
+        for node in nodes:
+            if not (
+                isinstance(node, ast.Call)
+                and _call_name(node) in {"int", "float"}
+                and node.args
+                and _reads_environment(node.args[0])
+            ):
+                continue
+            # The value may be validated under the NAME it was bound to rather
+            # than as the call expression itself.
+            bound = ""
+            for stmt in nodes:
+                if isinstance(stmt, ast.Assign) and stmt.value is node:
+                    names = [n for n, _ in _bound_names(stmt.targets)]
+                    bound = names[0] if names else ""
+            env_calls.append((node, bound))
+        if not env_calls:
+            continue
+
+        compared: set[str] = set()
+        clamped: set[str] = set()
+        guards_non_env = False
+        for node in nodes:
+            if isinstance(node, ast.Compare):
+                operands = [node.left, *node.comparators]
+                compared |= {n for o in operands for n in _names_used(o)}
+                if not any(_reads_environment(o) for o in operands):
+                    guards_non_env = True
+            elif isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+                # `if not height:` -- a validation, even if a partial one.
+                compared |= _names_used(node.operand)
+                if not _reads_environment(node.operand):
+                    guards_non_env = True
+            elif isinstance(node, ast.Call) and _call_name(node) in {"max", "min"}:
+                clamped |= {n for a in node.args for n in _names_used(a)}
+
+        for call, bound in env_calls:
+            if bound and (bound in compared or bound in clamped):
+                continue
+            if any(
+                isinstance(n, ast.Compare)
+                and any(o is call for o in [n.left, *n.comparators])
+                for n in nodes
+            ):
+                continue
+            out.append(
+                _finding(
+                    "unvalidated-numeric-from-environment",
+                    "FIX",
+                    "high" if guards_non_env else "medium",
+                    call,
+                    "this numeric comes straight from the environment with no range "
+                    "check",
+                    (
+                        "the same function validates the value it gets from another "
+                        "source -- the untrusted branch is the unguarded one"
+                        if guards_non_env
+                        else "a zero or negative value propagates into arithmetic "
+                        "downstream (ZeroDivisionError, IndexError, or a silently "
+                        "wrong layout)"
+                    ),
+                )
+            )
+    return out
+
+
+def _check_wrapper_mutates_foreign_collection(tree: ast.AST) -> list[dict]:
+    """Mutating a collection reached THROUGH another object.
+
+    The owner maintains bookkeeping alongside the collection -- a cursor, a
+    parallel list, a dirty flag. Reaching past its API mutates the data and
+    leaves the bookkeeping stale, so the owner's own invariants break.
+    """
+    out: list[dict] = []
+    for node in ast.walk(tree):
+        target: ast.expr | None = None
+        what = ""
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr not in _RESIZING_METHODS:
+                continue
+            target, what = node.func.value, f".{node.func.attr}()"
+        elif isinstance(node, ast.Delete):
+            for t in node.targets:
+                if isinstance(t, ast.Subscript):
+                    target, what = t.value, " del"
+                    break
+        if target is None:
+            continue
+        # The receiver must be an ATTRIBUTE OF a call result -- `a.get_x().items`
+        # -- which is reaching past another object's API into its data. A bare
+        # `a.get_x().append()` is just using the returned object normally.
+        if not (
+            isinstance(target, ast.Attribute)
+            and any(isinstance(n, ast.Call) for n in ast.walk(target.value))
+        ):
+            continue
+        owner = _dotted_name(target) or "the wrapped object"
+        out.append(
+            _finding(
+                "wrapper-mutates-foreign-collection",
+                "CONSIDER",
+                "medium",
+                node,
+                f"{what.strip()} mutates a collection reached through another "
+                f"object rather than going through its API",
+                "if the owner keeps bookkeeping beside the collection -- a cursor, a "
+                f"parallel list, a dirty flag -- this leaves it stale ({owner})",
+            )
+        )
+    return out
+
+
+def _check_save_state_clobbered(tree: ast.AST) -> list[dict]:
+    """A snapshot-then-modify method with no idempotence guard.
+
+    Calling it twice overwrites the saved ORIGINAL with the already-modified
+    state, so the paired restore puts back the modification instead of the
+    original. Re-entry across a signal or a suspend boundary is the usual way in.
+    """
+    out: list[dict] = []
+    for cls in ast.walk(tree):
+        if not isinstance(cls, ast.ClassDef):
+            continue
+        methods = [
+            m
+            for m in cls.body
+            if isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef))
+        ]
+        restored: set[str] = set()
+        for method in methods:
+            if not any(h in method.name.lower() for h in ("restore", "exit", "close")):
+                continue
+            for node in ast.walk(method):
+                if isinstance(node, ast.Attribute) and _dotted_name(node).startswith(
+                    "self."
+                ):
+                    restored.add(node.attr)
+        for method in methods:
+            if any(h in method.name.lower() for h in ("restore", "exit", "close")):
+                continue
+            # Initialization and context entry are SUPPOSED to snapshot; the
+            # shape is about a method that can be re-entered.
+            if method.name.startswith("__") and method.name.endswith("__"):
+                continue
+            for stmt in _walk_same_scope(method):
+                if not isinstance(stmt, ast.Assign) or not isinstance(
+                    stmt.value, ast.Call
+                ):
+                    continue
+                attrs = [
+                    t.attr
+                    for t in stmt.targets
+                    if isinstance(t, ast.Attribute)
+                    and isinstance(t.value, ast.Name)
+                    and t.value.id == "self"
+                ]
+                snapshot = [a for a in attrs if a in restored]
+                if not snapshot:
+                    continue
+                # An idempotence guard anywhere in the method discharges it.
+                guarded = any(
+                    isinstance(n, ast.Compare)
+                    and any(
+                        isinstance(o, ast.Attribute) and o.attr in snapshot
+                        for o in [n.left, *n.comparators]
+                    )
+                    for n in ast.walk(method)
+                )
+                if guarded:
+                    continue
+                # The modify must be the SAME API as the snapshot, differing only
+                # get->set (tcgetattr/tcsetattr). Any set*-prefixed call matched
+                # far too much: 60 findings, dominated by __init__ assignments.
+                snapshot_call = (_call_name(stmt.value) or "").split(".")[-1]
+                stem = _get_set_stem(snapshot_call)
+                if stem is None:
+                    continue
+                modifies = any(
+                    isinstance(n, ast.Call)
+                    and n is not stmt.value
+                    and (_call_name(n) or "").split(".")[-1] == stem
+                    for n in ast.walk(method)
+                )
+                if not modifies:
+                    continue
+                out.append(
+                    _finding(
+                        "save-state-clobbered-by-reentry",
+                        "FIX",
+                        "medium",
+                        stmt,
+                        f"{cls.name}.{method.name}() snapshots self.{snapshot[0]} and "
+                        f"then modifies that state, with no guard against running twice",
+                        "a second call saves the ALREADY-MODIFIED state as the "
+                        "'original', so the paired restore puts back the modification; "
+                        "guard the snapshot or split save from apply",
+                    )
+                )
+    return out
+
+
+def _check_return_ignored_against_family(tree: ast.AST) -> list[dict]:
+    """A status-returning call discarded where its siblings are all checked.
+
+    The argument is the file's own convention: when every other call in the same
+    family has its result tested, the one that does not is an oversight rather
+    than a decision.
+    """
+    # The observation was about a foreign-function binding, and the convention
+    # argument only holds there. Without this gate the check fired on every test
+    # module that constructs CamelCase objects: 720 of 787 findings were tests.
+    imports = {
+        alias.name.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.Import, ast.ImportFrom))
+        for alias in getattr(node, "names", [])
+    } | {
+        getattr(node, "module", None) or ""
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom)
+    }
+    if not imports & {"ctypes", "_winapi", "msvcrt", "winreg", "_ctypes"}:
+        return []
+
+    checked: dict[str, list[ast.Call]] = {}
+    discarded: dict[str, list[ast.Call]] = {}
+    for node, _ in _walk_with_scope(tree):
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
+            family = _call_family(_call_name(node.value))
+            if family:
+                discarded.setdefault(family, []).append(node.value)
+    # "Checked" means the result is actually TESTED -- an `if`/`while` test, a
+    # comparison, an assert, or a raise-if-false. Counting every non-statement
+    # position also counted `f(Foo())`, inflating the sibling count.
+    tested: list[ast.AST] = []
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.If, ast.While)):
+            tested.append(node.test)
+        elif isinstance(node, ast.Assert):
+            tested.append(node.test)
+        elif isinstance(node, (ast.Compare, ast.BoolOp, ast.UnaryOp)):
+            tested.append(node)
+    for root in tested:
+        for call in (n for n in ast.walk(root) if isinstance(n, ast.Call)):
+            family = _call_family(_call_name(call))
+            if family:
+                checked.setdefault(family, []).append(call)
+
+    out: list[dict] = []
+    for family, calls in discarded.items():
+        siblings = checked.get(family, [])
+        # Three checked siblings is the threshold at which "the file checks these"
+        # becomes a convention rather than a coincidence.
+        if len(siblings) < 3:
+            continue
+        for call in calls:
+            out.append(
+                _finding(
+                    "return-ignored-against-checked-family",
+                    "CONSIDER",
+                    "medium",
+                    call,
+                    f"{_call_name(call)}() discards its result, while "
+                    f"{len(siblings)} sibling '{family}' calls in this file check theirs",
+                    "the file's own convention says this result is a status code; a "
+                    "silent failure here leaves the following code operating on state "
+                    "it never established",
+                )
+            )
+    return out
+
+
+def _call_family(name: str) -> str:
+    """Group calls that share a status-returning convention.
+
+    Restricted to CamelCase tails, which in Python means a foreign-function or
+    Win32-style binding rather than an ordinary method. The first attempt keyed
+    on get/set stems instead and collapsed `self.__setstate` and `self.state`
+    into one family, producing 1414 findings across the stdlib -- almost all of
+    them setters that correctly return None.
+    """
+    tail = name.split(".")[-1].lstrip("_")
+    if not tail[:1].isupper() or tail.isupper() or not any(c.islower() for c in tail):
+        return ""
+    return name.rsplit(".", 1)[0] if "." in name else "<module>"
+
+
+def _get_set_stem(name: str) -> str | None:
+    """The `set` twin of a `get`-style accessor name, else None."""
+    lowered = name.lower()
+    for getter, setter in (("tcget", "tcset"), ("get", "set")):
+        if lowered.startswith(getter):
+            return setter + name[len(getter) :]
+    return None
+
+
+def _reads_environment(node: ast.AST) -> bool:
+    for sub in ast.walk(node):
+        if isinstance(sub, ast.Subscript) and _dotted_name(sub.value).endswith(
+            "environ"
+        ):
+            return True
+        if isinstance(sub, ast.Call) and _call_name(sub) in {
+            "os.getenv",
+            "os.environ.get",
+            "environ.get",
+            "getenv",
+        }:
+            return True
+    return False
+
+
+def _conditional_body_ids(tree: ast.AST) -> set[int]:
+    """Ids of nodes inside a conditional BODY (not its test).
+
+    A single DFS carrying a flag. Marking each `if` subtree with its own
+    ast.walk is quadratic on nested conditionals and cost minutes on a
+    stdlib-sized run.
+    """
+    out: set[int] = set()
+
+    def descend(node: ast.AST, inside: bool) -> None:
+        if inside:
+            out.add(id(node))
+        if isinstance(node, ast.If):
+            descend(node.test, inside)
+            for stmt in node.body + node.orelse:
+                descend(stmt, True)
+            return
+        if isinstance(node, ast.Try):
+            children: list[ast.AST] = [
+                *node.body,
+                *node.handlers,
+                *node.orelse,
+                *node.finalbody,
+            ]
+            for child in children:
+                descend(child, True)
+            return
+        for child in ast.iter_child_nodes(node):
+            descend(child, inside)
+
+    descend(tree, False)
+    return out
+
+
+def _is_policy_flag(test: ast.expr) -> bool:
+    """True if a guard reads as a POLICY switch rather than a data condition.
+
+    `if should_auto_add_history:` is a policy the inverse must also respect;
+    `if x in seen:` or `if len(t) > 2:` is algorithmic, and an unguarded inverse
+    beside it is normal.
+    """
+    if isinstance(test, ast.UnaryOp) and isinstance(test.op, ast.Not):
+        test = test.operand
+    if isinstance(test, ast.BoolOp):
+        # `if ret and should_auto_add_history:` -- a policy flag ANDed with a
+        # data condition is still a policy the inverse must honour.
+        return any(_is_policy_flag(v) for v in test.values)
+    return bool(_dotted_name(test))
+
+
+def _is_docstring(stmt: ast.stmt) -> bool:
+    return isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant)
+
+
+# --------------------------------------------------------------------------
+# Project-level checks -- these compare files against each other, so they take
+# the whole parsed corpus rather than one tree.
+# --------------------------------------------------------------------------
+
+
+def _parallel_key(rel_path: str) -> str | None:
+    """Strip a platform prefix so parallel implementations share a key."""
+    name = rel_path.rsplit("/", 1)[-1]
+    for prefix in _PARALLEL_PREFIXES:
+        if name.startswith(prefix):
+            return name[len(prefix) :]
+    return None
+
+
+def _sentinel_kind(node: ast.AST) -> str | None:
+    """Classify an empty-ish literal, which is where the divergence shows up."""
+    if isinstance(node, ast.Constant):
+        if node.value is None:
+            return "None"
+        if node.value == "" and isinstance(node.value, str):
+            return "empty str"
+        if node.value == b"":
+            return "empty bytes"
+        if node.value == 0 and isinstance(node.value, int):
+            return "0"
+    if isinstance(node, (ast.List, ast.Tuple)) and not node.elts:
+        return "empty sequence"
+    if isinstance(node, ast.Dict) and not node.keys:
+        return "empty dict"
+    return None
+
+
+def _check_divergent_sentinel(corpus: list[tuple[str, ast.AST]]) -> list[dict]:
+    """Parallel implementations constructing one type with different sentinels.
+
+    The guarded-twin relation is INVERTED here, which is why it survives review:
+    the side that emits the SAFE value also carries a defensive guard it never
+    needs, while the side that emits the dangerous one has none. Looking for
+    "which side has the guard" therefore points at the wrong file.
+    """
+    # (parallel key, constructor, arg position) -> {sentinel: (file, node)}
+    seen: dict[tuple[str, str, int], dict[str, tuple[str, ast.AST]]] = {}
+    for rel, tree in corpus:
+        key = _parallel_key(rel)
+        if key is None:
+            continue
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            ctor = _call_name(node)
+            tail = ctor.split(".")[-1] if ctor else ""
+            if not tail or not tail[:1].isupper():
+                continue
+            for index, arg in enumerate(node.args):
+                kind = _sentinel_kind(arg)
+                if kind is None:
+                    continue
+                seen.setdefault((key, tail, index), {}).setdefault(kind, (rel, node))
+
+    out: list[dict] = []
+    for (key, ctor, index), variants in sorted(seen.items()):
+        if len(variants) < 2:
+            continue
+        ordered = sorted(variants.items())
+        for kind, (rel, node) in ordered:
+            others = ", ".join(
+                f"{k} in {r.rsplit('/', 1)[-1]}" for k, (r, _) in ordered if k != kind
+            )
+            finding = _finding(
+                "divergent-sentinel-across-parallel-modules",
+                "FIX",
+                "high",
+                node,
+                f"{ctor}() is constructed with {kind} at argument {index} here, but "
+                f"with {others} in the parallel implementation of '{key}'",
+                "consumers written against one side break on the other; the side "
+                "emitting the safe value often also carries a defensive guard it "
+                "does not need, so 'which side has the guard' points at the wrong file",
+            )
+            finding["file"] = rel
+            out.append(finding)
+    return out
+
+
+def _check_unguarded_inverse(corpus: list[tuple[str, ast.AST]]) -> list[dict]:
+    """An operation guarded at one site and its inverse unguarded at another.
+
+    The append is conditional on a policy flag; the pop that undoes it is not.
+    Turn the policy off and the inverse consumes something it never added.
+    """
+    guarded: dict[tuple[str, str, str], tuple[str, ast.AST, str]] = {}
+    bare: list[tuple[str, str, ast.Call, str, str, str]] = []
+    for rel, tree in corpus:
+        directory = rel.rsplit("/", 1)[0] if "/" in rel else "."
+        conditional = _conditional_body_ids(tree)
+        # Only guards that read as a policy switch count. An `if` on the data
+        # itself is algorithmic, and an unguarded inverse beside it is normal --
+        # that distinction is the whole difference between 164 and a usable
+        # number at stdlib scale.
+        policy: set[int] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.If) and _is_policy_flag(node.test):
+                for stmt in node.body + node.orelse:
+                    policy.update(id(n) for n in ast.walk(stmt))
+        for scope in _iter_scopes(tree):
+            for node in _walk_same_scope(scope):
+                if not isinstance(node, ast.Call) or not isinstance(
+                    node.func, ast.Attribute
+                ):
+                    continue
+                method = node.func.attr
+                target = _dotted_name(node.func.value)
+                if not target:
+                    continue
+                # The collection must be OWNED by an object (`reader.history`),
+                # not a bare local. A local list is managed by one algorithm and
+                # an unguarded inverse beside it is normal; generic local names
+                # like `parts`/`lines` otherwise matched across unrelated files.
+                if "." not in target:
+                    continue
+                collection = target.split(".")[-1]
+                if collection in {"self", "cls"} or len(collection) < 3:
+                    continue
+                where = getattr(scope, "name", "<module>")
+                for adder, remover in _INVERSE_OPS:
+                    if method == adder and id(node) in policy:
+                        guarded.setdefault(
+                            (directory, collection, adder), (rel, node, where)
+                        )
+                    elif method == remover and id(node) not in conditional:
+                        bare.append((rel, collection, node, adder, remover, where))
+
+    out: list[dict] = []
+    for rel, collection, node, adder, remover, scope in bare:
+        directory = rel.rsplit("/", 1)[0] if "/" in rel else "."
+        source = guarded.get((directory, collection, adder))
+        if source is None:
+            continue
+        # Same function means one algorithm managing its own stack, not a policy
+        # the inverse forgot to honour.
+        if source[0] == rel and source[2] == scope:
+            continue
+        where = source[0].rsplit("/", 1)[-1]
+        finding = _finding(
+            "unguarded-inverse-of-guarded-operation",
+            "FIX",
+            "medium",
+            node,
+            f"{collection}.{remover}() is unconditional, but the "
+            f"{collection}.{adder}() it undoes is guarded at "
+            f"{where}:{getattr(source[1], 'lineno', 0)}",
+            "when the guard says no, the inverse still runs and consumes something "
+            "it never added -- it removes a neighbouring entry, or raises on empty",
+        )
+        finding["file"] = rel
+        out.append(finding)
+    return out
+
+
+_INVERSE_OPS = (
+    ("append", "pop"),
+    ("add", "discard"),
+    ("add", "remove"),
+    ("push", "pop"),
+    ("acquire", "release"),
+    ("insert", "remove"),
+)
+
+_PROJECT_CHECKS = {
+    "divergent-sentinel-across-parallel-modules": _check_divergent_sentinel,
+    "unguarded-inverse-of-guarded-operation": _check_unguarded_inverse,
+}
+
+
 _CHECKS = {
     "mutable-default-argument": _check_mutable_default,
     "late-binding-closure-in-loop": _check_late_binding_closure,
@@ -2433,19 +3388,36 @@ _CHECKS = {
     "signed-length-from-untrusted-header": _check_signed_length_from_header,
     "asymmetric-encode-decode-pair": _check_asymmetric_encode_decode,
     "one-lifecycle-hook-two-meanings": _check_lifecycle_hook_two_meanings,
+    "api-value-domain-mismatch": _check_api_value_domain,
+    "isinstance-on-container-not-element": _check_isinstance_on_container,
+    "mock-callable-as-spec": _check_mock_callable_as_spec,
+    "decode-error-treated-as-incomplete": _check_decode_error_as_incomplete,
+    "unvalidated-numeric-from-environment": _check_unvalidated_env_numeric,
+    "wrapper-mutates-foreign-collection": _check_wrapper_mutates_foreign_collection,
+    "save-state-clobbered-by-reentry": _check_save_state_clobbered,
+    "return-ignored-against-checked-family": _check_return_ignored_against_family,
 }
 
 
 def analyze_file(
-    path: Path, project_root: Path, checks: list[str] | None = None
+    path: Path,
+    project_root: Path,
+    checks: list[str] | None = None,
+    corpus: list[tuple[str, ast.AST]] | None = None,
 ) -> list[dict]:
-    """Run the selected checks over one file. Unparseable files yield nothing."""
+    """Run the selected checks over one file. Unparseable files yield nothing.
+
+    ``corpus`` collects (relative path, tree) for the project-level checks, which
+    compare files against each other and therefore cannot run here.
+    """
     tree = parse_source(path)
     if tree is None:
         return []
     selected = checks or list(_CHECKS)
     findings: list[dict] = []
     rel = relative_to_root(path, project_root)
+    if corpus is not None:
+        corpus.append((rel, tree))
     for name in selected:
         check = _CHECKS.get(name)
         if check is None:
@@ -2483,11 +3455,17 @@ def analyze(
     files, files_total = collect_python_files(scan_root, max_files)
 
     findings: list[dict] = []
+    corpus: list[tuple[str, ast.AST]] = []
     for path in files:
         rel = relative_to_root(path, project_root)
         if exclude and any(pattern in rel for pattern in exclude):
             continue
-        findings.extend(analyze_file(path, project_root, checks))
+        findings.extend(analyze_file(path, project_root, checks, corpus))
+
+    for name in checks or list(_PROJECT_CHECKS):
+        project_check = _PROJECT_CHECKS.get(name)
+        if project_check is not None:
+            findings.extend(project_check(corpus))
 
     # Deterministic ordering -- see explore's --runs cross-run deduplication.
     findings.sort(key=lambda f: (f["file"], f["line"], f["shape"]))
@@ -2516,7 +3494,7 @@ def analyze(
         "by_directory": dict(
             sorted(by_directory.items(), key=lambda kv: (-kv[1], kv[0]))
         ),
-        "checks_run": sorted(checks or _CHECKS),
+        "checks_run": sorted(checks or (set(_CHECKS) | set(_PROJECT_CHECKS))),
         "excluded_patterns": sorted(exclude or []),
     }
     result["findings"] = findings
@@ -2548,12 +3526,13 @@ def main() -> None:
     argv, checks, exclude = _extract_options(sys.argv[1:])
     target, max_files = parse_common_args(argv)
     if checks:
-        unknown = [c for c in checks if c not in _CHECKS]
+        known = set(_CHECKS) | set(_PROJECT_CHECKS)
+        unknown = [c for c in checks if c not in known]
         if unknown:
             emit(
                 {
                     "error": f"unknown check(s): {', '.join(unknown)}",
-                    "available": sorted(_CHECKS),
+                    "available": sorted(known),
                 }
             )
             sys.exit(2)
