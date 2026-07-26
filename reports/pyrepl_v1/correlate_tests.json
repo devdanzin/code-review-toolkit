@@ -1,0 +1,296 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/_pyrepl",
+  "files_total": 25,
+  "files_analyzed": 25,
+  "files_capped": false,
+  "summary": {
+    "source_files": 25,
+    "test_files": 0,
+    "source_files_with_tests": 0,
+    "source_files_without_tests": 25,
+    "coverage_percentage": 0.0,
+    "total_test_methods": 0,
+    "total_skipped_tests": 0
+  },
+  "untested_sources": [
+    "Lib/_pyrepl/__init__.py",
+    "Lib/_pyrepl/__main__.py",
+    "Lib/_pyrepl/_module_completer.py",
+    "Lib/_pyrepl/_threading_handler.py",
+    "Lib/_pyrepl/base_eventqueue.py",
+    "Lib/_pyrepl/commands.py",
+    "Lib/_pyrepl/completing_reader.py",
+    "Lib/_pyrepl/console.py",
+    "Lib/_pyrepl/fancy_termios.py",
+    "Lib/_pyrepl/historical_reader.py",
+    "Lib/_pyrepl/input.py",
+    "Lib/_pyrepl/keymap.py",
+    "Lib/_pyrepl/main.py",
+    "Lib/_pyrepl/pager.py",
+    "Lib/_pyrepl/reader.py",
+    "Lib/_pyrepl/readline.py",
+    "Lib/_pyrepl/simple_interact.py",
+    "Lib/_pyrepl/terminfo.py",
+    "Lib/_pyrepl/trace.py",
+    "Lib/_pyrepl/types.py",
+    "Lib/_pyrepl/unix_console.py",
+    "Lib/_pyrepl/unix_eventqueue.py",
+    "Lib/_pyrepl/utils.py",
+    "Lib/_pyrepl/windows_console.py",
+    "Lib/_pyrepl/windows_eventqueue.py"
+  ],
+  "source_coverage": [
+    {
+      "source_file": "Lib/_pyrepl/__init__.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/__main__.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/_module_completer.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 5,
+      "public_functions": 1,
+      "public_surface_size": 26,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/_threading_handler.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/base_eventqueue.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 5,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/commands.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 42,
+      "public_functions": 2,
+      "public_surface_size": 40,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/completing_reader.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 5,
+      "public_surface_size": 15,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/console.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 0,
+      "public_surface_size": 20,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/fancy_termios.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 2,
+      "public_surface_size": 7,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/historical_reader.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 18,
+      "public_functions": 0,
+      "public_surface_size": 27,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/input.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 0,
+      "public_surface_size": 6,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/keymap.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 2,
+      "public_surface_size": 2,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/main.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/pager.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 8,
+      "public_surface_size": 8,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/reader.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 2,
+      "public_surface_size": 36,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/readline.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 4,
+      "public_functions": 1,
+      "public_surface_size": 11,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/simple_interact.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 2,
+      "public_surface_size": 2,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/terminfo.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 1,
+      "public_surface_size": 2,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/trace.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/types.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/unix_console.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 1,
+      "public_surface_size": 17,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/unix_eventqueue.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/utils.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 10,
+      "public_surface_size": 12,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/windows_console.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 9,
+      "public_functions": 0,
+      "public_surface_size": 19,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/_pyrepl/windows_eventqueue.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    }
+  ],
+  "test_details": {}
+}

@@ -440,6 +440,46 @@
       ],
       "differential": "An asserting method that is CALLED from a test is correct DRY design, not an orphan -- only flag one nothing calls. A test with no assertion may be a deliberate does-not-raise smoke test (`test_init` constructing an object) -- that is why it is medium, not high. Assertions aliased to locals and tests delegating to an in-class asserting helper both count as assertions.",
       "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "self-referential-accumulate",
+      "title": "A value accumulated into itself -- the source was never updated",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "`x += x`, or `obj.field += obj.field`, where an ADJACENT statement accumulates into the same object from a different source (`obj.other += src.other`). The line was copied and its source not changed.",
+      "guarded_twin": "The sibling accumulate one line away, which names the correct source. It is literally adjacent -- that is what makes this shape so cheap to confirm.",
+      "hunt": "Grep every `+=` whose two sides are the same name. Then check whether a neighbouring statement accumulates into the same object from a different source; if so it is near-certain.",
+      "expected": "the accumulator collects the values it is meant to collect.",
+      "caught_as": "NOTHING -- for an accumulator starting empty (`b\"\"`, `\"\"`, `0`, `[]`) the statement is a permanent no-op, so the data it should have gathered is silently discarded. It surfaces only when someone finally reads the field, which may be years later.",
+      "confirmed_examples": [
+        "CPython _pyrepl unix_console.py:545 and :569 (6080c86) -- `e.raw += e.raw` in both `getpending()` variants, directly below the correct `e.data += e2.data`. `e.raw` starts `b\"\"`, so the raw bytes of every already-queued event are dropped. Latent because all three callers read only `.data`. Found by reports/pyrepl_v1."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Across CPython's Lib/ (1847 files) this shape produces 2 findings, both real -- effectively zero false-positive rate."
+      ],
+      "differential": "`x += x` is legitimate for deliberate doubling (`s += s` to repeat a string, `n += n`). The discriminator is the adjacent sibling using a different source, which is why that raises confidence to high.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "duplicated-guard-wrong-operand",
+      "title": "A bounds check copied without updating its operand",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "Two structurally identical guards in one block (`if offset > len(data): raise ...`), with a new value computed between them (`end_offset = offset + 2 * n`). The second guard should test the NEW value but repeats the first verbatim, so the computed value is never validated.",
+      "guarded_twin": "A nearby guard that does check its computed end -- in the confirmed instance, nine lines below: `if offset + str_size > len(data): raise ValueError(...)`.",
+      "hunt": "Any `end = start + n` followed by a check that does not mention `end`; or two textually identical guard tests within a few statements of each other.",
+      "expected": "malformed input is rejected at the guard.",
+      "caught_as": "QUIETLY WRONG rather than an exception -- the code proceeds with the value the guard should have rejected (a short slice, an unclamped index), so the failure re-emerges downstream as a DIFFERENT exception type than the caller's `except` clause was written for.",
+      "confirmed_examples": [
+        "CPython _pyrepl terminfo.py:401 (6080c86) -- `end_offset = offset + 2 * str_count` then `if offset > len(data)`, repeating line 396. A truncated terminfo file yields a short slice; if its length is odd `struct.iter_unpack` raises `struct.error`, which is not a `ValueError` and so escapes `__post_init__`'s `except (OSError, ValueError)`, defeating `fallback=True` and disabling PyREPL for the session. Found by reports/pyrepl_v1."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Across CPython's Lib/ (1847 files) this shape produces 1 finding, which is real."
+      ],
+      "differential": "A repeated guard is CORRECT when its own operand was rebound in between -- the `path = ...; if path.is_file(): return ...` loop idiom, or `token, value = get_fws(value)` before re-checking `value`. The check must consider bindings at any nesting depth and via tuple targets; missing either produces false positives on very common code.",
+      "detected_by": "scan_python_pitfalls.py"
     }
   ]
 }

@@ -1,0 +1,280 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/_pyrepl",
+  "files_total": 25,
+  "files_analyzed": 25,
+  "files_capped": false,
+  "git_available": true,
+  "summary": {
+    "total_markers": 18,
+    "by_category": {
+      "TYPE_IGNORE": 13,
+      "XXX": 4,
+      "HACK": 1
+    },
+    "by_age": {
+      "ancient": 18
+    },
+    "files_with_debt": 10,
+    "top_files": [
+      {
+        "file": "Lib/_pyrepl/windows_console.py",
+        "count": 4
+      },
+      {
+        "file": "Lib/_pyrepl/reader.py",
+        "count": 3
+      },
+      {
+        "file": "Lib/_pyrepl/commands.py",
+        "count": 2
+      },
+      {
+        "file": "Lib/_pyrepl/completing_reader.py",
+        "count": 2
+      },
+      {
+        "file": "Lib/_pyrepl/readline.py",
+        "count": 2
+      },
+      {
+        "file": "Lib/_pyrepl/_module_completer.py",
+        "count": 1
+      },
+      {
+        "file": "Lib/_pyrepl/_threading_handler.py",
+        "count": 1
+      },
+      {
+        "file": "Lib/_pyrepl/historical_reader.py",
+        "count": 1
+      },
+      {
+        "file": "Lib/_pyrepl/simple_interact.py",
+        "count": 1
+      },
+      {
+        "file": "Lib/_pyrepl/unix_console.py",
+        "count": 1
+      }
+    ]
+  },
+  "items": [
+    {
+      "file": "Lib/_pyrepl/_module_completer.py",
+      "line": 106,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "            path = self.resolve_relative_name(path, package)  # type: ignore[assignment]",
+      "context_before": "package = self.namespace.get('__package__', '')",
+      "context_after": "if path is None:",
+      "author": "Tomas R.",
+      "date": "2025-04-25T01:24:26+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/_threading_handler.py",
+      "line": 63,
+      "category": "TYPE_IGNORE",
+      "text": "[call-overload]",
+      "full_line": "            )  # type: ignore[call-overload]",
+      "context_before": "colorize=reader.can_colorize,",
+      "context_after": "pre = f\"\\nException in {args.thread.name}:\\n\" if args.thread else \"\\n\"",
+      "author": "\u0141ukasz Langa",
+      "date": "2024-09-06T19:28:29+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 244,
+      "category": "XXX",
+      "text": "this is invalid",
+      "full_line": "        # r.posxy = 0, 0  # XXX this is invalid",
+      "context_before": "r.pos = p",
+      "context_after": "r.dirty = True",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 452,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "            self.reader.msg = _sitebuiltins._Helper()()  # type: ignore[assignment]",
+      "context_before": "with self.reader.suspend():",
+      "context_after": "",
+      "author": "sobolevn",
+      "date": "2025-05-05T10:29:48+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/completing_reader.py",
+      "line": 169,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "        r = self.reader  # type: ignore[assignment]",
+      "context_before": "r: CompletingReader",
+      "context_after": "last_is_completer = r.last_command_is(self.__class__)",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/completing_reader.py",
+      "line": 209,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "        r = self.reader  # type: ignore[assignment]",
+      "context_before": "r: CompletingReader",
+      "context_after": "",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/historical_reader.py",
+      "line": 122,
+      "category": "XXX",
+      "text": "how to split?",
+      "full_line": "        # XXX how to split?",
+      "context_before": "a = r.get_arg(-1)",
+      "context_after": "words = r.get_item(r.historyi - r.yank_arg_i - 1).split()",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/reader.py",
+      "line": 45,
+      "category": "XXX",
+      "text": "perhaps should use some unicodedata here?",
+      "full_line": "    # XXX perhaps should use some unicodedata here?",
+      "context_before": "def make_default_syntax_table() -> dict[str, int]:",
+      "context_after": "st: dict[str, int] = {}",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/reader.py",
+      "line": 129,
+      "category": "HACK",
+      "text": "",
+      "full_line": "        # workaround",
+      "context_before": "(r\"\\EOH\", \"home\"),  # seem to be wrong.  this is a less than ideal",
+      "context_after": "]",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/reader.py",
+      "line": 665,
+      "category": "TYPE_IGNORE",
+      "text": "[arg-type]",
+      "full_line": "        command = command_type(self, *cmd)  # type: ignore[arg-type]",
+      "context_before": "",
+      "context_after": "command.do()",
+      "author": "Lysandros Nikolaou",
+      "date": "2024-05-07T14:31:56+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/readline.py",
+      "line": 278,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "        r = self.reader  # type: ignore[assignment]",
+      "context_before": "r: ReadlineAlikeReader",
+      "context_after": "r.dirty = True  # this is needed to hide the completion menu, if visible",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/readline.py",
+      "line": 401,
+      "category": "XXX",
+      "text": "we don't support parsing GNU-readline-style init files",
+      "full_line": "        pass  # XXX we don't support parsing GNU-readline-style init files",
+      "context_before": "def parse_and_bind(self, string: str) -> None:",
+      "context_after": "",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/simple_interact.py",
+      "line": 151,
+      "category": "TYPE_IGNORE",
+      "text": "[call-arg]",
+      "full_line": "            more = console.push(_strip_final_indent(statement), filename=input_name, _symbol=\"single\")  # type: ignore[call-arg]",
+      "context_before": "input_name = f\"<python-input-{input_n}>\"",
+      "context_after": "assert not more",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-21T23:16:56+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/unix_console.py",
+      "line": 140,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "    poll = MinimalPoll  # type: ignore[assignment]",
+      "context_before": "",
+      "context_after": "",
+      "author": "Pablo Galindo Salgado",
+      "date": "2024-05-05T19:32:23+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/windows_console.py",
+      "line": 46,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "    from ctypes import get_last_error, GetLastError, WinDLL, windll, WinError  # type: ignore[attr-defined]",
+      "context_before": "try:",
+      "context_after": "except:",
+      "author": "Chris Eibl",
+      "date": "2025-04-29T16:03:45+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/windows_console.py",
+      "line": 57,
+      "category": "TYPE_IGNORE",
+      "text": "[no-redef]",
+      "full_line": "    class WinError(OSError):  # type: ignore[no-redef]",
+      "context_before": "",
+      "context_after": "def __init__(self, err: int | None, descr: str | None = None) -> None:",
+      "author": "Dino Viehland",
+      "date": "2024-05-31T07:49:03+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/windows_console.py",
+      "line": 169,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "            self.out = io._WindowsConsoleIO(self.output_fd, \"w\")  # type: ignore[attr-defined]",
+      "context_before": "try:",
+      "context_after": "except ValueError:",
+      "author": "Dino Viehland",
+      "date": "2024-05-31T07:49:03+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "Lib/_pyrepl/windows_console.py",
+      "line": 421,
+      "category": "TYPE_IGNORE",
+      "text": "[no-any-return]",
+      "full_line": "        return info.srWindow.Bottom  # type: ignore[no-any-return]",
+      "context_before": "",
+      "context_after": "",
+      "author": "Dino Viehland",
+      "date": "2024-05-31T07:49:03+00:00",
+      "age": "ancient"
+    }
+  ]
+}

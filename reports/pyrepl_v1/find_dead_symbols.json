@@ -1,0 +1,395 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/_pyrepl",
+  "files_total": 25,
+  "files_analyzed": 25,
+  "files_capped": false,
+  "summary": {
+    "unused_imports": 16,
+    "unreferenced_symbols": 26,
+    "orphan_files": 2,
+    "commented_code_blocks": 6,
+    "high_confidence_items": 16,
+    "medium_confidence_items": 28
+  },
+  "unused_imports": [
+    {
+      "file": "Lib/_pyrepl/_module_completer.py",
+      "line": 1,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/_threading_handler.py",
+      "line": 1,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 22,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/completing_reader.py",
+      "line": 21,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/console.py",
+      "line": 20,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/historical_reader.py",
+      "line": 20,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/input.py",
+      "line": 36,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/pager.py",
+      "line": 1,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/reader.py",
+      "line": 22,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/readline.py",
+      "line": 29,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/simple_interact.py",
+      "line": 26,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/simple_interact.py",
+      "line": 34,
+      "name": "errno",
+      "module": "errno",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/trace.py",
+      "line": 1,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/unix_console.py",
+      "line": 22,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/utils.py",
+      "line": 1,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/_pyrepl/windows_console.py",
+      "line": 20,
+      "name": "annotations",
+      "module": "__future__.annotations",
+      "confidence": "high"
+    }
+  ],
+  "unreferenced_symbols": [
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 131,
+      "name": "clear_screen",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 149,
+      "name": "kill_line",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 162,
+      "name": "unix_line_discard",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 168,
+      "name": "unix_word_rubout",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 175,
+      "name": "kill_word",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 182,
+      "name": "backward_kill_word",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 189,
+      "name": "yank",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 198,
+      "name": "yank_pop",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 216,
+      "name": "interrupt",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 225,
+      "name": "ctrl_c",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 249,
+      "name": "up",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 279,
+      "name": "down",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 334,
+      "name": "beginning_of_line",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 339,
+      "name": "end_of_line",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 354,
+      "name": "forward_word",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 361,
+      "name": "backward_word",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 382,
+      "name": "insert_nl",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 388,
+      "name": "transpose_characters",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 419,
+      "name": "delete",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 442,
+      "name": "accept",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 447,
+      "name": "help",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 455,
+      "name": "invalid_key",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 468,
+      "name": "show_history",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "line": 491,
+      "name": "perform_bracketed_paste",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/fancy_termios.py",
+      "line": 66,
+      "name": "Term",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/windows_console.py",
+      "line": 607,
+      "name": "CONSOLE_CURSOR_INFO",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    }
+  ],
+  "orphan_files": [
+    {
+      "file": "Lib/_pyrepl/commands.py",
+      "module": "Lib._pyrepl.commands",
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/_pyrepl/input.py",
+      "module": "Lib._pyrepl.input",
+      "confidence": "medium"
+    }
+  ],
+  "commented_code_blocks": [
+    {
+      "file": "Lib/_pyrepl/completing_reader.py",
+      "line_start": 89,
+      "line_end": 92,
+      "line_count": 4,
+      "preview": "# sort_in_column=False (default)     sort_in_column=True"
+    },
+    {
+      "file": "Lib/_pyrepl/completing_reader.py",
+      "line_start": 138,
+      "line_end": 140,
+      "line_count": 3,
+      "preview": "# if there's only one possible completion, stick it in.  if the last thing"
+    },
+    {
+      "file": "Lib/_pyrepl/completing_reader.py",
+      "line_start": 158,
+      "line_end": 160,
+      "line_count": 3,
+      "preview": "# for the second bang on the completion key"
+    },
+    {
+      "file": "Lib/_pyrepl/readline.py",
+      "line_start": 294,
+      "line_end": 296,
+      "line_count": 3,
+      "preview": "# if there's already a new line before the cursor then"
+    },
+    {
+      "file": "Lib/_pyrepl/unix_console.py",
+      "line_start": 639,
+      "line_end": 641,
+      "line_count": 3,
+      "preview": "# self.dch1 inside the loop -- but alternative ways of"
+    },
+    {
+      "file": "Lib/_pyrepl/windows_console.py",
+      "line_start": 254,
+      "line_end": 256,
+      "line_count": 3,
+      "preview": "# self.dch1 inside the loop -- but alternative ways of"
+    }
+  ]
+}

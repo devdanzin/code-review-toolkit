@@ -1678,6 +1678,143 @@ def _check_test_cannot_fail(tree: ast.AST) -> list[dict]:
     return out
 
 
+def _check_self_referential_accumulate(tree: ast.AST) -> list[dict]:
+    """`e.raw += e.raw` -- accumulating a value into itself.
+
+    Almost always a copy-paste where the SOURCE was not updated: an adjacent
+    line accumulates from a different object (`e.data += e2.data`) and this one
+    was duplicated without changing it. For an accumulator starting empty the
+    statement is a permanent no-op, so the data it should have collected is
+    silently discarded.
+    """
+    out: list[dict] = []
+    for parent in ast.walk(tree):
+        body = getattr(parent, "body", None)
+        if not isinstance(body, list):
+            continue
+        for idx, stmt in enumerate(body):
+            if not isinstance(stmt, ast.AugAssign):
+                continue
+            target = _dotted_name(stmt.target)
+            value = _dotted_name(stmt.value)
+            if not target or target != value:
+                continue
+            # A sibling accumulate into the same object from a DIFFERENT source
+            # is the copy-paste twin, and makes this near-certain.
+            obj = target.rsplit(".", 1)[0] if "." in target else target
+            twin = None
+            for other in body:
+                if other is stmt or not isinstance(other, ast.AugAssign):
+                    continue
+                o_target = _dotted_name(other.target)
+                o_value = _dotted_name(other.value)
+                if not o_target or not o_value or o_target == o_value:
+                    continue
+                if o_target.rsplit(".", 1)[0] == obj:
+                    twin = f"{o_target} += {o_value}"
+                    break
+            out.append(
+                _finding(
+                    "self-referential-accumulate",
+                    "FIX",
+                    "high" if twin else "medium",
+                    stmt,
+                    f"`{target} += {target}` accumulates a value into itself",
+                    (
+                        f"the sibling `{twin}` accumulates from a different source -- "
+                        f"this line was almost certainly copied and its source not "
+                        f"updated"
+                        if twin
+                        else "for an accumulator starting empty this is a permanent "
+                        "no-op; confirm the source is meant to be itself"
+                    ),
+                )
+            )
+            _ = idx
+    return out
+
+
+def _check_duplicated_guard(tree: ast.AST) -> list[dict]:
+    """Two structurally identical guards in one block, with a value computed
+    between them -- the second was copied without updating its operand.
+
+    The failure is quiet: instead of raising, the code proceeds with a value the
+    guard was supposed to reject (a short slice, an unclamped index), so the
+    error re-emerges downstream as a DIFFERENT exception type that the caller's
+    `except` clause was not written for.
+    """
+    out: list[dict] = []
+    for parent in ast.walk(tree):
+        body = getattr(parent, "body", None)
+        if not isinstance(body, list) or len(body) < 2:
+            continue
+        seen: dict[str, ast.If] = {}
+        for stmt in body:
+            if not isinstance(stmt, ast.If):
+                continue
+            try:
+                key = ast.dump(stmt.test)
+            except (TypeError, ValueError):
+                continue
+            # Only guards -- a test whose body just raises or returns.
+            if not any(isinstance(n, (ast.Raise, ast.Return)) for n in stmt.body):
+                continue
+            if key in seen:
+                first = seen[key]
+                # Something must be computed between them, else it is dead code
+                # rather than a mis-copied guard.
+                # Any binding in the SPAN between the guards, at any nesting
+                # depth -- a reassignment inside an `if` still means the second
+                # guard is re-testing a new value.
+                between = [
+                    n
+                    for n in ast.walk(parent)
+                    if isinstance(n, (ast.Assign, ast.AnnAssign, ast.AugAssign))
+                    and first.lineno < n.lineno < stmt.lineno
+                ]
+                if not between:
+                    continue
+                # Every name bound between the guards, INCLUDING tuple targets
+                # (`token, value = get_fws(value)`) -- missing those made the
+                # discriminator blind to the commonest reassignment idiom.
+                names: list[str] = []
+                for n in between:
+                    targets = n.targets if isinstance(n, ast.Assign) else [n.target]
+                    for t in targets:
+                        dotted = _dotted_name(t)
+                        if dotted:
+                            names.append(dotted)
+                        names.extend(
+                            sub.id for sub in ast.walk(t) if isinstance(sub, ast.Name)
+                        )
+                # If the guard's OWN operand was reassigned in between, the
+                # repeat is a deliberate re-test of a new value -- the
+                # `path = ...; if path.is_file()` loop idiom. Only a guard whose
+                # operands are all unchanged is a mis-copied one.
+                tested = _names_used(stmt.test) | {
+                    _dotted_name(n)
+                    for n in ast.walk(stmt.test)
+                    if isinstance(n, ast.Attribute)
+                }
+                if any(a in tested or a.split(".")[0] in tested for a in names):
+                    continue
+                out.append(
+                    _finding(
+                        "duplicated-guard-wrong-operand",
+                        "FIX",
+                        "high",
+                        stmt,
+                        f"this guard repeats the test at line {first.lineno} verbatim, "
+                        f"though {', '.join(names) or 'a value'} was computed in between",
+                        "a copied guard whose operand was not updated: it re-checks the "
+                        "already-validated value and never checks the new one",
+                    )
+                )
+            else:
+                seen[key] = stmt
+    return out
+
+
 _CHECKS = {
     "mutable-default-argument": _check_mutable_default,
     "late-binding-closure-in-loop": _check_late_binding_closure,
@@ -1702,6 +1839,8 @@ _CHECKS = {
     "guard-rechecks-call-receiver": _check_guard_rechecks_call_receiver,
     "falsy-check-for-none-default": _check_falsy_check_for_none_default,
     "test-cannot-fail": _check_test_cannot_fail,
+    "self-referential-accumulate": _check_self_referential_accumulate,
+    "duplicated-guard-wrong-operand": _check_duplicated_guard,
 }
 
 
