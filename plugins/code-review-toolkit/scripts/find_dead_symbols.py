@@ -126,6 +126,16 @@ def analyze_file(filepath: Path, project_root: Path) -> dict:
                     "is_from": True,
                 })
 
+    # `# pragma: debugging` marks a maintainer-only tool invoked by hand from a
+    # debugger; being unreferenced is its normal state.
+    source_lines = source.splitlines()
+
+    def debugging_pragma(node: ast.AST) -> bool:
+        start = getattr(node, "lineno", 0)
+        end = getattr(node, "end_lineno", start) or start
+        window = source_lines[max(0, start - 1) : min(len(source_lines), end)]
+        return any("pragma: debugging" in line for line in window)
+
     # Collect defined symbols (top-level and class-level).
     for node in ast.iter_child_nodes(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -136,6 +146,7 @@ def analyze_file(filepath: Path, project_root: Path) -> dict:
                 "is_public": not node.name.startswith("_"),
                 "is_test_method": node.name.startswith("test"),
                 "is_magic": node.name in _MAGIC_METHODS,
+                "is_debugging_pragma": debugging_pragma(node),
             })
         elif isinstance(node, ast.ClassDef):
             result["defined_symbols"].append({
@@ -185,6 +196,13 @@ def find_unused_imports(file_analysis: dict) -> list[dict]:
 
     for imp in file_analysis["imports"]:
         local_name = imp["local_name"]
+        # `from __future__ import annotations` is a COMPILER DIRECTIVE (PEP 563),
+        # not an import: it binds no name, so a reference scanner will always call
+        # it unused. Removing it flips annotation evaluation from lazy to eager and
+        # breaks every unquoted forward reference. It was 42 of the 42 "unused
+        # imports" reported for coverage.py -- the entire category.
+        if imp["module"].split(".")[0] == "__future__":
+            continue
         # Check if name is used in the file body.
         if local_name in refs:
             continue
@@ -208,10 +226,17 @@ def find_unused_imports(file_analysis: dict) -> list[dict]:
 
 def find_unreferenced_symbols(
     all_files: list[dict],
+    external_refs: set[str] | None = None,
 ) -> list[dict]:
-    """Find functions/classes that are defined but never referenced anywhere."""
+    """Find functions/classes that are defined but never referenced anywhere.
+
+    ``external_refs`` carries names referenced OUTSIDE the scanned tree -- an
+    entry point in setup.py, a public helper used only by tests, an API shown in
+    the docs. Without it, reviewing a package on its own reports every such
+    symbol as dead.
+    """
     # Build a set of all names referenced across all files.
-    global_refs: set[str] = set()
+    global_refs: set[str] = set(external_refs or ())
     for fa in all_files:
         global_refs |= fa["referenced_names"]
 
@@ -254,6 +279,10 @@ def find_unreferenced_symbols(
             # Skip if the file has a __main__ guard and this could be an entry point.
             if fa["has_main_guard"] and sym["type"] == "function":
                 continue
+            # `# pragma: debugging` marks a tool the maintainer invokes by hand
+            # from a debugger. Unreferenced is its normal state, not a defect.
+            if sym.get("is_debugging_pragma"):
+                continue
 
             # Check if name appears anywhere in the codebase.
             if bare_name not in global_refs:
@@ -276,9 +305,14 @@ def find_unreferenced_symbols(
 
 
 def find_orphan_files(
-    all_files: list[dict], project_root: Path
+    all_files: list[dict], project_root: Path, external_refs: set[str] | None = None
 ) -> list[dict]:
-    """Find Python files that are never imported by any other file."""
+    """Find Python files that are never imported by any other file.
+
+    ``external_refs`` also covers files referenced by NAME rather than imported --
+    coverage.py's `pth_file.py` is read as text by setup.py and embedded into the
+    installed `.pth`, so it is a source template, not a module.
+    """
     # Collect all modules that are imported from.
     imported_modules: set[str] = set()
     for fa in all_files:
@@ -308,6 +342,10 @@ def find_orphan_files(
             continue  # __init__.py files are imported with the package.
         if rel in ("setup.py", "conftest.py"):
             continue
+        # `python -m pkg` executes __main__.py directly; being unimported is what
+        # it is FOR. Flagging it is wrong by construction.
+        if Path(rel).name == "__main__.py":
+            continue
 
         # Check if any variant of this module is imported.
         is_imported = any(
@@ -316,7 +354,7 @@ def find_orphan_files(
             for m in imported_modules
         )
 
-        if not is_imported:
+        if not is_imported and Path(rel).stem not in (external_refs or set()):
             orphans.append({
                 "file": rel,
                 "module": mod,
@@ -343,6 +381,11 @@ def find_commented_code(filepath: Path, project_root: Path) -> list[dict]:
         r"\w+\s*=\s*|^\s*#\s*\w+\()"
     )
 
+    # A comment run whose FIRST line is prose is documentation that happens to
+    # contain a code example -- all 6 blocks reported for coverage.py were this:
+    # explanatory text illustrating an edge case the surrounding code handles.
+    _PROSE = re.compile(r"^#\s*[A-Z][a-z]+\b[^=(]*$")
+
     i = 0
     while i < len(lines):
         line = lines[i].strip()
@@ -358,6 +401,13 @@ def find_commented_code(filepath: Path, project_root: Path) -> list[dict]:
                     j += 1
                 else:
                     break
+            # Walk back: is this run introduced by a prose sentence?
+            lead = i - 1
+            while lead >= 0 and lines[lead].strip().startswith("#"):
+                if _PROSE.match(lines[lead].strip()):
+                    block_lines = []
+                    break
+                lead -= 1
             if len(block_lines) >= 3:  # At least 3 consecutive lines.
                 blocks.append({
                     "file": rel,
@@ -399,18 +449,75 @@ def main() -> None:
 
     file_analyses = [analyze_file(f, project_root) for f in all_files]
 
+    # A package reviewed on its own does not contain every reference to its own
+    # symbols: setup.py declares console_scripts, tests/ exercises public helpers,
+    # doc/ shows documented APIs. Scoping references to the scanned tree alone
+    # reported 9 unreferenced symbols for coverage.py of which 9 were referenced
+    # elsewhere in the repo. Collect references from the wider project without
+    # analysing those files as subjects.
+    external_refs: set[str] = set()
+    external_scopes: list[str] = []
+    if scan_root != project_root:
+        package = scan_root.name
+        # Search the project root AND the scanned tree's own parent: CPython puts
+        # Lib/test/ and Doc/ beside Lib/<package>/, not at the repository root.
+        candidates: list[Path] = []
+        for base in (project_root, scan_root.parent):
+            for name in ("setup.py", "conftest.py", "tests", "test", "doc", "Doc",
+                         "docs"):
+                extra = base / name
+                if not extra.exists():
+                    continue
+                if extra.is_dir():
+                    # Prefer a subdirectory dedicated to this package -- walking
+                    # all of CPython's Lib/test to review one package is both slow
+                    # and wrong.
+                    for special in (f"test_{package}", f"test_{package.lstrip('_')}",
+                                    package):
+                        if (extra / special).is_dir():
+                            extra = extra / special
+                            break
+                if extra not in candidates:
+                    candidates.append(extra)
+        for extra in candidates:
+            paths = (
+                [extra] if extra.is_file() else sorted(discover_python_files(extra))
+            )
+            for path in paths:
+                if path in all_files:
+                    continue
+                external_refs |= analyze_file(path, project_root)["referenced_names"]
+            external_scopes.append(str(extra.relative_to(project_root)))
+        # Documentation and packaging metadata reference symbols as plain text.
+        for name in ("setup.py", "doc", "Doc", "docs"):
+            extra = project_root / name
+            if not extra.exists():
+                continue
+            texts = (
+                [extra]
+                if extra.is_file()
+                else [q for q in extra.rglob("*") if q.is_file() and q.suffix in
+                      (".rst", ".md", ".txt", ".cfg", ".toml")]
+            )
+            for path in texts:
+                try:
+                    body = path.read_text(encoding="utf-8", errors="replace")
+                except OSError:
+                    continue
+                external_refs |= set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", body))
+
     # Find issues (before converting sets to lists).
     unused_imports: list[dict] = []
     for fa in file_analyses:
         unused_imports.extend(find_unused_imports(fa))
 
-    unreferenced = find_unreferenced_symbols(file_analyses)
+    unreferenced = find_unreferenced_symbols(file_analyses, external_refs)
 
     # Drop per-file referenced_names to free memory.
     for fa in file_analyses:
         fa.pop("referenced_names", None)
 
-    orphans = find_orphan_files(file_analyses, project_root)
+    orphans = find_orphan_files(file_analyses, project_root, external_refs)
 
     commented_code: list[dict] = []
     for f in all_files:
@@ -436,6 +543,7 @@ def main() -> None:
         "summary": {
             "unused_imports": len(unused_imports),
             "unreferenced_symbols": len(unreferenced),
+            "external_reference_scopes": external_scopes,
             "orphan_files": len(orphans),
             "commented_code_blocks": len(commented_code),
             "high_confidence_items": len(high_confidence),

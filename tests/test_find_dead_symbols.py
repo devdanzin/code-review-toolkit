@@ -323,5 +323,48 @@ class TestMaxFiles(unittest.TestCase):
             self.assertGreater(output["files_total"], 3)
 
 
+class TestDeadCodeFalsePositives(unittest.TestCase):
+    """Found by the coverage.py benchmark, where the scanner scored 0 of 51:
+    every high-confidence item was a false positive."""
+
+    def test_future_import_is_never_unused(self):
+        # `from __future__ import annotations` is a COMPILER DIRECTIVE, not an
+        # import: it binds no name, so a reference scanner always calls it
+        # unused. It was 42 of the 42 unused imports reported for coverage.py.
+        with TempProject({"m.py": "from __future__ import annotations\nx = 1\n"}) as root:
+            out = mod.analyze_file(root / "m.py", root)
+        self.assertEqual(mod.find_unused_imports(out), [])
+
+    def test_genuinely_unused_import_still_reported(self):
+        with TempProject({"m.py": "import os\nx = 1\n"}) as root:
+            out = mod.analyze_file(root / "m.py", root)
+        self.assertEqual([u["name"] for u in mod.find_unused_imports(out)], ["os"])
+
+    def test_debugging_pragma_symbol_is_not_dead(self):
+        src = "def pp(x):  # pragma: debugging\n    print(x)\n"
+        with TempProject({"m.py": src}) as root:
+            out = mod.analyze_file(root / "m.py", root)
+        self.assertEqual(mod.find_unreferenced_symbols([out]), [])
+
+    def test_external_references_keep_a_symbol_alive(self):
+        # A public helper used only by tests/ or declared in setup.py is not
+        # dead; scoping references to the reviewed package alone reported 9
+        # such symbols for coverage.py, all of them referenced elsewhere.
+        src = "def import_local_file(name):\n    return name\n"
+        with TempProject({"m.py": src}) as root:
+            out = mod.analyze_file(root / "m.py", root)
+        self.assertTrue(mod.find_unreferenced_symbols([out]))
+        self.assertEqual(
+            mod.find_unreferenced_symbols([out], {"import_local_file"}), []
+        )
+
+    def test_main_module_is_not_an_orphan(self):
+        # `python -m pkg` executes __main__.py; being unimported is what it IS for.
+        with TempProject({"pkg/__main__.py": "print(1)\n"}) as root:
+            out = mod.analyze_file(root / "pkg" / "__main__.py", root)
+        self.assertEqual(mod.find_orphan_files([out], root), [])
+
+
 if __name__ == "__main__":
     unittest.main()
+

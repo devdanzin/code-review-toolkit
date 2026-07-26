@@ -290,8 +290,52 @@ def build_internal_graph(
     return graph
 
 
+def resolve_edge_targets(edge: dict, index: dict[str, str]) -> set[str]:
+    """Files an import edge actually depends on.
+
+    `from pkg import submodule` binds the SUBMODULE -- Python's `_handle_fromlist`
+    falls back to importing it -- so the dependency is on `pkg/submodule.py`, not
+    on `pkg/__init__.py`. Attributing it to the package manufactures a cycle
+    through the package facade: 16 of the 20 cycles reported for coverage.py were
+    this one idiom (`from coverage import env`), and none of them is real.
+
+    `from pkg import SomeName` is different: that name is BOUND in `__init__.py`,
+    so the dependency is on the package and is order-sensitive.
+    """
+    target = edge.get("target") or ""
+    names = [n.get("name") for n in (edge.get("names") or []) if n.get("name")]
+    submodules = {
+        index[f"{target}.{name}"] for name in names if f"{target}.{name}" in index
+    }
+    bound = [name for name in names if f"{target}.{name}" not in index]
+    resolved = set(submodules)
+    # A bare `import pkg`, or a name genuinely bound in the package __init__.
+    if (not names or bound) and target in index:
+        resolved.add(index[target])
+    return resolved
+
+
+def module_name_for(path: str) -> str:
+    """Dotted module name a project-relative file path denotes."""
+    module = path.replace("/", ".").replace("\\", ".")
+    if module.endswith(".py"):
+        module = module[:-3]
+    if module.endswith(".__init__"):
+        module = module[:-9]
+    return module
+
+
 def compute_metrics(graph: dict[str, list[dict]], all_files: list[str]) -> dict:
-    """Compute fan-in and fan-out per file."""
+    """Compute fan-in and fan-out per file.
+
+    Fan-in resolves each target to EXACTLY one file. The previous prefix match
+    (`t.startswith(f_module + ".")`) made a package's `__init__.py` match every
+    module inside it, so `coverage/__init__.py` reported a fan-in of 209 in a
+    44-file package where the true figure is 24. That is the same prefix
+    fallback `detect_cycles` had already dropped -- the fix was never propagated
+    to its sibling.
+    """
+    index = {module_name_for(f): f for f in all_files}
     fan_out: dict[str, int] = {}
     fan_in: dict[str, int] = {}
 
@@ -302,17 +346,11 @@ def compute_metrics(graph: dict[str, list[dict]], all_files: list[str]) -> dict:
     for source, edges in graph.items():
         targets = {e["target"] for e in edges}
         fan_out[source] = len(targets)
-        for t in targets:
-            # Fan-in: find files that match this target module path.
-            for f in all_files:
-                # Rough match: does the file path correspond to the target?
-                f_module = f.replace("/", ".").replace("\\", ".")
-                if f_module.endswith(".py"):
-                    f_module = f_module[:-3]
-                if f_module.endswith(".__init__"):
-                    f_module = f_module[:-9]
-                if f_module == t or t.startswith(f_module + "."):
-                    fan_in[f] = fan_in.get(f, 0) + 1
+        depends_on: set[str] = set()
+        for edge in edges:
+            depends_on |= resolve_edge_targets(edge, index)
+        for resolved in depends_on:
+            fan_in[resolved] = fan_in.get(resolved, 0) + 1
 
     return {
         "fan_out": dict(sorted(fan_out.items(), key=lambda x: -x[1])),
@@ -320,37 +358,52 @@ def compute_metrics(graph: dict[str, list[dict]], all_files: list[str]) -> dict:
     }
 
 
-def detect_cycles(graph: dict[str, list[dict]]) -> list[list[str]]:
+def detect_cycles(
+    graph: dict[str, list[dict]],
+    include_type_checking: bool = False,
+    all_files: list[str] | None = None,
+) -> list[list[str]]:
     """Detect circular dependencies using DFS.
 
     Normalises targets to file paths so that cycles between files can be
     detected even when the graph edges use dotted module names.
+
+    A `TYPE_CHECKING`-guarded import does NOT run, so a cycle that exists only
+    through such edges is not an import cycle -- avoiding it is precisely why
+    the guard is there. Those edges are excluded by default; the flag keeps the
+    type-time graph available for callers that want it.
     """
-    # Build a simplified adjacency list: file -> set of target module strings.
-    adj: dict[str, set[str]] = {}
+    # Build a simplified adjacency list: file -> set of live edges.
+    adj: dict[str, list[dict]] = {}
     for source, edges in graph.items():
-        adj[source] = {e["target"] for e in edges}
+        adj[source] = [
+            e
+            for e in edges
+            if include_type_checking or not e.get("type_checking_only")
+        ]
 
     # Collect all known file-stem identifiers so we can map dotted targets
     # back to concrete files.
+    # Index EVERY file, not only those that have imports of their own. A leaf
+    # module (coverage/env.py, fan-out 0) is absent from the graph keys, so
+    # indexing from them alone leaves `coverage.env` unresolvable -- and the
+    # bare-package fallback then attributes `from coverage import env` to the
+    # package __init__, manufacturing a cycle through the facade. This is the
+    # same root cause as the prefix fallback removed earlier: the index was
+    # incomplete, not the matching rule.
     file_to_module: dict[str, str] = {}
     module_to_file: dict[str, str] = {}
-    for f in adj:
-        mod = f.replace("/", ".").replace("\\", ".")
-        if mod.endswith(".py"):
-            mod = mod[:-3]
-        if mod.endswith(".__init__"):
-            mod = mod[:-9]
+    for f in all_files if all_files is not None else list(adj):
+        mod = module_name_for(f)
         file_to_module[f] = mod
         module_to_file[mod] = f
 
     # Resolve adjacency to file-level.
     file_adj: dict[str, set[str]] = {}
-    for f, targets in adj.items():
+    for f, edges in adj.items():
         resolved: set[str] = set()
-        for t in targets:
-            if t in module_to_file:
-                resolved.add(module_to_file[t])
+        for edge in edges:
+            resolved |= resolve_edge_targets(edge, module_to_file)
             # No prefix fallback. `module_to_file` only covers files that have
             # imports of their own, so a target naming an import-free module
             # (mypkg.utils) is absent from it; a prefix match then resolved it to
@@ -373,8 +426,12 @@ def detect_cycles(graph: dict[str, list[dict]]) -> list[list[str]]:
             if v not in color:
                 color[v] = WHITE
             if color[v] == GRAY:
-                # Found a cycle — reconstruct it.
-                cycle = [v, u]
+                # Found a cycle -- reconstruct it. The walk back from `u` ends ON
+                # `v`, so seeding the list with `v` as well repeated it: every
+                # cycle came out one element too long, and a 2-cycle rendered as
+                # three nodes ("a -> b -> b"). All 26 cycles reported for
+                # coverage.py had a duplicated node.
+                cycle = [u]
                 node = u
                 while node != v and parent.get(node) is not None:
                     node = parent[node]  # type: ignore[assignment]
@@ -431,7 +488,7 @@ def main() -> None:
     all_file_paths = [fa["file"] for fa in file_analyses]
     internal_graph = build_internal_graph(file_analyses)
     metrics = compute_metrics(internal_graph, all_file_paths)
-    cycles = detect_cycles(internal_graph)
+    cycles = detect_cycles(internal_graph, all_files=all_file_paths)
 
     # Collect external dependencies.
     external: dict[str, list[str]] = {}

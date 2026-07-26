@@ -1,0 +1,678 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "files_total": 44,
+  "files_analyzed": 44,
+  "files_capped": false,
+  "git_available": true,
+  "summary": {
+    "total_markers": 51,
+    "by_category": {
+      "TYPE_IGNORE": 47,
+      "TODO": 3,
+      "PRAGMA_NO_COVER": 1
+    },
+    "by_age": {
+      "stale": 36,
+      "ancient": 12,
+      "fresh": 3
+    },
+    "files_with_debt": 17,
+    "top_files": [
+      {
+        "file": "coverage/sysmon.py",
+        "count": 11
+      },
+      {
+        "file": "coverage/config.py",
+        "count": 7
+      },
+      {
+        "file": "coverage/control.py",
+        "count": 4
+      },
+      {
+        "file": "coverage/execfile.py",
+        "count": 4
+      },
+      {
+        "file": "coverage/sqlitedb.py",
+        "count": 4
+      },
+      {
+        "file": "coverage/cmdline.py",
+        "count": 3
+      },
+      {
+        "file": "coverage/multiproc.py",
+        "count": 3
+      },
+      {
+        "file": "coverage/pytracer.py",
+        "count": 3
+      },
+      {
+        "file": "coverage/debug.py",
+        "count": 2
+      },
+      {
+        "file": "coverage/html.py",
+        "count": 2
+      }
+    ]
+  },
+  "items": [
+    {
+      "file": "coverage/annotate.py",
+      "line": 33,
+      "category": "PRAGMA_NO_COVER",
+      "text": "",
+      "full_line": "        -     if 0:   #pragma: no cover",
+      "context_before": "> def h(x):",
+      "context_after": "-         pass",
+      "author": "Ned Batchelder",
+      "date": "2009-05-13T11:23:09+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/cmdline.py",
+      "line": 477,
+      "category": "TYPE_IGNORE",
+      "text": "[misc]",
+      "full_line": "        super_format = super()._format_text  # type: ignore[misc]",
+      "context_before": "# _format_text is not documented in optparse, so mypy can't find it.",
+      "context_after": "paras = text.split(\"\\f\")",
+      "author": "Ned Batchelder",
+      "date": "2025-12-22T11:55:57+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/cmdline.py",
+      "line": 510,
+      "category": "TYPE_IGNORE",
+      "text": "[override]",
+      "full_line": "    def __eq__(self, other: str) -> bool:  # type: ignore[override]",
+      "context_before": "",
+      "context_after": "# A convenience equality, so that I can put strings in unit test",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/cmdline.py",
+      "line": 515,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "    __hash__ = None  # type: ignore[assignment]",
+      "context_before": "",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 50,
+      "category": "TYPE_IGNORE",
+      "text": "[override]",
+      "full_line": "    def read(  # type: ignore[override]",
+      "context_before": "",
+      "context_after": "self,",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 67,
+      "category": "TYPE_IGNORE",
+      "text": "[override]",
+      "full_line": "    def has_option(self, section: str, option: str) -> bool:  # type: ignore[override]",
+      "context_before": "",
+      "context_after": "real_section = self.real_section(section)",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 73,
+      "category": "TYPE_IGNORE",
+      "text": "[override]",
+      "full_line": "    def has_section(self, section: str) -> bool:  # type: ignore[override]",
+      "context_before": "",
+      "context_after": "return bool(self.real_section(section))",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 76,
+      "category": "TYPE_IGNORE",
+      "text": "[override]",
+      "full_line": "    def options(self, section: str) -> list[str]:  # type: ignore[override]",
+      "context_before": "",
+      "context_after": "real_section = self.real_section(section)",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 89,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "    def get(self, section: str, option: str, *args: Any, **kwargs: Any) -> str:  # type: ignore",
+      "context_before": "",
+      "context_after": "\"\"\"Get a value, replacing environment variables also.",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 525,
+      "category": "TYPE_IGNORE",
+      "text": "[index]",
+      "full_line": "            self.plugin_options.setdefault(plugin_name, {})[key] = value  # type: ignore[index]",
+      "context_before": "if key and plugin_name in self.plugins:",
+      "context_after": "return",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/config.py",
+      "line": 549,
+      "category": "TYPE_IGNORE",
+      "text": "[no-any-return]",
+      "full_line": "                return getattr(self, attr)  # type: ignore[no-any-return]",
+      "context_before": "if where == option_name:",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2023-06-27T10:04:11+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/control.py",
+      "line": 661,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "                self._old_sigterm = signal.signal(  # type: ignore[assignment]",
+      "context_before": "# https://stackoverflow.com/questions/35772001/x/35792192#35792192",
+      "context_after": "signal.SIGTERM,",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/control.py",
+      "line": 1075,
+      "category": "TYPE_IGNORE",
+      "text": "[list-item]",
+      "full_line": "            morfs = [morfs]  # type: ignore[list-item]",
+      "context_before": "if not isinstance(morfs, (list, tuple, set)):",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/control.py",
+      "line": 1427,
+      "category": "TYPE_IGNORE",
+      "text": "[misc]",
+      "full_line": "    Coverage = decorate_methods(  # type: ignore[misc]",
+      "context_before": "",
+      "context_after": "show_calls(show_args=True),",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/control.py",
+      "line": 1489,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "    process_startup.coverage = cov  # type: ignore[attr-defined]",
+      "context_before": "cov = Coverage(config_file=config_file)",
+      "context_after": "cov._warn_no_data = False",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/debug.py",
+      "line": 280,
+      "category": "TYPE_IGNORE",
+      "text": "[misc]",
+      "full_line": "                (lambda fi, pat=pat: re.search(pat, fi.filename)),  # type: ignore[misc]",
+      "context_before": "stack = itertools.dropwhile(",
+      "context_after": "stack,",
+      "author": "Ned Batchelder",
+      "date": "2023-11-12T12:23:20+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/debug.py",
+      "line": 561,
+      "category": "TYPE_IGNORE",
+      "text": "[no-untyped-def]",
+      "full_line": "    def _decorator(cls):  # type: ignore[no-untyped-def]",
+      "context_before": "",
+      "context_after": "for name, meth in inspect.getmembers(cls, inspect.isroutine):",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/env.py",
+      "line": 39,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "    PYPYVERSION = tuple(sys.pypy_version_info)  # type: ignore[attr-defined]",
+      "context_before": "# Minimum now is 7.3.16",
+      "context_after": "else:",
+      "author": "Ned Batchelder",
+      "date": "2025-08-23T17:45:35+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "line": 146,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "            self.spec.loader = self.loader  # type: ignore[assignment]",
+      "context_before": "self.loader = DummyLoader(self.modulename)",
+      "context_after": "assert pathname is not None",
+      "author": "A5rocks",
+      "date": "2026-06-28T12:29:47+00:00",
+      "age": "fresh"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "line": 171,
+      "category": "TYPE_IGNORE",
+      "text": "[arg-type]",
+      "full_line": "                self.loader,  # type: ignore[arg-type]",
+      "context_before": "\"__main__\",",
+      "context_after": "origin=try_filename,",
+      "author": "A5rocks",
+      "date": "2026-06-28T12:29:47+00:00",
+      "age": "fresh"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "line": 194,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "        main_mod.__loader__ = self.loader  # type: ignore[assignment]",
+      "context_before": "main_mod.__package__ = self.package",
+      "context_after": "if self.spec is not None:",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "line": 198,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "        main_mod.__builtins__ = sys.modules[\"builtins\"]  # type: ignore[attr-defined]",
+      "context_before": "",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/files.py",
+      "line": 76,
+      "category": "TYPE_IGNORE",
+      "text": "[unreachable]",
+      "full_line": "                    continue  # type: ignore[unreachable]",
+      "context_before": "if path is None:",
+      "context_after": "f = os.path.join(path, filename)",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/html.py",
+      "line": 424,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "        self.template_globals[\"statics\"][slug] = dest  # type: ignore",
+      "context_before": "slug = os.path.basename(src).replace(\".\", \"_\")",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/html.py",
+      "line": 546,
+      "category": "TYPE_IGNORE",
+      "text": "[index]",
+      "full_line": "                    self.template_globals[\"category\"][ldata.category],  # type: ignore[index]",
+      "context_before": "css_classes.append(",
+      "context_after": ")",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/multiproc.py",
+      "line": 24,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "original_bootstrap = OriginalProcess._bootstrap  # type: ignore[attr-defined]",
+      "context_before": "OriginalProcess = multiprocessing.process.BaseProcess",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/multiproc.py",
+      "line": 30,
+      "category": "TYPE_IGNORE",
+      "text": "[no-untyped-def]",
+      "full_line": "    def _bootstrap(self, *args, **kwargs):  # type: ignore[no-untyped-def]",
+      "context_before": "",
+      "context_after": "\"\"\"Wrapper around _bootstrap to start coverage.\"\"\"",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/multiproc.py",
+      "line": 92,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "    OriginalProcess._bootstrap = ProcessWithCoverage._bootstrap  # type: ignore[attr-defined]",
+      "context_before": "",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/parser.py",
+      "line": 620,
+      "category": "TODO",
+      "text": "Shouldn't the cause messages join with \"and\" instead of \"or\"?",
+      "full_line": "# TODO: Shouldn't the cause messages join with \"and\" instead of \"or\"?",
+      "context_before": "",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2018-10-05T14:39:28+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/parser.py",
+      "line": 836,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "            line = node.lineno  # type: ignore[attr-defined]",
+      "context_before": "else:",
+      "context_after": "return self.multiline.get(line, line)",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/plugin.py",
+      "line": 617,
+      "category": "TYPE_IGNORE",
+      "text": "[assignment]",
+      "full_line": "    __hash__ = None  # type: ignore[assignment]",
+      "context_before": "# This object doesn't need to be hashed.",
+      "context_after": "",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/pytracer.py",
+      "line": 132,
+      "category": "TYPE_IGNORE",
+      "text": "[unreachable]",
+      "full_line": "                f.write(  # type: ignore[unreachable]",
+      "context_before": "if 0:  # if you want thread ids..",
+      "context_after": "\".{:x}.{:x}\".format(",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:20:58+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/pytracer.py",
+      "line": 140,
+      "category": "TYPE_IGNORE",
+      "text": "[unreachable]",
+      "full_line": "                f.write(\" | \")  # type: ignore[unreachable]",
+      "context_before": "if 0:  # if you want callers..",
+      "context_after": "stack = \" / \".join(",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/pytracer.py",
+      "line": 166,
+      "category": "TYPE_IGNORE",
+      "text": "[unreachable]",
+      "full_line": "                f = frame  # type: ignore[unreachable]",
+      "context_before": "if 0:",
+      "context_after": "self.log(\"---\\nX\", f.f_code.co_filename, f.f_lineno)",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/report_core.py",
+      "line": 110,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined]",
+      "full_line": "            if fr.should_be_python():  # type: ignore[attr-defined]",
+      "context_before": "# should_be_python() method.",
+      "context_after": "if config.ignore_errors:",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/sqldata.py",
+      "line": 754,
+      "category": "TYPE_IGNORE",
+      "text": "[arg-type]",
+      "full_line": "                NumbitsUnionAgg,  # type: ignore[arg-type]",
+      "context_before": "1,",
+      "context_after": ")",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/sqlitedb.py",
+      "line": 72,
+      "category": "TYPE_IGNORE",
+      "text": "[attr-defined, unused-ignore]",
+      "full_line": "            self.con.setconfig(  # type: ignore[attr-defined, unused-ignore]",
+      "context_before": "# Turn off defensive mode, so that journal_mode=off can succeed.",
+      "context_after": "sqlite3.SQLITE_DBCONFIG_DEFENSIVE,",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/sqlitedb.py",
+      "line": 102,
+      "category": "TYPE_IGNORE",
+      "text": "[no-untyped-def]",
+      "full_line": "    def __exit__(self, exc_type, exc_value, traceback) -> None:  # type: ignore[no-untyped-def]",
+      "context_before": "",
+      "context_after": "self.nest -= 1",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/sqlitedb.py",
+      "line": 122,
+      "category": "TYPE_IGNORE",
+      "text": "[arg-type]",
+      "full_line": "                return self.con.execute(sql, parameters)  # type: ignore[arg-type]",
+      "context_before": "try:",
+      "context_after": "except Exception:",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/sqlitedb.py",
+      "line": 127,
+      "category": "TYPE_IGNORE",
+      "text": "[arg-type]",
+      "full_line": "                return self.con.execute(sql, parameters)  # type: ignore[arg-type]",
+      "context_before": "# https://github.com/coveragepy/coveragepy/issues/1010",
+      "context_after": "except sqlite3.Error as exc:",
+      "author": "Ned Batchelder",
+      "date": "2025-08-21T12:00:43+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 196,
+      "category": "TODO",
+      "text": "should_start_context and switch_context are unused!",
+      "full_line": "        # TODO: should_start_context and switch_context are unused!",
+      "context_before": "self.should_trace_cache: dict[str, TFileDisposition | None]",
+      "context_after": "# Change tests/testenv.py:DYN_CONTEXTS when this is updated.",
+      "author": "Ned Batchelder",
+      "date": "2023-11-10T17:09:43+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 202,
+      "category": "TODO",
+      "text": "warn is unused.",
+      "full_line": "        # TODO: warn is unused.",
+      "context_before": "self.unlock_data: Callable[[], None]",
+      "context_after": "self.warn: TWarnFn",
+      "author": "Ned Batchelder",
+      "date": "2023-11-10T17:09:43+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 341,
+      "category": "TYPE_IGNORE",
+      "text": "[union-attr]",
+      "full_line": "                    frame = inspect.currentframe().f_back  # type: ignore[union-attr]",
+      "context_before": "if frame is not None:",
+      "context_after": "if LOG:  # pragma: debugging",
+      "author": "Ned Batchelder",
+      "date": "2025-07-22T23:17:35+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 344,
+      "category": "TYPE_IGNORE",
+      "text": "[union-attr]",
+      "full_line": "                        frame = frame.f_back  # type: ignore[union-attr]",
+      "context_before": "# @panopticon adds a frame.",
+      "context_after": "disp = self.should_trace(filename, frame)  # type: ignore[arg-type]",
+      "author": "Ned Batchelder",
+      "date": "2025-07-22T23:17:35+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 345,
+      "category": "TYPE_IGNORE",
+      "text": "[arg-type]",
+      "full_line": "                disp = self.should_trace(filename, frame)  # type: ignore[arg-type]",
+      "context_before": "frame = frame.f_back  # type: ignore[union-attr]",
+      "context_after": "self.should_trace_cache[filename] = disp",
+      "author": "Ned Batchelder",
+      "date": "2023-12-25T12:58:03+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 410,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "        last_line = code_info.byte_to_line.get(instruction_offset)  # type: ignore",
+      "context_before": "# wouldn't have enabled this event if they were.",
+      "context_after": "if last_line is not None:",
+      "author": "Ned Batchelder",
+      "date": "2025-11-14T23:24:26+00:00",
+      "age": "stale"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 413,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "            code_info.file_data.add(arc)  # type: ignore",
+      "context_before": "arc = (last_line, -code.co_firstlineno)",
+      "context_after": "# log(f\"adding {arc=}\")",
+      "author": "Ned Batchelder",
+      "date": "2025-03-20T12:39:59+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 427,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "            code_info.file_data.add(line_number)  # type: ignore",
+      "context_before": "if code_info is not None and code_info.file_data is not None:",
+      "context_after": "# log(f\"adding {line_number=}\")",
+      "author": "Ned Batchelder",
+      "date": "2025-03-20T12:39:59+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 440,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "        code_info.file_data.add(arc)  # type: ignore",
+      "context_before": "arc = (line_number, line_number)",
+      "context_after": "# log(f\"adding {arc=}\")",
+      "author": "Ned Batchelder",
+      "date": "2025-03-20T12:39:59+00:00",
+      "age": "ancient"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 466,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "            code_info.file_data.add(arc)  # type: ignore",
+      "context_before": "if arc is not None:",
+      "context_after": "# log(f\"adding {arc=}\")",
+      "author": "Paul Kehrer",
+      "date": "2026-07-12T20:05:59+00:00",
+      "age": "fresh"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "line": 476,
+      "category": "TYPE_IGNORE",
+      "text": "",
+      "full_line": "                    code_info.file_data.add(arc)  # type: ignore",
+      "context_before": "arc = (l1, l2)",
+      "context_after": "# log(f\"adding unforeseen {arc=}\")",
+      "author": "Ned Batchelder",
+      "date": "2025-11-14T23:24:26+00:00",
+      "age": "stale"
+    }
+  ]
+}

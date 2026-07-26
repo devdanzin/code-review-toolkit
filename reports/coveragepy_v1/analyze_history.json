@@ -1,0 +1,919 @@
+/home/danzin/projects/code-review-toolkit/plugins/code-review-toolkit/scripts/analyze_history.py:720: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='UTF-8'>
+  result = analyze()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/danzin/projects/code-review-toolkit/plugins/code-review-toolkit/scripts/analyze_history.py:720: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='UTF-8'>
+  result = analyze()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "time_range": {
+    "start": "2026-04-27T22:33:39.606498+00:00",
+    "end": "2026-07-26T22:33:39.606498+00:00",
+    "days": 90,
+    "commit_cap_applied": false
+  },
+  "summary": {
+    "total_commits": 39,
+    "commits_by_type": {
+      "refactor": 2,
+      "chore": 7,
+      "docs": 7,
+      "fix": 16,
+      "unknown": 5,
+      "feature": 1,
+      "test": 1
+    },
+    "files_changed": 20,
+    "functions_changed": 40,
+    "authors": 11
+  },
+  "file_churn": [
+    {
+      "file": "coverage/version.py",
+      "commits": 15,
+      "lines_added": 29,
+      "lines_removed": 29,
+      "churn_rate": 1.66,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:41-04:00",
+      "last_modified": "2026-07-15T14:58:36-04:00"
+    },
+    {
+      "file": "coverage/parser.py",
+      "commits": 6,
+      "lines_added": 124,
+      "lines_removed": 49,
+      "churn_rate": 0.14,
+      "authors": 2,
+      "first_commit_in_range": "2026-07-06T19:07:27-04:00",
+      "last_modified": "2026-07-15T20:05:33-04:00"
+    },
+    {
+      "file": "coverage/control.py",
+      "commits": 4,
+      "lines_added": 26,
+      "lines_removed": 30,
+      "churn_rate": 0.04,
+      "authors": 2,
+      "first_commit_in_range": "2026-06-08T07:36:37-04:00",
+      "last_modified": "2026-07-15T14:04:48-04:00"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "commits": 4,
+      "lines_added": 63,
+      "lines_removed": 59,
+      "churn_rate": 0.24,
+      "authors": 2,
+      "first_commit_in_range": "2026-06-08T07:36:37-04:00",
+      "last_modified": "2026-07-12T14:05:59-06:00"
+    },
+    {
+      "file": "coverage/cmdline.py",
+      "commits": 3,
+      "lines_added": 17,
+      "lines_removed": 3,
+      "churn_rate": 0.02,
+      "authors": 2,
+      "first_commit_in_range": "2026-05-05T03:45:37-07:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "coverage/html.py",
+      "commits": 2,
+      "lines_added": 17,
+      "lines_removed": 5,
+      "churn_rate": 0.03,
+      "authors": 2,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-07-11T18:11:39+05:30"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "commits": 2,
+      "lines_added": 13,
+      "lines_removed": 4,
+      "churn_rate": 0.05,
+      "authors": 2,
+      "first_commit_in_range": "2026-06-28T08:29:47-04:00",
+      "last_modified": "2026-07-02T15:20:49+03:00"
+    },
+    {
+      "file": "coverage/python.py",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 1,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-15T14:04:48-04:00",
+      "last_modified": "2026-07-15T14:04:48-04:00"
+    },
+    {
+      "file": "coverage/report_core.py",
+      "commits": 1,
+      "lines_added": 8,
+      "lines_removed": 2,
+      "churn_rate": 0.08,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-15T14:04:48-04:00",
+      "last_modified": "2026-07-15T14:04:48-04:00"
+    },
+    {
+      "file": "coverage/bytecode.py",
+      "commits": 1,
+      "lines_added": 89,
+      "lines_removed": 136,
+      "churn_rate": 1.08,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-12T14:05:59-06:00",
+      "last_modified": "2026-07-12T14:05:59-06:00"
+    },
+    {
+      "file": "coverage/lcovreport.py",
+      "commits": 1,
+      "lines_added": 6,
+      "lines_removed": 1,
+      "churn_rate": 0.03,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T18:31:10+02:00",
+      "last_modified": "2026-06-27T18:31:10+02:00"
+    },
+    {
+      "file": "coverage/env.py",
+      "commits": 1,
+      "lines_added": 8,
+      "lines_removed": 1,
+      "churn_rate": 0.06,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-23T01:22:08+03:00",
+      "last_modified": "2026-06-23T01:22:08+03:00"
+    },
+    {
+      "file": "coverage/config.py",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 1,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-21T09:27:06-07:00",
+      "last_modified": "2026-06-21T09:27:06-07:00"
+    },
+    {
+      "file": "coverage/sqldata.py",
+      "commits": 1,
+      "lines_added": 24,
+      "lines_removed": 0,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-20T14:55:13+01:00",
+      "last_modified": "2026-06-20T14:55:13+01:00"
+    },
+    {
+      "file": "coverage/core.py",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 2,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-08T07:36:37-04:00",
+      "last_modified": "2026-06-08T07:36:37-04:00"
+    },
+    {
+      "file": "coverage/htmlfiles/style.css",
+      "commits": 1,
+      "lines_added": 2,
+      "lines_removed": 0,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "coverage/htmlfiles/style.scss",
+      "commits": 1,
+      "lines_added": 4,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "coverage/collector.py",
+      "commits": 1,
+      "lines_added": 20,
+      "lines_removed": 8,
+      "churn_rate": 0.06,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T20:54:15-04:00",
+      "last_modified": "2026-05-09T20:54:15-04:00"
+    },
+    {
+      "file": "coverage/data.py",
+      "commits": 1,
+      "lines_added": 18,
+      "lines_removed": 6,
+      "churn_rate": 0.09,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-05-09T13:35:56-04:00"
+    },
+    {
+      "file": "coverage/phystokens.py",
+      "commits": 1,
+      "lines_added": 5,
+      "lines_removed": 0,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-03T11:29:36-04:00",
+      "last_modified": "2026-05-03T11:29:36-04:00"
+    }
+  ],
+  "function_churn": [
+    {
+      "function": "_raw_parse",
+      "file": "coverage/parser.py",
+      "line_start": 165,
+      "line_end": 267,
+      "commits": 3,
+      "lines_changed": 103
+    },
+    {
+      "function": "command_line",
+      "file": "coverage/cmdline.py",
+      "line_start": 793,
+      "line_end": 956,
+      "commits": 3,
+      "lines_changed": 164
+    },
+    {
+      "function": "_analyze_ast",
+      "file": "coverage/parser.py",
+      "line_start": 333,
+      "line_end": 358,
+      "commits": 2,
+      "lines_changed": 26
+    },
+    {
+      "function": "_analyze",
+      "file": "coverage/control.py",
+      "line_start": 1001,
+      "line_end": 1011,
+      "commits": 2,
+      "lines_changed": 11
+    },
+    {
+      "function": "fix_with_jumps",
+      "file": "coverage/parser.py",
+      "line_start": 360,
+      "line_end": 398,
+      "commits": 2,
+      "lines_changed": 39
+    },
+    {
+      "function": "sysmon_py_start",
+      "file": "coverage/sysmon.py",
+      "line_start": 317,
+      "line_end": 395,
+      "commits": 2,
+      "lines_changed": 79
+    },
+    {
+      "function": "sysmon_branch_either",
+      "file": "coverage/sysmon.py",
+      "line_start": 445,
+      "line_end": 479,
+      "commits": 2,
+      "lines_changed": 35
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/sysmon.py",
+      "line_start": 190,
+      "line_end": 233,
+      "commits": 2,
+      "lines_changed": 44
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/parser.py",
+      "line_start": 76,
+      "line_end": 140,
+      "commits": 2,
+      "lines_changed": 65
+    },
+    {
+      "function": "with_jump_fixers",
+      "file": "coverage/parser.py",
+      "line_start": 745,
+      "line_end": 769,
+      "commits": 2,
+      "lines_changed": 25
+    },
+    {
+      "function": "get_analysis_to_report",
+      "file": "coverage/report_core.py",
+      "line_start": 71,
+      "line_end": 123,
+      "commits": 1,
+      "lines_changed": 53
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/bytecode.py",
+      "line_start": 18,
+      "line_end": 28,
+      "commits": 1,
+      "lines_changed": 11
+    },
+    {
+      "function": "line_at",
+      "file": "coverage/bytecode.py",
+      "line_start": 153,
+      "line_end": 158,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "resolve",
+      "file": "coverage/bytecode.py",
+      "line_start": 160,
+      "line_end": 208,
+      "commits": 1,
+      "lines_changed": 49
+    },
+    {
+      "function": "multiline_map_from_tokens",
+      "file": "coverage/parser.py",
+      "line_start": 29,
+      "line_end": 55,
+      "commits": 1,
+      "lines_changed": 27
+    },
+    {
+      "function": "multiline_map_from_text",
+      "file": "coverage/parser.py",
+      "line_start": 58,
+      "line_end": 65,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "compute_multiline_map",
+      "file": "coverage/sysmon.py",
+      "line_start": 489,
+      "line_end": 503,
+      "commits": 1,
+      "lines_changed": 15
+    },
+    {
+      "function": "write_html_page",
+      "file": "coverage/html.py",
+      "line_start": 467,
+      "line_end": 568,
+      "commits": 1,
+      "lines_changed": 102
+    },
+    {
+      "function": "process_raise_exits",
+      "file": "coverage/parser.py",
+      "line_start": 546,
+      "line_end": 548,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "process_return_exits",
+      "file": "coverage/parser.py",
+      "line_start": 550,
+      "line_end": 552,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/control.py",
+      "line_start": 142,
+      "line_end": 350,
+      "commits": 1,
+      "lines_changed": 209
+    },
+    {
+      "function": "_init_for_start",
+      "file": "coverage/control.py",
+      "line_start": 569,
+      "line_end": 664,
+      "commits": 1,
+      "lines_changed": 96
+    },
+    {
+      "function": "switch_context",
+      "file": "coverage/control.py",
+      "line_start": 781,
+      "line_end": 801,
+      "commits": 1,
+      "lines_changed": 21
+    },
+    {
+      "function": "get_data",
+      "file": "coverage/control.py",
+      "line_start": 913,
+      "line_end": 936,
+      "commits": 1,
+      "lines_changed": 24
+    },
+    {
+      "function": "_post_save_work",
+      "file": "coverage/control.py",
+      "line_start": 938,
+      "line_end": 964,
+      "commits": 1,
+      "lines_changed": 27
+    },
+    {
+      "function": "branch_stats",
+      "file": "coverage/control.py",
+      "line_start": 1013,
+      "line_end": 1025,
+      "commits": 1,
+      "lines_changed": 13
+    },
+    {
+      "function": "_get_file_reporter",
+      "file": "coverage/control.py",
+      "line_start": 1027,
+      "line_end": 1053,
+      "commits": 1,
+      "lines_changed": 27
+    },
+    {
+      "function": "_get_file_reporters",
+      "file": "coverage/control.py",
+      "line_start": 1055,
+      "line_end": 1077,
+      "commits": 1,
+      "lines_changed": 23
+    },
+    {
+      "function": "prepare",
+      "file": "coverage/execfile.py",
+      "line_start": 88,
+      "line_end": 131,
+      "commits": 1,
+      "lines_changed": 44
+    },
+    {
+      "function": "_prepare2",
+      "file": "coverage/execfile.py",
+      "line_start": 133,
+      "line_end": 178,
+      "commits": 1,
+      "lines_changed": 46
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/cmdline.py",
+      "line_start": 387,
+      "line_end": 430,
+      "commits": 1,
+      "lines_changed": 44
+    },
+    {
+      "function": "lcov_functions",
+      "file": "coverage/lcovreport.py",
+      "line_start": 55,
+      "line_end": 104,
+      "commits": 1,
+      "lines_changed": 50
+    },
+    {
+      "function": "_reap_dead_thread_dbs",
+      "file": "coverage/sqldata.py",
+      "line_start": 373,
+      "line_end": 394,
+      "commits": 1,
+      "lines_changed": 22
+    },
+    {
+      "function": "_connect",
+      "file": "coverage/sqldata.py",
+      "line_start": 396,
+      "line_end": 401,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "start",
+      "file": "coverage/sysmon.py",
+      "line_start": 241,
+      "line_end": 268,
+      "commits": 1,
+      "lines_changed": 28
+    },
+    {
+      "function": "escape",
+      "file": "coverage/html.py",
+      "line_start": 852,
+      "line_end": 859,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "pair",
+      "file": "coverage/html.py",
+      "line_start": 862,
+      "line_end": 864,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "flush_data",
+      "file": "coverage/collector.py",
+      "line_start": 442,
+      "line_end": 501,
+      "commits": 1,
+      "lines_changed": 60
+    },
+    {
+      "function": "combine_parallel_data",
+      "file": "coverage/data.py",
+      "line_start": 132,
+      "line_end": 240,
+      "commits": 1,
+      "lines_changed": 109
+    },
+    {
+      "function": "find_soft_key_lines",
+      "file": "coverage/phystokens.py",
+      "line_start": 93,
+      "line_end": 110,
+      "commits": 1,
+      "lines_changed": 18
+    }
+  ],
+  "recent_fixes": [
+    {
+      "commit": "78cab6e1770e55951c84a78d80b90c60ccfba4d5",
+      "commit_short": "78cab6e",
+      "message": "fix: reduce memory use during reporting. #2229 (#2231)",
+      "date": "2026-07-15T14:04:48-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/control.py",
+        "coverage/parser.py",
+        "coverage/python.py",
+        "coverage/report_core.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_analyze",
+          "file": "coverage/control.py"
+        },
+        {
+          "function": "_analyze_ast",
+          "file": "coverage/parser.py"
+        },
+        {
+          "function": "fix_with_jumps",
+          "file": "coverage/parser.py"
+        },
+        {
+          "function": "get_analysis_to_report",
+          "file": "coverage/report_core.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/control.py b/coverage/control.py\nindex 8567614c..698e2428 100644\n--- a/coverage/control.py\n+++ b/coverage/control.py\n@@ -304,8 +304,6 @@ class Coverage(TConfigurable):\n         self._file_mapper: Callable[[str], str] = abs_file\n         self._data_suffix = self._run_suffix = None\n         self._exclude_re: dict[str, str] = {}\n-        self._analysis_cache: dict[TMorf, Analysis] = {}\n-        self._file_reporter_cache: dict[TMorf, FileReporter] = {}\n         self._old_sigterm: Callable[[int, FrameType | None], Any] | None = None\n \n         # State machine variables:\n@@ -567,7 +565,6 @@ class Coverage(TConfigurable):\n         if not should_skip:\n             assert self._data is not None\n             self._data.read()\n-        self._clear_analysis_caches()\n \n     def _init_for_start(self) -> None:\n         \"\"\"Initialization for start()\"\"\"\n@@ -780,7 +777,6 @@ class Coverage(TConfigurable):\n         self._data.erase(parallel=self.config.parallel)\n         self._data = None\n         self._inited_for_start = False\n-        self._clear_analysis_caches()\n \n     def switch_context(self, new_context: str) -> None:\n         \"\"\"Switch to a new dynamic context.\n@@ -913,7 +909,6 @@ class Coverage(TConfigurable):\n             keep=keep,\n             message=self._message,\n         )\n-        self._clear_analysis_caches()\n \n     def get_data(self) -> CoverageData:\n         \"\"\"Get the collected data.\n@@ -935,7 +930,6 @@ class Coverage(TConfigurable):\n                     self._collector.plugin_was_disabled(plugin)\n \n             if self._collector.flush_data():\n-                self._clear_analysis_caches()\n                 self._post_save_work()\n \n         assert self._data is not None\n@@ -1004,27 +998,18 @@ class Coverage(TConfigurable):\n             analysis.missing_formatted(),\n         )\n \n-    def _analyze(self, morf: TMorf) -> Analysis:\n+    def _analyze(self, morf: TMorf, file_reporter: FileReporter | None = None) -> Analysis:\n         \"\"\"Analyze a module or file.  Private for now.\"\"\"\n-        analysis = self._analysis_cache.get(morf)\n-        if analysis is not None:\n-            return analysis\n-\n         self._init()\n         self._post_init()\n \n         data = self.get_data()\n-        file_reporter = self._get_file_reporter(morf)\n+        if file_reporter is None:\n+            file_reporter = self._get_file_reporter(morf)\n         filename = self._file_mapper(file_reporter.filename)\n         analysis = analysis_from_file_reporter(data, self.config.precision, file_reporter, filename)\n-        self._analysis_cache[morf] = analysis\n         return analysis\n \n-    def _clear_analysis_caches(self) -> None:\n-        \"\"\"Forget cached analyses and file reporters, because data changed.\"\"\"\n-        self._analysis_cache.clear()\n-        self._file_reporter_cache.clear()\n-\n     def branch_stats(self, morf: TMorf) -> dict[TLineNo, tuple[int, int]]:\n         \"\"\"Get branch statistics about a module.\n \n@@ -1041,9 +1026,6 @@ class Coverage(TConfigurable):\n \n     def _get_file_reporter(self, morf: TMorf) -> FileReporter:\n         \"\"\"Get a FileReporter for a module or file name.\"\"\"\n-        cached = self._file_reporter_cache.get(morf)\n-        if cached is not None:\n-            return cached\n         assert self._data is not None\n         plugin = None\n         file_reporter: str | FileReporter = \"python\"\n@@ -1068,7 +1050,6 @@ class Coverage(TConfigurable):\n             file_reporter = PythonFileReporter(morf, self)\n \n         assert isinstance(file_reporter, FileReporter)\n-        self._file_reporter_cache[morf] = file_reporter\n         return file_reporter\n \n     def _get_file_reporters(\n@@ -1093,7 +1074,6 @@ class Coverage(TConfigurable):\n         if not isinstance(morfs, (list, tuple, set)):\n             morfs = [morfs]  # type: ignore[list-item]\n \n-        morfs = sorted(morfs, key=lambda m: m if isinstance(m, str) else m.__name__)\n         return [(self._get_file_reporter(morf), morf) for morf in morfs]\n \n     def _prepare_data_for_reporting(self) -> None:\ndiff --git a/coverage/parser.py b/coverage/parser.py\nindex e672c2db..6ee5bc01 100644\n--- a/coverage/parser.py\n+++ b/coverage/parser.py\n@@ -336,8 +336,10 @@ class PythonParser:\n         `_all_arcs` is the set of arcs in the code.\n \n         \"\"\"\n-        assert self._ast_root is not None\n-        aaa = AstArcAnalyzer(self.filename, self._ast_root, self.raw_statements, self.multiline_map)\n+        ast_root = self._ast_root\n+        if ast_root is None:\n+            ast_root = ast.parse(self.text)\n+        aaa = AstArcAnalyzer(self.filename, ast_root, self.raw_statements, self.multiline_map)\n         aaa.analyze()\n         arcs = aaa.arcs\n         self._with_jump_fixers = aaa.with_jump_fixers()\n@@ -353,6 +355,10 @@ class PythonParser:\n \n         self._missing_arc_fragments = aaa.missing_arc_fragments\n \n+        # The AST is large and no longer needed: everything derived from it is\n+        # memoized above.  Release it so long-lived parsers don't hold it.\n+        self._ast_root = None\n+\n     def fix_with_jumps(self, arcs: Iterable[TArc]) -> set[TArc]:\n         \"\"\"Adjust arcs to fix jumps leaving `with` statements.\n \ndiff --git a/coverage/python.py b/coverage/python.py\nindex 36dd7a1c..c3c36e7c 100644\n--- a/coverage/python.py\n+++ b/coverage/python.py\n@@ -172,7 +172,6 @@ class PythonFileReporter(FileReporter):\n \n         self._source: str | None = None\n         self._parser: PythonParser | None = None\n-        self._excluded = None\n \n     def __repr__(self) -> str:\n         return f\"<PythonFileReporter {self.filename!r}>\"\ndiff --git a/coverage/report_core.py b/coverage/report_core.py\nindex 81b2068c..ea2f4136 100644\n--- a/coverage/report_core.py\n+++ b/coverage/report_core.py\n@@ -93,9 +93,15 @@ def get_analysis_to_report(\n     if not fr_morfs:\n         raise NoDataError(\"No data to report.\")\n \n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "182b010b63a2661c86df1ca3b3f84ce8511ee435",
+      "commit_short": "182b010",
+      "message": "perf: resolve sysmon branch events lazily, one pair at a time (#2221)",
+      "date": "2026-07-12T14:05:59-06:00",
+      "author": "Paul Kehrer",
+      "files": [
+        "coverage/bytecode.py",
+        "coverage/sysmon.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "__init__",
+          "file": "coverage/bytecode.py"
+        },
+        {
+          "function": "line_at",
+          "file": "coverage/bytecode.py"
+        },
+        {
+          "function": "resolve",
+          "file": "coverage/bytecode.py"
+        },
+        {
+          "function": "sysmon_py_start",
+          "file": "coverage/sysmon.py"
+        },
+        {
+          "function": "sysmon_branch_either",
+          "file": "coverage/sysmon.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/bytecode.py b/coverage/bytecode.py\nindex 78bc866f..0546b97e 100644\n--- a/coverage/bytecode.py\n+++ b/coverage/bytecode.py\n@@ -5,11 +5,9 @@\n \n from __future__ import annotations\n \n-import collections\n import dis\n from collections.abc import Iterable, Mapping\n from types import CodeType\n-from typing import Optional\n \n from coverage.types import TArc, TLineNo, TOffset\n \n@@ -108,148 +106,103 @@ RETURNS = op_set(\n     \"RETURN_GENERATOR\",\n )\n \n-# Opcodes that do nothing.\n-NOPS = op_set(\n-    \"NOP\",\n-    \"NOT_TAKEN\",\n-)\n-\n-\n-class InstructionWalker:\n-    \"\"\"Utility to step through trails of instructions.\n \n-    We have two reasons to need sequences of instructions from a code object:\n-    First, in strict sequence to visit all the instructions in the object.\n-    This is `walk(follow_jumps=False)`.  Second, we want to follow jumps to\n-    understand how execution will flow: `walk(follow_jumps=True)`.\n-    \"\"\"\n-\n-    def __init__(self, code: CodeType) -> None:\n-        self.code = code\n-        self.insts: dict[TOffset, dis.Instruction] = {}\n+# CACHE doesn't exist in Python 3.10, but the branch resolver is only used\n+# on 3.14+, so a placeholder value is fine.\n+_CACHE = dis.opmap.get(\"CACHE\", -1)\n+_EXTENDED_ARG = dis.opmap[\"EXTENDED_ARG\"]\n \n-        inst = None\n-        for inst in dis.get_instructions(code):\n-            self.insts[inst.offset] = inst\n+# All opcodes with a jump target.\n+JUMPS = set(dis.hasjrel) | set(dis.hasjabs)\n \n-        assert inst is not None\n-        self.max_offset = inst.offset\n+# Opcodes that jump backwards.\n+BACKWARD_JUMPS = {op for op in JUMPS if \"JUMP_BACKWARD\" in dis.opname[op]}\n \n-    def walk(\n-        self, *, start_at: TOffset = 0, follow_jumps: bool = True\n-    ) -> Iterable[dis.Instruction]:\n-        \"\"\"\n-        Yield instructions starting from `start_at`.  Follow unconditional\n-        jumps if `follow_jumps` is true.\n-        \"\"\"\n-        seen = set()\n-        offset = start_at\n-        while offset < self.max_offset + 1:\n-            if offset in seen:\n-                break\n-            seen.add(offset)\n-            if inst := self.insts.get(offset):\n-                yield inst\n-                if follow_jumps and inst.opcode in ALWAYS_JUMPS:\n-                    offset = inst.jump_target\n-                    continue\n-            offset += 2\n \n+class BranchArcResolver:\n+    \"\"\"Resolve branch events to line arcs, one (source, dest) pair at a time.\n \n-TBranchTrailsOneSource = dict[Optional[TArc], set[TOffset]]\n-TBranchTrails = dict[TOffset, TBranchTrailsOneSource]\n+    Branch events are one-shot (they are DISABLEd after firing), so each\n+    (source offset, destination offset) pair is resolved at most a couple of\n+    times per code object.  Resolving pairs on demand is much cheaper than\n+    precomputing trails for every branch in the code object, most of which\n+    never fire.  We walk the raw bytecode bytes so that we never need to\n+    disassemble whole code objects with `dis`.\n \n+    To resolve one pair:\n+    starting from the destination, follow the trail of instructions (through\n+    unconditional jumps) until we reach an instruction on a new source line\n+    (giving us the arc), a return (an arc to leaving the code object), or\n+    another branch possibility (no arc: that branch will produce its own\n+    events).\n \n-def branch_trails(\n-    code: CodeType,\n-    multiline_map: Mapping[TLineNo, TLineNo],\n-) -> TBranchTrails:\n     \"\"\"\n-    Calculate branch trails for `code`.\n-\n-    `multiline_map` maps line numbers to the first line number of a\n-    multi-line statement.\n \n-    Instructions can have a jump_target, where they might jump to next.  Some\n-    instructions with a jump_target are unconditional jumps (ALWAYS_JUMPS), so\n-    they aren't interesting to us, since they aren't the start of a branch\n-    possibility.\n-\n-    Instructions that might or might not jump somewhere else are branch\n-    possibilities.  For each of those, we track a trail of instructions.  These\n-    are lists of instruction offsets, the next instructions that can execute.\n-    We follow the trail until we get to a new source line.  That gives us the\n-    arc from the original instruction's line to the new source line.\n-\n-    \"\"\"\n-    the_trails: TBranchTrails = collections.defaultdict(lambda: collections.defaultdict(set))\n-    iwalker = InstructionWalker(code)\n-    for inst in iwalker.walk(follow_jumps=False):\n-        if not inst.jump_target:\n-            # We only care about instructions with jump targets.\n-            continue\n-        if inst.opcode in ALWAYS_JUMPS:\n-            # We don't care about unconditional jumps.\n-            continue\n-\n-        from_line = inst.line_number\n+    def __init__(\n+        self,\n+        code: CodeType,\n+        byte_to_line: Mapping[TOffset, TLineNo],\n+        multiline_map: Mapping[TLineNo, TLineNo],\n+    ) -> None:\n+        self.code = code\n+        # co_code re-copies the bytes on each access, so fetch it once.\n+        self.co_code = code.co_code\n+        self.byte_to_line = byte_to_line\n+        self.multiline_map = multiline_map\n+\n+    def line_at(self, offset: TOffset) -> TLineNo | None:\n+        \"\"\"The source line of the instruction at `offset`, de-multilined.\"\"\"\n+        line = self.byte_to_line.get(offset)\n+        if line is not None:\n+            line = self.multiline_map.get(line, line)\n+        return line\n+\n+    def resolve(self, source: TOffset, dest: TOffset) -> TArc | None:\n+        \"\"\"Turn a branch event's (source, dest) offsets into an arc, or None.\"\"\"\n+        from_line = self.line_at(source)\n         if from_line is None:\n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "dd806350de678c9e4f137ffdda5cb131d269019c",
+      "commit_short": "dd80635",
+      "message": "fix: escape context labels in html report inline script block (#2224)",
+      "date": "2026-07-11T18:11:39+05:30",
+      "author": "rajath201",
+      "files": [
+        "coverage/html.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "write_html_page",
+          "file": "coverage/html.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/html.py b/coverage/html.py\nindex dc7c7eb3..991a0863 100644\n--- a/coverage/html.py\n+++ b/coverage/html.py\n@@ -483,9 +483,18 @@ class HtmlReporter:\n         contexts = collections.Counter(c for cline in file_data.lines for c in cline.contexts)\n         context_codes = {y: i for (i, y) in enumerate(x[0] for x in contexts.most_common())}\n         if context_codes:\n-            contexts_json = json.dumps(\n-                {encode_int(v): k for (k, v) in context_codes.items()},\n-                indent=2,\n+            # This JSON is dropped straight into an inline <script> element, so\n+            # the HTML-significant characters have to be escaped as \\uXXXX to keep\n+            # a context label like \"</script>\" from closing the element early.\n+            # The escapes are still valid JSON, so the parsed values are unchanged.\n+            contexts_json = (\n+                json.dumps(\n+                    {encode_int(v): k for (k, v) in context_codes.items()},\n+                    indent=2,\n+                )\n+                .replace(\"<\", r\"\\u003c\")\n+                .replace(\">\", r\"\\u003e\")\n+                .replace(\"&\", r\"\\u0026\")\n             )\n         else:\n             contexts_json = None\n"
+    },
+    {
+      "commit": "6f9fa1e1e8a89f62c69dbf3b38e0adb744d6d4b2",
+      "commit_short": "6f9fa1e",
+      "message": "fix: preserve isolated sys.path on Python 3.10 (#2211)",
+      "date": "2026-07-02T15:20:49+03:00",
+      "author": "Ilia Sorokin",
+      "files": [
+        "coverage/execfile.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "prepare",
+          "file": "coverage/execfile.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/execfile.py b/coverage/execfile.py\nindex d55058d9..649c49cf 100644\n--- a/coverage/execfile.py\n+++ b/coverage/execfile.py\n@@ -91,7 +91,10 @@ class PyRunner:\n         This needs to happen before any importing, and without importing anything.\n         \"\"\"\n         path0: str | None\n-        if getattr(sys.flags, \"safe_path\", False):\n+        if getattr(sys.flags, \"safe_path\", False) or getattr(sys.flags, \"isolated\", False):\n+            # PYVERSION\n+            # Python 3.10 isolated mode predates sys.flags.safe_path.\n+            # Remove the isolated fallback when coverage drops 3.10 support.\n             # See https://docs.python.org/3/using/cmdline.html#cmdoption-P\n             path0 = None\n         elif self.as_module:\n"
+    },
+    {
+      "commit": "1ed39982fe550fc542a9ed3d5561dec29737b0dc",
+      "commit_short": "1ed3998",
+      "message": "fix: start attaching the loader on `__spec__` #2208 (#2209)",
+      "date": "2026-06-28T08:29:47-04:00",
+      "author": "A5rocks",
+      "files": [
+        "coverage/execfile.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_prepare2",
+          "file": "coverage/execfile.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/execfile.py b/coverage/execfile.py\nindex 04946be8..d55058d9 100644\n--- a/coverage/execfile.py\n+++ b/coverage/execfile.py\n@@ -140,6 +140,7 @@ class PyRunner:\n             if self.spec is not None:\n                 self.modulename = self.spec.name\n             self.loader = DummyLoader(self.modulename)\n+            self.spec.loader = self.loader  # type: ignore[assignment]\n             assert pathname is not None\n             self.pathname = os.path.abspath(pathname)\n             self.args[0] = self.arg0 = self.pathname\n@@ -157,12 +158,17 @@ class PyRunner:\n             else:\n                 raise NoSource(f\"Can't find '__main__' module in '{self.arg0}'\")\n \n-            # Make a spec. I don't know if this is the right way to do it.\n             try_filename = python_reported_file(try_filename)\n-            self.spec = importlib.machinery.ModuleSpec(\"__main__\", None, origin=try_filename)\n-            self.spec.has_location = True\n             self.package = \"\"\n             self.loader = DummyLoader(\"__main__\")\n+\n+            # Make a spec. I don't know if this is the right way to do it.\n+            self.spec = importlib.machinery.ModuleSpec(\n+                \"__main__\",\n+                self.loader,  # type: ignore[arg-type]\n+                origin=try_filename,\n+            )\n+            self.spec.has_location = True\n         else:\n             self.loader = DummyLoader(\"__main__\")\n \n"
+    },
+    {
+      "commit": "65979cc05b7f6b10c3e27c84408867fd9bc30846",
+      "commit_short": "65979cc",
+      "message": "fix: skip excluded functions in LCOV function totals (#2206)",
+      "date": "2026-06-27T18:31:10+02:00",
+      "author": "Martin Kuntz Jacobsen",
+      "files": [
+        "coverage/lcovreport.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "lcov_functions",
+          "file": "coverage/lcovreport.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/lcovreport.py b/coverage/lcovreport.py\nindex 003f214f..42895dda 100644\n--- a/coverage/lcovreport.py\n+++ b/coverage/lcovreport.py\n@@ -84,18 +84,23 @@ def lcov_functions(\n     narrower.add_regions(r.lines for _, _, r in functions)\n \n     functions.sort()\n+    functions_found = 0\n     functions_hit = 0\n     for first_line, last_line, region in functions:\n         # A function counts as having been executed if any of it has been\n         # executed.\n         analysis = narrower.narrow(region.lines)\n+        if analysis.numbers.n_statements == 0:\n+            continue\n+\n+        functions_found += 1\n         hit = int(analysis.numbers.n_executed > 0)\n         functions_hit += hit\n \n         outfile.write(f\"FN:{first_line},{last_line},{region.name}\\n\")\n         outfile.write(f\"FNDA:{hit},{region.name}\\n\")\n \n-    outfile.write(f\"FNF:{len(functions)}\\n\")\n+    outfile.write(f\"FNF:{functions_found}\\n\")\n     outfile.write(f\"FNH:{functions_hit}\\n\")\n \n \n"
+    },
+    {
+      "commit": "f36248d7ba313734d4fcf3d6eab713b5eba2c259",
+      "commit_short": "f36248d",
+      "message": "fix: don't emit 'Couldn't import C tracer' warning for 3.13t (#2203)",
+      "date": "2026-06-23T01:22:08+03:00",
+      "author": "Hugo van Kemenade",
+      "files": [
+        "coverage/env.py"
+      ],
+      "functions_modified": [],
+      "diff": "diff --git a/coverage/env.py b/coverage/env.py\nindex 8cf8230e..6e84de86 100644\n--- a/coverage/env.py\n+++ b/coverage/env.py\n@@ -8,6 +8,7 @@ from __future__ import annotations\n import os\n import platform\n import sys\n+import sysconfig\n from collections.abc import Iterable\n from typing import Any, Final\n \n@@ -42,8 +43,14 @@ else:\n # Do we have a GIL?\n GIL = getattr(sys, \"_is_gil_enabled\", lambda: True)()\n \n+# Is this a free-threaded build of CPython? Checks the build, not runtime GIL\n+# state, since the GIL can be re-enabled at runtime on a free-threaded build.\n+FREE_THREADED = bool(sysconfig.get_config_var(\"Py_GIL_DISABLED\"))\n+\n # Do we ship compiled coveragepy wheels for this version?\n-SHIPPING_WHEELS = CPYTHON and PYVERSION[:2] <= (3, 14)\n+SHIPPING_WHEELS = (\n+    CPYTHON and PYVERSION[:2] <= (3, 14) and not (FREE_THREADED and PYVERSION[:2] == (3, 13))\n+)\n \n # Should we default to sys.monitoring?\n SYSMON_DEFAULT = CPYTHON and PYVERSION >= (3, 14)\n"
+    },
+    {
+      "commit": "f4b2b4d35e1b7cd8f33f1ee88d354b0debeeed08",
+      "commit_short": "f4b2b4d",
+      "message": "fix: exclude `...` bodies after multi-line return-type annotations (#2185) (#2196)",
+      "date": "2026-06-21T09:27:06-07:00",
+      "author": "MJSHANG",
+      "files": [
+        "coverage/config.py"
+      ],
+      "functions_modified": [],
+      "diff": "diff --git a/coverage/config.py b/coverage/config.py\nindex 3722e698..87473124 100644\n--- a/coverage/config.py\n+++ b/coverage/config.py\n@@ -149,7 +149,7 @@ TConfigParser = HandyConfigParser | TomlConfigParser\n # The default line exclusion regexes.\n DEFAULT_EXCLUDE = [\n     r\"#\\s*(pragma|PRAGMA)[:\\s]?\\s*(no|NO)\\s*(cover|COVER)\",\n-    r\"^\\s*(((async )?def .*?)?\\)(\\s*->.*?)?:\\s*)?\\.\\.\\.\\s*(#|$)\",\n+    r\"^\\s*(((async )?def .*?)?[\\])]+(\\s*->.*?)?:\\s*)?\\.\\.\\.\\s*(#|$)\",\n     r\"if (typing\\.)?TYPE_CHECKING:\",\n ]\n \n"
+    },
+    {
+      "commit": "f960696bd4f5fab32c8fd9086386d5ff4e99df82",
+      "commit_short": "f960696",
+      "message": "Fix: close SQLite connections from terminated threads (#2192) (#2193)",
+      "date": "2026-06-20T14:55:13+01:00",
+      "author": "Matthew Lloyd",
+      "files": [
+        "coverage/sqldata.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_reap_dead_thread_dbs",
+          "file": "coverage/sqldata.py"
+        },
+        {
+          "function": "_connect",
+          "file": "coverage/sqldata.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/sqldata.py b/coverage/sqldata.py\nindex cb406ddd..9701a63b 100644\n--- a/coverage/sqldata.py\n+++ b/coverage/sqldata.py\n@@ -370,9 +370,33 @@ class CoverageData:\n             )\n         db.executemany_void(\"INSERT OR IGNORE INTO meta (key, value) VALUES (?, ?)\", meta_data)\n \n+    def _reap_dead_thread_dbs(self) -> None:\n+        \"\"\"Close and drop SqliteDb connections held by terminated threads.\n+\n+        Connections are keyed by thread id in ``self._dbs`` and are otherwise\n+        only closed at process end. On workloads with many short-lived threads\n+        whose ids are not recycled, this leaks one open fd per dead thread.\n+        Closing is safe from another thread because connections use\n+        ``check_same_thread=False``.\n+        \"\"\"\n+        with self._lock:\n+            live_idents = {thread.ident for thread in threading.enumerate()}\n+            dead_idents = [ident for ident in self._dbs if ident not in live_idents]\n+            for ident in dead_idents:\n+                db = self._dbs.pop(ident)\n+                if self._debug.should(\"dataio\"):\n+                    self._debug.write(f\"Reaping dead thread's data file: {db!r}\")\n+                try:\n+                    db.close(force=True)\n+                except Exception:\n+                    # Closing is best-effort; a failure here must not break\n+                    # collection. The entry has already been dropped.\n+                    pass\n+\n     def _connect(self) -> SqliteDb:\n         \"\"\"Get the SqliteDb object to use.\"\"\"\n         if threading.get_ident() not in self._dbs:\n+            self._reap_dead_thread_dbs()\n             self._open_db()\n         return self._dbs[threading.get_ident()]\n \n"
+    },
+    {
+      "commit": "27c11f1b08051ed291138bb2772de0f7fab2ce5a",
+      "commit_short": "27c11f1",
+      "message": "fix: write messages to stderr. #2197",
+      "date": "2026-06-19T10:51:18-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/control.py"
+      ],
+      "functions_modified": [],
+      "diff": "diff --git a/coverage/control.py b/coverage/control.py\nindex 57531d39..87f89e3a 100644\n--- a/coverage/control.py\n+++ b/coverage/control.py\n@@ -502,7 +502,7 @@ class Coverage(TConfigurable):\n     def _message(self, msg: str) -> None:\n         \"\"\"Write a message to the user, if configured to do so.\"\"\"\n         if self._messages:\n-            print(msg)\n+            print(msg, file=sys.stderr)\n \n     def get_option(self, option_name: str) -> TConfigValueOut | None:\n         \"\"\"Get an option from the configuration.\n"
+    },
+    {
+      "commit": "4b0fc85715053e96238137908e45b8ff9d6aa4f7",
+      "commit_short": "4b0fc85",
+      "message": "fix: find a usable sys.monitoring toolid instead of assuming COVERAGE_ID is available. #2187",
+      "date": "2026-06-08T07:36:37-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/control.py",
+        "coverage/core.py",
+        "coverage/sysmon.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "__init__",
+          "file": "coverage/sysmon.py"
+        },
+        {
+          "function": "start",
+          "file": "coverage/sysmon.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/control.py b/coverage/control.py\nindex dd19732a..57531d39 100644\n--- a/coverage/control.py\n+++ b/coverage/control.py\n@@ -301,7 +301,6 @@ class Coverage(TConfigurable):\n         self._data_to_close: list[CoverageData] = []\n         self._core: Core | None = None\n         self._collector: Collector | None = None\n-        self._metacov = False\n \n         self._file_mapper: Callable[[str], str] = abs_file\n         self._data_suffix = self._run_suffix = None\n@@ -596,7 +595,6 @@ class Coverage(TConfigurable):\n             debug=(self._debug if self._debug.should(\"core\") else None),\n             config=self.config,\n             dynamic_contexts=(should_start_context is not None),\n-            metacov=self._metacov,\n         )\n         self._collector = Collector(\n             core=self._core,\ndiff --git a/coverage/core.py b/coverage/core.py\nindex 64616a69..d6e65a84 100644\n--- a/coverage/core.py\n+++ b/coverage/core.py\n@@ -61,7 +61,6 @@ class Core:\n         debug: TDebugCtl | None,\n         config: CoverageConfig,\n         dynamic_contexts: bool,\n-        metacov: bool,\n     ) -> None:\n         def _debug(msg: str) -> None:\n             if debug:\n@@ -115,7 +114,6 @@ class Core:\n \n         if core_name == \"sysmon\":\n             self.tracer_class = SysMonitor\n-            self.tracer_kwargs[\"tool_id\"] = 3 if metacov else 1\n             self.file_disposition_class = FileDisposition\n             self.supports_plugins = False\n             self.packed_arcs = False\ndiff --git a/coverage/sysmon.py b/coverage/sysmon.py\nindex 8161a777..dbd2dd12 100644\n--- a/coverage/sysmon.py\n+++ b/coverage/sysmon.py\n@@ -193,7 +193,7 @@ class SysMonitor(Tracer):\n \n     # One of these will be used across threads. Be careful.\n \n-    def __init__(self, tool_id: int) -> None:\n+    def __init__(self) -> None:\n         # Attributes set from the collector:\n         self.data: TTraceData\n         self.trace_arcs = False\n@@ -208,7 +208,11 @@ class SysMonitor(Tracer):\n         # TODO: warn is unused.\n         self.warn: TWarnFn\n \n-        self.myid = tool_id\n+        assert sys_monitoring is not None\n+        # sys.monitoring pre-allocates tool ids, but it's kind of pointless.\n+        # There's no guarantee that \"our\" tool id will still be available, so\n+        # we have to search for a usable one in start() anyway.\n+        self.myid = sys_monitoring.COVERAGE_ID\n \n         # Map id(code_object) -> CodeInfo\n         self.code_infos: dict[int, CodeInfo] = {}\n@@ -241,7 +245,15 @@ class SysMonitor(Tracer):\n         \"\"\"Start this Tracer.\"\"\"\n         with self.lock:\n             assert sys_monitoring is not None\n-            sys_monitoring.use_tool_id(self.myid, \"coverage.py\")\n+            while self.myid <= 5:\n+                try:\n+                    sys_monitoring.use_tool_id(self.myid, \"coverage.py\")\n+                    break\n+                except ValueError:\n+                    self.myid += 1\n+                    continue\n+            else:\n+                raise RuntimeError(\"No sys.monitoring tool id is available\")\n             register = functools.partial(sys_monitoring.register_callback, self.myid)\n             events = sys.monitoring.events\n \n"
+    },
+    {
+      "commit": "7996dfdcccb9dffaf4f9d3d435d2bce3a7772109",
+      "commit_short": "7996dfd",
+      "message": "fix: use CSS for slash-space to let ctrl-f work. #2170",
+      "date": "2026-05-13T06:27:35-07:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/html.py",
+        "coverage/htmlfiles/style.css",
+        "coverage/htmlfiles/style.scss"
+      ],
+      "functions_modified": [
+        {
+          "function": "escape",
+          "file": "coverage/html.py"
+        },
+        {
+          "function": "pair",
+          "file": "coverage/html.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/html.py b/coverage/html.py\nindex 548003da..dc7c7eb3 100644\n--- a/coverage/html.py\n+++ b/coverage/html.py\n@@ -856,5 +856,8 @@ def pair(ratio: tuple[int, int]) -> str:\n \n \n def pretty_file(filename: str) -> str:\n-    \"\"\"Return a prettier version of `filename` for display.\"\"\"\n-    return re.sub(r\"[/\\\\]\", \"\\N{THIN SPACE}\\\\g<0>\\N{THIN SPACE}\", filename)\n+    \"\"\"Return a prettier version of `filename` for display.\n+\n+    This is a filter for the template engine, so HTML output is literal.\n+    \"\"\"\n+    return re.sub(r\"[/\\\\]\", '<span class=\"sep\">\\\\g<0></span>', filename)\ndiff --git a/coverage/htmlfiles/style.css b/coverage/htmlfiles/style.css\nindex 5e304ce5..f82a185d 100644\n--- a/coverage/htmlfiles/style.css\n+++ b/coverage/htmlfiles/style.css\n@@ -164,6 +164,8 @@ header button.par.show_par { background: #ffa; border: 2px solid #bbbb00; margin\n \n kbd { border: 1px solid black; border-color: #888 #333 #333 #888; padding: .1em .35em; font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: bold; background: #eee; border-radius: 3px; }\n \n+.sep { padding: 0 .1em; }\n+\n #source { padding: 1em 0 1em 3.5rem; font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace; }\n \n #source p { position: relative; white-space: pre; }\ndiff --git a/coverage/htmlfiles/style.scss b/coverage/htmlfiles/style.scss\nindex 5e33c21e..b41df2eb 100644\n--- a/coverage/htmlfiles/style.scss\n+++ b/coverage/htmlfiles/style.scss\n@@ -425,6 +425,10 @@ kbd {\n     border-radius: 3px;\n }\n \n+.sep {\n+    padding: 0 .1em;\n+}\n+\n // Source file styles\n \n // The slim bar at the left edge of the source lines, colored by coverage.\n"
+    },
+    {
+      "commit": "8cd392e3b5c4bc15d534aaec0c21714f9f518469",
+      "commit_short": "8cd392e",
+      "message": "fix: snapshot data in Collector.flush_data to avoid threading race (#2165)",
+      "date": "2026-05-09T20:54:15-04:00",
+      "author": "Alex Vandiver",
+      "files": [
+        "coverage/collector.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "flush_data",
+          "file": "coverage/collector.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/collector.py b/coverage/collector.py\nindex 289995e5..e1263798 100644\n--- a/coverage/collector.py\n+++ b/coverage/collector.py\n@@ -9,7 +9,7 @@ import contextlib\n import functools\n import os\n import sys\n-from collections.abc import Callable, Mapping\n+from collections.abc import Callable, Collection, Mapping\n from types import FrameType\n from typing import Any, TypeVar, cast\n \n@@ -450,19 +450,25 @@ class Collector:\n         if not self._activity():\n             return False\n \n+        # dict.copy() and set.copy() are atomic in CPython (the GIL is\n+        # held for the duration of the C-level copy), so we get clean\n+        # snapshots of the dict and each per-file set even while tracers\n+        # in other threads continue to add data. Without these copies,\n+        # add_arcs() and add_lines() iterate the live sets and can fail\n+        # with \"RuntimeError: Set changed size during iteration\" when a\n+        # tracer thread mutates them mid-iteration.\n         if self.branch:\n+            arc_data: dict[str, Collection[TArc]]\n             if self.core.packed_arcs:\n                 # Unpack the line number pairs packed into integers.  See\n                 # tracer.c:CTracer_record_pair for the C code that creates\n                 # these packed ints.\n-                arc_data: dict[str, list[TArc]] = {}\n+                arc_data = {}\n                 packed_data = cast(dict[str, set[int]], self.data)\n \n-                # The list() here and in the inner loop are to get a clean copy\n-                # even as tracers are continuing to add data.\n-                for fname, packeds in list(packed_data.items()):\n+                for fname, packeds in packed_data.copy().items():\n                     tuples = []\n-                    for packed in list(packeds):\n+                    for packed in packeds.copy():\n                         l1 = packed & 0xFFFFFFF\n                         l2 = (packed & (0xFFFFFFF << 28)) >> 28\n                         if packed & (1 << 56):\n@@ -472,10 +478,16 @@ class Collector:\n                         tuples.append((l1, l2))\n                     arc_data[fname] = tuples\n             else:\n-                arc_data = cast(dict[str, list[TArc]], self.data)\n+                arc_data = {\n+                    fname: arcs.copy()\n+                    for fname, arcs in cast(dict[str, set[TArc]], self.data).copy().items()\n+                }\n             self.covdata.add_arcs(self.mapped_file_dict(arc_data))\n         else:\n-            line_data = cast(dict[str, set[int]], self.data)\n+            line_data = {\n+                fname: linenos.copy()\n+                for fname, linenos in cast(dict[str, set[int]], self.data).copy().items()\n+            }\n             self.covdata.add_lines(self.mapped_file_dict(line_data))\n \n         file_tracers = {\n"
+    },
+    {
+      "commit": "c48e0edc2ebe44621b0053176e90f77b0c79bec1",
+      "commit_short": "c48e0ed",
+      "message": "fix: less output for combining",
+      "date": "2026-05-09T13:35:56-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/data.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "combine_parallel_data",
+          "file": "coverage/data.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/data.py b/coverage/data.py\nindex 209722b2..d382df2c 100644\n--- a/coverage/data.py\n+++ b/coverage/data.py\n@@ -177,6 +177,7 @@ def combine_parallel_data(\n     classifier = DataFileClassifier()\n     combined_any = False\n \n+    combined = skipped = errored = 0\n     for f in files_to_combine:\n         if f == data.data_filename():\n             # Sometimes we are combining into a file which is one of the\n@@ -203,21 +204,24 @@ def combine_parallel_data(\n                 new_data = CoverageData(f, debug=data._debug)\n                 new_data.read()\n             except CoverageException as exc:\n+                errored += 1\n                 if data._warn:\n                     # The CoverageException has the file name in it, so just\n                     # use the message as the warning.\n                     data._warn(str(exc))\n-                if message:\n-                    message(f\"Couldn't combine data file {rel_file_name}: {exc}\")\n+                if data._debug.should(\"combine\"):\n+                    data._debug.write(f\"Couldn't combine data file {rel_file_name}: {exc}\")\n                 delete_this_one = False\n             else:\n                 data.update(new_data, map_path=map_path)\n+                combined += 1\n                 combined_any = True\n-                if message:\n-                    message(f\"Combined data file {rel_file_name}\")\n+                if data._debug.should(\"combine\"):\n+                    data._debug.write(f\"Combined data file {rel_file_name}\")\n         else:\n-            if message:\n-                message(f\"Skipping duplicate data {rel_file_name}\")\n+            skipped += 1\n+            if data._debug.should(\"combine\"):\n+                data._debug.write(f\"Skipping duplicate data {rel_file_name}\")\n \n         if delete_this_one:\n             if data._debug.should(\"dataio\"):\n@@ -227,6 +231,14 @@ def combine_parallel_data(\n     if strict and not combined_any:\n         raise NoDataError(\"No usable data files\")\n \n+    if message and (combined + skipped + errored > 0):\n+        msg = f\"Combined {plural(combined, 'file')}\"\n+        if skipped:\n+            msg += f\", skipped {skipped}\"\n+        if errored:\n+            msg += f\", {plural(errored, 'file')} errored\"\n+        message(msg)\n+\n \n def debug_data_file(filename: str) -> None:\n     \"\"\"Implementation of 'coverage debug data'.\"\"\"\n"
+    },
+    {
+      "commit": "1cd47aa6ac1da4e150da44055295d4e4f3a014e8",
+      "commit_short": "1cd47aa",
+      "message": "fix: implicit combine-during-report now removes the combined data files",
+      "date": "2026-05-07T07:18:23-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/cmdline.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "command_line",
+          "file": "coverage/cmdline.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/cmdline.py b/coverage/cmdline.py\nindex f5a202c1..a5375c94 100644\n--- a/coverage/cmdline.py\n+++ b/coverage/cmdline.py\n@@ -874,7 +874,7 @@ class CoverageScript:\n         sys.path.insert(0, \"\")\n \n         self.coverage.load()\n-        self.coverage.combine(strict=False, keep=True)\n+        self.coverage.combine(strict=False, keep=False)\n \n         total = None\n         if options.action == \"report\":\n"
+    },
+    {
+      "commit": "9fbdcdfee1c122fac43f1bf9a5e2d1f4d835f21c",
+      "commit_short": "9fbdcdf",
+      "message": "fix: lazy soft keywords are bolded",
+      "date": "2026-05-03T11:29:36-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/phystokens.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "find_soft_key_lines",
+          "file": "coverage/phystokens.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/phystokens.py b/coverage/phystokens.py\nindex bac06c0b..48b0d47c 100644\n--- a/coverage/phystokens.py\n+++ b/coverage/phystokens.py\n@@ -95,12 +95,17 @@ def find_soft_key_lines(source: str) -> set[TLineNo]:\n     soft_key_lines: set[TLineNo] = set()\n \n     for node in ast.walk(ast.parse(source)):\n+        # PYVERSION: we use sys.version_info here so that mypy will be ok with\n+        # us accessing attributes that appeared in those versions.\n         if isinstance(node, ast.Match):\n             soft_key_lines.add(node.lineno)\n             for case in node.cases:\n                 soft_key_lines.add(case.pattern.lineno)\n         elif sys.version_info >= (3, 12) and isinstance(node, ast.TypeAlias):\n             soft_key_lines.add(node.lineno)\n+        elif sys.version_info >= (3, 15) and isinstance(node, (ast.Import, ast.ImportFrom)):\n+            if node.is_lazy:\n+                soft_key_lines.add(node.lineno)\n \n     return soft_key_lines\n \n"
+    }
+  ],
+  "recent_features": [
+    {
+      "commit": "5c32db47b34b05200f6eb4ab1294953576587fac",
+      "commit_short": "5c32db4",
+      "message": "perf: enable only sys.monitoring events that have registered callbacks (#2218)",
+      "date": "2026-07-06T19:11:15-04:00",
+      "author": "Paul Kehrer",
+      "files": [
+        "coverage/sysmon.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "sysmon_py_start",
+          "file": "coverage/sysmon.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/sysmon.py b/coverage/sysmon.py\nindex dbd2dd12..c5e2cfbf 100644\n--- a/coverage/sysmon.py\n+++ b/coverage/sysmon.py\n@@ -359,7 +359,8 @@ class SysMonitor(Tracer):\n                 finally:\n                     self.unlock_data()\n                 file_data = self.data[tracename]\n-                b2l = bytes_to_lines(code)\n+                # byte_to_line is only read by the arc callbacks\n+                b2l = bytes_to_lines(code) if self.trace_arcs else None\n             else:\n                 file_data = None\n                 b2l = None\n@@ -381,10 +382,12 @@ class SysMonitor(Tracer):\n                 with self.lock:\n                     if self.sysmon_on:\n                         assert sys_monitoring is not None\n-                        local_events = events.PY_RETURN | events.PY_RESUME | events.LINE\n+                        local_events = events.LINE\n                         if self.trace_arcs:\n                             assert env.PYBEHAVIOR.branch_right_left\n-                            local_events |= events.BRANCH_RIGHT | events.BRANCH_LEFT\n+                            local_events |= (\n+                                events.PY_RETURN | events.BRANCH_RIGHT | events.BRANCH_LEFT\n+                            )\n                         sys_monitoring.set_local_events(self.myid, code, local_events)\n \n                         if LOG:  # pragma: debugging\n"
+    }
+  ],
+  "recent_refactors": [
+    {
+      "commit": "887b366ee7d126d1ed1f794d0c4b3dbb5acf8429",
+      "commit_short": "887b366",
+      "message": "refactor: now self._ast_root is never None",
+      "date": "2026-07-15T20:05:33-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/parser.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_analyze_ast",
+          "file": "coverage/parser.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/parser.py b/coverage/parser.py\nindex 6ee5bc01..38eda019 100644\n--- a/coverage/parser.py\n+++ b/coverage/parser.py\n@@ -336,10 +336,8 @@ class PythonParser:\n         `_all_arcs` is the set of arcs in the code.\n \n         \"\"\"\n-        ast_root = self._ast_root\n-        if ast_root is None:\n-            ast_root = ast.parse(self.text)\n-        aaa = AstArcAnalyzer(self.filename, ast_root, self.raw_statements, self.multiline_map)\n+        assert self._ast_root is not None\n+        aaa = AstArcAnalyzer(self.filename, self._ast_root, self.raw_statements, self.multiline_map)\n         aaa.analyze()\n         arcs = aaa.arcs\n         self._with_jump_fixers = aaa.with_jump_fixers()\n"
+    },
+    {
+      "commit": "fc76909288f6f73cb65fe8eb7e8b0ee35225e22e",
+      "commit_short": "fc76909",
+      "message": "perf: remove a cast that occurs in the hot path in AstArcAnalyzer (#2213)",
+      "date": "2026-07-06T19:07:27-04:00",
+      "author": "Paul Kehrer",
+      "files": [
+        "coverage/parser.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "with_jump_fixers",
+          "file": "coverage/parser.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/parser.py b/coverage/parser.py\nindex fa814748..f96a663e 100644\n--- a/coverage/parser.py\n+++ b/coverage/parser.py\n@@ -752,9 +752,10 @@ class AstArcAnalyzer:\n \n         \"\"\"\n         node_name = node.__class__.__name__\n-        handler = cast(\n-            Optional[Callable[[ast.AST], TLineNo]],\n-            getattr(self, f\"_line__{node_name}\", None),\n+        handler: Callable[[ast.AST], TLineNo] | None = getattr(\n+            self,\n+            f\"_line__{node_name}\",\n+            None,\n         )\n         if handler is not None:\n             line = handler(node)\n@@ -836,9 +837,10 @@ class AstArcAnalyzer:\n \n         \"\"\"\n         node_name = node.__class__.__name__\n-        handler = cast(\n-            Optional[Callable[[ast.AST], set[ArcStart]]],\n-            getattr(self, f\"_handle__{node_name}\", None),\n+        handler: Callable[[ast.AST], set[ArcStart]] | None = getattr(\n+            self,\n+            f\"_handle__{node_name}\",\n+            None,\n         )\n         if handler is not None:\n             arc_starts = handler(node)\n"
+    }
+  ],
+  "co_change_clusters": [],
+  "notes": []
+}

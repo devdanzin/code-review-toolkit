@@ -1,0 +1,1051 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/tests",
+  "summary": {
+    "source_files": 0,
+    "test_files": 101,
+    "source_functions": 0,
+    "total_test_functions": 743,
+    "selected_test_functions": 30,
+    "invariants_extracted": 82,
+    "similar_functions_found": 0,
+    "untested_similar_functions": 0,
+    "bug_fix_tests_found": 0
+  },
+  "invariants": [
+    {
+      "file": "tests/test_api.py",
+      "function": "test_datafile_none",
+      "line": 346,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 366,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 368,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_empty_reporting",
+      "line": 370,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 374,
+          "detail": "NoDataError",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_combining_twice",
+      "line": 510,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 521,
+          "detail": "NoDataError",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 514,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 526,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 529,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 530,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 532,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 533,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 7,
+      "behavioral_assertion_count": 7,
+      "invariant_types": [
+        "error_condition",
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_config_crash",
+      "line": 716,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 721,
+          "detail": "Exception",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_unknown_dynamic_context",
+      "line": 839,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 842,
+          "detail": "Exception",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_switch_context_unstarted",
+      "line": 845,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 849,
+          "detail": "CoverageException",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 855,
+          "detail": "CoverageException",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_explicit_namespace_module",
+      "line": 895,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 901,
+          "detail": "CoverageException",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_non_existent_source_dir",
+      "line": 1095,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 1096,
+          "detail": "ConfigError",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_moving_stuff",
+      "line": 1284,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 1300,
+          "detail": "NoSource",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 1291,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "error_condition",
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_combine_parallel_data",
+      "line": 1480,
+      "assertions": [
+        {
+          "method": "pytest.raises",
+          "invariant_type": "error_condition",
+          "line": 1503,
+          "detail": "NoDataError",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 1488,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 1498,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 1509,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 4,
+      "behavioral_assertion_count": 4,
+      "invariant_types": [
+        "error_condition",
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_annotate.py",
+      "function": "test_missing_after_else",
+      "line": 124,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 144,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_unexecuted_file",
+      "line": 68,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 93,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 94,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_filenames",
+      "line": 96,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 117,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 119,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 122,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 124,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 132,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 134,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 137,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 139,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 8,
+      "behavioral_assertion_count": 8,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_stdlib",
+      "line": 142,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 157,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 158,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 162,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 164,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 4,
+      "behavioral_assertion_count": 4,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_include_can_measure_stdlib",
+      "line": 166,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 183,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 186,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_stdlib_symlink",
+      "line": 188,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 221,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_exclude_list",
+      "line": 223,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 226,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 228,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 230,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 231,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 233,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 5,
+      "behavioral_assertion_count": 5,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_exclude_partial_list",
+      "line": 235,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 238,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 240,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 242,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 243,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 245,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 5,
+      "behavioral_assertion_count": 5,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_exclude_and_partial_are_separate_lists",
+      "line": 247,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 252,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 253,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 255,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 256,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 259,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 260,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 262,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 263,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 265,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 266,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 10,
+      "behavioral_assertion_count": 10,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_completely_zero_reporting",
+      "line": 377,
+      "assertions": [
+        {
+          "method": "pytest.warns",
+          "invariant_type": "warning_condition",
+          "line": 382,
+          "detail": "Warning",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 394,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general",
+        "warning_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_combining_with_a_used_coverage",
+      "line": 535,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 548,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_ordered_combine",
+      "line": 551,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 589,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 605,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 569,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 3,
+      "behavioral_assertion_count": 3,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_warnings",
+      "line": 607,
+      "assertions": [
+        {
+          "method": "pytest.warns",
+          "invariant_type": "warning_condition",
+          "line": 615,
+          "detail": "Warning",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 620,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general",
+        "warning_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_warnings_suppressed",
+      "line": 629,
+      "assertions": [
+        {
+          "method": "pytest.warns",
+          "invariant_type": "warning_condition",
+          "line": 644,
+          "detail": "Warning",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 649,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general",
+        "warning_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_warn_once",
+      "line": 654,
+      "assertions": [
+        {
+          "method": "pytest.warns",
+          "invariant_type": "warning_condition",
+          "line": 655,
+          "detail": "Warning",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 663,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general",
+        "warning_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_warnings_with_urls",
+      "line": 665,
+      "assertions": [
+        {
+          "method": "pytest.warns",
+          "invariant_type": "warning_condition",
+          "line": 666,
+          "detail": "Warning",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 679,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "general",
+        "warning_condition"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_source_and_include_dont_conflict",
+      "line": 684,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 714,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_run_debug_sys",
+      "line": 731,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 736,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_switch_context_testrunner",
+      "line": 759,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 783,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 789,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 791,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 3,
+      "behavioral_assertion_count": 3,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "tests/test_api.py",
+      "function": "test_switch_context_with_static",
+      "line": 793,
+      "assertions": [
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 819,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 825,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert",
+          "invariant_type": "general",
+          "line": 827,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 3,
+      "behavioral_assertion_count": 3,
+      "invariant_types": [
+        "general"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    }
+  ],
+  "bug_fix_tests": [],
+  "untested_similar_functions": []
+}
