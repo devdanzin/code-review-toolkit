@@ -929,5 +929,213 @@ class TestDuplicatedGuard(unittest.TestCase):
         self.assertNotIn("duplicated-guard-wrong-operand", shapes(src))
 
 
+class TestSignedLengthFromHeader(unittest.TestCase):
+    """_pyrepl terminfo.py:373 -- five header counts unpacked signed."""
+
+    HEADER = (
+        "import struct\n"
+        "def parse(data):\n"
+        "    name_size, str_count = struct.unpack('<hh', data[:4])\n"
+        "    offset = 12 + name_size\n"
+        "    return data[offset:offset + str_count]\n"
+    )
+
+    def test_signed_extent_reaching_a_slice(self):
+        f = [
+            x
+            for x in scan(self.HEADER)
+            if x["shape"] == "signed-length-from-untrusted-header"
+        ]
+        self.assertEqual({x["confidence"] for x in f}, {"high"})
+        self.assertEqual(
+            {"name_size", "str_count"}, {x["message"].split("'")[1] for x in f}
+        )
+
+    def test_unsigned_format_is_silent(self):
+        src = self.HEADER.replace("'<hh'", "'<HH'")
+        self.assertNotIn("signed-length-from-untrusted-header", shapes(src))
+
+    def test_negative_check_is_silent(self):
+        # The guarded twin: ncurses range-checks every header field.
+        src = self.HEADER.replace(
+            "    offset = 12",
+            "    if name_size < 0 or str_count < 0:\n"
+            "        raise ValueError\n    offset = 12",
+        )
+        self.assertNotIn("signed-length-from-untrusted-header", shapes(src))
+
+    def test_clamping_is_silent(self):
+        src = self.HEADER.replace("12 + name_size", "12 + max(0, name_size)")
+        f = [
+            x for x in scan(src) if x["shape"] == "signed-length-from-untrusted-header"
+        ]
+        self.assertNotIn("name_size", {x["message"].split("'")[1] for x in f})
+
+    def test_only_the_signed_field_of_a_mixed_format_is_flagged(self):
+        # '<Hh' -- count is unsigned, size is signed. Flagging both by
+        # association is what made test_zipfile emit eight findings.
+        src = (
+            "import struct\n"
+            "def parse(data):\n"
+            "    count, size = struct.unpack('<Hh', data[:4])\n"
+            "    return data[:size], data[:count]\n"
+        )
+        f = [
+            x for x in scan(src) if x["shape"] == "signed-length-from-untrusted-header"
+        ]
+        self.assertEqual([x["message"].split("'")[1] for x in f], ["size"])
+
+    def test_padding_and_string_fields_do_not_shift_alignment(self):
+        # '4s' consumes four bytes for ONE value and '2x' produces none.
+        src = (
+            "import struct\n"
+            "def parse(data):\n"
+            "    magic, flags, size = struct.unpack('<4s2xHh', data[:10])\n"
+            "    return data[:size]\n"
+        )
+        f = [
+            x for x in scan(src) if x["shape"] == "signed-length-from-untrusted-header"
+        ]
+        self.assertEqual([x["message"].split("'")[1] for x in f], ["size"])
+
+    def test_non_extent_name_is_silent(self):
+        src = (
+            "import struct\n"
+            "def parse(data):\n"
+            "    version, = struct.unpack('<h', data[:2])\n    return version\n"
+        )
+        self.assertNotIn("signed-length-from-untrusted-header", shapes(src))
+
+
+class TestAsymmetricEncodeDecode(unittest.TestCase):
+    """_pyrepl readline.py:443 vs :460 -- lenient read, strict write-back."""
+
+    def test_lenient_read_strict_write(self):
+        src = (
+            "def read(p):\n    with open(p, encoding='utf-8', errors='replace') as f:\n"
+            "        return f.read()\n"
+            "def write(p, s):\n    with open(p, 'w', encoding='utf-8') as f:\n"
+            "        f.write(s)\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "asymmetric-encode-decode-pair"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_binary_read_with_manual_decode(self):
+        # The real _pyrepl form: `open(p, 'rb')` plus `.decode(enc, errors=...)`.
+        src = (
+            "def read(p):\n    with open(p, 'rb') as f:\n"
+            "        return f.read().decode('utf-8', errors='replace')\n"
+            "def write(p, s):\n    with open(p, 'w', encoding='utf-8') as f:\n"
+            "        f.write(s)\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "asymmetric-encode-decode-pair"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_symmetric_codec_is_silent(self):
+        # The guarded twin: Modules/readline.c uses surrogateescape on both sides.
+        src = (
+            "def read(p):\n"
+            "    with open(p, encoding='utf-8', errors='surrogateescape') as f:\n"
+            "        return f.read()\n"
+            "def write(p, s):\n"
+            "    with open(p, 'w', encoding='utf-8', errors='surrogateescape') as f:\n"
+            "        f.write(s)\n"
+        )
+        self.assertNotIn("asymmetric-encode-decode-pair", shapes(src))
+
+    def test_codec_varying_suite_is_silent(self):
+        # A module that opens one path under many codecs is VARYING them on
+        # purpose. This class was 876 of 904 findings in the raw stdlib pass.
+        src = (
+            "def t(p):\n"
+            "    open(p, 'w', encoding='utf-8').write('x')\n"
+            "    open(p, 'w', encoding='latin-1').write('x')\n"
+            "    open(p, encoding='utf-8').read()\n"
+            "    open(p, encoding='ascii').read()\n"
+        )
+        self.assertNotIn("asymmetric-encode-decode-pair", shapes(src))
+
+    def test_binary_on_both_sides_is_silent(self):
+        src = (
+            "def read(p):\n    return open(p, 'rb').read()\n"
+            "def write(p, b):\n    open(p, 'wb').write(b)\n"
+        )
+        self.assertNotIn("asymmetric-encode-decode-pair", shapes(src))
+
+    def test_self_encode_is_not_a_codec(self):
+        # `self.encode(text)` is a method taking DATA, not str.encode taking a
+        # codec name -- reading its argument as an encoding invented a mismatch
+        # in idlelib's iomenu.py.
+        src = (
+            "class M:\n"
+            "    def read(self, p):\n        return open(p, 'rb').read()\n"
+            "    def write(self, p, text):\n"
+            "        chars = self.encode(text)\n"
+            "        with open(p, 'wb') as f:\n            f.write(chars)\n"
+        )
+        self.assertNotIn("asymmetric-encode-decode-pair", shapes(src))
+
+
+class TestLifecycleHookTwoMeanings(unittest.TestCase):
+    """_pyrepl commands.py:225-229 -- Ctrl-C calls the line-accepted hook."""
+
+    def test_commit_hook_on_abort_path(self):
+        src = (
+            "class accept(Command):\n    def do(self):\n        self.reader.finish()\n"
+            "class ctrl_c(Command):\n    def do(self):\n        self.reader.finish()\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "one-lifecycle-hook-two-meanings"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+        self.assertIn("ctrl_c.do", f[0]["message"])
+
+    def test_hook_parameterized_by_outcome_is_silent(self):
+        # The guarded twin, from tkinter/dnd.py: `finish` takes a commit flag, so
+        # it implements BOTH meanings.
+        src = (
+            "class DndHandler:\n"
+            "    def on_release(self, event):\n        self.finish(event, 1)\n"
+            "    def cancel(self, event=None):\n        self.finish(event, 0)\n"
+            "    def finish(self, event, commit=0):\n        pass\n"
+        )
+        self.assertNotIn("one-lifecycle-hook-two-meanings", shapes(src))
+
+    def test_predicate_call_is_silent(self):
+        # asyncio's Future.done() is a QUERY. Read as a hook it was the largest
+        # false-positive class in the raw pass.
+        src = (
+            "class Task:\n    def cancel(self):\n        if self.done():\n"
+            "            return False\n        return True\n"
+        )
+        self.assertNotIn("one-lifecycle-hook-two-meanings", shapes(src))
+
+    def test_release_hook_is_not_checked(self):
+        # `close`/`cleanup`/`flush` mean "let go of the resource", correct on
+        # both paths -- including them buries the real signal.
+        src = (
+            "class R:\n    def accept(self):\n        self.f.close()\n"
+            "    def cancel(self):\n        self.f.close()\n"
+        )
+        self.assertNotIn("one-lifecycle-hook-two-meanings", shapes(src))
+
+    def test_resource_receiver_is_downgraded(self):
+        src = (
+            "class a(Command):\n    def do(self):\n        self.reader.console.finish()\n"
+            "class ctrl_c(Command):\n    def do(self):\n        self.reader.console.finish()\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "one-lifecycle-hook-two-meanings"]
+        self.assertEqual([x["confidence"] for x in f], ["medium"])
+
+    def test_test_scope_is_silent(self):
+        src = (
+            "class InterruptedSendTimeoutTest:\n"
+            "    def setUp(self):\n        self.serv.accept()\n"
+            "    def other(self):\n        self.serv.accept()\n"
+        )
+        self.assertNotIn("one-lifecycle-hook-two-meanings", shapes(src))
+
+
 if __name__ == "__main__":
     unittest.main()

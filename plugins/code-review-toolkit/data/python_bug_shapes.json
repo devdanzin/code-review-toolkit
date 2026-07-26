@@ -480,6 +480,69 @@
       ],
       "differential": "A repeated guard is CORRECT when its own operand was rebound in between -- the `path = ...; if path.is_file(): return ...` loop idiom, or `token, value = get_fws(value)` before re-checking `value`. The check must consider bindings at any nesting depth and via tuple targets; missing either produces false positives on very common code.",
       "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "signed-length-from-untrusted-header",
+      "title": "A length or offset unpacked SIGNED from an untrusted binary header",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "`struct.unpack` with a signed integer code (`b`/`h`/`i`/`l`/`q`/`n`, as opposed to their uppercase unsigned twins) binding a name that is then used as a length, offset, count, or index -- with only upper-bound validation (`if offset > len(data)`) and no check that the value is non-negative.",
+      "guarded_twin": "The uppercase format code (`<HHHHHH` instead of `<hhhhhh`), or an explicit `if size < 0: raise`, or a clamp (`max(0, size)`). For terminfo specifically the twin is ncurses itself, which range-checks all six header fields.",
+      "hunt": "Every other field unpacked from the same header, then every other header parser in the module: the signed format code is chosen once for a whole struct and copied to the next one. Also check whether the format was transcribed from a C header, where the fields were `short` and the C reader did its own range check.",
+      "expected": "a malformed or hostile file is rejected at the header check.",
+      "caught_as": "SILENT, and this is the whole point -- in C a negative length is an out-of-bounds read that usually crashes, but Python's negative slicing RE-ANCHORS from the end of the buffer. `data[-5:10]` is a legal, non-empty slice. So a crafted file parses with no error at all and yields attacker-chosen bytes, which the caller then trusts.",
+      "confirmed_examples": [
+        "CPython _pyrepl terminfo.py:373 (6080c86) -- five header counts unpacked `<hhhhhh` with only upper-bound checks. A negative `name_size` drives `offset` negative; a 100-byte crafted file parses without error and yields attacker-chosen `bel`/`clear` byte strings that `UnixConsole` writes straight to the terminal. ncurses range-checks all six fields and refuses `$TERMINFO` under setuid; this reimplementation does neither. Found by reports/pyrepl_v1.",
+        "CPython multiprocessing/connection.py:449 -- `size, = struct.unpack('!i', ...)` guarded only by `if size == -1` (a SENTINEL test, which does not exclude other negatives) before reaching `self._recv(size)`."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Across CPython's Lib/ (1847 files) this shape produces 10 findings, 6 of them high-confidence.",
+        "Python reference, 'Slicings' -- a negative index is normalized by adding the sequence length, rather than raising."
+      ],
+      "differential": "A header the program itself just WROTE is not untrusted -- test fixtures that round-trip their own structs are the main medium-confidence noise. A sentinel comparison (`if size == -1`) is not a bounds check: it excludes exactly one negative value. Conversely `if not size` is not one either, since it only tests zero. Only a comparison that actually excludes the negative range, or a clamp, discharges the obligation.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "asymmetric-encode-decode-pair",
+      "title": "The same file read and written with different text codecs, so a round-trip is lossy",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "One path opened for reading and for writing with different `encoding=`/`errors=`. The destructive form is a LENIENT read (`errors='replace'`/`'ignore'`) paired with a strict write: the read substitutes replacement characters for bytes it cannot decode, and the write persists those substitutions, so the original bytes are gone. The binary variant hides the codec in a hand-written `.decode(enc, errors='replace')` next to an `open(p, 'rb')`.",
+      "guarded_twin": "The same `errors=` on both sides -- `surrogateescape` is the round-trip-safe choice and is what `Modules/readline.c` uses for exactly this file. Any codec is acceptable as long as decode and encode agree.",
+      "hunt": "For every path the module opens for writing, find every read of the same path and diff `encoding=`/`errors=`. Then widen past `open`: the same asymmetry appears as escape-at-one-granularity/unescape-globally, and as a format marker the reader understands but the writer never emits. Property-test `unescape(escape(x)) == x` over a corpus containing the escape characters themselves.",
+      "expected": "reading a file and writing it back leaves it byte-identical.",
+      "caught_as": "SILENT and IRREVERSIBLE. Nothing raises -- that is what `errors='replace'` bought. The data is destroyed on the first write-back, so by the time anyone notices, the original is gone.",
+      "confirmed_examples": [
+        "CPython _pyrepl readline.py:443 vs :460 (6080c86) -- history read decodes with `errors='replace'`, write is strict UTF-8. A latin-1 `~/.python_history` is destroyed unrecoverably on first exit: `b'caf\\xe9'` becomes `b'caf\\xef\\xbf\\xbd'`. `Modules/readline.c` uses `surrogateescape` on BOTH sides and round-trips correctly. `site.register_readline` writes at exit, so one launch suffices. Found by reports/pyrepl_v1."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Across CPython's Lib/ (1847 files) this shape produces 3 findings, the one high-confidence hit being the real bug.",
+        "PEP 383 -- surrogateescape, the lossless error handler for round-tripping undecodable bytes."
+      ],
+      "differential": "A deliberate TRANSCODER reads in one codec and writes another BY DESIGN -- read the write to see whether it is a write-back of what was read or a conversion. A path opened under three or more distinct codecs is a module varying the codec on purpose (codec test suites do this, and they dominated the raw output by two orders of magnitude), so it is not evidence of asymmetry. Two different variable names are not evidence either -- they may hold the same value.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "one-lifecycle-hook-two-meanings",
+      "title": "A commit-semantic lifecycle hook invoked on the abort path",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A hook whose NAME means 'the operation completed' (`finish`, `commit`, `save`, `accept`, `submit`, `done`, `complete`, `finalize`) called from a scope whose name means the operation was ABANDONED (`cancel`, `abort`, `interrupt`, `ctrl_c`, `rollback`, `discard`, `reject`, `escape`). The override implements only the success meaning -- it persists something -- so tearing down through it records work the user cancelled.",
+      "guarded_twin": "Parameterize the hook by outcome so it implements both meanings. `tkinter/dnd.py` is the stdlib's model: `finish(self, event, commit=0)`, where `on_release` calls `self.finish(event, 1)` and `cancel` calls `self.finish(event, 0)`. The alternative twin is a separate `abort()`/`discard()` entry point.",
+      "hunt": "Enumerate every call site of each overridden `finish`/`close`/`commit`/`cleanup` and flag any on an error or cancel path. Then read the OVERRIDE, not the base: the base class hook is usually a harmless no-op and the subclass is where the success semantics were added, which is why this survives review.",
+      "expected": "abandoning an operation leaves no trace of it.",
+      "caught_as": "SILENT, and privacy-relevant when the persisted thing is user input. Nothing raises; the abandoned work simply shows up later as though it had completed.",
+      "confirmed_examples": [
+        "CPython _pyrepl commands.py:225-229 (6080c86) -- `ctrl_c`/`interrupt` call `reader.finish()` on the ABORT path, but `HistoricalReader.finish()` implements 'line accepted' and appends to history. So Ctrl-C persists the abandoned line to `~/.python_history`; verified that an abandoned `print(SECRET_TOKEN)` reaches disk. GNU readline discards on SIGINT. Found by reports/pyrepl_v1."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Across CPython's Lib/ (1847 files) this shape produces 4 findings, all in the module that motivated it."
+      ],
+      "differential": "RELEASE-semantic hooks (`close`, `cleanup`, `flush`) mean 'let go of the resource', which is correct on both paths -- checking them buries the signal, so they are excluded by construction. A call in EXPRESSION position is a predicate being read, not a hook being invoked: `if self.done():` is asyncio's `Future.done()` query and was the largest false-positive class in the raw pass. If the abort path passes different arguments than the success path, the hook is being TOLD which outcome it is handling -- that is the guarded twin, not the bug. On a resource-like receiver (`console`, `socket`, `stream`) a commit-named hook may still just mean tear-down; report it lower rather than suppressing it.",
+      "detected_by": "scan_python_pitfalls.py"
     }
   ]
 }

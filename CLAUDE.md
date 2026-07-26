@@ -82,7 +82,7 @@ candidates, and prints JSON to stdout.
 | Script | Purpose |
 |---|---|
 | `scan_common.py` | **Shared utilities — every other script imports from here** |
-| `scan_python_pitfalls.py` | Correctness defects; 23 checks mapping 1:1 to `data/python_bug_shapes.json` |
+| `scan_python_pitfalls.py` | Correctness defects; 28 checks mapping 1:1 to `data/python_bug_shapes.json` |
 | `analyze_imports.py` | Import graph, module boundaries, circular dependencies |
 | `analyze_history.py` | Git history: churn, co-change, fix density |
 | `measure_complexity.py` | Per-function complexity metrics |
@@ -194,17 +194,19 @@ Every finding is tagged:
 
 Tracked honestly so the next session does not have to re-derive them:
 
-1. **One validation run** (`reports/idlelib_v1/`), against sibling toolkits' 1–67. It produced five
-   false-positive classes and three scanner fixes, which is the loop working — but a single run on
-   an old, careful codebase is thin evidence. An async-heavy target is the right next one.
-2. **4 of 22 shapes are `confirmed`; 18 remain `documented`.** Improving, but most of the catalog is
-   still grounded in documented semantics rather than in this toolkit's own findings.
+1. **Two validation runs** (`reports/idlelib_v1/`, `reports/pyrepl_v1/`), against sibling toolkits'
+   1–67. They are deliberately complementary — idlelib is mature and careful, `_pyrepl` is young and
+   takes chances — and `_pyrepl` exercised parts of the catalog idlelib never touched, including two
+   real scanner bugs idlelib could not surface. An async-heavy target is the right next one.
+2. **10 of 28 shapes are `confirmed`; 18 remain `documented`.** Improving, but a third of the catalog
+   is still grounded in documented semantics rather than in this toolkit's own findings.
 3. ~~All 14 bug shapes owned by one agent~~ **Done** — `python-pitfall-scanner` now owns them, backed
    by `scan_python_pitfalls.py`, so every shape is executable rather than prompt-only.
-4. **No companion findings repository.** Every mature sibling has a `*-review-findings` repo. The
-   `.code-review/findings.json` schema written by `informed-explore` is deliberately
-   wire-compatible with those repos' `crate-local/findings.json`, so the memory can be lifted over
-   when the repo is created. Create it once there are real findings to put in it.
+4. **Companion findings repository exists but holds only idlelib.** `~/projects/code-review-findings`
+   was created with the 26 idlelib findings; the `_pyrepl` findings still live only in
+   `reports/pyrepl_v1/` and need migrating into a `cpython-pyrepl/` subdirectory. The
+   `.code-review/findings.json` schema written by `informed-explore` is wire-compatible with that
+   repo's `project-local/findings.json`, so a project's accumulated memory lifts over unchanged.
 5. **`known-issues` command not implemented.** It needs a regression catalog, which needs gap 1.
 
 ## Workflow

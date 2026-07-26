@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.0]
+
+### Added
+
+- **The three highest-value shapes banked from the `_pyrepl` benchmark**, taking the catalog to 28
+  shapes with 10 `confirmed`:
+  - `signed-length-from-untrusted-header` — a length/offset unpacked with a *signed* `struct` code
+    and never checked for negativity. In C this is the classic signed-overflow read; in Python it is
+    harder to spot and worse in one respect, because a negative bound does not raise — negative
+    slicing re-anchors, so a crafted file parses cleanly and yields attacker-chosen bytes.
+    Exemplar: `_pyrepl/terminfo.py:373`, five header counts unpacked `<hhhhhh` with only
+    upper-bound checks, where ncurses range-checks all six.
+  - `asymmetric-encode-decode-pair` — the same path read and written with different
+    `encoding=`/`errors=`, so the program's own round-trip destroys data. Exemplar:
+    `_pyrepl/readline.py:443` vs `:460`, where a latin-1 `~/.python_history` is destroyed
+    unrecoverably on first exit; `Modules/readline.c` uses `surrogateescape` on both sides.
+  - `one-lifecycle-hook-two-meanings` — a commit-semantic hook (`finish`/`commit`/`save`) invoked
+    on an abort path, where the override implements only the success meaning. Exemplar:
+    `_pyrepl/commands.py:225-229`, where Ctrl-C persists the abandoned line to `~/.python_history`.
+- Four false-positive classes in `data/python_non_bugs.md` (now 25), all learned from the
+  stdlib-scale calibration: codec-varying test suites, predicates read as lifecycle hooks,
+  outcome-parameterized hooks, and self-written headers round-tripped by a test.
+
+### Fixed
+
+- `_manual_codec` read `self.encode(text)` — a method taking *data* — as `str.encode` taking a codec
+  name, inventing a mismatch in `idlelib/iomenu.py`.
+- The signed-header check tainted every name in a tuple unpack when any field was signed. Struct
+  formats are now expanded to one type code per produced value (handling repeat counts, `Ns`
+  consuming N bytes for one value, and `Nx` producing none) and aligned positionally with the
+  targets, so only names that actually received a signed field are flagged.
+
+### Calibration
+
+- All three shapes were calibrated over CPython's `Lib/` (1847 files) rather than on the target
+  package, per the established methodology. The raw pass produced **904 findings; the calibrated
+  pass produces 17**, of which all 9 high-confidence hits are real instances of their shape. The
+  reduction came almost entirely from `asymmetric-encode-decode-pair` (876 → 3): it paired every
+  reader against every writer of a path, and 543 findings came from `test_io.py` alone. Requiring
+  exactly one distinct codec per side — which is what "the two sides disagree" presupposes —
+  removed the class outright.
+
 ## [Unreleased]
 
 ### Added
