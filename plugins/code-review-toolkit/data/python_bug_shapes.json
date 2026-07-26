@@ -264,6 +264,101 @@
       ],
       "differential": "`is None` / `is True` / `is False` and sentinel-object comparisons are correct and must not be flagged.",
       "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "except-exception-too-broad",
+      "title": "`except Exception:` around a narrow operation swallows unrelated failures",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A `try` whose body is one or two narrow operations -- a single attribute access, one call, one parse -- wrapped in `except Exception:` (or `except BaseException:`) whose handler swallows: `pass`, or assigning a default/`None`, or `return`ing a fallback. The author meant one specific failure (`AttributeError`, `TypeError`, `ValueError`); everything else -- `RuntimeError`, `MemoryError`, a genuine bug in the callee -- is silently absorbed and reported as the expected condition.",
+      "guarded_twin": "The same operation elsewhere guarded by the SPECIFIC exception it can raise: `except AttributeError:` for an attribute chain, `except (TypeError, ValueError):` for a parse. Most codebases already contain the narrow form somewhere -- find it and match it.",
+      "hunt": "For each instance, grep every other site performing the same operation (same method, same parse, same attribute chain). Broad catches propagate by copy-paste, and the narrow twin is usually adjacent.",
+      "expected": "the anticipated failure is handled; anything else propagates so it can be seen and fixed.",
+      "caught_as": "SILENT -- a genuine bug in the guarded call is indistinguishable from the expected condition. Frequently surfaces much later as an empty result, a `None`, or a missing side effect.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Derived from a 40-bug audit of CPython's pure-Python stdlib (gist 3198710e3c0128fda5e0a7b4e0768e5f), where this family accounted for ~50% of all confirmed findings (20 of 40).",
+        "Instances there: typing.py x4, argparse.py, subprocess.py, http/cookiejar.py, xml.sax, xml.dom.domreg",
+        "ruff BLE001 blind-except"
+      ],
+      "differential": "A broad catch at a genuine trust boundary is legitimate: a plugin/entry-point loader, a top-level CLI handler, or a call into user-supplied code -- ESPECIALLY when it logs at warning+ or re-raises, or carries a comment explaining the containment. The discriminator is the size and nature of the try body: one narrow operation = too broad; a whole subsystem call at a boundary = fine.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "cleanup-only-on-success-path",
+      "title": "Resource released at the end of `try` instead of in `finally` -- leaked on the error path",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A resource is acquired, used, and released (`close()`, `quit()`, `shutdown()`, `release()`, `disconnect()`) as the LAST statement of a `try` body, with `except` clauses but no `finally`. Any exception raised mid-body skips the release, leaking a file descriptor, socket, or connection.",
+      "guarded_twin": "`finally: resource.close()`, or a `with` block. A sibling function in the same module usually already does it correctly.",
+      "hunt": "Audit every acquire/release pair in the module. Also check `__exit__`/`close()` methods that release several resources in sequence -- an exception on the first leaks the rest.",
+      "expected": "the resource is released on every path, success or failure.",
+      "caught_as": "SILENT under normal operation; surfaces only under load or after repeated failures as fd exhaustion, connection-pool starvation, or `ResourceWarning: unclosed ...` at GC time.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Derived from a 40-bug audit of CPython's pure-Python stdlib (gist 3198710e3c0128fda5e0a7b4e0768e5f), where this family accounted for ~20% of confirmed findings (8 of 40).",
+        "Instances there: logging.handlers SMTP `quit()` not in finally; shutil partial cleanup on cross-device move; xml.sax.saxutils and xml.dom.pulldom missing close"
+      ],
+      "differential": "Fine if the resource is returned to the caller (ownership transfers), if a `with` block already governs it, or if the except clause itself performs the release. Confirm no path skips it.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "error-reported-below-warning",
+      "title": "Failure reported only at debug/info level -- invisible under default logging",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "pattern": "An `except` handler whose ONLY reporting is `logger.debug(...)` / `logger.info(...)` / `util.debug(...)` / `print` to a non-default stream, with no re-raise and no state change signalling failure. Default logging configuration discards DEBUG and INFO, so the failure produces literally no output in production.",
+      "guarded_twin": "`logger.warning(...)`/`logger.exception(...)` for a genuine failure; debug level is for tracing, not for errors. The same module usually logs comparable failures at warning or above.",
+      "hunt": "Grep every `debug(`/`info(` call inside an except handler across the project; also check whether the module's logger is even configured by default.",
+      "expected": "an operator running with default configuration can tell the operation failed.",
+      "caught_as": "SILENT in production by construction -- the report exists in source, so a reader believes it is handled, but nothing reaches the logs.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Derived from a 40-bug audit of CPython's pure-Python stdlib (gist 3198710e3c0128fda5e0a7b4e0768e5f), where this family accounted for ~17% of confirmed findings (7 of 40).",
+        "Instances there: multiprocessing proxy-refcount failure at debug level; after-fork callback failures at info level; logging.handlers ignoring HTTP response status"
+      ],
+      "differential": "Debug level is correct for genuinely-expected, high-frequency, non-actionable conditions (a cache miss, an optional import). The discriminator: would an operator want to know? If the handler is recovering from something that should not normally happen, it belongs at warning+.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "except-in-loop-without-exit",
+      "title": "Swallowed exception inside an unbounded loop -- a persistent failure becomes a hang",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A `while True:` (or a retry loop) containing a `try`/`except` whose handler neither breaks, returns, raises, nor increments a bounded attempt counter -- typically `except OSError: pass` or `except Exception: continue`. If the failure is transient the loop recovers; if it is persistent the process spins forever with no diagnostic.",
+      "guarded_twin": "A bounded retry: `for attempt in range(N)` with a final re-raise, or a `break`/`raise` after a threshold. Backoff loops elsewhere in the same module usually show the correct shape.",
+      "hunt": "Every unbounded loop containing a try/except. Also check loops that poll a resource which can be permanently unavailable (a deleted directory, a closed socket, a dead peer).",
+      "expected": "a persistent failure terminates the loop with a diagnostic instead of spinning.",
+      "caught_as": "A HANG with no output -- the worst diagnostic profile of any shape here, because there is no exception, no log line, and no exit.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Derived from a 40-bug audit of CPython's pure-Python stdlib (gist 3198710e3c0128fda5e0a7b4e0768e5f), where this family accounted for an instance in importlib._bootstrap_external: `except OSError: pass` in a `while True:` directory scan, which hangs the process indefinitely."
+      ],
+      "differential": "Correct for an event loop or server accept-loop that MUST survive individual failures -- but even those should log. The discriminator: can the guarded operation fail permanently? If yes, the loop needs an exit.",
+      "detected_by": "scan_python_pitfalls.py"
+    },
+    {
+      "id": "raise-without-from-in-except",
+      "title": "Re-raising a new exception inside `except` without `from` loses the cause",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "pattern": "`raise NewError(...)` inside an `except` handler with no `from err` and no `from None`. Python still records the original as implicit context, but the explicit cause is lost and tooling/readers cannot distinguish 'this replaced that deliberately' from 'the author forgot'. The severe variant passes the wrong object entirely -- e.g. `raise TypeError(msg, err.__traceback__)`, which stuffs a traceback object into `args` instead of chaining.",
+      "guarded_twin": "`raise NewError(...) from err` to chain, or `from None` to deliberately suppress. Both are explicit and both read correctly.",
+      "hunt": "Every `raise` inside an `except` in the module; the convention is applied per-codebase, so a module that chains in one place and not another has a real inconsistency.",
+      "expected": "the traceback shows the original cause, explicitly marked as cause or deliberately suppressed.",
+      "caught_as": "Visible in the traceback as 'During handling of the above exception, another exception occurred' rather than 'The above exception was the direct cause' -- confusing rather than silent, but it degrades every downstream diagnosis.",
+      "confirmed_examples": [],
+      "validation": "documented",
+      "references": [
+        "Derived from a 40-bug audit of CPython's pure-Python stdlib (gist 3198710e3c0128fda5e0a7b4e0768e5f), where this family accounted for the pickle.py instance, where a traceback object is passed as a constructor argument instead of being chained.",
+        "ruff B904 raise-without-from-inside-except"
+      ],
+      "differential": "Not a defect when the new exception is genuinely unrelated to the caught one and `from None` would be noise, or in code targeting Python 2 compatibility. Judge by whether the original would help someone debugging.",
+      "detected_by": "scan_python_pitfalls.py"
     }
   ]
 }

@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Five new bug shapes derived from a 40-bug audit of CPython's pure-Python stdlib** — the catalog
+  previously covered *none* of that audit's pattern families. Added `except-exception-too-broad`
+  (~50% of the audit's confirmed findings: `except Exception:` around a narrow operation with a
+  swallowing handler), `cleanup-only-on-success-path` (~20%: `close()`/`quit()` at the end of a `try`
+  instead of in `finally`), `error-reported-below-warning` (~17%: failures logged only at
+  debug/info, invisible under default configuration), `except-in-loop-without-exit` (a persistent
+  failure inside `while True:` becomes a silent hang), and `raise-without-from-in-except`. Catalog is
+  now 19 shapes.
 - **New agent + script: `python-pitfall-scanner` / `scan_python_pitfalls.py`** — the toolkit's first
   dedicated bug-finding capability. Fourteen AST checks mapping 1:1 to the shapes in
   `python_bug_shapes.json`, each emitting a confidence level (`high`/`medium`/`low`) derived from that

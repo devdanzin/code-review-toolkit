@@ -195,3 +195,14 @@ run that produced it, so the evidence is traceable.
 - **Real bug:** the *remaining* control-flow exceptions. In the `rpc.py` shape `SystemExit` is
   re-raised but `KeyboardInterrupt` is still swallowed, so the finding is real but narrower than it
   first appears. Name precisely which exceptions remain swallowed.
+
+### 21. Poll loop draining a queue or socket *(idlelib `rpc.py:424`, `run.py:166`)*
+- **Symptom:** `while True: ... except queue.Empty: pass` flagged as a swallowed exception in an
+  unbounded loop (the "persistent failure hangs the process" shape).
+- **Why non-bug:** `queue.Empty`, `TimeoutError`, `socket.timeout`, `BlockingIOError` and
+  `InterruptedError` mean *"nothing ready right now"*, not *"this failed"*. Catching one and
+  continuing **is** the design of an event loop; the body goes on to do other work before retrying.
+- **Real bug:** the caught exception denotes an actual failure that can be permanent — the gist's
+  genuine instance was `except OSError: pass` around a directory scan in
+  `importlib._bootstrap_external`, which spins forever if the directory is gone. The discriminator is
+  the exception's *meaning*, not the loop shape.

@@ -83,8 +83,10 @@ class TestLateBindingClosure(unittest.TestCase):
 class TestExceptOrdering(unittest.TestCase):
     def test_broad_before_narrow(self):
         src = "def f():\n    try:\n        pass\n    except Exception:\n        pass\n    except ValueError:\n        pass\n"
-        f = scan(src)
-        self.assertEqual(f[0]["shape"], "except-clause-ordering-unreachable")
+        # The same fixture also legitimately triggers except-exception-too-broad,
+        # so select by shape rather than by position.
+        f = [x for x in scan(src) if x["shape"] == "except-clause-ordering-unreachable"]
+        self.assertEqual(len(f), 1)
         self.assertEqual(f[0]["confidence"], "high")
 
     def test_oserror_before_filenotfound(self):
@@ -470,6 +472,198 @@ class TestEnvelopeAndOptions(unittest.TestCase):
         findings = scan("def f(x=[]):\n    x.append(1)\n")
         for key in ("shape", "severity", "confidence", "file", "line", "message"):
             self.assertIn(key, findings[0])
+
+
+class TestExceptExceptionTooBroad(unittest.TestCase):
+    """The gist's #1 family: ~50% of 40 confirmed CPython stdlib findings."""
+
+    def test_narrow_body_swallowed_is_high(self):
+        src = (
+            "def f(o):\n    try:\n        x = o.a.b.c\n"
+            "    except Exception:\n        x = None\n    return x\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "except-exception-too-broad"]
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_narrow_body_with_pass_is_high(self):
+        src = "def f(o):\n    try:\n        o.flush()\n    except Exception:\n        pass\n"
+        f = [x for x in scan(src) if x["shape"] == "except-exception-too-broad"]
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_base_exception_also_flagged(self):
+        src = "def f(o):\n    try:\n        o.flush()\n    except BaseException:\n        pass\n"
+        self.assertIn("except-exception-too-broad", shapes(src))
+
+    def test_loud_logging_downgrades(self):
+        src = (
+            "import logging\nlog = logging.getLogger(__name__)\n"
+            "def f(o):\n    try:\n        o.flush()\n"
+            "    except Exception:\n        log.exception('failed')\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "except-exception-too-broad"]
+        self.assertEqual(f[0]["confidence"], "medium")
+
+    def test_large_body_boundary_is_low(self):
+        src = (
+            "def f(p):\n    try:\n        p.setup()\n        p.configure()\n"
+            "        p.start()\n        p.verify()\n    except Exception:\n        pass\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "except-exception-too-broad"]
+        self.assertEqual(f[0]["confidence"], "low")
+
+    def test_narrow_exception_type_is_silent(self):
+        src = (
+            "def f(o):\n    try:\n        return o.a.b\n"
+            "    except AttributeError:\n        return None\n"
+        )
+        self.assertNotIn("except-exception-too-broad", shapes(src))
+
+    def test_reraising_handler_is_silent(self):
+        src = "def f(o):\n    try:\n        o.flush()\n    except Exception:\n        raise\n"
+        self.assertNotIn("except-exception-too-broad", shapes(src))
+
+
+class TestCleanupOnlyOnSuccess(unittest.TestCase):
+    def test_close_last_in_try_is_flagged(self):
+        src = (
+            "def f(c):\n    try:\n        c.send(1)\n        c.check()\n"
+            "        c.close()\n    except OSError:\n        pass\n"
+        )
+        self.assertIn("cleanup-only-on-success-path", shapes(src))
+
+    def test_close_in_finally_is_silent(self):
+        src = (
+            "def f(c):\n    try:\n        c.send(1)\n    finally:\n        c.close()\n"
+        )
+        self.assertNotIn("cleanup-only-on-success-path", shapes(src))
+
+    def test_handler_also_closes_is_silent(self):
+        src = (
+            "def f(c):\n    try:\n        c.send(1)\n        c.close()\n"
+            "    except OSError:\n        c.close()\n"
+        )
+        self.assertNotIn("cleanup-only-on-success-path", shapes(src))
+
+    def test_non_release_call_is_silent(self):
+        src = (
+            "def f(c):\n    try:\n        c.send(1)\n        c.flush()\n"
+            "    except OSError:\n        pass\n"
+        )
+        self.assertNotIn("cleanup-only-on-success-path", shapes(src))
+
+
+class TestErrorReportedBelowWarning(unittest.TestCase):
+    def test_debug_only_is_flagged(self):
+        src = (
+            "import logging\nlog = logging.getLogger(__name__)\n"
+            "def f(o):\n    try:\n        o.decref()\n"
+            "    except Exception:\n        log.debug('failed')\n"
+        )
+        self.assertIn("error-reported-below-warning", shapes(src))
+
+    def test_warning_is_silent(self):
+        src = (
+            "import logging\nlog = logging.getLogger(__name__)\n"
+            "def f(o):\n    try:\n        o.decref()\n"
+            "    except Exception:\n        log.warning('failed')\n"
+        )
+        self.assertNotIn("error-reported-below-warning", shapes(src))
+
+    def test_reraise_is_silent(self):
+        src = (
+            "import logging\nlog = logging.getLogger(__name__)\n"
+            "def f(o):\n    try:\n        o.decref()\n"
+            "    except Exception:\n        log.debug('x')\n        raise\n"
+        )
+        self.assertNotIn("error-reported-below-warning", shapes(src))
+
+
+class TestExceptInLoopWithoutExit(unittest.TestCase):
+    def test_swallow_in_while_true_is_flagged(self):
+        src = (
+            "def f(p):\n    while True:\n        try:\n            return listdir(p)\n"
+            "        except OSError:\n            pass\n"
+        )
+        self.assertIn("except-in-loop-without-exit", shapes(src))
+
+    def test_break_in_handler_is_silent(self):
+        src = (
+            "def f(p):\n    while True:\n        try:\n            return listdir(p)\n"
+            "        except OSError:\n            break\n"
+        )
+        self.assertNotIn("except-in-loop-without-exit", shapes(src))
+
+    def test_raise_in_handler_is_silent(self):
+        src = (
+            "def f(p):\n    while True:\n        try:\n            return listdir(p)\n"
+            "        except OSError:\n            raise\n"
+        )
+        self.assertNotIn("except-in-loop-without-exit", shapes(src))
+
+    def test_queue_empty_poll_loop_is_silent(self):
+        # idlelib rpc.py/run.py: "nothing queued right now" is the design.
+        src = (
+            "import queue\ndef f(q):\n    while True:\n        try:\n"
+            "            msg = q.get(0)\n        except queue.Empty:\n            pass\n"
+            "        do_other_work()\n"
+        )
+        self.assertNotIn("except-in-loop-without-exit", shapes(src))
+
+    def test_timeout_poll_loop_is_silent(self):
+        src = (
+            "def f(s):\n    while True:\n        try:\n            return s.recv()\n"
+            "        except TimeoutError:\n            pass\n"
+        )
+        self.assertNotIn("except-in-loop-without-exit", shapes(src))
+
+    def test_oserror_scan_loop_still_flagged(self):
+        # The gist's genuine instance: a real failure, not a poll signal.
+        src = (
+            "def f(p):\n    while True:\n        try:\n            return listdir(p)\n"
+            "        except OSError:\n            pass\n"
+        )
+        self.assertIn("except-in-loop-without-exit", shapes(src))
+
+    def test_bounded_loop_is_silent(self):
+        src = (
+            "def f(p):\n    for _ in range(3):\n        try:\n            return listdir(p)\n"
+            "        except OSError:\n            pass\n"
+        )
+        self.assertNotIn("except-in-loop-without-exit", shapes(src))
+
+
+class TestRaiseWithoutFrom(unittest.TestCase):
+    def test_missing_from_is_flagged(self):
+        src = (
+            "def f(t):\n    try:\n        return int(t)\n"
+            "    except ValueError as err:\n        raise TypeError('bad')\n"
+        )
+        self.assertIn("raise-without-from-in-except", shapes(src))
+
+    def test_from_err_is_silent(self):
+        src = (
+            "def f(t):\n    try:\n        return int(t)\n"
+            "    except ValueError as err:\n        raise TypeError('bad') from err\n"
+        )
+        self.assertNotIn("raise-without-from-in-except", shapes(src))
+
+    def test_from_none_is_silent(self):
+        src = (
+            "def f(t):\n    try:\n        return int(t)\n"
+            "    except ValueError:\n        raise TypeError('bad') from None\n"
+        )
+        self.assertNotIn("raise-without-from-in-except", shapes(src))
+
+    def test_bare_reraise_is_silent(self):
+        src = "def f(t):\n    try:\n        return int(t)\n    except ValueError:\n        raise\n"
+        self.assertNotIn("raise-without-from-in-except", shapes(src))
+
+    def test_reraising_caught_name_is_silent(self):
+        src = (
+            "def f(t):\n    try:\n        return int(t)\n"
+            "    except ValueError as err:\n        raise err\n"
+        )
+        self.assertNotIn("raise-without-from-in-except", shapes(src))
 
 
 if __name__ == "__main__":
