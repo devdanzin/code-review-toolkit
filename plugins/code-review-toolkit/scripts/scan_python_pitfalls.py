@@ -1424,6 +1424,246 @@ def _check_falsy_check_for_none_default(tree: ast.AST) -> list[dict]:
     return out
 
 
+# unittest assertion methods whose arguments decide whether a test can fail.
+_ASSERT_PREFIXES = ("assert", "failUnless", "failIf")
+_FIXTURE_NAMES = frozenset(
+    {
+        "setUp",
+        "setUpClass",
+        "tearDown",
+        "tearDownClass",
+        "setUpModule",
+        "tearDownModule",
+    }
+)
+
+
+def _is_testcase_class(cls: ast.ClassDef) -> bool:
+    """True if the class looks like a unittest TestCase."""
+    for base in cls.bases:
+        name = _dotted_name(base)
+        if name and ("TestCase" in name or name.endswith("TestCase")):
+            return True
+    return False
+
+
+def _assertion_aliases(fn: ast.AST) -> set[str]:
+    """Local names bound to an assertion method.
+
+    `Equal = self.assertEqual` then `Equal(a, b)` is a very common unittest
+    idiom (used throughout CPython's own tests). Without this, every test using
+    it looks assertion-free.
+    """
+    aliases: set[str] = set()
+    for node in ast.walk(fn):
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if not isinstance(target, ast.Name):
+            continue
+        bound = _dotted_name(node.value)
+        if bound and bound.split(".")[-1].startswith(_ASSERT_PREFIXES):
+            aliases.add(target.id)
+    return aliases
+
+
+def _has_assertion(fn: ast.AST) -> bool:
+    """True if the function body contains any assertion or explicit failure."""
+    aliases = _assertion_aliases(fn)
+    for node in ast.walk(fn):
+        if isinstance(node, ast.Assert):
+            return True
+        if isinstance(node, ast.Call):
+            name = _call_name(node)
+            tail = name.split(".")[-1] if name else ""
+            if tail.startswith(_ASSERT_PREFIXES) or tail in {"fail", "skipTest"}:
+                return True
+            # A call to a locally-aliased assertion, or to a project assertion
+            # helper (assert_*/check_*), also counts.
+            if tail in aliases or tail.startswith(("assert_", "check_", "_assert")):
+                return True
+        if isinstance(node, ast.withitem):
+            name = _dotted_name(getattr(node.context_expr, "func", node.context_expr))
+            if name and name.split(".")[-1].startswith(_ASSERT_PREFIXES):
+                return True
+    return False
+
+
+def _called_names(tree: ast.AST) -> set[str]:
+    """Every simple/attribute call target name used anywhere in the module."""
+    names: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            name = _call_name(node)
+            if name:
+                names.add(name.split(".")[-1])
+    return names
+
+
+def _is_effectively_empty(body: list[ast.stmt]) -> bool:
+    """True if the body is only `pass`, `...`, and/or a docstring."""
+    for stmt in body:
+        if isinstance(stmt, ast.Pass):
+            continue
+        if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant):
+            continue  # docstring or a bare `...`
+        return False
+    return True
+
+
+def _check_test_cannot_fail(tree: ast.AST) -> list[dict]:
+    """Tests that pass regardless of what the code under test does.
+
+    A test that cannot fail is worse than no test: it reports coverage and
+    consumes review attention while verifying nothing, and it makes every other
+    invariant the suite claims less trustworthy.
+    """
+    out: list[dict] = []
+    called = _called_names(tree)
+    for cls in ast.walk(tree):
+        if not isinstance(cls, ast.ClassDef) or not _is_testcase_class(cls):
+            continue
+        methods = [
+            m
+            for m in cls.body
+            if isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef))
+        ]
+        tests = [m for m in methods if m.name.startswith("test")]
+        # Methods of this class that assert directly -- a test calling one of
+        # these is verified even though it has no assertion of its own.
+        asserting_helpers = {
+            m.name
+            for m in methods
+            if not m.name.startswith("test") and _has_assertion(m)
+        }
+        fixtures = [m for m in methods if m.name in _FIXTURE_NAMES]
+
+        if fixtures and not tests:
+            out.append(
+                _finding(
+                    "test-cannot-fail",
+                    "CONSIDER",
+                    "medium",
+                    cls,
+                    f"{cls.name} defines fixtures ({', '.join(m.name for m in fixtures)}) "
+                    f"but no test methods -- the setup runs for nothing",
+                    "either the tests were removed or their names lost the `test` prefix",
+                )
+            )
+
+        for method in methods:
+            is_test = method.name.startswith("test")
+            if is_test and _is_effectively_empty(method.body):
+                out.append(
+                    _finding(
+                        "test-cannot-fail",
+                        "FIX",
+                        "high",
+                        method,
+                        f"{cls.name}.{method.name} has an empty body -- it always passes",
+                        "an unwritten test still reports as coverage; mark it skipped "
+                        "or write it",
+                    )
+                )
+                continue
+            # A test delegating to an in-class asserting helper is verified.
+            delegates = any(
+                isinstance(n, ast.Call)
+                and (_call_name(n).split(".")[-1] if _call_name(n) else "")
+                in asserting_helpers
+                for n in ast.walk(method)
+            )
+            if is_test and not _has_assertion(method) and not delegates:
+                out.append(
+                    _finding(
+                        "test-cannot-fail",
+                        "CONSIDER",
+                        "medium",
+                        method,
+                        f"{cls.name}.{method.name} contains no assertion",
+                        "may be a deliberate does-not-raise smoke test; if so say so, "
+                        "otherwise it verifies nothing",
+                    )
+                )
+            # An asserting helper that IS called from a test is correct DRY
+            # design (idlelib has many: assert_sidebar_lines_synced, check,
+            # runcase). Only an orphan -- one nothing calls -- is a lost test.
+            if (
+                not is_test
+                and _has_assertion(method)
+                and method.name not in _FIXTURE_NAMES
+                and method.name not in called
+            ):
+                out.append(
+                    _finding(
+                        "test-cannot-fail",
+                        "FIX",
+                        "high",
+                        method,
+                        f"{cls.name}.{method.name} asserts but is not named `test*`, so "
+                        f"unittest never runs it",
+                        "rename it, or call it explicitly from a real test",
+                    )
+                )
+
+    # Vacuous assertion arguments, anywhere in the module.
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        name = _call_name(node)
+        tail = name.split(".")[-1] if name else ""
+        if not tail.startswith(_ASSERT_PREFIXES):
+            continue
+        for arg in node.args:
+            # assertTrue(all(filter(...))) -- filter yields only matching items,
+            # so all() is true unless a yielded item is itself falsy.
+            if (
+                isinstance(arg, ast.Call)
+                and _call_name(arg) in {"all", "any"}
+                and arg.args
+                and isinstance(arg.args[0], ast.Call)
+                and _call_name(arg.args[0]) == "filter"
+            ):
+                out.append(
+                    _finding(
+                        "test-cannot-fail",
+                        "FIX",
+                        "high",
+                        node,
+                        f"{tail}({_call_name(arg)}(filter(...))) -- filter already drops "
+                        f"non-matching items, so the predicate is never actually tested",
+                        "use a generator expression applying the predicate: "
+                        "all(pred(x) for x in xs)",
+                    )
+                )
+        # assertTrue(True) / assertEqual(1, 1) and friends.
+        consts = [a for a in node.args if isinstance(a, ast.Constant)]
+        if consts and len(consts) == len(node.args) and node.args:
+            values = [a.value for a in consts]
+            vacuous = (
+                (tail in {"assertTrue", "failUnless"} and bool(values[0]))
+                or (tail in {"assertFalse", "failIf"} and not values[0])
+                or (
+                    tail in {"assertEqual", "assertEquals", "failUnlessEqual"}
+                    and len(values) >= 2
+                    and values[0] == values[1]
+                )
+            )
+            if vacuous:
+                out.append(
+                    _finding(
+                        "test-cannot-fail",
+                        "FIX",
+                        "high",
+                        node,
+                        f"{tail}({', '.join(repr(v) for v in values)}) compares only "
+                        f"constants -- it can never fail",
+                        "assert on a value produced by the code under test",
+                    )
+                )
+    return out
+
+
 _CHECKS = {
     "mutable-default-argument": _check_mutable_default,
     "late-binding-closure-in-loop": _check_late_binding_closure,
@@ -1447,6 +1687,7 @@ _CHECKS = {
     "flag-not-reset-on-early-exit": _check_flag_not_reset_on_early_exit,
     "guard-rechecks-call-receiver": _check_guard_rechecks_call_receiver,
     "falsy-check-for-none-default": _check_falsy_check_for_none_default,
+    "test-cannot-fail": _check_test_cannot_fail,
 }
 
 

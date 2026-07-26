@@ -5,7 +5,7 @@
   "files_analyzed": 125,
   "files_capped": false,
   "summary": {
-    "total_findings": 79,
+    "total_findings": 100,
     "by_shape": {
       "bare-except-swallows-control-flow": 28,
       "class-level-mutable-attribute": 18,
@@ -19,18 +19,19 @@
       "guard-rechecks-call-receiver": 1,
       "late-binding-closure-in-loop": 1,
       "mutable-default-argument": 6,
-      "raise-without-from-in-except": 7
+      "raise-without-from-in-except": 7,
+      "test-cannot-fail": 21
     },
     "by_severity": {
-      "CONSIDER": 15,
-      "FIX": 64
+      "CONSIDER": 31,
+      "FIX": 69
     },
     "by_confidence": {
-      "high": 36,
-      "medium": 43
+      "high": 41,
+      "medium": 59
     },
     "by_directory": {
-      "Lib": 79
+      "Lib": 100
     },
     "checks_run": [
       "asyncio-fire-and-forget-task",
@@ -54,6 +55,7 @@
       "mutation-during-iteration",
       "raise-without-from-in-except",
       "return-or-break-in-finally",
+      "test-cannot-fail",
       "unawaited-coroutine"
     ],
     "excluded_patterns": []
@@ -313,6 +315,50 @@
       "file": "Lib/idlelib/idle_test/mock_tk.py"
     },
     {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 26,
+      "column": 8,
+      "message": "assertTrue(True) compares only constants -- it can never fail",
+      "detail": "assert on a value produced by the code under test",
+      "file": "Lib/idlelib/idle_test/template.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 241,
+      "column": 8,
+      "message": "assertTrue(all(filter(...))) -- filter already drops non-matching items, so the predicate is never actually tested",
+      "detail": "use a generator expression applying the predicate: all(pred(x) for x in xs)",
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 242,
+      "column": 8,
+      "message": "assertTrue(any(filter(...))) -- filter already drops non-matching items, so the predicate is never actually tested",
+      "detail": "use a generator expression applying the predicate: all(pred(x) for x in xs)",
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 123,
+      "column": 4,
+      "message": "CodeContextTest.test_del contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_codecontext.py"
+    },
+    {
       "shape": "class-level-mutable-attribute",
       "type": "class-level-mutable-attribute",
       "severity": "FIX",
@@ -333,6 +379,127 @@
       "message": "ChangesTest.loaded is a mutable class attribute shared by every instance",
       "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
       "file": "Lib/idlelib/idle_test/test_config.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 761,
+      "column": 4,
+      "message": "ChangesTest.test_save_default contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_config.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 55,
+      "column": 4,
+      "message": "ConfigDialogTest.test_deactivate_current_config has an empty body -- it always passes",
+      "detail": "an unwritten test still reports as coverage; mark it skipped or write it",
+      "file": "Lib/idlelib/idle_test/test_configdialog.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 1300,
+      "column": 0,
+      "message": "ExtPageTest defines fixtures (setUpClass) but no test methods -- the setup runs for nothing",
+      "detail": "either the tests were removed or their names lost the `test` prefix",
+      "file": "Lib/idlelib/idle_test/test_configdialog.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 292,
+      "column": 4,
+      "message": "NameSpaceTest.test_init contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_debugger.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 236,
+      "column": 4,
+      "message": "RMenuTest.test_rclick has an empty body -- it always passes",
+      "detail": "an unwritten test still reports as coverage; mark it skipped or write it",
+      "file": "Lib/idlelib/idle_test/test_editor.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 106,
+      "column": 4,
+      "message": "FetchTest.test_fetch_prev_cyclic contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_history.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 113,
+      "column": 4,
+      "message": "FetchTest.test_fetch_next_cyclic contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_history.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 133,
+      "column": 4,
+      "message": "FetchTest.test_fetch_prev_noncyclic contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_history.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 141,
+      "column": 4,
+      "message": "FetchTest.test_fetch_next_noncyclic contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_history.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 69,
+      "column": 4,
+      "message": "IsTypeTkTest.test_isfuncs contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_macosx.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 82,
+      "column": 4,
+      "message": "ParenMatchTest.test_paren_corner contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_parenmatch.py"
     },
     {
       "shape": "class-level-mutable-attribute",
@@ -399,6 +566,72 @@
       "message": "raising a new exception inside `except` without `from` loses the explicit cause",
       "detail": "use `from err` to chain or `from None` to suppress deliberately",
       "file": "Lib/idlelib/idle_test/test_run.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 26,
+      "column": 4,
+      "message": "ScriptBindingTest.test_init contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_runscript.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 22,
+      "column": 4,
+      "message": "ScrolledListTest.test_init contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_scrolledlist.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 299,
+      "column": 4,
+      "message": "SqueezerTest.test_reload_no_squeezer_instances contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_squeezer.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 217,
+      "column": 0,
+      "message": "TkTextTest defines fixtures (setUpClass, tearDownClass, setUp) but no test methods -- the setup runs for nothing",
+      "detail": "either the tests were removed or their names lost the `test` prefix",
+      "file": "Lib/idlelib/idle_test/test_text.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 22,
+      "column": 4,
+      "message": "TreeTest.test_init contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_tree.py"
+    },
+    {
+      "shape": "test-cannot-fail",
+      "type": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 33,
+      "column": 4,
+      "message": "Test.test_zoom_height_event contains no assertion",
+      "detail": "may be a deliberate does-not-raise smoke test; if so say so, otherwise it verifies nothing",
+      "file": "Lib/idlelib/idle_test/test_zoomheight.py"
     },
     {
       "shape": "falsy-check-for-none-default",

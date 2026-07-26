@@ -765,5 +765,77 @@ class TestFalsyCheckForNoneDefault(unittest.TestCase):
         self.assertNotIn("falsy-check-for-none-default", shapes(src))
 
 
+class TestTestCannotFail(unittest.TestCase):
+    """Tests that pass no matter what the code under test does."""
+
+    def test_empty_test_body(self):
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def test_thing(self):\n        pass\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "test-cannot-fail"]
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_constant_assertion(self):
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def test_thing(self):\n        self.assertTrue(True)\n"
+        )
+        self.assertIn("test-cannot-fail", shapes(src))
+
+    def test_all_filter_is_vacuous(self):
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def test_thing(self):\n"
+            "        self.assertTrue(all(filter(lambda x: x.startswith('_'), self.s)))\n"
+        )
+        self.assertIn("test-cannot-fail", shapes(src))
+
+    def test_orphan_asserting_method(self):
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def check_thing(self):\n        self.assertEqual(1, self.x)\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "test-cannot-fail"]
+        self.assertTrue(any("never runs it" in x["message"] for x in f))
+
+    def test_called_helper_is_silent(self):
+        # DRY assertion helper invoked from a real test -- correct design.
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def check_thing(self, v):\n        self.assertEqual(1, v)\n"
+            "    def test_thing(self):\n        self.check_thing(self.x)\n"
+        )
+        self.assertNotIn("test-cannot-fail", shapes(src))
+
+    def test_aliased_assertion_counts(self):
+        # `Equal = self.assertEqual` is ubiquitous in CPython's own tests.
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def test_thing(self):\n        Equal = self.assertEqual\n"
+            "        Equal(1, self.x)\n"
+        )
+        self.assertNotIn("test-cannot-fail", shapes(src))
+
+    def test_real_assertion_is_silent(self):
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def test_thing(self):\n        self.assertEqual(compute(), 3)\n"
+        )
+        self.assertNotIn("test-cannot-fail", shapes(src))
+
+    def test_fixtures_without_tests(self):
+        src = (
+            "import unittest\nclass T(unittest.TestCase):\n"
+            "    def setUp(self):\n        self.x = 1\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "test-cannot-fail"]
+        self.assertTrue(any("no test methods" in x["message"] for x in f))
+
+    def test_non_testcase_class_ignored(self):
+        src = "class Helper:\n    def test_thing(self):\n        pass\n"
+        self.assertNotIn("test-cannot-fail", shapes(src))
+
+
 if __name__ == "__main__":
     unittest.main()
