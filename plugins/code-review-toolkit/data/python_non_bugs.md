@@ -299,3 +299,38 @@ run that produced it, so the evidence is traceable.
   rule. A leaf module with no imports of its own is absent from the graph's keys, so indexing from
   those alone leaves it unresolvable and the bare-package fallback blames the facade. Index every
   file. This is the same root cause as the prefix fallback removed after the `_pyrepl` run.
+
+### 32. `from __future__ import annotations` reported as an unused import *(coverage.py)*
+- **Symptom:** every module in the project reported with one unused import.
+- **Why non-bug:** it is a **compiler directive** (PEP 563), not an import — it binds no name, so a
+  name-reference scanner will *always* call it unused. Removing it flips annotation evaluation from
+  lazy to eager and breaks every unquoted forward reference. It was **42 of the 42** unused imports
+  reported for coverage.py: the entire category.
+- **Real bug:** an ordinary import whose bound name is never referenced. Exclude `__future__` outright.
+
+### 33. Symbol referenced only outside the reviewed package *(coverage.py)*
+- **Symptom:** a public helper reported as unreferenced.
+- **Why non-bug:** the reference lives outside the scanned tree — a `console_scripts` entry point in
+  `setup.py`, a helper used only by `tests/`, an API shown in `doc/`. All **9** unreferenced symbols
+  reported for coverage.py were referenced elsewhere in the same repository.
+- **Real bug:** a symbol nothing anywhere references. Collect references from the wider project
+  (`setup.py`, `tests/`, `doc/`) without analysing those files as subjects; and treat
+  `# pragma: debugging` as an exclusion marker, since a maintainer's hand-invoked debug tool is
+  unreferenced by design.
+
+### 34. `__main__.py` reported as an orphan *(coverage.py)*
+- **Symptom:** `pkg/__main__.py` never imported by any module.
+- **Why non-bug:** `python -m pkg` has the interpreter execute it; being unimported is what it is
+  *for*. Likewise a file read as **text** rather than imported — coverage.py's `pth_file.py` is
+  embedded into the installed `.pth` by `setup.py`, making it a source template, not a module.
+- **Real bug:** a module that is genuinely reachable from nothing. Exclude `__main__.py`, and treat a
+  filename appearing anywhere in project text as a reference.
+
+### 35. `type: ignore` age read as staleness *(coverage.py)*
+- **Symptom:** a debt inventory reporting "36 stale, 12 ancient" suppressions.
+- **Why non-bug:** age measures **commit date**, not whether the suppression still suppresses
+  anything. coverage.py sets `warn_unused_ignores = true`, and `mypy` is clean — so **zero** of its 47
+  ignores are stale, whatever their age.
+- **Real bug:** a suppression mypy would now report as unused. For a mypy-gated repository,
+  `warn_unused_ignores` is the oracle and marker age carries no signal at all. Check for that setting
+  before reporting ignore-debt as actionable.
