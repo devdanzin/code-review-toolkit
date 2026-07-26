@@ -837,5 +837,78 @@ class TestTestCannotFail(unittest.TestCase):
         self.assertNotIn("test-cannot-fail", shapes(src))
 
 
+class TestSelfReferentialAccumulate(unittest.TestCase):
+    """_pyrepl unix_console.py:545 -- `e.raw += e.raw` beside `e.data += e2.data`."""
+
+    def test_adjacent_twin_makes_it_high(self):
+        src = (
+            "def f(q):\n    e = Ev()\n    while q:\n        e2 = q.get()\n"
+            "        e.data += e2.data\n        e.raw += e.raw\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "self-referential-accumulate"]
+        self.assertEqual(f[0]["confidence"], "high")
+        self.assertIn("e2.data", f[0]["detail"])
+
+    def test_without_twin_is_medium(self):
+        src = "def f():\n    total = 0\n    total += total\n"
+        f = [x for x in scan(src) if x["shape"] == "self-referential-accumulate"]
+        self.assertEqual(f[0]["confidence"], "medium")
+
+    def test_correct_source_is_silent(self):
+        src = (
+            "def f(q):\n    e = Ev()\n    while q:\n        e2 = q.get()\n"
+            "        e.data += e2.data\n        e.raw += e2.raw\n"
+        )
+        self.assertNotIn("self-referential-accumulate", shapes(src))
+
+
+class TestDuplicatedGuard(unittest.TestCase):
+    """_pyrepl terminfo.py:401 -- a bounds check copied without its operand."""
+
+    def test_repeated_guard_with_new_value(self):
+        src = (
+            "def f(data, offset, n):\n    if offset > len(data):\n        raise ValueError\n"
+            "    end = offset + 2 * n\n    if offset > len(data):\n        raise ValueError\n"
+            "    return data[offset:end]\n"
+        )
+        f = [x for x in scan(src) if x["shape"] == "duplicated-guard-wrong-operand"]
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_guard_checking_new_value_is_silent(self):
+        src = (
+            "def f(data, offset, n):\n    if offset > len(data):\n        raise ValueError\n"
+            "    end = offset + 2 * n\n    if end > len(data):\n        raise ValueError\n"
+            "    return data[offset:end]\n"
+        )
+        self.assertNotIn("duplicated-guard-wrong-operand", shapes(src))
+
+    def test_operand_rebound_between_is_silent(self):
+        # The `path = ...; if path.is_file(): return ...` loop idiom.
+        src = (
+            "def f(dirs, name):\n    for d in dirs:\n        path = d / name\n"
+            "        if path.is_file():\n            return path\n"
+            "        path = d / 'hex' / name\n        if path.is_file():\n"
+            "            return path\n"
+        )
+        self.assertNotIn("duplicated-guard-wrong-operand", shapes(src))
+
+    def test_tuple_target_rebinding_is_silent(self):
+        src = (
+            "def f(value):\n    if not value:\n        raise ValueError\n"
+            "    token, value = get(value)\n    if not value:\n        raise ValueError\n"
+            "    return value\n"
+        )
+        self.assertNotIn("duplicated-guard-wrong-operand", shapes(src))
+
+    def test_nested_rebinding_is_silent(self):
+        src = (
+            "def f(value):\n    if not value:\n        raise ValueError\n"
+            "    if value[0] == 'x':\n        leader, value = get(value)\n"
+            "    if not value:\n        raise ValueError\n    return value\n"
+        )
+        self.assertNotIn("duplicated-guard-wrong-operand", shapes(src))
+
+
 if __name__ == "__main__":
     unittest.main()

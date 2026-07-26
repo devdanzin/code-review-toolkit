@@ -1,0 +1,299 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/_pyrepl",
+  "files_total": 25,
+  "files_analyzed": 25,
+  "files_capped": false,
+  "summary": {
+    "total_findings": 22,
+    "by_shape": {
+      "bare-except-swallows-control-flow": 3,
+      "class-level-mutable-attribute": 10,
+      "except-exception-too-broad": 5,
+      "except-in-loop-without-exit": 2,
+      "raise-without-from-in-except": 2
+    },
+    "by_severity": {
+      "CONSIDER": 2,
+      "FIX": 20
+    },
+    "by_confidence": {
+      "high": 7,
+      "low": 1,
+      "medium": 14
+    },
+    "by_directory": {
+      "Lib": 22
+    },
+    "checks_run": [
+      "asyncio-fire-and-forget-task",
+      "bare-except-swallows-control-flow",
+      "blocking-call-in-async-function",
+      "class-level-mutable-attribute",
+      "cleanup-only-on-success-path",
+      "eq-without-hash",
+      "error-reported-below-warning",
+      "except-clause-ordering-unreachable",
+      "except-exception-too-broad",
+      "except-in-loop-without-exit",
+      "exception-in-del-or-finalizer",
+      "falsy-check-for-none-default",
+      "flag-not-reset-on-early-exit",
+      "guard-rechecks-call-receiver",
+      "is-comparison-with-literal",
+      "late-binding-closure-in-loop",
+      "lru-cache-on-method",
+      "mutable-default-argument",
+      "mutation-during-iteration",
+      "raise-without-from-in-except",
+      "return-or-break-in-finally",
+      "test-cannot-fail",
+      "unawaited-coroutine"
+    ],
+    "excluded_patterns": []
+  },
+  "findings": [
+    {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 65,
+      "column": 8,
+      "message": "`except Exception:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
+      "file": "Lib/_pyrepl/_module_completer.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 231,
+      "column": 4,
+      "message": "ImportParser._ignored_tokens is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/_module_completer.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 235,
+      "column": 4,
+      "message": "ImportParser._keywords is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/_module_completer.py"
+    },
+    {
+      "shape": "bare-except-swallows-control-flow",
+      "type": "bare-except-swallows-control-flow",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 184,
+      "column": 8,
+      "message": "`except BaseException:` without re-raise also swallows KeyboardInterrupt and SystemExit",
+      "detail": "an earlier clause re-raises ['SystemExit'], but this one still swallows ['GeneratorExit', 'KeyboardInterrupt']",
+      "file": "Lib/_pyrepl/console.py"
+    },
+    {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "low",
+      "line": 17,
+      "column": 0,
+      "message": "`except Exception:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "large try body: may be a genuine boundary (plugin loader, CLI top level, call into user code) -- check for a rationale",
+      "file": "Lib/_pyrepl/main.py"
+    },
+    {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 691,
+      "column": 12,
+      "message": "`except Exception:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
+      "file": "Lib/_pyrepl/reader.py"
+    },
+    {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 698,
+      "column": 12,
+      "message": "`except Exception:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
+      "file": "Lib/_pyrepl/reader.py"
+    },
+    {
+      "shape": "except-exception-too-broad",
+      "type": "except-exception-too-broad",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 137,
+      "column": 12,
+      "message": "`except Exception:` swallows every failure of the guarded operation, not just the expected one",
+      "detail": "the try body is 1 statement(s) -- one narrow operation guarded by a catch-all",
+      "file": "Lib/_pyrepl/simple_interact.py"
+    },
+    {
+      "shape": "except-in-loop-without-exit",
+      "type": "except-in-loop-without-exit",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 137,
+      "column": 12,
+      "message": "`except Exception` inside `while True:` neither breaks, returns nor raises; a persistent failure spins forever",
+      "detail": "a transient failure recovers, but a permanent one hangs the process with no diagnostic -- bound the retries",
+      "file": "Lib/_pyrepl/simple_interact.py"
+    },
+    {
+      "shape": "except-in-loop-without-exit",
+      "type": "except-in-loop-without-exit",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 155,
+      "column": 12,
+      "message": "`except (FileNotFoundError, PermissionError, OSError)` inside `while True:` neither breaks, returns nor raises; a persistent failure spins forever",
+      "detail": "a transient failure recovers, but a permanent one hangs the process with no diagnostic -- bound the retries",
+      "file": "Lib/_pyrepl/simple_interact.py"
+    },
+    {
+      "shape": "bare-except-swallows-control-flow",
+      "type": "bare-except-swallows-control-flow",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 174,
+      "column": 8,
+      "message": "`except:` without re-raise also swallows KeyboardInterrupt and SystemExit",
+      "detail": "an earlier clause re-raises ['SystemExit'], but this one still swallows ['GeneratorExit', 'KeyboardInterrupt']",
+      "file": "Lib/_pyrepl/simple_interact.py"
+    },
+    {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 174,
+      "column": 12,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
+      "file": "Lib/_pyrepl/unix_console.py"
+    },
+    {
+      "shape": "raise-without-from-in-except",
+      "type": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "confidence": "medium",
+      "line": 433,
+      "column": 24,
+      "message": "raising a new exception inside `except` without `from` loses the explicit cause",
+      "detail": "use `from err` to chain or `from None` to suppress deliberately",
+      "file": "Lib/_pyrepl/unix_console.py"
+    },
+    {
+      "shape": "bare-except-swallows-control-flow",
+      "type": "bare-except-swallows-control-flow",
+      "severity": "FIX",
+      "confidence": "high",
+      "line": 47,
+      "column": 0,
+      "message": "`except:` without re-raise also swallows KeyboardInterrupt and SystemExit",
+      "detail": "use `except Exception:` so Ctrl-C and sys.exit() still work",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 598,
+      "column": 4,
+      "message": "CONSOLE_SCREEN_BUFFER_INFO._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 608,
+      "column": 4,
+      "message": "CONSOLE_CURSOR_INFO._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 615,
+      "column": 4,
+      "message": "CHAR_INFO._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 622,
+      "column": 4,
+      "message": "Char._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 629,
+      "column": 4,
+      "message": "KeyEvent._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 640,
+      "column": 4,
+      "message": "WindowsBufferSizeEvent._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 644,
+      "column": 4,
+      "message": "ConsoleEvent._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    },
+    {
+      "shape": "class-level-mutable-attribute",
+      "type": "class-level-mutable-attribute",
+      "severity": "FIX",
+      "confidence": "medium",
+      "line": 651,
+      "column": 4,
+      "message": "INPUT_RECORD._fields_ is a mutable class attribute shared by every instance",
+      "detail": "no mutation seen in this module: likely declarative class config, possibly overridden by subclasses -- confirm nothing elsewhere mutates it",
+      "file": "Lib/_pyrepl/windows_console.py"
+    }
+  ]
+}
