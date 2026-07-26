@@ -1181,6 +1181,20 @@ def _check_except_in_loop_without_exit(tree: ast.AST) -> list[dict]:
                     continue
                 if _is_poll_signal(handler):
                     continue  # poll loop draining a queue/socket, not a hang
+                # A handler that reports loudly is diagnosable, not a silent
+                # hang -- this shape's whole complaint is "no diagnostic".
+                if any(
+                    isinstance(n, ast.Call)
+                    and (_call_name(n).split(".")[-1] if _call_name(n) else "")
+                    in _LOUD_LOG_METHODS
+                    for n in ast.walk(handler)
+                ):
+                    continue
+                # A `while True:` whose ENTIRE body is the guarded operation is a
+                # spin. A loop that does other work each iteration -- a REPL
+                # reading input, a server accepting connections -- makes progress
+                # even when this operation keeps failing.
+                sole = len(loop.body) == 1 and loop.body[0] is node
                 if not _handler_swallows(handler):
                     continue
                 label = (
@@ -1190,7 +1204,7 @@ def _check_except_in_loop_without_exit(tree: ast.AST) -> list[dict]:
                     _finding(
                         "except-in-loop-without-exit",
                         "FIX",
-                        "high",
+                        "high" if sole else "medium",
                         handler,
                         f"`except {label}` inside `while True:` neither breaks, returns "
                         f"nor raises; a persistent failure spins forever",

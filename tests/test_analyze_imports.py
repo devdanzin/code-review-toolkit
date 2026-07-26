@@ -25,7 +25,14 @@ class TestIsStdlib(unittest.TestCase):
 
 
 class TestResolveRelativeImport(unittest.TestCase):
-    """Test relative import resolution."""
+    """Relative-import resolution, checked against real interpreter semantics.
+
+    `from .X import Y` imports X from the package CONTAINING the importing
+    module; each additional dot strips one more level. These expectations were
+    verified by building the package layout on disk and importing it, not by
+    reading the implementation -- the previous versions of these tests asserted
+    the implementation's off-by-one instead of the language's behaviour.
+    """
 
     def _resolve(self, source_rel, level, module):
         root = Path("/project")
@@ -33,38 +40,26 @@ class TestResolveRelativeImport(unittest.TestCase):
         return mod._resolve_relative_import(source, root, level, module)
 
     def test_level_1_with_module(self):
-        # from .core import X  inside pkg/sub/file.py  →  pkg.sub.core
-        # Actually: level=1, source is in pkg/sub/, so we go up 1 from
-        # pkg/sub and get pkg, then append module.
-        # Wait, let me trace the logic more carefully.
-        # source_file = /project/pkg/sub/file.py
-        # rel = pkg/sub/file.py
-        # parts = [pkg, sub]  (directory components)
-        # level=1: base_parts = parts[:len(parts)-1] = [pkg]
-        # dotted = "pkg"
-        # module = "core" → "pkg.core"
-        result = self._resolve("pkg/sub/file.py", 1, "core")
-        self.assertEqual(result, "pkg.core")
+        # `from .core import X` in pkg/sub/file.py -> pkg.sub.core
+        self.assertEqual(self._resolve("pkg/sub/file.py", 1, "core"), "pkg.sub.core")
 
     def test_level_1_no_module(self):
-        # from . import X  inside pkg/sub/file.py  →  pkg
-        result = self._resolve("pkg/sub/file.py", 1, None)
-        self.assertEqual(result, "pkg")
+        # `from . import X` in pkg/sub/file.py -> pkg.sub
+        self.assertEqual(self._resolve("pkg/sub/file.py", 1, None), "pkg.sub")
 
     def test_level_2(self):
-        # from ..utils import X  inside pkg/sub/deep/file.py  →  pkg.utils
-        result = self._resolve("pkg/sub/deep/file.py", 2, "utils")
-        self.assertEqual(result, "pkg.utils")
-
-    def test_level_exceeds_depth(self):
-        # from ... import X  inside pkg/file.py  (only 1 dir level)
-        result = self._resolve("pkg/file.py", 3, "something")
-        self.assertIsNone(result)
+        # `from ..utils import X` in pkg/sub/deep/file.py -> pkg.sub.utils
+        self.assertEqual(
+            self._resolve("pkg/sub/deep/file.py", 2, "utils"), "pkg.sub.utils"
+        )
 
     def test_top_level_relative(self):
-        # from .sibling import X  inside pkg/file.py  →  sibling
-        result = self._resolve("pkg/file.py", 1, "sibling")
-        self.assertEqual(result, "sibling")
+        # `from .sibling import X` in pkg/file.py -> pkg.sibling
+        self.assertEqual(self._resolve("pkg/file.py", 1, "sibling"), "pkg.sibling")
+
+    def test_level_exceeds_depth(self):
+        # More dots than there are packages to strip.
+        self.assertIsNone(self._resolve("pkg/file.py", 3, "something"))
 
 
 class TestAnalyzeFile(unittest.TestCase):
@@ -312,6 +307,67 @@ class TestMaxFiles(unittest.TestCase):
             self.assertEqual(output["files_analyzed"], 3)
             self.assertTrue(output["files_capped"])
             self.assertGreater(output["files_total"], 3)
+
+
+def _graph(root):
+    """Build the internal import graph for a temp project."""
+    files = sorted(mod.discover_python_files(root))
+    packages = mod.identify_project_packages(root)
+    return mod.build_internal_graph([mod.analyze_file(f, root, packages) for f in files])
+
+
+class TestRelativeImportResolution(unittest.TestCase):
+    """`from .X import Y` must resolve to the CONTAINING package, not its parent.
+
+    Getting this wrong produces module paths that match no file, which silently
+    zeroes every fan_in metric for any project using relative imports.
+    """
+
+    def test_single_dot_resolves_within_package(self):
+        files = {
+            "pkg/__init__.py": "",
+            "pkg/a.py": "from .b import thing\n",
+            "pkg/b.py": "thing = 1\n",
+        }
+        with TempProject(files) as root:
+            graph = _graph(root)
+        targets = [e["target"] for e in graph.get("pkg/a.py", [])]
+        self.assertIn("pkg.b", targets)
+
+    def test_double_dot_resolves_to_parent(self):
+        files = {
+            "pkg/__init__.py": "",
+            "pkg/sub/__init__.py": "",
+            "pkg/sub/a.py": "from ..b import thing\n",
+            "pkg/b.py": "thing = 1\n",
+        }
+        with TempProject(files) as root:
+            graph = _graph(root)
+        targets = [e["target"] for e in graph.get("pkg/sub/a.py", [])]
+        self.assertIn("pkg.b", targets)
+
+    def test_two_modules_target_the_same_sibling(self):
+        files = {
+            "pkg/__init__.py": "",
+            "pkg/a.py": "from .shared import thing\n",
+            "pkg/c.py": "from .shared import thing\n",
+            "pkg/shared.py": "thing = 1\n",
+        }
+        with TempProject(files) as root:
+            graph = _graph(root)
+        targets = [e["target"] for edges in graph.values() for e in edges]
+        self.assertEqual(targets.count("pkg.shared"), 2)
+
+    def test_no_phantom_cycle_through_package_init(self):
+        # An import-free sibling must not resolve to the package __init__.
+        files = {
+            "mypkg/__init__.py": "from .core import main\n",
+            "mypkg/core.py": "from .utils import helper\n",
+            "mypkg/utils.py": "def helper():\n    return 1\n",
+        }
+        with TempProject(files) as root:
+            graph = _graph(root)
+        self.assertEqual(mod.detect_cycles(graph), [])
 
 
 if __name__ == "__main__":
