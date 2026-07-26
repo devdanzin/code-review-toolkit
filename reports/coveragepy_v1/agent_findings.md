@@ -482,3 +482,66 @@ Three instances, all leaving the default core under-tested in the configurations
 
 `core.py:83-89` also lets **`timid = True` silently discard an explicit `core =`**, checking `timid`
 first with no warning, unlike every sysmon conflict.
+
+---
+
+## Part 8 — The test suite as a specification
+
+Baseline: **1613 collected / 1491 passed / 66 skipped / 56 failed** (the 56 environmental — no
+gevent/greenlet, debug-build CPython). The suite is **genuinely strong**: module-level mutation testing
+killed 22/23 in `templite`, 1/1 in `numbits`, 4/4 in `regions`, and every narrow-map survivor in
+`misc.py` was killed by the full suite. Mechanical sweeps for empty bodies, shadowed test names,
+uncollectable `Test*` classes, empty `parametrize`, fixture-only classes, and `mock-callable-as-spec`
+all returned **zero**. There is no `xfail` at all, and `strict = true` makes an orphan mark a hard error.
+
+Only two environment-gated holes let real breakage through — and both are big.
+
+### Patch-tested, confirmed
+
+| # | Test | What it actually guarantees | Proof |
+|---|---|---|---|
+| 1 | `test_concurrency.py:635` `test_thread_safe_save_data` | **Zero assertions.** `grep -c assert` over the body = 0. Workers have no assert and no try/except, so `t.join()` silently discards worker exceptions; `cov.get_data()`'s result is discarded. | Reverted fix `8cd392e3` (#2165, the `.copy()` snapshots) → **test passed 10/10** |
+| 2 | `test_concurrency.py:783` `test_sigterm_still_runs` | Only that CPython runs a user's SIGTERM handler. `proc.exitcode` never read; no combine/report despite `parallel = True`. | Disabled the whole handler install → **still passed** |
+| 3 | `test_api.py:868-871` | `if not env.METACOV: assert current is None` — **under metacov the only meaningful assertion is skipped**, and `cur0 is cur1` becomes a tautology. | Made `Coverage.current()` return a stale instance: METACOV off → caught; **METACOV on → not caught** |
+| 4 | `context.py:49` | **Dynamic-context detection is unguarded on the default core.** | Mutated `or`→`and`: sysmon **SURVIVED** (3 failed both ways); ctrace 3→9 failed, pytrace 2→9 failed |
+
+Finding 1 has decisive historical corroboration: `git show --stat 8cd392e3` → `CHANGES.rst | 6 +,
+coverage/collector.py | 28 +-` — **no test file touched.** The `RuntimeError: Set changed size during
+iteration` this test exists to catch shipped straight past it. The reason is subtle and worth keeping:
+the test spreads mutation over 1000 one-line modules, so each set holds 1–2 elements and the iteration
+window is ~0 ns. Its guarded twin is in the same repo — `tests/test_data.py:597` `test_thread_stress`.
+
+Finding 4 compounds: `testenv.DYN_CONTEXTS = C_TRACER or PY_TRACER` is False under sysmon, so all 16
+dynamic-context tests skip, and `addopts` (`pyproject.toml:121`) is `-rfEX` — **no `s`** — so those
+skips are invisible locally. **A developer running bare `pytest` on 3.14+ gets green with the feature
+totally broken.** CI is safe only because tox sweeps all three cores.
+
+### Skips that disable whole features
+
+- **`test_oddball.py:256-259` never runs anywhere** — `skipif(not C_TRACER)` *plus* an unconditional
+  `pytest.skip("This is too expensive for now (30s)")` as the first statement, the rest marked
+  `# type: ignore[unreachable]`. The whole `MemoryFumblingTest` is dead. The author's
+  `# TODO: Mark this so it will only be run sometimes.` was never done.
+- **`test_concurrency.py:290` `test_bug_330`** — unconditional `@pytest.mark.skip`, dead since eventlet
+  left the requirements; the body keeps `eventlet = glob` to quiet linters.
+- **`testenv.py:43` `CAN_MEASURE_BRANCHES`** — a pure **version** predicate used under
+  `reason="Can't measure branches with this core"`; verified identical for all three cores. On
+  3.10–3.13 it is False for *every* core including ctrace, which measures branches fine — so the
+  regression test for #2021 never runs on 4 of 6 supported Pythons.
+- **`env.py:124` vs `igor.py:247` disagree on METACOV** — `os.getenv(...) is not None` vs
+  `== "yes"`. With `COVERAGE_COVERAGE=no`, igor runs **plain** tests while `env.METACOV` is True: all
+  11 metacov guards fire (including the whole `ProcessStartupTest` class) and nothing is measured in
+  exchange. Nothing guards this.
+
+### Corrections — plausible suspects that patch-tested NEGATIVE
+
+Recorded because they look exactly like findings and are not:
+
+- `test_oddball.py:250` `assert any(d < 50*1024 for d in deltas)` looks vacuous (30 samples, one small
+  one passes). **It is not.** Rebuilding the C tracer with bug #1924 reintroduced made
+  `test_eval_codeobject_leak` fail **6/6** on both params — a real leak makes every delta large.
+- `test_for_leaks` passes with that same leak, but it reuses one code object so a *reference* leak
+  cannot grow RAM there. Out of scope, not a defect.
+
+**This is the standard of proof the whole run should be judged against** — a plausible-looking finding
+that dies under a patch-test is worth as much as one that survives.
