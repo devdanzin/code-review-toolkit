@@ -194,10 +194,11 @@ Every finding is tagged:
 
 Tracked honestly so the next session does not have to re-derive them:
 
-1. **No validation runs.** `reports/` is empty, while sibling toolkits have between 1 and 67. This is
-   the root cause of gap 2 — no runs means no calibration data.
-2. **Every bug shape is `validation: documented`, none `confirmed`.** The catalog is grounded in
-   Python's documented semantics, not yet in findings from this toolkit.
+1. **One validation run** (`reports/idlelib_v1/`), against sibling toolkits' 1–67. It produced five
+   false-positive classes and three scanner fixes, which is the loop working — but a single run on
+   an old, careful codebase is thin evidence. An async-heavy target is the right next one.
+2. **1 of 14 shapes is `confirmed`; 13 remain `documented`.** The catalog is still mostly grounded
+   in Python's documented semantics rather than in this toolkit's own findings.
 3. ~~All 14 bug shapes owned by one agent~~ **Done** — `python-pitfall-scanner` now owns them, backed
    by `scan_python_pitfalls.py`, so every shape is executable rather than prompt-only.
 4. **No companion findings repository.** Every mature sibling has a `*-review-findings` repo. The
