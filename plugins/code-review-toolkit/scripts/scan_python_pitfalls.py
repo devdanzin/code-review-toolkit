@@ -1620,6 +1620,36 @@ def _check_test_cannot_fail(tree: ast.AST) -> list[dict]:
                     )
                 )
 
+    # A comprehension/loop over a literal EMPTY container: cases are built and
+    # none are run. CPython's test_keymap.py:35 has `for key in []` producing 60
+    # cases and running zero -- introduced by a commit titled "Increase test
+    # coverage", which replaced three passing assertions with it.
+    for node in ast.walk(tree):
+        iters: list[ast.expr] = []
+        if isinstance(
+            node, (ast.ListComp, ast.SetComp, ast.GeneratorExp, ast.DictComp)
+        ):
+            iters = [g.iter for g in node.generators]
+        elif isinstance(node, ast.For):
+            iters = [node.iter]
+        for it in iters:
+            empty = (
+                isinstance(it, (ast.List, ast.Set, ast.Tuple)) and not it.elts
+            ) or (isinstance(it, ast.Dict) and not it.keys)
+            if not empty:
+                continue
+            out.append(
+                _finding(
+                    "test-cannot-fail",
+                    "FIX",
+                    "high",
+                    node,
+                    "iterates over a literal empty container -- the body never runs",
+                    "any cases built for it are silently discarded; check whether an "
+                    "iterable was meant here",
+                )
+            )
+
     # Vacuous assertion arguments, anywhere in the module.
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
