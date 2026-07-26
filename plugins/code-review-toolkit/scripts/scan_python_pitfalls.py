@@ -947,6 +947,289 @@ def _check_is_literal(tree: ast.AST) -> list[dict]:
     return out
 
 
+# --------------------------------------------------------------------------
+# Shapes derived from a 40-bug audit of CPython's pure-Python stdlib.
+# Overly-broad `except Exception:` alone accounted for ~50% of those findings.
+# --------------------------------------------------------------------------
+
+# Releasing a resource. Not exhaustive by design -- these are the verbs whose
+# omission on an error path actually leaks something.
+_RELEASE_METHODS = frozenset(
+    {"close", "quit", "shutdown", "release", "disconnect", "terminate", "unlink"}
+)
+
+# Logging calls too quiet to surface a failure under default configuration.
+_QUIET_LOG_METHODS = frozenset({"debug", "info"})
+_LOUD_LOG_METHODS = frozenset(
+    {"warning", "warn", "error", "exception", "critical", "fatal"}
+)
+
+
+def _handler_swallows(handler: ast.ExceptHandler) -> bool:
+    """True if the handler neither re-raises nor propagates a failure signal.
+
+    `pass`, a bare default assignment, or returning a fallback all mean the
+    caller cannot tell the operation failed.
+    """
+    if any(isinstance(n, ast.Raise) for n in ast.walk(handler)):
+        return False
+    for stmt in handler.body:
+        if isinstance(stmt, ast.Pass):
+            continue
+        if isinstance(stmt, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+            continue
+        if isinstance(stmt, ast.Return):
+            continue
+        if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call):
+            # A logging/reporting call is still swallowing unless it is loud.
+            name = _call_name(stmt.value)
+            tail = name.split(".")[-1] if name else ""
+            if tail in _QUIET_LOG_METHODS or tail in _LOUD_LOG_METHODS:
+                continue
+            return False
+        return False
+    return True
+
+
+def _check_except_exception_too_broad(tree: ast.AST) -> list[dict]:
+    out: list[dict] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Try):
+            continue
+        # A narrow try body is the signal: the author guarded one operation.
+        narrow = len(node.body) <= 2
+        for handler in node.handlers:
+            if not isinstance(handler.type, ast.Name):
+                continue
+            if handler.type.id not in {"Exception", "BaseException"}:
+                continue
+            if not _handler_swallows(handler):
+                continue
+            # A loud log makes the failure visible -- not silent, so not FIX.
+            loud = any(
+                isinstance(n, ast.Call)
+                and (_call_name(n).split(".")[-1] if _call_name(n) else "")
+                in _LOUD_LOG_METHODS
+                for n in ast.walk(handler)
+            )
+            if narrow and not loud:
+                conf = "high"
+                why = (
+                    f"the try body is {len(node.body)} statement(s) -- one narrow "
+                    f"operation guarded by a catch-all"
+                )
+            elif narrow:
+                conf, why = (
+                    "medium",
+                    "narrow try body, but the handler logs loudly -- confirm the "
+                    "broad catch is deliberate containment",
+                )
+            else:
+                conf, why = (
+                    "low",
+                    "large try body: may be a genuine boundary (plugin loader, CLI "
+                    "top level, call into user code) -- check for a rationale",
+                )
+            out.append(
+                _finding(
+                    "except-exception-too-broad",
+                    "FIX",
+                    conf,
+                    handler,
+                    f"`except {handler.type.id}:` swallows every failure of the "
+                    f"guarded operation, not just the expected one",
+                    why,
+                )
+            )
+    return out
+
+
+def _check_cleanup_only_on_success(tree: ast.AST) -> list[dict]:
+    out: list[dict] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Try) or not node.handlers or node.finalbody:
+            continue
+        if not node.body:
+            continue
+        last = node.body[-1]
+        if not (isinstance(last, ast.Expr) and isinstance(last.value, ast.Call)):
+            continue
+        call = last.value
+        if not isinstance(call.func, ast.Attribute):
+            continue
+        verb = call.func.attr
+        if verb not in _RELEASE_METHODS:
+            continue
+        target = _dotted_name(call.func.value) or "<resource>"
+        # If a handler also releases it, the error path is covered.
+        released_in_handler = any(
+            isinstance(n, ast.Call)
+            and isinstance(n.func, ast.Attribute)
+            and n.func.attr == verb
+            for h in node.handlers
+            for n in ast.walk(h)
+        )
+        if released_in_handler:
+            continue
+        out.append(
+            _finding(
+                "cleanup-only-on-success-path",
+                "FIX",
+                "high" if len(node.body) > 1 else "medium",
+                last,
+                f"`{target}.{verb}()` runs only when the try body succeeds; an "
+                f"exception above it leaks the resource",
+                "move it to a `finally:` block, or use a `with` statement",
+            )
+        )
+    return out
+
+
+def _check_error_reported_below_warning(tree: ast.AST) -> list[dict]:
+    out: list[dict] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ExceptHandler):
+            continue
+        if any(isinstance(n, ast.Raise) for n in ast.walk(node)):
+            continue
+        quiet: list[str] = []
+        loud = False
+        for inner in ast.walk(node):
+            if not isinstance(inner, ast.Call):
+                continue
+            name = _call_name(inner)
+            tail = name.split(".")[-1] if name else ""
+            if tail in _LOUD_LOG_METHODS:
+                loud = True
+            elif tail in _QUIET_LOG_METHODS and name:
+                quiet.append(name)
+        if loud or not quiet:
+            continue
+        out.append(
+            _finding(
+                "error-reported-below-warning",
+                "CONSIDER",
+                "medium",
+                node,
+                f"the only report of this failure is {quiet[0]}(...), which default "
+                f"logging configuration discards",
+                "an operator running with defaults sees nothing; use warning/exception "
+                "if the condition is actionable",
+            )
+        )
+    return out
+
+
+# "Nothing to do right now" signals. Catching one of these in a poll loop and
+# continuing IS the design -- an event loop that drains a queue with a timeout
+# is not a hang. Observed on idlelib's rpc.py/run.py event loops, where every
+# raw hit was this pattern; the gist's genuine instance was `except OSError:`
+# on a directory scan, where the error means real failure.
+_POLL_SIGNAL_EXCEPTIONS = frozenset(
+    {
+        "Empty",
+        "Full",
+        "queue.Empty",
+        "queue.Full",
+        "timeout",
+        "socket.timeout",
+        "TimeoutError",
+        "BlockingIOError",
+        "InterruptedError",
+        "asyncio.TimeoutError",
+        "KeyboardInterrupt",
+    }
+)
+
+
+def _is_poll_signal(handler: ast.ExceptHandler) -> bool:
+    """True if the handler catches only 'nothing ready yet' conditions."""
+    if handler.type is None:
+        return False
+    parts = handler.type.elts if isinstance(handler.type, ast.Tuple) else [handler.type]
+    names = {_dotted_name(p) for p in parts}
+    names |= {n.split(".")[-1] for n in names if n}
+    caught = {n for n in names if n}
+    # An unresolvable name (not a plain Name/Attribute) means we cannot tell.
+    if len(caught) < len(parts):
+        return False
+    return bool(caught) and caught <= _POLL_SIGNAL_EXCEPTIONS
+
+
+def _check_except_in_loop_without_exit(tree: ast.AST) -> list[dict]:
+    out: list[dict] = []
+    for loop in ast.walk(tree):
+        # Unbounded loop only: `while True:` / `while 1:`.
+        if not isinstance(loop, ast.While):
+            continue
+        test = loop.test
+        unbounded = (isinstance(test, ast.Constant) and bool(test.value)) or (
+            isinstance(test, ast.Name) and test.id == "True"
+        )
+        if not unbounded:
+            continue
+        for node in ast.walk(loop):
+            if not isinstance(node, ast.Try):
+                continue
+            for handler in node.handlers:
+                # Any exit from the loop discharges the obligation.
+                exits = any(
+                    isinstance(n, (ast.Break, ast.Return, ast.Raise))
+                    for n in ast.walk(handler)
+                )
+                if exits:
+                    continue
+                if _is_poll_signal(handler):
+                    continue  # poll loop draining a queue/socket, not a hang
+                if not _handler_swallows(handler):
+                    continue
+                label = (
+                    ast.unparse(handler.type) if handler.type is not None else "bare"
+                )
+                out.append(
+                    _finding(
+                        "except-in-loop-without-exit",
+                        "FIX",
+                        "high",
+                        handler,
+                        f"`except {label}` inside `while True:` neither breaks, returns "
+                        f"nor raises; a persistent failure spins forever",
+                        "a transient failure recovers, but a permanent one hangs the "
+                        "process with no diagnostic -- bound the retries",
+                    )
+                )
+    return out
+
+
+def _check_raise_without_from(tree: ast.AST) -> list[dict]:
+    out: list[dict] = []
+    for handler in ast.walk(tree):
+        if not isinstance(handler, ast.ExceptHandler):
+            continue
+        for node in ast.walk(handler):
+            if not isinstance(node, ast.Raise):
+                continue
+            if node.exc is None:  # bare `raise` re-raises; correct
+                continue
+            if node.cause is not None:  # explicit `from err` / `from None`
+                continue
+            # Re-raising the caught name itself needs no cause.
+            if isinstance(node.exc, ast.Name) and node.exc.id == handler.name:
+                continue
+            out.append(
+                _finding(
+                    "raise-without-from-in-except",
+                    "CONSIDER",
+                    "medium",
+                    node,
+                    "raising a new exception inside `except` without `from` loses the "
+                    "explicit cause",
+                    "use `from err` to chain or `from None` to suppress deliberately",
+                )
+            )
+    return out
+
+
 _CHECKS = {
     "mutable-default-argument": _check_mutable_default,
     "late-binding-closure-in-loop": _check_late_binding_closure,
@@ -962,6 +1245,11 @@ _CHECKS = {
     "bare-except-swallows-control-flow": _check_bare_except,
     "exception-in-del-or-finalizer": _check_exception_in_del,
     "is-comparison-with-literal": _check_is_literal,
+    "except-exception-too-broad": _check_except_exception_too_broad,
+    "cleanup-only-on-success-path": _check_cleanup_only_on_success,
+    "error-reported-below-warning": _check_error_reported_below_warning,
+    "except-in-loop-without-exit": _check_except_in_loop_without_exit,
+    "raise-without-from-in-except": _check_raise_without_from,
 }
 
 

@@ -82,7 +82,7 @@ candidates, and prints JSON to stdout.
 | Script | Purpose |
 |---|---|
 | `scan_common.py` | **Shared utilities — every other script imports from here** |
-| `scan_python_pitfalls.py` | Correctness defects; 14 checks mapping 1:1 to `data/python_bug_shapes.json` |
+| `scan_python_pitfalls.py` | Correctness defects; 19 checks mapping 1:1 to `data/python_bug_shapes.json` |
 | `analyze_imports.py` | Import graph, module boundaries, circular dependencies |
 | `analyze_history.py` | Git history: churn, co-change, fix density |
 | `measure_complexity.py` | Per-function complexity metrics |
