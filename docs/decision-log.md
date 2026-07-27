@@ -243,3 +243,67 @@ subprocess call per run. A prototype exists at `scratchpad/validate_rules.py`.
 **Unresolved:** the 0.16.0 changelog claims `BLE001` is now suppressed when the exception is logged via
 `logging` methods other than `critical`/`error`/`exception`; this could not be reproduced
 (`logging.info(e)` still fires). Do not rely on `BLE001` suppression semantics without a local fixture.
+
+---
+
+## D-11 · 2026-07-26 · Session boundary — state at handoff, and how to resume
+
+Written before a context compaction so Phase 0 can begin cold.
+
+### State
+
+| | |
+|---|---|
+| Toolkit | `main` @ `38b2d2f`, pushed. **v1.5.0** — 40 shapes (21 confirmed), 35 FP classes, 570 tests passing |
+| Findings | `github.com/devdanzin/code-review-findings` (**private**) @ `8fc8cf8`, pushed. 3 projects, 111 findings |
+| Benchmarks | `reports/idlelib_v1`, `idlelib_v2`, `pyrepl_v1`, `coveragepy_v1` |
+| Targets | coveragepy @ `d37859cd` **clean**; CPython `~/projects/3.14` @ `6080c866096` unmodified |
+| Venv | `~/venvs/cext-review-toolkit` (Python 3.14.3+ debug). Has ruff 0.15.10, mypy, pyright, ty, pyrefly. **coverage is an editable install of `~/projects/coveragepy`**, not PyPI 7.13.5 — restore with `pip install --force-reinstall coverage==7.13.5` if unwanted |
+| ruff 0.16.0 | installed at `<scratch>/ruff016venv/bin/ruff` — scratch is session-local and **will not survive**; reinstall with `pip install ruff==0.16.0` |
+
+### Start here
+
+**Phase 0 of `docs/improvement-plan.md`. It blocks everything else.** Read that file and this log first
+— between them they carry the reasoning, and the numbers are already measured so nothing needs re-deriving.
+
+The first task is item **0.1**: reconcile the 43 stranded shapes. Reproduce the gap with:
+
+```bash
+cd ~/projects/code-review-findings && python - <<'PY'
+import json, csv
+from pathlib import Path
+cat = json.loads(Path("../code-review-toolkit/plugins/code-review-toolkit/data/python_bug_shapes.json").read_text())
+known = {s["id"] for s in cat["shapes"]}
+used = {}
+for tsv in Path(".").glob("*/catalog/known_findings.tsv"):
+    for row in csv.reader(tsv.read_text().splitlines(), delimiter="\t"):
+        if row and not row[0].startswith("#"):
+            used.setdefault(row[2], []).append(tsv.parent.parent.name)
+print(f"catalog={len(known)} used={len(used)} stranded={len({s for s in used if s not in known})}")
+print(f"covered={sum(len(v) for s,v in used.items() if s in known)}/{sum(len(v) for v in used.values())}")
+PY
+```
+
+Expected today: `catalog=40 used=64 stranded=43` and `covered=40/111`. **That ratio is Phase 0's
+success metric** — not new findings.
+
+Each stranded shape already has a title, location, consequence, guarded twin and fix in the relevant
+`project-local/findings.json`. What it needs is the catalog's `pattern` / `hunt` / `expected` /
+`caught_as` / `differential` fields plus a call: **implement as a check, or mark `agent-only`**.
+
+### Traps that cost real time this session
+
+- **Never patch-test in a live checkout** (D-07) — `git archive HEAD | tar -x -C <scratch>`. Verify the
+  target tree yourself; an agent claimed a restore that had not happened.
+- **`gh search issues` silently returns empty** — use `gh api search/issues` (D-06).
+- **A membership test against `ruff rule --all` passes for a removed rule** — read `status` (D-10).
+- **Grep cannot measure stale `type: ignore`** (D-04).
+- **Bump the plugin version whenever an agent is added**, or it stays invisible to the registry (item 0.6).
+- `scan_python_pitfalls.py` has had **two quadratic walks** fixed; if a full-`Lib/` run exceeds ~5 min,
+  suspect a third.
+
+### Deliberately not doing
+
+`migrate` (dropped), `reproduce`/OOM sweep, `recursion-guard-auditor`, `parity-checker` as an agent,
+`data/playbooks/`, campaign slice manifests — reasons in plan §0.5. Upstream reporting of the 111
+existing findings is out of scope by decision.
