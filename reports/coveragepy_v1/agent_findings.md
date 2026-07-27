@@ -460,12 +460,16 @@ no reading of `sysmon.py` could ever surface it.
   edited after import yields wrong sysmon branch attribution. CTracer/PyTracer take line numbers from
   the frame and never touch disk.
 
-### A shipped changelog entry describes behaviour the code does not have
+### ~~A shipped changelog entry describes behaviour the code does not have~~ — **WITHDRAWN**
 
-`CHANGES.rst:447-449`, in **released 7.11.1** (2025-11-07): *"If the 'sysmon' core is explicitly
-requested … but other settings conflict, **an error is now raised**. This used to produce a warning."*
-The code warns and falls back (`core.py:91-95`), and `tests/test_core.py:108-114` asserts exactly that
-warning. The adjacent bullet is correct.
+Reported as a defect, then **refuted during the prior-art pass.** The 7.11.1 entry
+(`CHANGES.rst:447-449`) was accurate when written; **7.11.3 (`CHANGES.rst:400-405`) explicitly
+documents the restore**, citing issues 2076 and 2078. A changelog is a historical record of what each
+release did, not a live claim about current behaviour — reading it as the latter is the error. The
+entry is correct by convention and merely lacks a cross-link.
+
+*Kept visible rather than deleted: this is the kind of finding that reads as convincing and is simply
+wrong, and the prior-art step is what caught it.*
 
 ### Over-broad test flags — muting a test instead of narrowing a condition
 
@@ -545,3 +549,137 @@ Recorded because they look exactly like findings and are not:
 
 **This is the standard of proof the whole run should be judged against** — a plausible-looking finding
 that dies under a patch-test is worth as much as one that survives.
+
+---
+
+## Part 9 — Prior art
+
+Searched `coveragepy/coveragepy` per `docs/searching-trackers.md` (the `gh api search/issues` recipe —
+`gh search issues` has two footguns that silently return empty). Both states, issues and PRs, plus
+`CHANGES.rst`. Latest release 7.15.2; "Unreleased — Nothing yet."
+
+**13 findings have no prior art.** Two are *regressions one release old*, which makes them the highest
+value to report:
+
+| Finding | Verdict | Reference |
+|---|---|---|
+| `_reap_dead_thread_dbs` destroys the in-memory DB | **NO PRIOR ART — 7.14.2 regression** | introduced by PR #2193 (fixing #2192) |
+| `SyntaxError` escapes `compute_multiline_map` | **NO PRIOR ART — 7.15.1 regression** | introduced by PR #2220; re-opens the class #2077 closed |
+| CTracer's `warn` never called | NO PRIOR ART | users noticed the asymmetry in #436 comments; nobody filed it |
+| Missing `DETACH` in `update()` | NO PRIOR ART | exactly one `ATTACH`, zero `DETACH` in the file |
+| XML `line-rate` `.4g` → `1` | NO PRIOR ART | #552/#345 are different xml-rate complaints |
+| `patch = fork` reduces coverage | NO PRIOR ART | #1941 is the report *motivating* the feature, not a bug in it |
+| `[report] contexts` ignored by xml/lcov/annotate | NO PRIOR ART | (annotate is deprecated, so that third is lower value) |
+| `*`-leading omit patterns not symlink-resolved | NO PRIOR ART | adjacent to #1689 but a **distinct mechanism** — do not fold |
+| `set_option()` bypasses `post_process()` | NO PRIOR ART | `post_process` called from exactly one place |
+| Two TOML plugin-config gaps | NO PRIOR ART | |
+| `DebugFileReporterWrapper` 10-of-14 | NO PRIOR ART | |
+| `html.py:42` `coverage.plugins` typo | NO PRIOR ART | one-line PR, not an issue |
+| Thread-measurement parity | **PARTIAL** | #318 (open, 2014) records the settrace limitation; predates sysmon, says nothing about the divergence |
+
+### Already known — do not file
+
+- **`relative_files` + symlink → 0%** is **#1689 (open, `label:bug`, unfixed since 2023)**, same
+  user-visible symptom with 3 corroborating comments. Our `python.py:155` vs `inorout.py:401` framing
+  is a *sharper diagnosis* of the same bug — worth a comment there, not a new issue.
+- **`Collector.resume()`** — PR #2018 fixed it, PR #2027 reverted it two days later (*"This broke usage
+  of nested contexts, reverting until I find a better fix"*), and **no follow-up issue was ever
+  opened.** Filing one to re-open the thread is the useful move.
+- **`file_tracers` in `flush_data`** — PR #2165 added `.copy()` for `self.data` and the inner sets and
+  left this one live. Belongs as a follow-up on that PR, not a fresh issue.
+- **`--fail-under` rounding** — #1168 is the *identical asymmetry*, but was fixed only by
+  special-casing `fail_under == 100.0`. Every other threshold is still broken; the residual is
+  unreported. Comment on #1168 rather than open a duplicate.
+- **sysmon code-object retention** — acknowledged in `tests/test_oddball.py:228`'s own skipif comment.
+  No issue, no changelog entry, but the maintainer clearly knows.
+
+### The maintainer is actively receptive to this exact shape
+
+There is no "parity" label or umbrella issue, but **`label:bug sysmon` returns 33 issues**, and
+**#2200 (open, 2026-06-21)** — *"sysmon core silently drops contexts set via `switch_context()` (no
+warning, no fallback)"* — argues explicitly about *"the asymmetry"* between cores and the absence of a
+warning/fallback, with two open PRs attached (#2202, #2234). That is the precise template for the
+thread-measurement and CTracer-`warn` findings.
+
+---
+
+## Part 10 — Reproduction pass (data layer and config)
+
+Run on a pristine `git archive` copy, shadowed over the editable install; user checkout verified
+untouched. **Nothing was refuted.** Two findings needed amendment, and one produced a stronger result
+than the finding it was found under.
+
+| Finding | Verdict |
+|---|---|
+| `sqldata.py:912-927` `write()` missing the `no_disk` guard | **reproduced**; CLI-unreachability **confirmed, not assumed** |
+| `sysmon.py:410/:436/:451` unguarded `code_infos[id(code)]` | confirmed-structurally; **not reachable on 3.14** — downgrade to CONSIDER |
+| `config.py:55-59`/`:319` unreadable config = "no config" | **reproduced**, plus an extra wrinkle |
+| `sysmon.py:489-503` source re-read at measurement time | **reproduced** — 83% → 50% |
+| `sqldata.py:468-475` `_file_map` + `INSERT OR REPLACE` | **reproduced independently, API *and* CLI** |
+| `sqldata.py:804-809` lines-vs-arcs source-of-truth split | **reproduced** |
+
+### NEW — silent coverage loss on 3.14 after a nested `Coverage` *(found underneath the sysmon guard finding)*
+
+`sysmon_py_start` installs local events only in the `if tracing_code is None:` branch. When a nested
+`Coverage` frees and re-takes the `sys.monitoring` tool id, CPython **wipes the outer tracer's local
+events** — but its `code_infos` entry still exists, so the install block is skipped and the events are
+never re-installed. Everything the outer `Coverage` had already seen stops being measured for the rest
+of the process.
+
+```
+=== core=sysmon ===          === core=ctrace ===
+lib2.py  8  6  25%           lib2.py  8  3  62%
+```
+
+Identical program, **25% vs 62%**. This is a live 3.14 bug on the default core and is the more valuable
+result of the two.
+
+### Amendment 1 — the sysmon guard finding is NOT a live crash
+
+Each unguarded site does fail when reached (`KeyError` at `:436`/`:451`, `AttributeError` at `:410`),
+but **CPython 3.14 forbids the trigger**: `sys.monitoring.free_tool_id` →
+`_PyMonitoring_ClearToolId` bumps the tool version explicitly to *"invalidate local events on all
+existing code objects"* (added by `5e0abb47886`, gh-116750). Cross-version probe, raw `sys.monitoring`,
+no coverage involved:
+
+```
+3.14.3+: stale local events seen by tool B -> 0,  LINE hits=[]
+3.12.13: stale local events seen by tool B -> 32, LINE hits=[5, 6]
+```
+
+And the three unguarded siblings are registered **only** under `if self.trace_arcs:`, gated on
+`PYVERSION > (3,14,0,'alpha',5,0)` — so they exist only on the versions where CPython already closed
+the hole. The guarded site's guard *does* provably fire on 3.12, which confirms the comment
+(*"But somehow code_info can be None here"*) was written from real experience.
+
+**The safety is accidental**, and the code's own reasoning (*"we wouldn't have enabled this event if
+they were"*) is false. Keep as CONSIDER / defensive-robustness, not FIX.
+
+### Amendment 2 — lead with the realistic trigger
+
+`write()`'s missing `no_disk` guard is reachable without any explicit `data_suffix=True`:
+`control.py:609-616` promotes `config.parallel` to `suffix=True`, so **any API user passing
+`data_file=None` inside a project whose config sets `parallel = true`** gets a raw, unwrapped
+`FileNotFoundError` out of `Coverage.save()`. CLI-unreachability was then verified empirically
+(`--data-file=''`, an empty `data_file =` in config, and an instrumented `__init__` all yield
+`_no_disk = False`), not assumed.
+
+### Extra wrinkle — `--rcfile=.coveragerc` is silently downgraded
+
+`config_files_to_try` (`config.py:646-648`) special-cases `if config_file == ".coveragerc": config_file = True`,
+which routes the *explicit* form onto the silent path when the name happens to be the default:
+
+```
+--rcfile=covconfig.ini   -> "Couldn't read 'covconfig.ini' as a config file", exit 1
+--rcfile=.coveragerc     -> exit 0, config silently ignored
+```
+
+Same file, same permissions, opposite behaviour. The unreadable-config case itself is stark: `source`,
+`omit`, `parallel` and `branch` all revert, taking the report from 2 files / 75% to **7 files / 9%**
+including stdlib and `vendor/`, exit 0, nothing on stderr.
+
+### Adjacent, not chased
+
+With `--append` against a **non-existent** data file, `_have_used` stays `False` and the first
+`add_lines` calls `erase()` — deleting a data file another concurrent writer created in the meantime.
+Same "two writers, one file" family as the `_file_map` finding; flag if worth pursuing.

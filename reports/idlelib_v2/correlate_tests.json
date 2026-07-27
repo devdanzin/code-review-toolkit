@@ -1,0 +1,3920 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/idlelib",
+  "files_total": 125,
+  "files_analyzed": 125,
+  "files_capped": false,
+  "summary": {
+    "source_files": 66,
+    "test_files": 59,
+    "source_files_with_tests": 56,
+    "source_files_without_tests": 10,
+    "coverage_percentage": 84.8,
+    "total_test_methods": 587,
+    "total_skipped_tests": 7,
+    "external_test_roots": []
+  },
+  "untested_sources": [
+    "Lib/idlelib/__init__.py",
+    "Lib/idlelib/__main__.py",
+    "Lib/idlelib/dynoption.py",
+    "Lib/idlelib/idle.py",
+    "Lib/idlelib/idle_test/__init__.py",
+    "Lib/idlelib/idle_test/htest.py",
+    "Lib/idlelib/idle_test/mock_idle.py",
+    "Lib/idlelib/idle_test/mock_tk.py",
+    "Lib/idlelib/idle_test/template.py",
+    "Lib/idlelib/idle_test/tkinter_testing_utils.py"
+  ],
+  "source_coverage": [
+    {
+      "source_file": "Lib/idlelib/__init__.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/__main__.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/autocomplete.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_autocomplete.py"
+      ],
+      "test_method_count": 14,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/autocomplete_w.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_autocomplete_w.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 10,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/autoexpand.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_autoexpand.py"
+      ],
+      "test_method_count": 5,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 3,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/browser.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_browser.py"
+      ],
+      "test_method_count": 21,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 2,
+      "public_surface_size": 17,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/calltip.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_calltip.py"
+      ],
+      "test_method_count": 20,
+      "skipped_test_count": 2,
+      "public_classes": 1,
+      "public_functions": 2,
+      "public_surface_size": 9,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/calltip_w.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_calltip_w.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/codecontext.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_codecontext.py"
+      ],
+      "test_method_count": 13,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 2,
+      "public_surface_size": 10,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/colorizer.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_colorizer.py"
+      ],
+      "test_method_count": 22,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 4,
+      "public_surface_size": 16,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/config.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_config.py"
+      ],
+      "test_method_count": 48,
+      "skipped_test_count": 2,
+      "public_classes": 7,
+      "public_functions": 0,
+      "public_surface_size": 40,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/config_key.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_config_key.py"
+      ],
+      "test_method_count": 17,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 1,
+      "public_surface_size": 16,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/configdialog.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_configdialog.py"
+      ],
+      "test_method_count": 68,
+      "skipped_test_count": 0,
+      "public_classes": 10,
+      "public_functions": 1,
+      "public_surface_size": 76,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/debugger.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_debugger.py"
+      ],
+      "test_method_count": 21,
+      "skipped_test_count": 0,
+      "public_classes": 4,
+      "public_functions": 0,
+      "public_surface_size": 33,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/debugger_r.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_debugger_r.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 7,
+      "public_functions": 7,
+      "public_surface_size": 40,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/debugobj.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_debugobj.py"
+      ],
+      "test_method_count": 7,
+      "skipped_test_count": 0,
+      "public_classes": 5,
+      "public_functions": 1,
+      "public_surface_size": 15,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/debugobj_r.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_debugobj_r.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/delegator.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_delegator.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 2,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/dynoption.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/editor.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_editor.py"
+      ],
+      "test_method_count": 7,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 5,
+      "public_surface_size": 96,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/filelist.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_filelist.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/format.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_format.py"
+      ],
+      "test_method_count": 25,
+      "skipped_test_count": 0,
+      "public_classes": 4,
+      "public_functions": 7,
+      "public_surface_size": 21,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/grep.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_grep.py"
+      ],
+      "test_method_count": 6,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 3,
+      "public_surface_size": 9,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/help.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_help.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 4,
+      "public_functions": 2,
+      "public_surface_size": 8,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/help_about.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_help_about.py"
+      ],
+      "test_method_count": 8,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 10,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/history.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_history.py"
+      ],
+      "test_method_count": 13,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 4,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/hyperparser.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_hyperparser.py"
+      ],
+      "test_method_count": 7,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 5,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/idle.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/idle_test/__init__.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/idle_test/htest.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/idle_test/mock_idle.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 0,
+      "public_surface_size": 3,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/idle_test/mock_tk.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 6,
+      "public_functions": 0,
+      "public_surface_size": 15,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/idle_test/template.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 3,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/idle_test/tkinter_testing_utils.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "Lib/idlelib/iomenu.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_iomenu.py"
+      ],
+      "test_method_count": 5,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 20,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/macosx.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_macosx.py"
+      ],
+      "test_method_count": 4,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 11,
+      "public_surface_size": 11,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/mainmenu.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_mainmenu.py"
+      ],
+      "test_method_count": 3,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/multicall.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_multicall.py"
+      ],
+      "test_method_count": 3,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 2,
+      "public_surface_size": 2,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/outwin.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_outwin.py"
+      ],
+      "test_method_count": 8,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 2,
+      "public_surface_size": 12,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/parenmatch.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_parenmatch.py"
+      ],
+      "test_method_count": 3,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 13,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/pathbrowser.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_pathbrowser.py"
+      ],
+      "test_method_count": 6,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 0,
+      "public_surface_size": 8,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/percolator.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_percolator.py"
+      ],
+      "test_method_count": 8,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 6,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/pyparse.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_pyparse.py"
+      ],
+      "test_method_count": 16,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 0,
+      "public_surface_size": 11,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/pyshell.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_pyshell.py"
+      ],
+      "test_method_count": 10,
+      "skipped_test_count": 0,
+      "public_classes": 8,
+      "public_functions": 6,
+      "public_surface_size": 90,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/query.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_query.py"
+      ],
+      "test_method_count": 34,
+      "skipped_test_count": 0,
+      "public_classes": 6,
+      "public_functions": 0,
+      "public_surface_size": 18,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/redirector.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_redirector.py"
+      ],
+      "test_method_count": 11,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 0,
+      "public_surface_size": 4,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/replace.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_replace.py"
+      ],
+      "test_method_count": 8,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 1,
+      "public_surface_size": 12,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/rpc.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_rpc.py"
+      ],
+      "test_method_count": 3,
+      "skipped_test_count": 0,
+      "public_classes": 9,
+      "public_functions": 5,
+      "public_surface_size": 35,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/run.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_run.py"
+      ],
+      "test_method_count": 21,
+      "skipped_test_count": 0,
+      "public_classes": 6,
+      "public_functions": 15,
+      "public_surface_size": 37,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/runscript.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_runscript.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 8,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/scrolledlist.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_scrolledlist.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 14,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/search.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_search.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 3,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/searchbase.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_searchbase.py"
+      ],
+      "test_method_count": 9,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 10,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/searchengine.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_searchengine.py"
+      ],
+      "test_method_count": 12,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 4,
+      "public_surface_size": 18,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/sidebar.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_sidebar.py"
+      ],
+      "test_method_count": 22,
+      "skipped_test_count": 3,
+      "public_classes": 5,
+      "public_functions": 5,
+      "public_surface_size": 36,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/squeezer.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_squeezer.py"
+      ],
+      "test_method_count": 24,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 1,
+      "public_surface_size": 9,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/stackviewer.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_stackviewer.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 1,
+      "public_surface_size": 11,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/statusbar.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_statusbar.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 1,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/textview.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_textview.py"
+      ],
+      "test_method_count": 14,
+      "skipped_test_count": 0,
+      "public_classes": 4,
+      "public_functions": 2,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/tooltip.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_tooltip.py"
+      ],
+      "test_method_count": 7,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 0,
+      "public_surface_size": 9,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/tree.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_tree.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 4,
+      "public_functions": 2,
+      "public_surface_size": 41,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/undo.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_undo.py"
+      ],
+      "test_method_count": 6,
+      "skipped_test_count": 0,
+      "public_classes": 5,
+      "public_functions": 0,
+      "public_surface_size": 33,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/util.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_util.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/window.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_window.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 0,
+      "public_surface_size": 10,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/zoomheight.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_zoomheight.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 2,
+      "public_surface_size": 5,
+      "has_tests": true
+    },
+    {
+      "source_file": "Lib/idlelib/zzdummy.py",
+      "test_files": [
+        "Lib/idlelib/idle_test/test_zzdummy.py"
+      ],
+      "test_method_count": 5,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 1,
+      "public_surface_size": 4,
+      "has_tests": true
+    }
+  ],
+  "test_details": {
+    "Lib/idlelib/idle_test/test_autocomplete.py": {
+      "classes": [
+        {
+          "name": "DummyEditwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 16
+        },
+        {
+          "name": "AutoCompleteTest",
+          "test_methods": [
+            "test_init",
+            "test_make_autocomplete_window",
+            "test_remove_autocomplete_window",
+            "test_force_open_completions_event",
+            "test_autocomplete_event",
+            "test_try_open_completions_event",
+            "test_delayed_open_completions",
+            "test_oc_cancel_comment",
+            "test_oc_no_list",
+            "test_open_completions_none",
+            "test_open_completions",
+            "test_completion_kwds",
+            "test_fetch_completions",
+            "test_get_entity"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 14,
+          "line_start": 25
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/autocomplete.py"
+      ],
+      "imported_modules": [
+        "unittest",
+        "unittest.mock",
+        "test.support",
+        "tkinter",
+        "os",
+        "__main__",
+        "idlelib.autocomplete",
+        "idlelib.autocomplete_w",
+        "idlelib.idle_test.mock_idle",
+        "idlelib.idle_test.mock_tk"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_autocomplete_w.py": {
+      "classes": [
+        {
+          "name": "AutoCompleteWindowTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 10
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/autocomplete_w.py"
+      ],
+      "imported_modules": [
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.autocomplete_w"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_autoexpand.py": {
+      "classes": [
+        {
+          "name": "DummyEditwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 9
+        },
+        {
+          "name": "AutoExpandTest",
+          "test_methods": [
+            "test_get_prevword",
+            "test_before_only",
+            "test_after_only",
+            "test_both_before_after",
+            "test_other_expand_cases"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 14
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/autoexpand.py"
+      ],
+      "imported_modules": [
+        "idlelib.autoexpand",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_browser.py": {
+      "classes": [
+        {
+          "name": "ModuleBrowserTest",
+          "test_methods": [
+            "test_init",
+            "test_settitle",
+            "test_rootnode",
+            "test_close",
+            "test_is_browseable_extension"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 18
+        },
+        {
+          "name": "TransformChildrenTest",
+          "test_methods": [
+            "test_transform_module_children",
+            "test_transform_node_children"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 93
+        },
+        {
+          "name": "ModuleBrowserTreeItemTest",
+          "test_methods": [
+            "test_init",
+            "test_gettext",
+            "test_geticonname",
+            "test_isexpandable",
+            "test_listchildren",
+            "test_getsublist",
+            "test_ondoubleclick"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 124
+        },
+        {
+          "name": "ChildBrowserTreeItemTest",
+          "test_methods": [
+            "test_init",
+            "test_gettext",
+            "test_geticonname",
+            "test_isexpandable",
+            "test_getsublist",
+            "test_ondoubleclick"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 176
+        },
+        {
+          "name": "NestedChildrenTest",
+          "test_methods": [
+            "test_nested"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 230
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/browser.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "test.support",
+        "unittest",
+        "unittest",
+        "idlelib.idle_test.mock_idle",
+        "idlelib.util",
+        "collections",
+        "os.path",
+        "pyclbr",
+        "tkinter",
+        "idlelib.tree"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_calltip.py": {
+      "classes": [
+        {
+          "name": "TC",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 14
+        },
+        {
+          "name": "Get_argspecTest",
+          "test_methods": [
+            "test_signature_wrap",
+            "test_properly_formatted",
+            "test_docline_truncation",
+            "test_multiline_docstring_2",
+            "test_functions",
+            "test_methods",
+            "test_bound_methods",
+            "test_starred_parameter",
+            "test_invalid_method_get_spec",
+            "test_non_ascii_name",
+            "test_no_docstring",
+            "test_buggy_getattr_class",
+            "test_metaclass_class",
+            "test_non_callables"
+          ],
+          "skipped_methods": [
+            "test_builtins",
+            "test_multiline_docstring"
+          ],
+          "total_test_methods": 16,
+          "line_start": 46
+        },
+        {
+          "name": "Get_entityTest",
+          "test_methods": [
+            "test_bad_entity",
+            "test_good_entity"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 269
+        },
+        {
+          "name": "mock_Shell",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 280
+        },
+        {
+          "name": "mock_TipWindow",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 290
+        },
+        {
+          "name": "WrappedCalltip",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 299
+        },
+        {
+          "name": "CalltipTest",
+          "test_methods": [
+            "test_open_close",
+            "test_repeated_force",
+            "test_repeated_parens",
+            "test_comment_parens"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 312
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/calltip.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "unittest.mock",
+        "textwrap",
+        "types",
+        "re",
+        "idlelib.idle_test.mock_tk",
+        "test.support"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_calltip_w.py": {
+      "classes": [
+        {
+          "name": "CallTipWindowTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 9
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/calltip_w.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_codecontext.py": {
+      "classes": [
+        {
+          "name": "DummyEditwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 38
+        },
+        {
+          "name": "CodeContextTest",
+          "test_methods": [
+            "test_init",
+            "test_del",
+            "test_del_with_timer",
+            "test_reload",
+            "test_toggle_code_context_event",
+            "test_get_context",
+            "test_update_code_context",
+            "test_jumptoline",
+            "test_timer_event",
+            "test_font",
+            "test_highlight_colors"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 53
+        },
+        {
+          "name": "HelperFunctionText",
+          "test_methods": [
+            "test_get_spaces_firstword",
+            "test_get_line_info"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 414
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/codecontext.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "unittest.mock",
+        "test.support",
+        "tkinter",
+        "unittest",
+        "re",
+        "idlelib"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_colorizer.py": {
+      "classes": [
+        {
+          "name": "FunctionTest",
+          "test_methods": [
+            "test_any",
+            "test_make_pat",
+            "test_prog",
+            "test_idprog"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 66
+        },
+        {
+          "name": "ColorConfigTest",
+          "test_methods": [
+            "test_color_config"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 99
+        },
+        {
+          "name": "ColorDelegatorInstantiationTest",
+          "test_methods": [
+            "test_init",
+            "test_init_state"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 128
+        },
+        {
+          "name": "ColorDelegatorTest",
+          "test_methods": [
+            "test_setdelegate",
+            "test_LoadTagDefs",
+            "test_config_colors",
+            "test_insert",
+            "test_delete",
+            "test_notify_range",
+            "test_toggle_colorize_event",
+            "test_recolorize",
+            "test_recolorize_main",
+            "test_def_statement",
+            "test_match_soft_keyword",
+            "test_case_soft_keyword",
+            "test_long_multiline_string",
+            "test_incremental_editing",
+            "test_removecolors"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 15,
+          "line_start": 167
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/colorizer.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "test.support",
+        "unittest",
+        "unittest",
+        "idlelib.idle_test.tkinter_testing_utils",
+        "functools",
+        "textwrap",
+        "tkinter",
+        "idlelib",
+        "idlelib.percolator"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_config.py": {
+      "classes": [
+        {
+          "name": "IdleConfParserTest",
+          "test_methods": [
+            "test_get",
+            "test_get_option_list",
+            "test_load_nothing",
+            "test_load_file"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 38
+        },
+        {
+          "name": "IdleUserConfParserTest",
+          "test_methods": [
+            "test_set_option",
+            "test_remove_option",
+            "test_add_section",
+            "test_remove_empty_sections",
+            "test_is_empty",
+            "test_save"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 97
+        },
+        {
+          "name": "IdleConfTest",
+          "test_methods": [
+            "test_create_config_handlers",
+            "test_load_cfg_files",
+            "test_save_user_cfg_files",
+            "test_get_option",
+            "test_set_option",
+            "test_get_section_list",
+            "test_get_highlight",
+            "test_get_theme_dict",
+            "test_get_current_theme_and_keys",
+            "test_current_colors_and_keys",
+            "test_default_keys",
+            "test_get_extensions",
+            "test_remove_key_bind_names",
+            "test_get_extn_name_for_event",
+            "test_get_extension_keys",
+            "test_get_extension_bindings",
+            "test_get_keybinding",
+            "test_get_current_keyset",
+            "test_get_keyset",
+            "test_is_core_binding",
+            "test_extra_help_source_list",
+            "test_get_font",
+            "test_get_core_keys"
+          ],
+          "skipped_methods": [
+            "test_get_user_cfg_dir_unix",
+            "test_get_user_cfg_dir_windows"
+          ],
+          "total_test_methods": 25,
+          "line_start": 180
+        },
+        {
+          "name": "CurrentColorKeysTest",
+          "test_methods": [
+            "test_old_builtin_theme",
+            "test_new_builtin_theme",
+            "test_user_override_theme",
+            "test_old_builtin_keys",
+            "test_new_builtin_keys",
+            "test_user_override_keys"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 589
+        },
+        {
+          "name": "ChangesTest",
+          "test_methods": [
+            "test_init",
+            "test_add_option",
+            "test_save_option",
+            "test_save_added",
+            "test_save_help",
+            "test_save_default",
+            "test_delete_section",
+            "test_clear"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 700
+        },
+        {
+          "name": "WarningTest",
+          "test_methods": [
+            "test_warn"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 786
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/config.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "sys",
+        "os",
+        "tempfile",
+        "test.support",
+        "unittest",
+        "unittest",
+        "idlelib",
+        "idlelib.idle_test.mock_idle",
+        "test.support",
+        "tkinter",
+        "tkinter.font"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_config_key.py": {
+      "classes": [
+        {
+          "name": "ValidationTest",
+          "test_methods": [
+            "test_ok_empty",
+            "test_ok_good",
+            "test_keys_no_ending",
+            "test_keys_no_modifier_bad",
+            "test_keys_no_modifier_ok",
+            "test_keys_shift_bad",
+            "test_keys_dup",
+            "test_bind_ok",
+            "test_bind_not_ok"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 17
+        },
+        {
+          "name": "ToggleLevelTest",
+          "test_methods": [
+            "test_toggle_level"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 103
+        },
+        {
+          "name": "KeySelectionTest",
+          "test_methods": [
+            "test_get_modifiers",
+            "test_build_key_string",
+            "test_final_key_selected"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 158
+        },
+        {
+          "name": "CancelWindowTest",
+          "test_methods": [
+            "test_cancel"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 240
+        },
+        {
+          "name": "OKWindowTest",
+          "test_methods": [
+            "test_ok"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 269
+        },
+        {
+          "name": "WindowResultTest",
+          "test_methods": [
+            "test_result"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 297
+        },
+        {
+          "name": "HelperTest",
+          "test_methods": [
+            "test_translate_key"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 333
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/config_key.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "test.support",
+        "unittest",
+        "unittest",
+        "tkinter",
+        "idlelib.idle_test.mock_idle",
+        "idlelib.idle_test.mock_tk"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_configdialog.py": {
+      "classes": [
+        {
+          "name": "ConfigDialogTest",
+          "test_methods": [
+            "test_deactivate_current_config"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 53
+        },
+        {
+          "name": "ButtonTest",
+          "test_methods": [
+            "test_click_ok",
+            "test_click_apply",
+            "test_click_cancel",
+            "test_click_help"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 62
+        },
+        {
+          "name": "FontPageTest",
+          "test_methods": [
+            "test_load_font_cfg",
+            "test_fontlist_key",
+            "test_fontlist_mouse",
+            "test_sizelist",
+            "test_bold_toggle",
+            "test_font_set",
+            "test_set_samples"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 105
+        },
+        {
+          "name": "HighPageTest",
+          "test_methods": [
+            "test_load_theme_cfg",
+            "test_theme_source",
+            "test_builtin_name",
+            "test_custom_name",
+            "test_color",
+            "test_highlight_target_list_mouse",
+            "test_highlight_target_text_mouse",
+            "test_highlight_sample_double_click",
+            "test_highlight_sample_b1_motion",
+            "test_set_theme_type",
+            "test_get_color",
+            "test_on_new_color_set",
+            "test_get_new_theme_name",
+            "test_save_as_new_theme",
+            "test_create_new_and_save_new",
+            "test_set_highlight_target",
+            "test_set_color_sample_binding",
+            "test_set_color_sample",
+            "test_paint_theme_sample",
+            "test_delete_custom"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 20,
+          "line_start": 263
+        },
+        {
+          "name": "KeysPageTest",
+          "test_methods": [
+            "test_load_key_cfg",
+            "test_keyset_source",
+            "test_builtin_name",
+            "test_custom_name",
+            "test_keybinding",
+            "test_set_keys_type",
+            "test_get_new_keys",
+            "test_get_new_keys_name",
+            "test_save_as_new_key_set",
+            "test_on_bindingslist_select",
+            "test_create_new_key_set_and_save_new_key_set",
+            "test_load_keys_list",
+            "test_delete_custom_keys"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 13,
+          "line_start": 771
+        },
+        {
+          "name": "WinPageTest",
+          "test_methods": [
+            "test_load_windows_cfg",
+            "test_startup",
+            "test_editor_size",
+            "test_indent_spaces",
+            "test_cursor_blink",
+            "test_autocomplete_wait",
+            "test_parenmatch",
+            "test_paragraph"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 1182
+        },
+        {
+          "name": "ShedPageTest",
+          "test_methods": [
+            "test_load_shelled_cfg",
+            "test_autosave",
+            "test_context"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 1263
+        },
+        {
+          "name": "ExtPageTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 1300
+        },
+        {
+          "name": "HelpSourceTest",
+          "test_methods": [
+            "test_load_helplist",
+            "test_source_selected",
+            "test_set_add_delete_state",
+            "test_helplist_item_add",
+            "test_helplist_item_edit",
+            "test_helplist_item_remove",
+            "test_update_help_changes"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 1308
+        },
+        {
+          "name": "VarTraceTest",
+          "test_methods": [
+            "test_init",
+            "test_clear",
+            "test_add",
+            "test_make_callback",
+            "test_attach_detach"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 1475
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/configdialog.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "test.support",
+        "unittest",
+        "unittest",
+        "idlelib.idle_test.mock_idle",
+        "tkinter",
+        "idlelib",
+        "idlelib.configdialog"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_debugger.py": {
+      "classes": [
+        {
+          "name": "MockFrame",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 25
+        },
+        {
+          "name": "IdbTest",
+          "test_methods": [
+            "test_init",
+            "test_user_line",
+            "test_user_exception"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 33
+        },
+        {
+          "name": "FunctionTest",
+          "test_methods": [
+            "test_functions"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 68
+        },
+        {
+          "name": "DebuggerTest",
+          "test_methods": [
+            "test_cont",
+            "test_step",
+            "test_quit",
+            "test_next",
+            "test_ret",
+            "test_clear_breakpoint",
+            "test_clear_file_breaks",
+            "test_set_load_breakpoints",
+            "test_sync_source_line"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 92
+        },
+        {
+          "name": "DebuggerGuiTest",
+          "test_methods": [
+            "test_run_debugger",
+            "test_close",
+            "test_show_stack",
+            "test_show_stack_with_frame"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 171
+        },
+        {
+          "name": "StackViewerTest",
+          "test_methods": [
+            "test_init",
+            "test_load_stack",
+            "test_show_source"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 230
+        },
+        {
+          "name": "NameSpaceTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 279
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/debugger.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "collections",
+        "textwrap",
+        "tkinter",
+        "test.support",
+        "unittest",
+        "unittest",
+        "unittest.mock"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_debugger_r.py": {
+      "classes": [
+        {
+          "name": "IdbAdapterTest",
+          "test_methods": [
+            "test_dict_item_noattr"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 21
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/debugger_r.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_debugobj.py": {
+      "classes": [
+        {
+          "name": "ObjectTreeItemTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 7
+        },
+        {
+          "name": "ClassTreeItemTest",
+          "test_methods": [
+            "test_isexpandable"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 16
+        },
+        {
+          "name": "AtomicObjectTreeItemTest",
+          "test_methods": [
+            "test_isexpandable"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 23
+        },
+        {
+          "name": "SequenceTreeItemTest",
+          "test_methods": [
+            "test_isexpandable",
+            "test_keys"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 30
+        },
+        {
+          "name": "DictTreeItemTest",
+          "test_methods": [
+            "test_isexpandable",
+            "test_keys"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 43
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/debugobj.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_debugobj_r.py": {
+      "classes": [
+        {
+          "name": "WrappedObjectTreeItemTest",
+          "test_methods": [
+            "test_getattr"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 7
+        },
+        {
+          "name": "StubObjectTreeItemTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 13
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/debugobj_r.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_delegator.py": {
+      "classes": [
+        {
+          "name": "DelegatorTest",
+          "test_methods": [
+            "test_mydel"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 7
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/delegator.py"
+      ],
+      "imported_modules": [
+        "idlelib.delegator",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_editmenu.py": {
+      "classes": [
+        {
+          "name": "PasteTest",
+          "test_methods": [
+            "test_paste_text",
+            "test_paste_entry",
+            "test_paste_spin"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 12
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "test.support",
+        "tkinter",
+        "tkinter",
+        "unittest",
+        "idlelib"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_editor.py": {
+      "classes": [
+        {
+          "name": "EditorWindowTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 12
+        },
+        {
+          "name": "GetLineIndentTest",
+          "test_methods": [
+            "test_empty_lines",
+            "test_tabwidth_4",
+            "test_tabwidth_8"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 34
+        },
+        {
+          "name": "IndentAndNewlineTest",
+          "test_methods": [
+            "test_indent_and_newline_event"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 101
+        },
+        {
+          "name": "IndentSearcherTest",
+          "test_methods": [
+            "test_searcher"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 184
+        },
+        {
+          "name": "RMenuTest",
+          "test_methods": [
+            "test_rclick"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 214
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/editor.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "collections",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_filelist.py": {
+      "classes": [
+        {
+          "name": "FileListTest",
+          "test_methods": [
+            "test_new_empty"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 8
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/filelist.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_format.py": {
+      "classes": [
+        {
+          "name": "Is_Get_Test",
+          "test_methods": [
+            "test_is_all_white",
+            "test_get_indent",
+            "test_get_comment_header"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 12
+        },
+        {
+          "name": "FindTest",
+          "test_methods": [
+            "test_find_comment",
+            "test_find_paragraph"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 43
+        },
+        {
+          "name": "ReformatFunctionTest",
+          "test_methods": [
+            "test_reformat_paragraph"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 162
+        },
+        {
+          "name": "ReformatCommentTest",
+          "test_methods": [
+            "test_reformat_comment"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 188
+        },
+        {
+          "name": "FormatClassTest",
+          "test_methods": [
+            "test_init_close"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 214
+        },
+        {
+          "name": "TextWrapper",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 233
+        },
+        {
+          "name": "Editor",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 241
+        },
+        {
+          "name": "FormatEventTest",
+          "test_methods": [
+            "test_short_line",
+            "test_long_line",
+            "test_multiple_lines",
+            "test_comment_block"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 246
+        },
+        {
+          "name": "DummyEditwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 380
+        },
+        {
+          "name": "FormatRegionTest",
+          "test_methods": [
+            "test_get_region",
+            "test_set_region",
+            "test_indent_region_event",
+            "test_dedent_region_event",
+            "test_comment_region_event",
+            "test_uncomment_region_event",
+            "test_tabify_region_event",
+            "test_untabify_region_event",
+            "test_ask_tabwidth"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 393
+        },
+        {
+          "name": "IndentsTest",
+          "test_methods": [
+            "test_toggle_tabs",
+            "test_change_indentwidth"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 577
+        },
+        {
+          "name": "RstripTest",
+          "test_methods": [
+            "test_rstrip_lines",
+            "test_rstrip_end"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 612
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/format.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.editor",
+        "idlelib.idle_test.mock_idle",
+        "idlelib.idle_test.mock_tk"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_grep.py": {
+      "classes": [
+        {
+          "name": "Dummy_searchengine",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 16
+        },
+        {
+          "name": "Dummy_grep",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 27
+        },
+        {
+          "name": "FindfilesTest",
+          "test_methods": [
+            "test_invaliddir",
+            "test_curdir",
+            "test_base",
+            "test_recurse"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 40
+        },
+        {
+          "name": "Grep_itTest",
+          "test_methods": [
+            "test_unfound",
+            "test_found"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 118
+        },
+        {
+          "name": "Default_commandTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 149
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/grep.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "idlelib.idle_test.mock_tk",
+        "os",
+        "re"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_help.py": {
+      "classes": [
+        {
+          "name": "IdleDocTest",
+          "test_methods": [
+            "test_1window",
+            "test_4text"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 11
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/help.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "os.path",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_help_about.py": {
+      "classes": [
+        {
+          "name": "LiveDialogTest",
+          "test_methods": [
+            "test_build_bits",
+            "test_dialog_title",
+            "test_dialog_logo",
+            "test_printer_buttons",
+            "test_file_buttons"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 19
+        },
+        {
+          "name": "DefaultTitleTest",
+          "test_methods": [
+            "test_dialog_title"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 89
+        },
+        {
+          "name": "CloseTest",
+          "test_methods": [
+            "test_close"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 113
+        },
+        {
+          "name": "Dummy_about_dialog",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 137
+        },
+        {
+          "name": "DisplayFileTest",
+          "test_methods": [
+            "test_file_display"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 147
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/help_about.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.idle_test.mock_idle",
+        "idlelib.idle_test.mock_tk",
+        "idlelib",
+        "os.path",
+        "platform"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_history.py": {
+      "classes": [
+        {
+          "name": "StoreTest",
+          "test_methods": [
+            "test_init",
+            "test_store_short",
+            "test_store_dup",
+            "test_store_reset"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 16
+        },
+        {
+          "name": "TextWrapper",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 58
+        },
+        {
+          "name": "FetchTest",
+          "test_methods": [
+            "test_fetch_prev_cyclic",
+            "test_fetch_next_cyclic",
+            "test_fetch_prev_prefix",
+            "test_fetch_next_prefix",
+            "test_fetch_prev_noncyclic",
+            "test_fetch_next_noncyclic",
+            "test_fetch_cursor_move",
+            "test_fetch_edit",
+            "test_history_prev_next"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 68
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/history.py"
+      ],
+      "imported_modules": [
+        "idlelib.history",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "tkinter",
+        "idlelib.idle_test.mock_tk",
+        "idlelib.config"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_hyperparser.py": {
+      "classes": [
+        {
+          "name": "DummyEditwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 9
+        },
+        {
+          "name": "HyperParserTest",
+          "test_methods": [
+            "test_init",
+            "test_is_in_string",
+            "test_is_in_code",
+            "test_get_surrounding_bracket",
+            "test_get_expression",
+            "test_eat_identifier",
+            "test_eat_identifier_various_lengths"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 21
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/hyperparser.py"
+      ],
+      "imported_modules": [
+        "idlelib.hyperparser",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.editor"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_iomenu.py": {
+      "classes": [
+        {
+          "name": "IOBindingTest",
+          "test_methods": [
+            "test_init",
+            "test_fixnewlines_end"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 18
+        },
+        {
+          "name": "FiletypesTest",
+          "test_methods": [
+            "test_python_source_files",
+            "test_text_files",
+            "test_all_files"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 68
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/iomenu.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.editor",
+        "idlelib",
+        "idlelib.idle_test.mock_idle",
+        "tokenize"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_macosx.py": {
+      "classes": [
+        {
+          "name": "InitTktypeTest",
+          "test_methods": [
+            "test_init_sets_tktype"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 24
+        },
+        {
+          "name": "IsTypeTkTest",
+          "test_methods": [
+            "test_is_calls_init",
+            "test_isfuncs"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 51
+        },
+        {
+          "name": "SetupTest",
+          "test_methods": [
+            "test_setupapp"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 79
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/macosx.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "unittest.mock",
+        "idlelib.filelist"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_mainmenu.py": {
+      "classes": [
+        {
+          "name": "MainMenuTest",
+          "test_methods": [
+            "test_menudefs",
+            "test_default_keydefs",
+            "test_tcl_indexes"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 9
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/mainmenu.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "re",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_multicall.py": {
+      "classes": [
+        {
+          "name": "MultiCallTest",
+          "test_methods": [
+            "test_creator",
+            "test_init",
+            "test_yview"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 9
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/multicall.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_outwin.py": {
+      "classes": [
+        {
+          "name": "OutputWindowTest",
+          "test_methods": [
+            "test_ispythonsource",
+            "test_window_title",
+            "test_maybesave",
+            "test_write",
+            "test_writelines",
+            "test_goto_file_line"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 14
+        },
+        {
+          "name": "ModuleFunctionTest",
+          "test_methods": [
+            "test_compile_progs",
+            "test_file_line_helper"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 142
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/outwin.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "platform",
+        "sys",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.idle_test.mock_tk",
+        "idlelib.idle_test.mock_idle",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_parenmatch.py": {
+      "classes": [
+        {
+          "name": "DummyEditwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 15
+        },
+        {
+          "name": "ParenMatchTest",
+          "test_methods": [
+            "test_paren_styles",
+            "test_paren_corner",
+            "test_handle_restore_timer"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 23
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/parenmatch.py"
+      ],
+      "imported_modules": [
+        "idlelib.parenmatch",
+        "test.support",
+        "unittest",
+        "unittest.mock",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_pathbrowser.py": {
+      "classes": [
+        {
+          "name": "PathBrowserTest",
+          "test_methods": [
+            "test_init",
+            "test_settitle",
+            "test_rootnode",
+            "test_close"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 18
+        },
+        {
+          "name": "DirBrowserTreeItemTest",
+          "test_methods": [
+            "test_DirBrowserTreeItem"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 62
+        },
+        {
+          "name": "PathBrowserTreeItemTest",
+          "test_methods": [
+            "test_PathBrowserTreeItem"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 75
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/pathbrowser.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "os.path",
+        "pyclbr",
+        "sys",
+        "idlelib.idle_test.mock_idle",
+        "idlelib",
+        "idlelib",
+        "idlelib.tree"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_percolator.py": {
+      "classes": [
+        {
+          "name": "MyFilter",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 10
+        },
+        {
+          "name": "PercolatorTest",
+          "test_methods": [
+            "test_insertfilter",
+            "test_removefilter",
+            "test_insert",
+            "test_modify_insert",
+            "test_modify_chain_insert",
+            "test_dont_insert",
+            "test_without_filter",
+            "test_delete"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 34
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/percolator.py"
+      ],
+      "imported_modules": [
+        "idlelib.percolator",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_pyparse.py": {
+      "classes": [
+        {
+          "name": "ParseMapTest",
+          "test_methods": [
+            "test_parsemap",
+            "test_trans"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 8
+        },
+        {
+          "name": "PyParseTest",
+          "test_methods": [
+            "test_init",
+            "test_set_code",
+            "test_find_good_parse_start",
+            "test_set_lo",
+            "test_study1",
+            "test_get_continuation_type",
+            "test_study2",
+            "test_get_num_lines_in_stmt",
+            "test_compute_bracket_indent",
+            "test_compute_backslash_indent",
+            "test_get_base_indent_string",
+            "test_is_block_opener",
+            "test_is_block_closer",
+            "test_get_last_stmt_bracketing"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 14,
+          "line_start": 24
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/pyparse.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "collections"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_pyshell.py": {
+      "classes": [
+        {
+          "name": "FunctionTest",
+          "test_methods": [
+            "test_restart_line_wide",
+            "test_restart_line_narrow"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 10
+        },
+        {
+          "name": "PyShellFileListTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 32
+        },
+        {
+          "name": "PyShellRemoveLastNewlineAndSurroundingWhitespaceTest",
+          "test_methods": [
+            "test_empty",
+            "test_newline",
+            "test_whitespace_no_newline",
+            "test_newline_with_whitespace",
+            "test_multiple_newlines",
+            "test_non_whitespace",
+            "test_unsupported_whitespace"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 63
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/pyshell.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_query.py": {
+      "classes": [
+        {
+          "name": "QueryTest",
+          "test_methods": [
+            "test_entry_ok_blank",
+            "test_entry_ok_good",
+            "test_ok_blank",
+            "test_ok_good",
+            "test_cancel"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 24
+        },
+        {
+          "name": "SectionNameTest",
+          "test_methods": [
+            "test_blank_section_name",
+            "test_used_section_name",
+            "test_long_section_name",
+            "test_good_section_name"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 75
+        },
+        {
+          "name": "ModuleNameTest",
+          "test_methods": [
+            "test_blank_module_name",
+            "test_bogus_module_name",
+            "test_c_source_name",
+            "test_good_module_name"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 108
+        },
+        {
+          "name": "GotoTest",
+          "test_methods": [
+            "test_bogus_goto",
+            "test_bad_goto",
+            "test_good_goto"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 144
+        },
+        {
+          "name": "HelpsourceBrowsefileTest",
+          "test_methods": [
+            "test_file_replaces_path"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 173
+        },
+        {
+          "name": "HelpsourcePathokTest",
+          "test_methods": [
+            "test_path_ok_blank",
+            "test_path_ok_bad",
+            "test_path_ok_web",
+            "test_path_ok_file"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 198
+        },
+        {
+          "name": "HelpsourceEntryokTest",
+          "test_methods": [
+            "test_entry_ok_helpsource"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 243
+        },
+        {
+          "name": "CustomRunCLIargsokTest",
+          "test_methods": [
+            "test_blank_args",
+            "test_invalid_args",
+            "test_good_args"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 268
+        },
+        {
+          "name": "CustomRunEntryokTest",
+          "test_methods": [
+            "test_entry_ok_customrun"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 295
+        },
+        {
+          "name": "QueryGuiTest",
+          "test_methods": [
+            "test_click_ok",
+            "test_click_blank",
+            "test_click_cancel"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 318
+        },
+        {
+          "name": "SectionnameGuiTest",
+          "test_methods": [
+            "test_click_section_name"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 361
+        },
+        {
+          "name": "ModulenameGuiTest",
+          "test_methods": [
+            "test_click_module_name"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 379
+        },
+        {
+          "name": "GotoGuiTest",
+          "test_methods": [
+            "test_click_module_name"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 396
+        },
+        {
+          "name": "HelpsourceGuiTest",
+          "test_methods": [
+            "test_click_help_source"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 412
+        },
+        {
+          "name": "CustomRunGuiTest",
+          "test_methods": [
+            "test_click_args"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 432
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/query.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "sys",
+        "unittest",
+        "idlelib.idle_test.mock_tk"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_redirector.py": {
+      "classes": [
+        {
+          "name": "InitCloseTest",
+          "test_methods": [
+            "test_init",
+            "test_close"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 10
+        },
+        {
+          "name": "WidgetRedirectorTest",
+          "test_methods": [
+            "test_repr",
+            "test_register",
+            "test_original_command",
+            "test_unregister",
+            "test_unregister_no_attribute",
+            "test_dispatch_intercept",
+            "test_dispatch_bypass",
+            "test_dispatch_error",
+            "test_command_dispatch"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 40
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/redirector.py"
+      ],
+      "imported_modules": [
+        "idlelib.redirector",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.idle_test.mock_idle"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_replace.py": {
+      "classes": [
+        {
+          "name": "ReplaceDialogTest",
+          "test_methods": [
+            "test_replace_simple",
+            "test_replace_wrap_around",
+            "test_replace_whole_word",
+            "test_replace_match_case",
+            "test_replace_regex",
+            "test_replace_backwards",
+            "test_replace_all",
+            "test_default_command"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 17
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/replace.py"
+      ],
+      "imported_modules": [
+        "idlelib.replace",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "unittest.mock",
+        "idlelib.idle_test.mock_tk",
+        "idlelib.searchengine"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_rpc.py": {
+      "classes": [
+        {
+          "name": "CodePicklerTest",
+          "test_methods": [
+            "test_pickle_unpickle",
+            "test_code_pickler",
+            "test_dumps"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 8
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/rpc.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_run.py": {
+      "classes": [
+        {
+          "name": "ExceptionTest",
+          "test_methods": [
+            "test_print_exception_unhashable",
+            "test_get_message",
+            "test_get_multiple_message"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 16
+        },
+        {
+          "name": "S",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 87
+        },
+        {
+          "name": "MockShell",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 102
+        },
+        {
+          "name": "StdInputFilesTest",
+          "test_methods": [
+            "test_misc",
+            "test_unsupported",
+            "test_read",
+            "test_readline",
+            "test_readlines",
+            "test_close"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 117
+        },
+        {
+          "name": "StdOutputFilesTest",
+          "test_methods": [
+            "test_misc",
+            "test_unsupported",
+            "test_write",
+            "test_write_stderr_nonencodable",
+            "test_writelines",
+            "test_close"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 220
+        },
+        {
+          "name": "RecursionLimitTest",
+          "test_methods": [
+            "test_bad_setrecursionlimit_calls",
+            "test_roundtrip",
+            "test_default_recursion_limit_preserved",
+            "test_fixdoc"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 331
+        },
+        {
+          "name": "HandleErrorTest",
+          "test_methods": [
+            "test_fatal_error"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 372
+        },
+        {
+          "name": "ExecRuncodeTest",
+          "test_methods": [
+            "test_exceptions"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 400
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/run.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "io",
+        "sys",
+        "test.support",
+        "unittest",
+        "unittest",
+        "idlelib",
+        "idlelib.idle_test.mock_idle",
+        "test.support"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_runscript.py": {
+      "classes": [
+        {
+          "name": "ScriptBindingTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 10
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/runscript.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.editor"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_scrolledlist.py": {
+      "classes": [
+        {
+          "name": "ScrolledListTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 10
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/scrolledlist.py"
+      ],
+      "imported_modules": [
+        "idlelib.scrolledlist",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_search.py": {
+      "classes": [
+        {
+          "name": "SearchDialogTest",
+          "test_methods": [
+            "test_find_again",
+            "test_find_selection"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 16
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/search.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_searchbase.py": {
+      "classes": [
+        {
+          "name": "SearchDialogBaseTest",
+          "test_methods": [
+            "test_open_and_close",
+            "test_create_widgets",
+            "test_make_entry",
+            "test_create_entries",
+            "test_make_frame",
+            "test_create_option_buttons",
+            "test_create_other_buttons",
+            "test_make_button",
+            "test_create_command_buttons"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 26
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/searchbase.py"
+      ],
+      "imported_modules": [
+        "unittest",
+        "test.support",
+        "tkinter",
+        "tkinter.ttk",
+        "idlelib",
+        "idlelib",
+        "idlelib.idle_test.mock_idle"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_searchengine.py": {
+      "classes": [
+        {
+          "name": "Mock",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 31
+        },
+        {
+          "name": "GetTest",
+          "test_methods": [
+            "test_get"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 34
+        },
+        {
+          "name": "GetLineColTest",
+          "test_methods": [
+            "test_get_line_col"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 48
+        },
+        {
+          "name": "GetSelectionTest",
+          "test_methods": [
+            "test_get_selection"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 57
+        },
+        {
+          "name": "ReverseSearchTest",
+          "test_methods": [
+            "test_search_reverse"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 92
+        },
+        {
+          "name": "SearchEngineTest",
+          "test_methods": [
+            "test_is_get",
+            "test_setcookedpat",
+            "test_getcookedpat",
+            "test_getprog",
+            "test_report_error"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 105
+        },
+        {
+          "name": "SearchTest",
+          "test_methods": [
+            "test_search"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 203
+        },
+        {
+          "name": "ForwardBackwardTest",
+          "test_methods": [
+            "test_search_forward",
+            "test_search_backward"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 264
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/searchengine.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "tkinter",
+        "tkinter",
+        "idlelib.idle_test.mock_tk",
+        "idlelib.idle_test.mock_tk",
+        "re"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_sidebar.py": {
+      "classes": [
+        {
+          "name": "Dummy_editwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 23
+        },
+        {
+          "name": "LineNumbersTest",
+          "test_methods": [
+            "test_init_empty",
+            "test_init_not_empty",
+            "test_toggle_linenumbering",
+            "test_insert",
+            "test_delete",
+            "test_sidebar_text_width",
+            "test_scroll",
+            "test_font",
+            "test_highlight_colors"
+          ],
+          "skipped_methods": [
+            "test_click_selection",
+            "test_drag_selection_down",
+            "test_drag_selection_up"
+          ],
+          "total_test_methods": 12,
+          "line_start": 38
+        },
+        {
+          "name": "ShellSidebarTest",
+          "test_methods": [
+            "test_initial_state",
+            "test_single_empty_input",
+            "test_single_line_statement",
+            "test_multi_line_statement",
+            "test_single_long_line_wraps",
+            "test_squeeze_multi_line_output",
+            "test_interrupt_recall_undo_redo",
+            "test_very_long_wrapped_line",
+            "test_font",
+            "test_highlight_colors",
+            "test_mousewheel",
+            "test_copy",
+            "test_copy_with_prompts"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 13,
+          "line_start": 394
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/sidebar.py"
+      ],
+      "imported_modules": [
+        "textwrap",
+        "sys",
+        "itertools",
+        "unittest",
+        "unittest.mock",
+        "test.support",
+        "test",
+        "tkinter",
+        "idlelib.idle_test.tkinter_testing_utils",
+        "idlelib.delegator",
+        "idlelib.editor",
+        "idlelib.percolator",
+        "idlelib.pyshell",
+        "idlelib.pyshell",
+        "idlelib.run",
+        "idlelib.sidebar",
+        "idlelib.sidebar"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_squeezer.py": {
+      "classes": [
+        {
+          "name": "CountLinesTest",
+          "test_methods": [
+            "test_count_empty",
+            "test_count_begins_with_empty_line",
+            "test_count_ends_with_empty_line",
+            "test_count_several_lines",
+            "test_empty_lines",
+            "test_long_line",
+            "test_several_lines_different_lengths"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 34
+        },
+        {
+          "name": "SqueezerTest",
+          "test_methods": [
+            "test_count_lines",
+            "test_init",
+            "test_write_no_tags",
+            "test_write_not_stdout",
+            "test_write_stdout",
+            "test_auto_squeeze",
+            "test_squeeze_current_text",
+            "test_squeeze_current_text_no_allowed_tags",
+            "test_squeeze_text_before_existing_squeezed_text",
+            "test_reload",
+            "test_reload_no_squeezer_instances"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 81
+        },
+        {
+          "name": "ExpandingButtonTest",
+          "test_methods": [
+            "test_init",
+            "test_expand",
+            "test_expand_dangerous_oupput",
+            "test_copy",
+            "test_view",
+            "test_rmenu"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 304
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/squeezer.py"
+      ],
+      "imported_modules": [
+        "textwrap",
+        "tkinter",
+        "unittest",
+        "unittest.mock",
+        "test.support",
+        "idlelib.config",
+        "idlelib.percolator",
+        "idlelib.squeezer",
+        "idlelib",
+        "idlelib.textview",
+        "idlelib.tooltip"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_stackviewer.py": {
+      "classes": [
+        {
+          "name": "StackBrowserTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 11
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/stackviewer.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.tree"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_statusbar.py": {
+      "classes": [
+        {
+          "name": "Test",
+          "test_methods": [
+            "test_init",
+            "test_set_label"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 9
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/statusbar.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_text.py": {
+      "classes": [
+        {
+          "name": "TextTest",
+          "test_methods": [
+            "test_init",
+            "test_index_empty",
+            "test_index_data",
+            "test_get",
+            "test_insert",
+            "test_no_delete",
+            "test_delete_char",
+            "test_delete_slice",
+            "test_multiple_lines",
+            "test_compare"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 10,
+          "line_start": 9
+        },
+        {
+          "name": "MockTextTest",
+          "test_methods": [
+            "test_decode"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 194
+        },
+        {
+          "name": "TkTextTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 217
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "unittest",
+        "test.support",
+        "_tkinter",
+        "idlelib.idle_test.mock_tk",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_textview.py": {
+      "classes": [
+        {
+          "name": "VW",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 35
+        },
+        {
+          "name": "ViewWindowTest",
+          "test_methods": [
+            "test_init_modal",
+            "test_init_nonmodal",
+            "test_ok"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 42
+        },
+        {
+          "name": "AutoHideScrollbarTest",
+          "test_methods": [
+            "test_forbidden_geometry"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 72
+        },
+        {
+          "name": "ScrollableTextFrameTest",
+          "test_methods": [
+            "test_line1",
+            "test_horiz_scrollbar"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 80
+        },
+        {
+          "name": "ViewFrameTest",
+          "test_methods": [
+            "test_line1"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 124
+        },
+        {
+          "name": "ViewFunctionTest",
+          "test_methods": [
+            "test_view_text",
+            "test_view_file",
+            "test_bad_file",
+            "test_bad_encoding",
+            "test_nowrap"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 145
+        },
+        {
+          "name": "ButtonClickTest",
+          "test_methods": [
+            "test_view_text_bind_with_button",
+            "test_view_file_bind_with_button"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 191
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/textview.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "test.support",
+        "os",
+        "unittest",
+        "tkinter",
+        "tkinter.ttk",
+        "idlelib.idle_test.mock_idle",
+        "idlelib.idle_test.mock_tk"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_tooltip.py": {
+      "classes": [
+        {
+          "name": "ToolTipBaseTest",
+          "test_methods": [
+            "test_base_class_is_unusable"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 50
+        },
+        {
+          "name": "HovertipTest",
+          "test_methods": [
+            "test_showtip",
+            "test_showtip_twice",
+            "test_hidetip",
+            "test_showtip_on_mouse_enter_no_delay",
+            "test_hover_with_delay",
+            "test_hidetip_on_mouse_leave"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 68
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/tooltip.py"
+      ],
+      "imported_modules": [
+        "idlelib.tooltip",
+        "test.support",
+        "functools",
+        "time",
+        "tkinter",
+        "unittest"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_tree.py": {
+      "classes": [
+        {
+          "name": "TreeTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 10
+        },
+        {
+          "name": "TestScrollEvent",
+          "test_methods": [
+            "test_wheel_event"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 32
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/tree.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_undo.py": {
+      "classes": [
+        {
+          "name": "UndoDelegatorTest",
+          "test_methods": [
+            "test_undo_event",
+            "test_redo_event",
+            "test_dump_event",
+            "test_get_set_saved",
+            "test_undo_start_stop",
+            "test_addcmd"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 14
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/undo.py"
+      ],
+      "imported_modules": [
+        "idlelib.undo",
+        "unittest",
+        "test.support",
+        "unittest.mock",
+        "tkinter",
+        "idlelib.percolator"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_util.py": {
+      "classes": [
+        {
+          "name": "UtilTest",
+          "test_methods": [
+            "test_extensions"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 7
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/util.py"
+      ],
+      "imported_modules": [
+        "unittest",
+        "idlelib"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_warning.py": {
+      "classes": [
+        {
+          "name": "RunWarnTest",
+          "test_methods": [
+            "test_run_show"
+          ],
+          "skipped_methods": [
+            "test_showwarnings"
+          ],
+          "total_test_methods": 2,
+          "line_start": 31
+        },
+        {
+          "name": "ShellWarnTest",
+          "test_methods": [
+            "test_idle_formatter",
+            "test_shell_show"
+          ],
+          "skipped_methods": [
+            "test_showwarnings"
+          ],
+          "total_test_methods": 3,
+          "line_start": 49
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "idlelib",
+        "idlelib",
+        "unittest",
+        "test.support",
+        "warnings"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_window.py": {
+      "classes": [
+        {
+          "name": "WindowListTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 9
+        },
+        {
+          "name": "ListedToplevelTest",
+          "test_methods": [
+            "test_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 19
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/window.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_zoomheight.py": {
+      "classes": [
+        {
+          "name": "Test",
+          "test_methods": [
+            "test_init",
+            "test_zoom_height_event"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 11
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/zoomheight.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "idlelib.editor"
+      ]
+    },
+    "Lib/idlelib/idle_test/test_zzdummy.py": {
+      "classes": [
+        {
+          "name": "DummyEditwin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 30
+        },
+        {
+          "name": "ZZDummyTest",
+          "test_methods": [
+            "test_init",
+            "test_reload",
+            "test_z_in_event",
+            "test_z_out_event",
+            "test_roundtrip"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 41
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "Lib/idlelib/zzdummy.py"
+      ],
+      "imported_modules": [
+        "idlelib",
+        "unittest",
+        "test.support",
+        "tkinter",
+        "unittest",
+        "idlelib",
+        "idlelib",
+        "idlelib"
+      ]
+    }
+  }
+}
