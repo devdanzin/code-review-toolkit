@@ -1,0 +1,2079 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/idlelib",
+  "summary": {
+    "source_files": 66,
+    "test_files": 59,
+    "source_functions": 1313,
+    "total_test_functions": 479,
+    "selected_test_functions": 30,
+    "invariants_extracted": 65,
+    "similar_functions_found": 110,
+    "untested_similar_functions": 20,
+    "bug_fix_tests_found": 0
+  },
+  "invariants": [
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_open_completions_none",
+      "line": 180,
+      "assertions": [
+        {
+          "method": "assertFalse",
+          "invariant_type": "falsiness",
+          "line": 193,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertFalse",
+          "invariant_type": "falsiness",
+          "line": 195,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "falsiness"
+      ],
+      "tested_function": {
+        "function": "FileList.open",
+        "file": "Lib/idlelib/filelist.py",
+        "line": 18,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "error_boundary",
+      "similar_functions": [
+        {
+          "function": "AutoComplete.open_completions",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 101,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "Calltip.open_calltip",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 57,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_module_event",
+          "file": "Lib/idlelib/editor.py",
+          "line": 720,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_module_browser",
+          "file": "Lib/idlelib/editor.py",
+          "line": 724,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_path_browser",
+          "file": "Lib/idlelib/editor.py",
+          "line": 735,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_get_entity",
+      "line": 280,
+      "assertions": [
+        {
+          "method": "assertRaises",
+          "invariant_type": "error_condition",
+          "line": 300,
+          "detail": "NameError",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": {
+        "function": "AutoComplete.get_entity",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 219,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "error_boundary",
+      "similar_functions": [
+        {
+          "function": "CalltipWindow.get_position",
+          "file": "Lib/idlelib/calltip_w.py",
+          "line": 35,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "GetKeysFrame.get_modifiers",
+          "file": "Lib/idlelib/config_key.py",
+          "line": 212,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "HighPage.get_color",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 846,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "HighPage.get_new_theme_name",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 895,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "KeysPage.get_new_keys",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1371,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_close",
+      "line": 52,
+      "assertions": [
+        {
+          "method": "assertTrue",
+          "invariant_type": "truthiness",
+          "line": 57,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertTrue",
+          "invariant_type": "truthiness",
+          "line": 58,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "truthiness"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowser.close",
+        "file": "Lib/idlelib/browser.py",
+        "line": 98,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "error_boundary",
+      "similar_functions": [
+        {
+          "function": "Calltip.close",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 29,
+          "similarity_score": 7,
+          "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "ColorDelegator.close",
+          "file": "Lib/idlelib/colorizer.py",
+          "line": 207,
+          "similarity_score": 7,
+          "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "Debugger.close",
+          "file": "Lib/idlelib/debugger.py",
+          "line": 158,
+          "similarity_score": 7,
+          "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "NamespaceViewer.close",
+          "file": "Lib/idlelib/debugger.py",
+          "line": 594,
+          "similarity_score": 7,
+          "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.close_hook",
+          "file": "Lib/idlelib/editor.py",
+          "line": 765,
+          "similarity_score": 7,
+          "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_calltip.py",
+      "function": "test_invalid_method_get_spec",
+      "line": 215,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 222,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 223,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_calltip.py",
+      "function": "test_bad_entity",
+      "line": 270,
+      "assertions": [
+        {
+          "method": "assertIsNone",
+          "invariant_type": "nullability",
+          "line": 271,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "nullability"
+      ],
+      "tested_function": {
+        "function": "AutoComplete.get_entity",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 219,
+        "match_method": "first_call"
+      },
+      "selection_tier": "error_boundary",
+      "similar_functions": [
+        {
+          "function": "CalltipWindow.get_position",
+          "file": "Lib/idlelib/calltip_w.py",
+          "line": 35,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "GetKeysFrame.get_modifiers",
+          "file": "Lib/idlelib/config_key.py",
+          "line": 212,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "HighPage.get_color",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 846,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "HighPage.get_new_theme_name",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 895,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "KeysPage.get_new_keys",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1371,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_calltip.py",
+      "function": "test_open_close",
+      "line": 336,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 338,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "FileList.open",
+        "file": "Lib/idlelib/filelist.py",
+        "line": 18,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "error_boundary",
+      "similar_functions": [
+        {
+          "function": "AutoComplete.open_completions",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 101,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "Calltip.open_calltip",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 57,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_module_event",
+          "file": "Lib/idlelib/editor.py",
+          "line": 720,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_module_browser",
+          "file": "Lib/idlelib/editor.py",
+          "line": 724,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_path_browser",
+          "file": "Lib/idlelib/editor.py",
+          "line": 735,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_codecontext.py",
+      "function": "test_del_with_timer",
+      "line": 126,
+      "assertions": [
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 131,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertRaises",
+          "invariant_type": "error_condition",
+          "line": 129,
+          "detail": "TclError",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "error_condition",
+        "membership"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_codecontext.py",
+      "function": "test_get_context",
+      "line": 173,
+      "assertions": [
+        {
+          "method": "assertRaises",
+          "invariant_type": "error_condition",
+          "line": 178,
+          "detail": "AssertionError",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "error_condition"
+      ],
+      "tested_function": {
+        "function": "CodeContext.get_context",
+        "file": "Lib/idlelib/codecontext.py",
+        "line": 149,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "error_boundary",
+      "similar_functions": [
+        {
+          "function": "IdbAdapter.get_stack",
+          "file": "Lib/idlelib/debugger_r.py",
+          "line": 94,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "IdbProxy.get_stack",
+          "file": "Lib/idlelib/debugger_r.py",
+          "line": 310,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.get_var_obj",
+          "file": "Lib/idlelib/editor.py",
+          "line": 1231,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "HyperParser.get_surrounding_brackets",
+          "file": "Lib/idlelib/hyperparser.py",
+          "line": 116,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "Text.get",
+          "file": "Lib/idlelib/idle_test/mock_tk.py",
+          "line": 201,
+          "similarity_score": 7,
+          "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "function": "test_remove_empty_sections",
+      "line": 139,
+      "assertions": [
+        {
+          "method": "assertCountEqual",
+          "invariant_type": "collection_equality",
+          "line": 145,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 147,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "collection_equality",
+        "equality"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "function": "test_is_empty",
+      "line": 149,
+      "assertions": [
+        {
+          "method": "assertTrue",
+          "invariant_type": "truthiness",
+          "line": 154,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 155,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertFalse",
+          "invariant_type": "falsiness",
+          "line": 159,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertCountEqual",
+          "invariant_type": "collection_equality",
+          "line": 160,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 4,
+      "behavioral_assertion_count": 4,
+      "invariant_types": [
+        "collection_equality",
+        "equality",
+        "falsiness",
+        "truthiness"
+      ],
+      "tested_function": null,
+      "selection_tier": "error_boundary",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_init",
+      "line": 46,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 47,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 48,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowser.init",
+        "file": "Lib/idlelib/browser.py",
+        "line": 103,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "ColorDelegator.init_state",
+          "file": "Lib/idlelib/colorizer.py",
+          "line": 125,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "WinPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1554,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "ShedPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1764,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "BaseSideBar.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 83,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "LineNumbers.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 294,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_make_autocomplete_window",
+      "line": 50,
+      "assertions": [
+        {
+          "method": "assertIsInstance",
+          "invariant_type": "type_check",
+          "line": 52,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "type_check"
+      ],
+      "tested_function": {
+        "function": "AutoComplete._make_autocomplete_window",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 57,
+        "match_method": "first_call"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "AutoCompleteWindow._change_start",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 64,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._binary_search",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 78,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._complete_string",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 91,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._selection_changed",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 123,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow.winconfig_event",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 233,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_remove_autocomplete_window",
+      "line": 54,
+      "assertions": [
+        {
+          "method": "assert_called_once",
+          "invariant_type": "mock_interaction",
+          "line": 58,
+          "detail": "",
+          "is_implementation_detail": true
+        },
+        {
+          "method": "assertIsNone",
+          "invariant_type": "nullability",
+          "line": 59,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "mock_interaction",
+        "nullability"
+      ],
+      "tested_function": {
+        "function": "AutoComplete._remove_autocomplete_window",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 60,
+        "match_method": "first_call"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "AutoCompleteWindow.__init__",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 29,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._change_start",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 64,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._binary_search",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 78,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._complete_string",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 91,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._selection_changed",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 123,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_force_open_completions_event",
+      "line": 61,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 66,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 67,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "AutoComplete.force_open_completions_event",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 65,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "Calltip.force_open_calltip_event",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 41,
+          "similarity_score": 7,
+          "similarity_reason": "same 'force_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow.__init__",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 29,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._change_start",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 64,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._binary_search",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 78,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._complete_string",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 91,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_autocomplete_event",
+      "line": 69,
+      "assertions": [
+        {
+          "method": "assertIsNone",
+          "invariant_type": "nullability",
+          "line": 75,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIsNone",
+          "invariant_type": "nullability",
+          "line": 80,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assert_called_once",
+          "invariant_type": "mock_interaction",
+          "line": 88,
+          "detail": "",
+          "is_implementation_detail": true
+        }
+      ],
+      "assertion_count": 3,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "mock_interaction",
+        "nullability"
+      ],
+      "tested_function": {
+        "function": "AutoComplete.autocomplete_event",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 70,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "AutoCompleteWindow.__init__",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 29,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._change_start",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 64,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._binary_search",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 78,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._complete_string",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 91,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._selection_changed",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 123,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_delayed_open_completions",
+      "line": 137,
+      "assertions": [
+        {
+          "method": "assertIsNone",
+          "invariant_type": "nullability",
+          "line": 149,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 155,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "equality",
+        "nullability"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_oc_no_list",
+      "line": 169,
+      "assertions": [
+        {
+          "method": "assertIsNone",
+          "invariant_type": "nullability",
+          "line": 174,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIsNone",
+          "invariant_type": "nullability",
+          "line": 176,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 177,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 3,
+      "behavioral_assertion_count": 3,
+      "invariant_types": [
+        "equality",
+        "nullability"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_open_completions",
+      "line": 203,
+      "assertions": [
+        {
+          "method": "assertIsInstance",
+          "invariant_type": "type_check",
+          "line": 213,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertTrue",
+          "invariant_type": "truthiness",
+          "line": 218,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "truthiness",
+        "type_check"
+      ],
+      "tested_function": {
+        "function": "AutoComplete.open_completions",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 101,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "Calltip.open_calltip",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 57,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_module",
+          "file": "Lib/idlelib/editor.py",
+          "line": 696,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_module_event",
+          "file": "Lib/idlelib/editor.py",
+          "line": 720,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_module_browser",
+          "file": "Lib/idlelib/editor.py",
+          "line": 724,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "EditorWindow.open_path_browser",
+          "file": "Lib/idlelib/editor.py",
+          "line": 735,
+          "similarity_score": 7,
+          "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_completion_kwds",
+      "line": 221,
+      "assertions": [
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 222,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 223,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertNotIn",
+          "invariant_type": "non_membership",
+          "line": 224,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 3,
+      "behavioral_assertion_count": 3,
+      "invariant_types": [
+        "membership",
+        "non_membership"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "function": "test_fetch_completions",
+      "line": 226,
+      "assertions": [
+        {
+          "method": "assertLess",
+          "invariant_type": "ordering",
+          "line": 240,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertTrue",
+          "invariant_type": "truthiness",
+          "line": 241,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertTrue",
+          "invariant_type": "truthiness",
+          "line": 242,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertNotIn",
+          "invariant_type": "non_membership",
+          "line": 236,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 247,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 248,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 249,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 250,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertNotEqual",
+          "invariant_type": "inequality",
+          "line": 252,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertNotIn",
+          "invariant_type": "non_membership",
+          "line": 259,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 260,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 261,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 262,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 273,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 274,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 277,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 278,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 17,
+      "behavioral_assertion_count": 17,
+      "invariant_types": [
+        "equality",
+        "inequality",
+        "membership",
+        "non_membership",
+        "ordering",
+        "truthiness"
+      ],
+      "tested_function": {
+        "function": "AutoComplete.fetch_completions",
+        "file": "Lib/idlelib/autocomplete.py",
+        "line": 161,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "Calltip.fetch_tip",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 108,
+          "similarity_score": 7,
+          "similarity_reason": "same 'fetch_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "History.fetch",
+          "file": "Lib/idlelib/history.py",
+          "line": 41,
+          "similarity_score": 7,
+          "similarity_reason": "same 'fetch_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow.__init__",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 29,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._change_start",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 64,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoCompleteWindow._binary_search",
+          "file": "Lib/idlelib/autocomplete_w.py",
+          "line": 78,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete_w.py",
+      "function": "test_init",
+      "line": 27,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 28,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowser.init",
+        "file": "Lib/idlelib/browser.py",
+        "line": 103,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "ColorDelegator.init_state",
+          "file": "Lib/idlelib/colorizer.py",
+          "line": 125,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "WinPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1554,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "ShedPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1764,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "BaseSideBar.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 83,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "LineNumbers.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 294,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autoexpand.py",
+      "function": "test_other_expand_cases",
+      "line": 130,
+      "assertions": [
+        {
+          "method": "assertNotEqual",
+          "invariant_type": "inequality",
+          "line": 151,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "inequality"
+      ],
+      "tested_function": null,
+      "selection_tier": "general",
+      "similar_functions": []
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_init",
+      "line": 34,
+      "assertions": [
+        {
+          "method": "assertIsInstance",
+          "invariant_type": "type_check",
+          "line": 39,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertIsNotNone",
+          "invariant_type": "non_nullability",
+          "line": 40,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "non_nullability",
+        "type_check"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowser.init",
+        "file": "Lib/idlelib/browser.py",
+        "line": 103,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "ColorDelegator.init_state",
+          "file": "Lib/idlelib/colorizer.py",
+          "line": 125,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "WinPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1554,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "ShedPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1764,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "BaseSideBar.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 83,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "LineNumbers.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 294,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_settitle",
+      "line": 42,
+      "assertions": [
+        {
+          "method": "assertIn",
+          "invariant_type": "membership",
+          "line": 44,
+          "detail": "",
+          "is_implementation_detail": false
+        },
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 45,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 2,
+      "behavioral_assertion_count": 2,
+      "invariant_types": [
+        "equality",
+        "membership"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowser.settitle",
+        "file": "Lib/idlelib/browser.py",
+        "line": 134,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "PathBrowser.settitle",
+          "file": "Lib/idlelib/pathbrowser.py",
+          "line": 20,
+          "similarity_score": 7,
+          "similarity_reason": "same 'settitle_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete._make_autocomplete_window",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 57,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete._remove_autocomplete_window",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 60,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete.force_open_completions_event",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 65,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete.autocomplete_event",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 70,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_rootnode",
+      "line": 47,
+      "assertions": [
+        {
+          "method": "assertIsInstance",
+          "invariant_type": "type_check",
+          "line": 50,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "type_check"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowser.rootnode",
+        "file": "Lib/idlelib/browser.py",
+        "line": 139,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "PathBrowser.rootnode",
+          "file": "Lib/idlelib/pathbrowser.py",
+          "line": 25,
+          "similarity_score": 7,
+          "similarity_reason": "same 'rootnode_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete._make_autocomplete_window",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 57,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete._remove_autocomplete_window",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 60,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete.force_open_completions_event",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 65,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "AutoComplete.autocomplete_event",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 70,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_is_browseable_extension",
+      "line": 61,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 68,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "is_browseable_extension",
+        "file": "Lib/idlelib/browser.py",
+        "line": 29,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "AutoComplete.reload",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 53,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "get_entity",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 133,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "get_argspec",
+          "file": "Lib/idlelib/calltip.py",
+          "line": 154,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "_calltip_window",
+          "file": "Lib/idlelib/calltip_w.py",
+          "line": 172,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        },
+        {
+          "function": "calltip_show",
+          "file": "Lib/idlelib/calltip_w.py",
+          "line": 185,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_init",
+      "line": 130,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 131,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowser.init",
+        "file": "Lib/idlelib/browser.py",
+        "line": 103,
+        "match_method": "test_name_convention"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "ColorDelegator.init_state",
+          "file": "Lib/idlelib/colorizer.py",
+          "line": 125,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "WinPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1554,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "ShedPage.init_validators",
+          "file": "Lib/idlelib/configdialog.py",
+          "line": 1764,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "BaseSideBar.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 83,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "LineNumbers.init_widgets",
+          "file": "Lib/idlelib/sidebar.py",
+          "line": 294,
+          "similarity_score": 7,
+          "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_gettext",
+      "line": 133,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 134,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowserTreeItem.GetText",
+        "file": "Lib/idlelib/browser.py",
+        "line": 159,
+        "match_method": "first_call"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "ObjectTreeItem.GetText",
+          "file": "Lib/idlelib/debugobj.py",
+          "line": 28,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetText_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "PathBrowserTreeItem.GetText",
+          "file": "Lib/idlelib/pathbrowser.py",
+          "line": 31,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetText_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "DirBrowserTreeItem.GetText",
+          "file": "Lib/idlelib/pathbrowser.py",
+          "line": 48,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetText_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "StackTreeItem.GetText",
+          "file": "Lib/idlelib/stackviewer.py",
+          "line": 38,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetText_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "FrameTreeItem.GetText",
+          "file": "Lib/idlelib/stackviewer.py",
+          "line": 55,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetText_' prefix, similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_geticonname",
+      "line": 136,
+      "assertions": [
+        {
+          "method": "assertEqual",
+          "invariant_type": "equality",
+          "line": 137,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "equality"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowserTreeItem.GetIconName",
+        "file": "Lib/idlelib/browser.py",
+        "line": 163,
+        "match_method": "first_call"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "ObjectTreeItem.GetIconName",
+          "file": "Lib/idlelib/debugobj.py",
+          "line": 30,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetIconName_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "TreeItem.GetIconName",
+          "file": "Lib/idlelib/tree.py",
+          "line": 385,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetIconName_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "FileTreeItem.GetIconName",
+          "file": "Lib/idlelib/tree.py",
+          "line": 424,
+          "similarity_score": 7,
+          "similarity_reason": "same 'GetIconName_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "ChildBrowserTreeItem.GetIconName",
+          "file": "Lib/idlelib/browser.py",
+          "line": 216,
+          "similarity_score": 6,
+          "similarity_reason": "same 'GetIconName_' prefix, similar parameter count"
+        },
+        {
+          "function": "AutoComplete._make_autocomplete_window",
+          "file": "Lib/idlelib/autocomplete.py",
+          "line": 57,
+          "similarity_score": 4,
+          "similarity_reason": "similar parameter count, different module"
+        }
+      ]
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "function": "test_isexpandable",
+      "line": 139,
+      "assertions": [
+        {
+          "method": "assertTrue",
+          "invariant_type": "truthiness",
+          "line": 140,
+          "detail": "",
+          "is_implementation_detail": false
+        }
+      ],
+      "assertion_count": 1,
+      "behavioral_assertion_count": 1,
+      "invariant_types": [
+        "truthiness"
+      ],
+      "tested_function": {
+        "function": "ModuleBrowserTreeItem.IsExpandable",
+        "file": "Lib/idlelib/browser.py",
+        "line": 179,
+        "match_method": "first_call"
+      },
+      "selection_tier": "general",
+      "similar_functions": [
+        {
+          "function": "ObjectTreeItem.IsExpandable",
+          "file": "Lib/idlelib/debugobj.py",
+          "line": 43,
+          "similarity_score": 7,
+          "similarity_reason": "same 'IsExpandable_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "ClassTreeItem.IsExpandable",
+          "file": "Lib/idlelib/debugobj.py",
+          "line": 62,
+          "similarity_score": 7,
+          "similarity_reason": "same 'IsExpandable_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "AtomicObjectTreeItem.IsExpandable",
+          "file": "Lib/idlelib/debugobj.py",
+          "line": 75,
+          "similarity_score": 7,
+          "similarity_reason": "same 'IsExpandable_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "SequenceTreeItem.IsExpandable",
+          "file": "Lib/idlelib/debugobj.py",
+          "line": 79,
+          "similarity_score": 7,
+          "similarity_reason": "same 'IsExpandable_' prefix, similar parameter count, different module"
+        },
+        {
+          "function": "VariablesTreeItem.IsExpandable",
+          "file": "Lib/idlelib/stackviewer.py",
+          "line": 99,
+          "similarity_score": 7,
+          "similarity_reason": "same 'IsExpandable_' prefix, similar parameter count, different module"
+        }
+      ]
+    }
+  ],
+  "bug_fix_tests": [],
+  "untested_similar_functions": [
+    {
+      "function": "Calltip.open_calltip",
+      "file": "Lib/idlelib/calltip.py",
+      "line": 57,
+      "similar_to": "FileList.open",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "falsiness"
+      ],
+      "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "EditorWindow.open_module_event",
+      "file": "Lib/idlelib/editor.py",
+      "line": 720,
+      "similar_to": "FileList.open",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "falsiness"
+      ],
+      "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "EditorWindow.open_module_browser",
+      "file": "Lib/idlelib/editor.py",
+      "line": 724,
+      "similar_to": "FileList.open",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "falsiness"
+      ],
+      "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "EditorWindow.open_path_browser",
+      "file": "Lib/idlelib/editor.py",
+      "line": 735,
+      "similar_to": "FileList.open",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "falsiness"
+      ],
+      "similarity_reason": "same 'open_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "CalltipWindow.get_position",
+      "file": "Lib/idlelib/calltip_w.py",
+      "line": 35,
+      "similar_to": "AutoComplete.get_entity",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "GetKeysFrame.get_modifiers",
+      "file": "Lib/idlelib/config_key.py",
+      "line": 212,
+      "similar_to": "AutoComplete.get_entity",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "HighPage.get_color",
+      "file": "Lib/idlelib/configdialog.py",
+      "line": 846,
+      "similar_to": "AutoComplete.get_entity",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "KeysPage.get_new_keys",
+      "file": "Lib/idlelib/configdialog.py",
+      "line": 1371,
+      "similar_to": "AutoComplete.get_entity",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "Calltip.close",
+      "file": "Lib/idlelib/calltip.py",
+      "line": 29,
+      "similar_to": "ModuleBrowser.close",
+      "tested_in": "Lib/idlelib/idle_test/test_browser.py",
+      "invariant_types": [
+        "truthiness"
+      ],
+      "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "ColorDelegator.close",
+      "file": "Lib/idlelib/colorizer.py",
+      "line": 207,
+      "similar_to": "ModuleBrowser.close",
+      "tested_in": "Lib/idlelib/idle_test/test_browser.py",
+      "invariant_types": [
+        "truthiness"
+      ],
+      "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "Debugger.close",
+      "file": "Lib/idlelib/debugger.py",
+      "line": 158,
+      "similar_to": "ModuleBrowser.close",
+      "tested_in": "Lib/idlelib/idle_test/test_browser.py",
+      "invariant_types": [
+        "truthiness"
+      ],
+      "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "NamespaceViewer.close",
+      "file": "Lib/idlelib/debugger.py",
+      "line": 594,
+      "similar_to": "ModuleBrowser.close",
+      "tested_in": "Lib/idlelib/idle_test/test_browser.py",
+      "invariant_types": [
+        "truthiness"
+      ],
+      "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "EditorWindow.close_hook",
+      "file": "Lib/idlelib/editor.py",
+      "line": 765,
+      "similar_to": "ModuleBrowser.close",
+      "tested_in": "Lib/idlelib/idle_test/test_browser.py",
+      "invariant_types": [
+        "truthiness"
+      ],
+      "similarity_reason": "same 'close_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "IdbAdapter.get_stack",
+      "file": "Lib/idlelib/debugger_r.py",
+      "line": 94,
+      "similar_to": "CodeContext.get_context",
+      "tested_in": "Lib/idlelib/idle_test/test_codecontext.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "IdbProxy.get_stack",
+      "file": "Lib/idlelib/debugger_r.py",
+      "line": 310,
+      "similar_to": "CodeContext.get_context",
+      "tested_in": "Lib/idlelib/idle_test/test_codecontext.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "EditorWindow.get_var_obj",
+      "file": "Lib/idlelib/editor.py",
+      "line": 1231,
+      "similar_to": "CodeContext.get_context",
+      "tested_in": "Lib/idlelib/idle_test/test_codecontext.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "HyperParser.get_surrounding_brackets",
+      "file": "Lib/idlelib/hyperparser.py",
+      "line": 116,
+      "similar_to": "CodeContext.get_context",
+      "tested_in": "Lib/idlelib/idle_test/test_codecontext.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "Text.get",
+      "file": "Lib/idlelib/idle_test/mock_tk.py",
+      "line": 201,
+      "similar_to": "CodeContext.get_context",
+      "tested_in": "Lib/idlelib/idle_test/test_codecontext.py",
+      "invariant_types": [
+        "error_condition"
+      ],
+      "similarity_reason": "same 'get_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "ColorDelegator.init_state",
+      "file": "Lib/idlelib/colorizer.py",
+      "line": 125,
+      "similar_to": "ModuleBrowser.init",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "equality"
+      ],
+      "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+    },
+    {
+      "function": "WinPage.init_validators",
+      "file": "Lib/idlelib/configdialog.py",
+      "line": 1554,
+      "similar_to": "ModuleBrowser.init",
+      "tested_in": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "invariant_types": [
+        "equality"
+      ],
+      "similarity_reason": "same 'init_' prefix, similar parameter count, different module"
+    }
+  ]
+}

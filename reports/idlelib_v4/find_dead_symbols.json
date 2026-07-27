@@ -1,0 +1,1422 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/idlelib",
+  "files_total": 125,
+  "files_analyzed": 125,
+  "files_capped": false,
+  "summary": {
+    "unused_imports": 8,
+    "unreferenced_symbols": 164,
+    "external_reference_scopes": [
+      "Doc",
+      "Lib/test"
+    ],
+    "orphan_files": 0,
+    "commented_code_blocks": 4,
+    "high_confidence_items": 8,
+    "medium_confidence_items": 164
+  },
+  "unused_imports": [
+    {
+      "file": "Lib/idlelib/editor.py",
+      "line": 42,
+      "name": "encoding",
+      "module": "idlelib.iomenu.encoding",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/htest.py",
+      "line": 66,
+      "name": "idlelib",
+      "module": "idlelib.pyshell",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/template.py",
+      "line": 3,
+      "name": "zzdummy",
+      "module": "idlelib.zzdummy",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help.py",
+      "line": 7,
+      "name": "abspath",
+      "module": "os.path.abspath",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help.py",
+      "line": 7,
+      "name": "dirname",
+      "module": "os.path.dirname",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help.py",
+      "line": 7,
+      "name": "join",
+      "module": "os.path.join",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_iomenu.py",
+      "line": 14,
+      "name": "open",
+      "module": "tokenize.open",
+      "confidence": "high"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_iomenu.py",
+      "line": 14,
+      "name": "detect_encoding",
+      "module": "tokenize.detect_encoding",
+      "confidence": "high"
+    }
+  ],
+  "unreferenced_symbols": [
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete.py",
+      "line": 25,
+      "name": "AutoCompleteTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autocomplete_w.py",
+      "line": 10,
+      "name": "AutoCompleteWindowTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_autoexpand.py",
+      "line": 14,
+      "name": "AutoExpandTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "line": 18,
+      "name": "ModuleBrowserTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "line": 93,
+      "name": "TransformChildrenTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "line": 124,
+      "name": "ModuleBrowserTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "line": 176,
+      "name": "ChildBrowserTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_browser.py",
+      "line": 230,
+      "name": "NestedChildrenTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_calltip.py",
+      "line": 46,
+      "name": "Get_argspecTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_calltip.py",
+      "line": 269,
+      "name": "Get_entityTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_calltip.py",
+      "line": 312,
+      "name": "CalltipTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_calltip_w.py",
+      "line": 9,
+      "name": "CallTipWindowTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_codecontext.py",
+      "line": 53,
+      "name": "CodeContextTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_codecontext.py",
+      "line": 414,
+      "name": "HelperFunctionText",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_colorizer.py",
+      "line": 66,
+      "name": "FunctionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_colorizer.py",
+      "line": 99,
+      "name": "ColorConfigTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_colorizer.py",
+      "line": 128,
+      "name": "ColorDelegatorInstantiationTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_colorizer.py",
+      "line": 167,
+      "name": "ColorDelegatorTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "line": 38,
+      "name": "IdleConfParserTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "line": 97,
+      "name": "IdleUserConfParserTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "line": 180,
+      "name": "IdleConfTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "line": 589,
+      "name": "CurrentColorKeysTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "line": 700,
+      "name": "ChangesTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config.py",
+      "line": 786,
+      "name": "WarningTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config_key.py",
+      "line": 17,
+      "name": "ValidationTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config_key.py",
+      "line": 103,
+      "name": "ToggleLevelTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config_key.py",
+      "line": 158,
+      "name": "KeySelectionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config_key.py",
+      "line": 240,
+      "name": "CancelWindowTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config_key.py",
+      "line": 269,
+      "name": "OKWindowTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config_key.py",
+      "line": 297,
+      "name": "WindowResultTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_config_key.py",
+      "line": 333,
+      "name": "HelperTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 53,
+      "name": "ConfigDialogTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 62,
+      "name": "ButtonTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 105,
+      "name": "FontPageTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 263,
+      "name": "HighPageTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 771,
+      "name": "KeysPageTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 1182,
+      "name": "WinPageTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 1263,
+      "name": "ShedPageTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 1300,
+      "name": "ExtPageTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 1308,
+      "name": "HelpSourceTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_configdialog.py",
+      "line": 1475,
+      "name": "VarTraceTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugger.py",
+      "line": 33,
+      "name": "IdbTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugger.py",
+      "line": 68,
+      "name": "FunctionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugger.py",
+      "line": 92,
+      "name": "DebuggerTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugger.py",
+      "line": 171,
+      "name": "DebuggerGuiTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugger.py",
+      "line": 230,
+      "name": "StackViewerTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugger.py",
+      "line": 279,
+      "name": "NameSpaceTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugger_r.py",
+      "line": 21,
+      "name": "IdbAdapterTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugobj.py",
+      "line": 7,
+      "name": "ObjectTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugobj.py",
+      "line": 16,
+      "name": "ClassTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugobj.py",
+      "line": 23,
+      "name": "AtomicObjectTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugobj.py",
+      "line": 30,
+      "name": "SequenceTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugobj.py",
+      "line": 43,
+      "name": "DictTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugobj_r.py",
+      "line": 7,
+      "name": "WrappedObjectTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_debugobj_r.py",
+      "line": 13,
+      "name": "StubObjectTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_delegator.py",
+      "line": 7,
+      "name": "DelegatorTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_editmenu.py",
+      "line": 12,
+      "name": "PasteTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_editor.py",
+      "line": 12,
+      "name": "EditorWindowTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_editor.py",
+      "line": 34,
+      "name": "GetLineIndentTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_editor.py",
+      "line": 101,
+      "name": "IndentAndNewlineTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_editor.py",
+      "line": 184,
+      "name": "IndentSearcherTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_editor.py",
+      "line": 214,
+      "name": "RMenuTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_filelist.py",
+      "line": 8,
+      "name": "FileListTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 12,
+      "name": "Is_Get_Test",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 43,
+      "name": "FindTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 162,
+      "name": "ReformatFunctionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 188,
+      "name": "ReformatCommentTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 214,
+      "name": "FormatClassTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 246,
+      "name": "FormatEventTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 393,
+      "name": "FormatRegionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 577,
+      "name": "IndentsTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_format.py",
+      "line": 612,
+      "name": "RstripTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_grep.py",
+      "line": 40,
+      "name": "FindfilesTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_grep.py",
+      "line": 118,
+      "name": "Grep_itTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_grep.py",
+      "line": 149,
+      "name": "Default_commandTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help.py",
+      "line": 11,
+      "name": "IdleDocTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help_about.py",
+      "line": 19,
+      "name": "LiveDialogTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help_about.py",
+      "line": 89,
+      "name": "DefaultTitleTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help_about.py",
+      "line": 113,
+      "name": "CloseTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_help_about.py",
+      "line": 147,
+      "name": "DisplayFileTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_history.py",
+      "line": 16,
+      "name": "StoreTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_history.py",
+      "line": 68,
+      "name": "FetchTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_hyperparser.py",
+      "line": 21,
+      "name": "HyperParserTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_iomenu.py",
+      "line": 18,
+      "name": "IOBindingTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_iomenu.py",
+      "line": 68,
+      "name": "FiletypesTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_macosx.py",
+      "line": 24,
+      "name": "InitTktypeTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_macosx.py",
+      "line": 51,
+      "name": "IsTypeTkTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_macosx.py",
+      "line": 79,
+      "name": "SetupTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_mainmenu.py",
+      "line": 9,
+      "name": "MainMenuTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_multicall.py",
+      "line": 9,
+      "name": "MultiCallTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_outwin.py",
+      "line": 14,
+      "name": "OutputWindowTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_outwin.py",
+      "line": 142,
+      "name": "ModuleFunctionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_parenmatch.py",
+      "line": 23,
+      "name": "ParenMatchTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pathbrowser.py",
+      "line": 18,
+      "name": "PathBrowserTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pathbrowser.py",
+      "line": 62,
+      "name": "DirBrowserTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pathbrowser.py",
+      "line": 75,
+      "name": "PathBrowserTreeItemTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_percolator.py",
+      "line": 34,
+      "name": "PercolatorTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pyparse.py",
+      "line": 8,
+      "name": "ParseMapTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pyparse.py",
+      "line": 24,
+      "name": "PyParseTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pyshell.py",
+      "line": 10,
+      "name": "FunctionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pyshell.py",
+      "line": 32,
+      "name": "PyShellFileListTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_pyshell.py",
+      "line": 63,
+      "name": "PyShellRemoveLastNewlineAndSurroundingWhitespaceTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 24,
+      "name": "QueryTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 75,
+      "name": "SectionNameTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 108,
+      "name": "ModuleNameTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 144,
+      "name": "GotoTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 173,
+      "name": "HelpsourceBrowsefileTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 198,
+      "name": "HelpsourcePathokTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 243,
+      "name": "HelpsourceEntryokTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 268,
+      "name": "CustomRunCLIargsokTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 295,
+      "name": "CustomRunEntryokTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 318,
+      "name": "QueryGuiTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 361,
+      "name": "SectionnameGuiTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 379,
+      "name": "ModulenameGuiTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 396,
+      "name": "GotoGuiTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 412,
+      "name": "HelpsourceGuiTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_query.py",
+      "line": 432,
+      "name": "CustomRunGuiTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_redirector.py",
+      "line": 10,
+      "name": "InitCloseTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_redirector.py",
+      "line": 40,
+      "name": "WidgetRedirectorTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_replace.py",
+      "line": 17,
+      "name": "ReplaceDialogTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_rpc.py",
+      "line": 8,
+      "name": "CodePicklerTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_run.py",
+      "line": 16,
+      "name": "ExceptionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_run.py",
+      "line": 117,
+      "name": "StdInputFilesTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_run.py",
+      "line": 220,
+      "name": "StdOutputFilesTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_run.py",
+      "line": 331,
+      "name": "RecursionLimitTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_run.py",
+      "line": 372,
+      "name": "HandleErrorTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_run.py",
+      "line": 400,
+      "name": "ExecRuncodeTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_runscript.py",
+      "line": 10,
+      "name": "ScriptBindingTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_scrolledlist.py",
+      "line": 10,
+      "name": "ScrolledListTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_search.py",
+      "line": 16,
+      "name": "SearchDialogTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchbase.py",
+      "line": 26,
+      "name": "SearchDialogBaseTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchengine.py",
+      "line": 34,
+      "name": "GetTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchengine.py",
+      "line": 48,
+      "name": "GetLineColTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchengine.py",
+      "line": 57,
+      "name": "GetSelectionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchengine.py",
+      "line": 92,
+      "name": "ReverseSearchTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchengine.py",
+      "line": 105,
+      "name": "SearchEngineTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchengine.py",
+      "line": 203,
+      "name": "SearchTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_searchengine.py",
+      "line": 264,
+      "name": "ForwardBackwardTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_sidebar.py",
+      "line": 38,
+      "name": "LineNumbersTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_sidebar.py",
+      "line": 394,
+      "name": "ShellSidebarTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_squeezer.py",
+      "line": 34,
+      "name": "CountLinesTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_squeezer.py",
+      "line": 81,
+      "name": "SqueezerTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_squeezer.py",
+      "line": 304,
+      "name": "ExpandingButtonTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_stackviewer.py",
+      "line": 11,
+      "name": "StackBrowserTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_text.py",
+      "line": 194,
+      "name": "MockTextTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_text.py",
+      "line": 217,
+      "name": "TkTextTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_textview.py",
+      "line": 42,
+      "name": "ViewWindowTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_textview.py",
+      "line": 72,
+      "name": "AutoHideScrollbarTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_textview.py",
+      "line": 80,
+      "name": "ScrollableTextFrameTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_textview.py",
+      "line": 124,
+      "name": "ViewFrameTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_textview.py",
+      "line": 145,
+      "name": "ViewFunctionTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_textview.py",
+      "line": 191,
+      "name": "ButtonClickTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_tooltip.py",
+      "line": 50,
+      "name": "ToolTipBaseTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_tooltip.py",
+      "line": 68,
+      "name": "HovertipTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_tree.py",
+      "line": 10,
+      "name": "TreeTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_tree.py",
+      "line": 32,
+      "name": "TestScrollEvent",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_undo.py",
+      "line": 14,
+      "name": "UndoDelegatorTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_util.py",
+      "line": 7,
+      "name": "UtilTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_warning.py",
+      "line": 31,
+      "name": "RunWarnTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_warning.py",
+      "line": 49,
+      "name": "ShellWarnTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_window.py",
+      "line": 9,
+      "name": "WindowListTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_window.py",
+      "line": 19,
+      "name": "ListedToplevelTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/idle_test/test_zzdummy.py",
+      "line": 41,
+      "name": "ZZDummyTest",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    },
+    {
+      "file": "Lib/idlelib/outwin.py",
+      "line": 159,
+      "name": "OnDemandOutputWindow",
+      "type": "class",
+      "is_public": true,
+      "confidence": "medium"
+    }
+  ],
+  "orphan_files": [],
+  "commented_code_blocks": [
+    {
+      "file": "Lib/idlelib/configdialog.py",
+      "line_start": 235,
+      "line_end": 249,
+      "line_count": 15,
+      "preview": "# class TabPage(Frame):  # A template for Page classes."
+    },
+    {
+      "file": "Lib/idlelib/editor.py",
+      "line_start": 1342,
+      "line_end": 1347,
+      "line_count": 6,
+      "preview": "# if intraline selection:"
+    },
+    {
+      "file": "Lib/idlelib/multicall.py",
+      "line_start": 200,
+      "line_end": 203,
+      "line_count": 4,
+      "preview": "# for the handler to run after it finishes calling the binded functions."
+    },
+    {
+      "file": "Lib/idlelib/pyshell.py",
+      "line_start": 301,
+      "line_end": 305,
+      "line_count": 5,
+      "preview": "#    def saved_change_hook(self):"
+    }
+  ]
+}

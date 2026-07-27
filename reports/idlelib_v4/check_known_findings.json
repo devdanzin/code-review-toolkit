@@ -1,0 +1,381 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/idlelib",
+  "catalog": "/home/danzin/projects/code-review-findings/cpython-idlelib/catalog/known_findings.tsv",
+  "catalog_entries": 26,
+  "files_analyzed": 125,
+  "summary": {
+    "present": 8,
+    "present_elsewhere": 0,
+    "absent_in_qualname": 2,
+    "absent": 5,
+    "out_of_scope": 0,
+    "file_missing": 0,
+    "not_scannable": 11,
+    "still_present": 8,
+    "possibly_fixed": 7,
+    "not_checked": 11
+  },
+  "notes": [
+    "An `absent` verdict is NOT proof of a fix. Read the file before concluding anything is fixed.",
+    "11 catalog entries name an agent-only shape. A fresh scan cannot see those at all; they are excluded from the counts above rather than reported as absent.",
+    "Keyed on (file, shape, qualname), never on line numbers, so a finding whose line moved is still `present`."
+  ],
+  "results": [
+    {
+      "id": "CRF-IDLELIB-0001",
+      "location": "config.py:135-139",
+      "shape": "except-exception-too-broad",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": "IdleUserConfParser.Save",
+      "verdict": "absent",
+      "matched_at": null
+    },
+    {
+      "id": "CRF-IDLELIB-0002",
+      "location": "pyshell.py:485-527",
+      "shape": "flag-not-reset-on-early-exit",
+      "severity": "FIX",
+      "catalog_status": "confirmed",
+      "qualname": "ModifiedInterpreter.restart_subprocess",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/pyshell.py:488"
+    },
+    {
+      "id": "CRF-IDLELIB-0003",
+      "location": "replace.py:213-216",
+      "shape": "guard-rechecks-call-receiver",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": "ReplaceDialog.do_replace",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/replace.py:214"
+    },
+    {
+      "id": "CRF-IDLELIB-0004",
+      "location": "autocomplete.py:117,134",
+      "shape": "falsy-test-on-a-zero-valued-enum-member",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0005",
+      "location": "searchengine.py:146-151",
+      "shape": "mirrored-direction-handles-fewer-cases",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0006",
+      "location": "calltip.py:189",
+      "shape": "except-exception-too-broad",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": "get_argspec",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/calltip.py:166"
+    },
+    {
+      "id": "CRF-IDLELIB-0007",
+      "location": "query.py:352,368-376",
+      "shape": "serialize-and-parse-use-different-grammars",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0008",
+      "location": "run.py:575-579,635",
+      "shape": "attribute-created-outside-init",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0009",
+      "location": "zoomheight.py:66-105",
+      "shape": "cleanup-only-on-success-path",
+      "severity": "FIX",
+      "catalog_status": "confirmed",
+      "qualname": "ZoomHeight.get_max_height_and_y_coord",
+      "verdict": "absent",
+      "matched_at": null
+    },
+    {
+      "id": "CRF-IDLELIB-0010",
+      "location": "autocomplete_w.py:238",
+      "shape": "flag-not-reset-on-early-exit",
+      "severity": "FIX",
+      "catalog_status": "confirmed",
+      "qualname": "AutoCompleteWindow.winconfig_event",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/autocomplete_w.py:238"
+    },
+    {
+      "id": "CRF-IDLELIB-0011",
+      "location": "iomenu.py:333-348",
+      "shape": "cleanup-only-on-success-path",
+      "severity": "CONSIDER",
+      "catalog_status": "reproduced",
+      "qualname": "IOBinding.print_window",
+      "verdict": "absent",
+      "matched_at": null
+    },
+    {
+      "id": "CRF-IDLELIB-0012",
+      "location": "run.py:183-190",
+      "shape": "handler-reads-a-name-the-try-may-not-have-bound",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0013",
+      "location": "rpc.py:358-361",
+      "shape": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "SocketIO.pollpacket",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/rpc.py:361"
+    },
+    {
+      "id": "CRF-IDLELIB-0014",
+      "location": "pyshell.py:790-807",
+      "shape": "cleanup-only-on-success-path",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "ModifiedInterpreter.runcode",
+      "verdict": "absent_in_qualname",
+      "matched_at": "Lib/idlelib/pyshell.py:539",
+      "note": "the file still has cleanup-only-on-success-path findings, but none in 'ModifiedInterpreter.runcode'"
+    },
+    {
+      "id": "CRF-IDLELIB-0015",
+      "location": "rpc.py:258-260",
+      "shape": "error-reported-below-warning",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "SocketIO.decoderesponse",
+      "verdict": "absent_in_qualname",
+      "matched_at": "Lib/idlelib/rpc.py:286",
+      "note": "the file still has error-reported-below-warning findings, but none in 'SocketIO.decoderesponse'"
+    },
+    {
+      "id": "CRF-IDLELIB-0016",
+      "location": "filelist.py:105-108",
+      "shape": "identity-key-from-a-non-artifact-proxy",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0017",
+      "location": "pyparse.py:44-48",
+      "shape": "recognizer-rejects-a-legal-variant-spelling",
+      "severity": "CONSIDER",
+      "catalog_status": "reproduced",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0018",
+      "location": "rpc.py:130-141",
+      "shape": "reinitializer-resets-a-subset-of-its-state",
+      "severity": "CONSIDER",
+      "catalog_status": "candidate",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0019",
+      "location": "replace.py:161-175",
+      "shape": "index-computed-before-a-mutation-used-after-it",
+      "severity": "CONSIDER",
+      "catalog_status": "reproduced",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0020",
+      "location": "searchengine.py:85-89",
+      "shape": "except-exception-too-broad",
+      "severity": "CONSIDER",
+      "catalog_status": "reproduced",
+      "qualname": "SearchEngine.getprog",
+      "verdict": "absent",
+      "matched_at": null
+    },
+    {
+      "id": "CRF-IDLELIB-0021",
+      "location": "pyshell.py:551-561",
+      "shape": "except-exception-too-broad",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "ModifiedInterpreter.terminate_subprocess",
+      "verdict": "absent",
+      "matched_at": null
+    },
+    {
+      "id": "CRF-IDLELIB-0022",
+      "location": "debugger.py:159-162",
+      "shape": "except-exception-too-broad",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "Debugger.close",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/debugger.py:162"
+    },
+    {
+      "id": "CRF-IDLELIB-0023",
+      "location": "autocomplete.py:173-175",
+      "shape": "bare-except-swallows-control-flow",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "AutoComplete.fetch_completions",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/autocomplete.py:201"
+    },
+    {
+      "id": "CRF-IDLELIB-0024",
+      "location": "iomenu.py:229,237",
+      "shape": "commit-side-effect-outside-the-success-guard",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0025",
+      "location": "debugger.py:55-56",
+      "shape": "fix-not-propagated-to-sibling-path",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": null,
+      "verdict": "not_scannable",
+      "matched_at": null,
+      "note": "shape is agent-only; a fresh scan cannot see it and its absence here is not evidence of a fix"
+    },
+    {
+      "id": "CRF-IDLELIB-0026",
+      "location": "idle_test/test_autocomplete.py:241",
+      "shape": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "AutoCompleteTest.test_fetch_completions",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/idle_test/test_autocomplete.py:242"
+    }
+  ],
+  "findings": [
+    {
+      "id": "CRF-IDLELIB-0002",
+      "location": "pyshell.py:485-527",
+      "shape": "flag-not-reset-on-early-exit",
+      "severity": "FIX",
+      "catalog_status": "confirmed",
+      "qualname": "ModifiedInterpreter.restart_subprocess",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/pyshell.py:488"
+    },
+    {
+      "id": "CRF-IDLELIB-0003",
+      "location": "replace.py:213-216",
+      "shape": "guard-rechecks-call-receiver",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": "ReplaceDialog.do_replace",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/replace.py:214"
+    },
+    {
+      "id": "CRF-IDLELIB-0006",
+      "location": "calltip.py:189",
+      "shape": "except-exception-too-broad",
+      "severity": "FIX",
+      "catalog_status": "reproduced",
+      "qualname": "get_argspec",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/calltip.py:166"
+    },
+    {
+      "id": "CRF-IDLELIB-0010",
+      "location": "autocomplete_w.py:238",
+      "shape": "flag-not-reset-on-early-exit",
+      "severity": "FIX",
+      "catalog_status": "confirmed",
+      "qualname": "AutoCompleteWindow.winconfig_event",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/autocomplete_w.py:238"
+    },
+    {
+      "id": "CRF-IDLELIB-0013",
+      "location": "rpc.py:358-361",
+      "shape": "raise-without-from-in-except",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "SocketIO.pollpacket",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/rpc.py:361"
+    },
+    {
+      "id": "CRF-IDLELIB-0022",
+      "location": "debugger.py:159-162",
+      "shape": "except-exception-too-broad",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "Debugger.close",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/debugger.py:162"
+    },
+    {
+      "id": "CRF-IDLELIB-0023",
+      "location": "autocomplete.py:173-175",
+      "shape": "bare-except-swallows-control-flow",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "AutoComplete.fetch_completions",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/autocomplete.py:201"
+    },
+    {
+      "id": "CRF-IDLELIB-0026",
+      "location": "idle_test/test_autocomplete.py:241",
+      "shape": "test-cannot-fail",
+      "severity": "CONSIDER",
+      "catalog_status": "confirmed",
+      "qualname": "AutoCompleteTest.test_fetch_completions",
+      "verdict": "present",
+      "matched_at": "Lib/idlelib/idle_test/test_autocomplete.py:242"
+    }
+  ]
+}

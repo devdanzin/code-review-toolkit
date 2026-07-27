@@ -362,6 +362,11 @@ def main() -> None:
             k: sorted(v) for k, v in container_types.items()
         },
         "any_usages": all_any,
+        # Report the DENOMINATOR with the cap. A bare list of 50 reads as a
+        # count of 50; on idlelib the true figure is 2079, and a reviewer who
+        # quoted "50 unannotated public functions" would be off by 40x.
+        "unannotated_public_functions_total": len(unannotated_public),
+        "unannotated_public_functions_capped": len(unannotated_public) > 50,
         "unannotated_public_functions": unannotated_public[:50],
         "files": file_analyses,
     }

@@ -410,8 +410,12 @@ def _is_high_signal_test(name: str) -> bool:
 
 def _get_bug_fix_tests(
     test_files: list[Path], project_root: Path
-) -> list[dict]:
-    """Identify tests added/modified in bug-fix commits using git."""
+) -> tuple[list[dict], int]:
+    """Identify tests added/modified in bug-fix commits using git.
+
+    Returns ``(capped_list, true_total)`` -- the caller reports both, so a
+    reader cannot mistake the cap for a measurement.
+    """
     try:
         result = subprocess.run(
             ["git", "log", "--oneline", "--diff-filter=AM",
@@ -420,9 +424,9 @@ def _get_bug_fix_tests(
             cwd=str(project_root),
         )
         if result.returncode != 0:
-            return []
+            return [], 0
     except (subprocess.TimeoutExpired, FileNotFoundError):
-        return []
+        return [], 0
 
     fix_commits: list[tuple[str, str]] = []
     for line in result.stdout.strip().split("\n"):
@@ -437,7 +441,7 @@ def _get_bug_fix_tests(
             fix_commits.append((sha, msg))
 
     if not fix_commits:
-        return []
+        return [], 0
 
     test_rel_paths = set()
     for tf in test_files:
@@ -465,7 +469,8 @@ def _get_bug_fix_tests(
                     "fix_message": msg[:120],
                 })
 
-    return bug_fix_tests[:15]
+    # Caller records the total; see `bug_fix_tests_total` in the envelope.
+    return bug_fix_tests[:15], len(bug_fix_tests)
 
 
 def select_tests(
@@ -595,8 +600,11 @@ def analyze(target: str, *, max_files: int = 0, with_git: bool = False) -> dict:
 
     # Get bug-fix tests if git is available
     bug_fix_tests: list[dict] = []
+    bug_fix_tests_total = 0
     if with_git:
-        bug_fix_tests = _get_bug_fix_tests(test_files, project_root)
+        bug_fix_tests, bug_fix_tests_total = _get_bug_fix_tests(
+            test_files, project_root
+        )
 
     # Select high-value tests
     selected = select_tests(all_test_info, bug_fix_tests, max_tests=30)
@@ -660,6 +668,7 @@ def analyze(target: str, *, max_files: int = 0, with_git: bool = False) -> dict:
         if item["function"] not in seen:
             seen.add(item["function"])
             deduped.append(item)
+    untested_similar_total = len(deduped)
     untested_similar = deduped[:20]
 
     return {
@@ -677,8 +686,15 @@ def analyze(target: str, *, max_files: int = 0, with_git: bool = False) -> dict:
             "similar_functions_found": sum(
                 len(t.get("similar_functions", [])) for t in invariants
             ),
+            # Both lists below are CAPPED. Report the true totals beside them:
+            # a reviewer who reads `untested_similar_functions: 20` as a count
+            # is reading the cap, not the measurement.
             "untested_similar_functions": len(untested_similar),
+            "untested_similar_functions_total": untested_similar_total,
+            "untested_similar_functions_capped": untested_similar_total > 20,
             "bug_fix_tests_found": len(bug_fix_tests),
+            "bug_fix_tests_total": bug_fix_tests_total,
+            "bug_fix_tests_capped": bug_fix_tests_total > 15,
         },
         "invariants": invariants,
         "bug_fix_tests": bug_fix_tests,

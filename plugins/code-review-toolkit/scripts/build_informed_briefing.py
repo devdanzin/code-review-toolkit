@@ -209,6 +209,17 @@ TRIAGE_RULES = """\
 6. **Cite or drop.** Every finding needs `file:line` and a concrete failure
    scenario (inputs → wrong outcome). A finding you cannot make concrete is a
    hypothesis; label it as one or drop it.
+7. **NEVER edit the reviewed tree.** Not to patch-test, not to mutation-test,
+   not "just to check". Work on a copy:
+
+       mkdir -p /tmp/repro && git -C <project> archive HEAD | tar -x -C /tmp/repro
+
+   A review often runs many agents over one checkout at once. A file you
+   modified is a file every other agent then reads wrongly, and one of them
+   will report a confident, false finding about code that was never there.
+   Restoring it afterwards does not undo that — the window is what does the
+   damage. If you did edit the tree, say so plainly in your report; it will be
+   verified independently either way.
 """
 
 

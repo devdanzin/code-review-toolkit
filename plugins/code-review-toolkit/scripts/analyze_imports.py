@@ -79,6 +79,22 @@ def _is_stdlib(top_level_name: str) -> bool:
     return top_level_name in _STDLIB_TOP_LEVEL
 
 
+def _classify(top: str | None, project_packages: set[str]) -> str:
+    """Classify an import's top-level name.
+
+    **The project's own packages win over the stdlib list.** When the reviewed
+    tree IS a stdlib package -- CPython's own `Lib/idlelib`, `Lib/asyncio` --
+    checking the stdlib first classifies every `from idlelib.x import y` as
+    `stdlib`, drops it from the internal graph, and yields an empty graph with
+    `cycles: []`. That reads as "no coupling" rather than "nothing resolved".
+    """
+    if not top:
+        return "external"
+    if top in project_packages:
+        return "internal"
+    return "stdlib" if _is_stdlib(top) else "external"
+
+
 def _resolve_relative_import(
     source_file: Path, project_root: Path, level: int, module: str | None
 ) -> str | None:
@@ -191,9 +207,7 @@ def analyze_file(
         if isinstance(node, ast.Import):
             for alias in node.names:
                 top = alias.name.split(".")[0]
-                category = "stdlib" if _is_stdlib(top) else (
-                    "internal" if top in project_packages else "external"
-                )
+                category = _classify(top, project_packages)
                 result["imports"].append({
                     "module": alias.name,
                     "names": None,
@@ -222,9 +236,7 @@ def analyze_file(
                 category = "internal"
             else:
                 top = module_str.split(".")[0] if module_str else None
-                category = "stdlib" if (top and _is_stdlib(top)) else (
-                    "internal" if top in project_packages else "external"
-                )
+                category = _classify(top, project_packages)
 
             result["imports"].append({
                 "module": module_str,
@@ -246,9 +258,20 @@ def analyze_file(
     return result
 
 
-def identify_project_packages(root: Path) -> set[str]:
-    """Identify top-level Python packages in the project."""
+def identify_project_packages(root: Path, scan_root: Path | None = None) -> set[str]:
+    """Identify top-level Python packages in the project.
+
+    *scan_root* is included as a package in its own right when it is a package
+    directory below *root*. Without it, reviewing a subpackage of a large tree
+    resolves nothing: on CPython's ``Lib/idlelib`` the detected packages came out
+    as ``['python-config', 'python-gdb']`` from the checkout root, every
+    ``from idlelib.x import y`` was classified `stdlib`, and the whole internal
+    graph came back empty -- reported as ``cycles: []``, which reads as a clean
+    result rather than as a total resolution failure.
+    """
     packages: set[str] = set()
+    if scan_root is not None and (scan_root / "__init__.py").exists():
+        packages.add(scan_root.name)
     # Look for directories with __init__.py.
     for item in root.iterdir():
         if item.is_dir() and (item / "__init__.py").exists():
@@ -472,9 +495,9 @@ def main() -> None:
     target = target.resolve()
 
     project_root = find_project_root(target)
-    project_packages = identify_project_packages(project_root)
-
     scan_root = target if target.is_dir() else project_root
+    project_packages = identify_project_packages(project_root, scan_root)
+
     all_files = sorted(discover_python_files(scan_root))
     files_total = len(all_files)
     if max_files > 0 and files_total > max_files:
@@ -526,9 +549,50 @@ def main() -> None:
         for imp in fa["imports"]:
             imp.pop("resolved_module", None)
 
+    # Denominator honesty: a graph with no internal edges over a non-trivial
+    # file set is a RESOLUTION FAILURE, not a project with no coupling. Reporting
+    # `cycles: []` for it states a clean result the run did not establish.
+    resolution = "ok"
+    resolution_note = None
+    # metrics is {"fan_in": {file: n}, "fan_out": {file: n}} -- not per-module
+    # dicts. Reading it the other way makes every project look unresolved.
+    graphed = sum(
+        1
+        for bucket in ("fan_in", "fan_out")
+        for n in metrics.get(bucket, {}).values()
+        if n
+    )
+    if len(file_analyses) > 3 and not internal_graph:
+        resolution = "FAILED"
+        resolution_note = (
+            f"no internal import edges resolved across {len(file_analyses)} files. "
+            f"Detected packages {sorted(project_packages)!r} — if that list does "
+            "not contain the package under review, every internal import was "
+            "misclassified as external and `cycles`, `metrics` and "
+            "`internal_graph` below are empty for that reason, NOT because the "
+            "code has no coupling."
+        )
+    elif internal_graph and not graphed:
+        # KNOWN LIMITATION. `internal_graph` keys on dotted module names while
+        # `metrics`/`cycles` key on repo-relative file paths. Those agree only
+        # when the package root IS the project root. Reviewing `Lib/idlelib`
+        # inside a CPython checkout, `idlelib.editor` never matches
+        # `Lib/idlelib/editor.py`, so 113 resolved edges still produce zero
+        # metrics and zero cycles -- which would read as "no coupling".
+        resolution = "PARTIAL"
+        resolution_note = (
+            f"{len(internal_graph)} import edges resolved, but NONE mapped onto a "
+            "scanned file, so `metrics` and `cycles` are empty and must not be "
+            "read as findings. This happens when the reviewed package is not at "
+            "the project root (e.g. Lib/idlelib inside a CPython checkout): the "
+            "graph keys on dotted module names and the metrics key on file paths."
+        )
+
     output = {
         "project_root": str(project_root),
         "scan_root": str(scan_root),
+        "resolution": resolution,
+        "resolution_note": resolution_note,
         "project_packages": sorted(project_packages),
         "files_total": files_total,
         "files_analyzed": len(all_files),

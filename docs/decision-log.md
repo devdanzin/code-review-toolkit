@@ -768,3 +768,69 @@ artifact rather than reading it. A gate that has never been run is not a gate.
 - **Scanner runtime** (plan §9). A full `Lib/` sweep with 38 checks exceeded 20 minutes and was
   killed; the plan's recorded baseline is 5 minutes with 10 checks. A benchmark nobody can afford to
   run stops being run.
+
+---
+
+## D-19 · 2026-07-27 · The idlelib informed-explore, and what it exposed in the toolkit
+
+18 agents + 12 scanners over `Lib/idlelib` (125 files) @ CPython `6080c866096`. Full findings in
+`reports/idlelib_v4/FINDINGS.md`. What matters for the toolkit:
+
+### Four scanner defects, all of the same class: a failure reported as a result
+
+- **`analyze_imports` reported a resolution failure as `cycles: []`.** idlelib IS the stdlib, so
+  `_is_stdlib()` was consulted before `project_packages` and every internal import was dropped.
+  **I repeated the false "0 cycles" to the user before an agent caught it.** Fixed three ways
+  (scan-root self-detection, project-packages-beat-stdlib, and a `resolution` field). idlelib
+  0 -> 113 edges; **asyncio 0 -> 19 cycles, so D-17's Phase 5 asyncio run had the same silent
+  failure**; coverage.py unchanged.
+- **Four lists are capped and presented as counts.** `count_types.unannotated_public_functions`
+  reads 50; the true figure is **2079**. Same at `extract_test_invariants` (`[:15]`, `[:20]`) and
+  `measure_complexity` (`[:30]`). I quoted the `[:20]` cap to an agent as a measurement. All now
+  emit `*_total` / `*_capped`.
+- **`correlate_tests` mis-measures three ways** — counts test-infrastructure files as source
+  (84.8% vs a real 93.3%), silently subtracts skipped and unmapped tests from its own total
+  (587 vs 613), and sees only `@skip` decorators, missing runtime `self.skipTest()`.
+
+The pattern is one thing: **a scanner that cannot answer must say so, not return an empty answer.**
+`check_typing`'s `status: FAILED` was the model; the others lacked it.
+
+### D-07 was violated twice, despite `docs/reproduction-convention.md` existing
+
+Two agents patch-tested in the live checkout. One restored; one left a `# MUTANT` marker in
+`sidebar.py` that I found and restored. A third ran 13 mutation experiments, restoring each time —
+every restore worked, but each left a file mutated for 60-90s.
+
+**The convention doc was not enough because agent prompts do not read it.** The `git archive` recipe
+is now **triage rule 7 in the informed briefing**, which every agent does read. That is the durable
+fix; the doc alone demonstrably was not.
+
+Verified final state: 0 modified files, no `MUTANT` markers, all SHAs match HEAD.
+
+### The registry gap from item 0.6 recurred, live
+
+`lint-rule-triager` and `typing-integrity-auditor` were not dispatchable — the installed plugin was
+1.6.0, from before this session shipped 1.7.0-1.11.0. Routed through `general-purpose` with their
+definition files. The tripwire fires in the repo; nothing can make a user re-run `/plugin`.
+
+### What the informed run bought, measured
+
+- **Five findings reached independently by two agents** from different evidence.
+- **silent-failure-hunter dismissed 24 of 32** candidates against the FP taxonomy and spent the
+  effort elsewhere; **dead-code-finder returned 1 of 164** with the denominator stated.
+- **consistency-auditor measured a plausible hypothesis and killed it** — "after-callbacks leak onto
+  destroyed widgets" fires zero callbacks, because `Misc.destroy` deletes the Tcl command.
+- **git-history-analyzer declined a finding it wanted**: gh-102778 looked like a textbook
+  `fix-reverted-and-never-relanded` and it verified the reland three months later.
+
+### The sharpest methodological result: mutation as the arbiter
+
+Against idlelib's full 623-test GUI suite (headless is only **296 run / 81 skipped**), mutations of
+`searchengine.py:182`, `undo.py:218/279` and four `sidebar.py` lines all **survive**, while the
+mirrored `search_forward` mutation dies with 5 failures. The cause is a test stub:
+`test_searchengine.py:279` does `cls.text.index = lambda index: "4.0"`, freezing every index
+expression to a constant.
+
+**This reframes `test-cannot-fail`.** The high-value variant is not "no assertion" but **"assertion
+against a stub that cannot express the failure"** — which is exactly how CRF-IDLELIB-0025 hid, and
+what `mock_idle.get_selection_indices` does today. Worth a catalog entry of its own.

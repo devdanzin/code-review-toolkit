@@ -1,0 +1,24 @@
+{
+  "project_root": "/home/danzin/projects/3.14",
+  "scan_root": "/home/danzin/projects/3.14/Lib/idlelib",
+  "status": "FAILED",
+  "failure_reason": "the tree shadows a stdlib module, so mypy refuses to analyze it. Stage the package under a directory that is NOT on the stdlib path (a symlink farm works) and re-run with --no-namespace-packages. This is expected for any in-tree CPython Lib/ subpackage.",
+  "mypy_version": "1.20.0",
+  "config_file": null,
+  "uses_project_config": false,
+  "returncode": 2,
+  "stderr": "mypy: \"../3.14/Lib/types.py\" shadows library module \"types\"\nnote: A user-defined top-level module with name \"types\" is not supported",
+  "files_checked": null,
+  "summary": {
+    "total": 0,
+    "defects": 0,
+    "missing_annotations": 0,
+    "other": 0,
+    "by_code": {},
+    "stale_ignores": 0,
+    "phantom_imports": 0,
+    "strict_pass_ran": false
+  },
+  "findings": [],
+  "phantom_import_findings": []
+}

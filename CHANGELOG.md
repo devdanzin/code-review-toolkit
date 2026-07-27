@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-07-27
+
+Fixes found by running a full 18-agent `informed-explore` against CPython's idlelib. Findings in
+`reports/idlelib_v4/FINDINGS.md`; reasoning in `docs/decision-log.md` D-19.
+
+### Fixed — four scanners reported a failure as a result
+
+- **`analyze_imports` reported a resolution failure as `cycles: []`.** When the reviewed tree IS a
+  stdlib package (`Lib/idlelib`, `Lib/asyncio`), `_is_stdlib()` was consulted before
+  `project_packages`, so every internal import was classified `stdlib` and dropped — and the empty
+  graph was reported as a clean result. Three fixes: the scanned package is detected as a package in
+  its own right; **project packages now win over the stdlib list**; and a `resolution` field reports
+  `FAILED` / `PARTIAL` / `ok`. idlelib **0 → 113 edges**; **asyncio 0 → 19 cycles**, so the 1.10.0
+  asyncio run had the same silent failure; coverage.py unchanged.
+- **Four lists were capped and presented as counts.** `count_types.unannotated_public_functions`
+  read 50 where the true figure for idlelib is **2079**; `extract_test_invariants` capped at 15 and
+  20 (the "20 untested similar functions" is really **20 of 53**). All now emit `*_total` and
+  `*_capped` beside the list.
+
+### Changed — reproduction discipline moved to where agents will read it
+
+- **`git archive` is now triage rule 7 in the informed briefing**, not only in
+  `docs/reproduction-convention.md`. Two agents patch-tested the live checkout during this run
+  despite that doc existing — agent prompts do not read it. The briefing they all do read.
+
 ## [1.11.0] - 2026-07-27
 
 Phase 6 — the regression gates. Both gates caught a defect in the gate itself.
