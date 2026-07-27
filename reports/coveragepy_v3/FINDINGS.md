@@ -1,7 +1,7 @@
 # coverage.py informed-explore v3 — findings
 
 `coverage/` @ `6b3259abb64a3cb80b4800f58fe1c71b24970110` (main, 2026-07-26) · 44 files / 16,426 lines
-· toolkit v1.13.0 · 16 agents + 12 scanners · **15 of 16 agents landed** (test-investigation still running)
+· toolkit v1.13.0 · 16 agents + 12 scanners · **all 16 agents landed**
 
 **This is a re-review at an unchanged tree.** `git diff d37859cd HEAD -- coverage/` is **empty** — only
 CI workflow files moved since the v1/v2 review. So every new finding here is informed-pass yield, not
@@ -54,7 +54,7 @@ filename and then hits a bare `ird.py` that is not a valid directive.
 block" and `e06eb348` "escape filenames in markdown report". Two sibling reporters were fixed; the
 one whose format is *most* delimiter-sensitive was not. `fix-not-propagated-to-sibling-path`.
 
-### V3 · CONSIDER · `results.py` — 89.995% displays as 90.00% and passes `--fail-under=90`
+### V3 · POLICY (downgraded from CONSIDER) · 89.995% displays as 90.00% and passes `--fail-under=90`
 
 ```
 total=89.995   display='90.00'   should_fail_under(total, 90, 2) = False
@@ -64,6 +64,12 @@ total=89.994   display='89.99'   should_fail_under(total, 90, 2) = True
 Confirms catalogued CRF-COVPY-0007 (`asymmetric-rounding-between-display-and-gate`) at HEAD. The
 display rounds half-up and the gate compares the rounded value, so a build at 89.995% passes a gate
 set at 90 — and the report agrees with itself, which is what makes it invisible.
+
+**Downgraded by the mutation sweep, which corrects my own first reading.** All **9 of 9** mutants on
+`results.py`'s rounding and `--fail-under` logic were killed by the suite. The asymmetry is not an
+untested accident: it is pinned by tests, i.e. specified. It remains a defensible thing to argue
+about with the maintainer, but it is a POLICY question, not an oversight, and the report should not
+present it as one.
 
 ### V4 · CONSIDER · `multiproc.py:37` sets one of the three warning suppressions its twin sets
 
@@ -191,6 +197,33 @@ releases, config and CLI options in both directions, a real nitpicky Sphinx buil
 mutation-tested), runtime-message deep links both ways, env vars, toctree, `[paths]`, `version_info`,
 the public API surface, extras. One measurement trap recorded with them: a hyphen-only regex reports
 all 15 message anchors broken, because docutils normalises the underscore labels.
+
+## Mutation testing — 65 mutants, 2 cores, the full 1613-test suite
+
+The strongest single method in this run. Each mutant was run against the whole suite on **both** the
+default `sysmon` core and `COVERAGE_CORE=ctrace` (the agent built and installed the C tracer into its
+copy; without it ~200 tests skip), with three baseline runs per sweep and flaky tests excluded.
+
+**51 killed · 13 survived · 4 of the survivors are equivalent mutants**, explicitly dismissed in the
+report so nobody re-reports them. Nine are genuinely unconstrained guards.
+
+The signature find is `files.py:35`, the system-root separator guard. Its only test —
+`test_files.py:93 test_relative_dir_for_root` — patches `os.path.normcase` to return `curdir`, which
+makes its own assertion a tautology. The mutant survives on **both** cores; the *inverse* mutant
+kills 92 tests, which proves it is not an equivalent mutant. Demonstrated consequence: `RELATIVE_DIR`
+becomes `'//'` at `/` and `relative_filename` stops stripping. This is
+`assertion-against-a-stub-that-cannot-fail` — the shape idlelib produced — confirmed on a second
+codebase by an independent method.
+
+**Negative results, equally valuable:** `files.py` path normalisation 11/12 killed, `results.py`
+rounding and `--fail-under` **9/9**, `report.py` 9/10, `lcovreport.py` 6/6, `numbits.py` 2/2. Those
+areas are genuinely well tested and should not be re-probed.
+
+It also settles the zip question with evidence rather than reading: at `report.py:106,176` the desync
+is **one-directional-silent** — an extra value is dropped unnoticed (mutant survives) while a missing
+column is caught by 36 tests — and the two mutants as originally framed are **equivalent**, because
+`values` deliberately carries the trailing sort key. Third independent confirmation that those sites
+are not defects.
 
 ## Systemic root
 
