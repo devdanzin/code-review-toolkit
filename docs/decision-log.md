@@ -999,3 +999,36 @@ which commit each build came from.
 **Toolkit implication:** the review commands never ask which branch a finding will be *reported*
 against, and `discover_python_project.py` (plan item 4.1) is the natural place to surface it. A
 review of a maintenance branch is legitimate; silently drafting an upstream report from one is not.
+
+---
+
+## D-23 · The idlelib umbrella is filed — reporting conventions to reuse (2026-07-27)
+
+**[python/cpython#154760](https://github.com/python/cpython/issues/154760)**, 69 findings, filed
+2026-07-27. 73 found → 3 already reported → 1 fixed on main (D-22) → 69 reported.
+
+Three conventions came from core-developer feedback and are **not** optional next time:
+
+1. **Bare row numbers, never prefixed identifiers.** `IDLE-0035` was renamed to `35` because
+   contributors were citing the prefixed form in issues and PRs. It does not autolink, so a reader
+   who meets one has no route back to the umbrella. The issue now states that the number is a row
+   and asks people to cite the issue plus the row — renaming alone would not have fixed the
+   behaviour it was meant to fix.
+2. **Every row ships as "Under analysis"** — explicitly *not cleared for work* — with the issue
+   saying that a maintainer moving a row off that state is what opens it. A reviewer's findings are
+   not triaged bugs: some are intentional, some not worth the churn, some wrong. `finding 34` is the
+   concrete argument: four search/replace entry points work *only because* of the `TclError` swallow.
+3. **Repeat both rules inside every gist.** People arrive at a gist from a search result, not from
+   the issue, and would otherwise see neither.
+
+**Structural choice that held up:** 8 cluster gists rather than 69 per-finding ones, because three
+findings are systemic roots that explain their neighbours and only read as roots when the instances
+sit next to them. Each finding still gets its own anchor, so the table is one row per finding.
+
+**Mechanical trap, twice:** gist heading anchors must be **scraped from the rendered page**, never
+computed. GitHub deletes apostrophes rather than replacing them and turns an em dash into a doubled
+`-`; a locally-guessed slug silently lands the reader at the top of the gist. Both the renumbering
+and the back-link edit were re-verified live (69/69).
+
+Status is mirrored in `findings.json:upstream.row_status`, but the issue table is authoritative once
+filed — maintainers edit it in place, so the generator no longer owns that column.
