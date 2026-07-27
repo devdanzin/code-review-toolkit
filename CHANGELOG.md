@@ -6,6 +6,63 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-07-27
+
+Phase 1 of `docs/improvement-plan.md` (external tools) and Phase 2 item 2.1.
+
+### Added — `unformatted-format-string-literal` (item 2.1)
+
+- **New shape and scanner check.** A `{name}` literal reaching a message sink that never formats it,
+  so the braces are shown to the reader verbatim — almost always a dropped `f` prefix. **Calibrated
+  over CPython's `Lib/` (1,847 files): 4 raw candidates, 1 finding, 0 false positives.** idlelib,
+  `_pyrepl` and coverage.py each produce 0, so it adds no false-positive pressure to the benchmark
+  corpora. The confirmed instance is `Lib/test/test_tarfile.py:3871`, in the `else` branch of a
+  platform check.
+- Three differentials carry it, each matching a real guarded twin in CPython: an extra argument on
+  the call (`_pyrepl/trace.py` formats only `if k or kw`), the literal being the receiver of
+  `.format` (`runpy.py:125`), and requiring the field name to be an **identifier** — `{}` and `{0}`
+  are indistinguishable from a regex quantifier or a literal brace in a character class, and those
+  two classes alone were ~90% of the raw candidates.
+
+### Added — the tiered lint pass (items 1.1, 1.4)
+
+- **`run_lint_rules.py` + the `lint-rule-triager` agent.** A defect pass that uses ruff as the
+  engine rather than a style pass: tier 1 means *the program does something the author did not
+  intend*. Measured tier-1 totals — **idlelib 67, `_pyrepl` 7, coverage.py 19**; tier-1+2 across the
+  three corpora is 997, closely reproducing the 989 the pre-plan survey measured.
+- **The tier lists are now recorded in the source.** They had been measured once and lost, which is
+  why this item had to re-derive them.
+- `rule_validation` inspects each selected rule's `status` rather than testing membership, because
+  removed rules are still listed by `ruff rule --all`. **It earned its keep on the first run**,
+  catching two tier-1 codes (`PLW1514`, `RUF055`) that were preview-gated and therefore silently
+  doing nothing — corroborated by the stderr capture, which is the only place ruff reports it.
+- `shape_id` marks the 13 rules that overlap a catalogued shape so they are merged rather than
+  double-reported. The first novel-shape harvest immediately found `B019` in this category
+  (`lru-cache-on-method` had been catalogued since the first wave) and it is now mapped.
+- `has_suppression_comment` is the measured dismissal signal: 6 of 19 tier-1 findings on coverage.py
+  carry one, and **every one is a deliberate idiom** — `open = open  # pylint:
+  disable=redefined-builtin`, which captures the builtin before mocking can replace it.
+
+### Added — type integrity (item 1.3)
+
+- **`check_typing.py` + the `typing-integrity-auditor` agent.** mypy only, with the project's own
+  config, never overridden. Reproduces the survey exactly on coverage.py: plain mypy 0 errors, and
+  the labelled `--disallow-any-unimported` second pass **3 phantom imports in one file**, all from
+  `from coverage.plugins import FileReporter` — a module that does not exist, silently degrading
+  three annotations to `Any`.
+- **`files_checked == 0` is reported as FAILED, not clean**, and `failure_reason` names the known
+  landmines with the fix for each. `_pyrepl` correctly reports FAILED with the stdlib-shadowing
+  diagnosis rather than a false clean.
+- Stale-ignore counts come **only** from mypy's own `unused-ignore` code, never from grep.
+
+### Changed — item 1.2
+
+- **`run_external_tools.py` no longer ships a competing curated ruff selection.** Its
+  `F,B,SIM,S,RET,PIE,UP,PERF` default measured 65-92% style-grade across the three corpora while
+  missing a quarter of the tier-1 defects. That script now answers "what does the project's own
+  tooling say?" and defers defect-grade selection to `run_lint_rules.py`; leaving both in place would
+  have shipped two contradictory ruff configurations in one toolkit.
+
 ## [1.6.0] - 2026-07-27
 
 Phase 0 of `docs/improvement-plan.md` in full — the calibration loop is repaired in both directions.

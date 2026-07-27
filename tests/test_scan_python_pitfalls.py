@@ -1466,5 +1466,91 @@ class TestProjectLevelShapes(unittest.TestCase):
         )
 
 
+SHAPE = "unformatted-format-string-literal"
+
+
+class TestUnformattedFormatString(unittest.TestCase):
+    """A `{name}` literal in a message nothing formats."""
+
+    def test_raise_with_a_named_field(self):
+        f = scan(
+            "import sys\n"
+            "def f():\n"
+            "    raise NotImplementedError('cannot guess for {sys.platform}')\n"
+        )
+        self.assertEqual(f[0]["shape"], SHAPE)
+        self.assertEqual(f[0]["severity"], "FIX")
+        # `sys` is bound in the module, so the author meant an f-string.
+        self.assertEqual(f[0]["confidence"], "high")
+
+    def test_field_naming_nothing_in_scope_is_medium(self):
+        f = scan("def f():\n    raise ValueError('bad {wibble}')\n")
+        self.assertEqual([x["confidence"] for x in f if x["shape"] == SHAPE], ["medium"])
+
+    def test_warning_and_logging_sinks(self):
+        for call in (
+            "warnings.warn('gone in {version}')",
+            "logging.error('failed for {user}')",
+            "log.info('saw {count}')",
+            "print('hello {name}')",
+        ):
+            with self.subTest(call=call):
+                self.assertIn(SHAPE, shapes(f"def f():\n    {call}\n"))
+
+    # ---- the differentials, each a real guarded twin from CPython ----
+
+    def test_format_receiver_is_silent(self):
+        # runpy.py:125 -- the literal carries braces and is formatted in place.
+        self.assertNotIn(
+            SHAPE,
+            shapes(
+                "def f(mod_name):\n"
+                "    raise RuntimeError("
+                "'{mod_name!r} found'.format(mod_name=mod_name))\n"
+            ),
+        )
+
+    def test_any_extra_argument_is_silent(self):
+        # _pyrepl/trace.py -- `trace(line, *k)` formats only `if k or kw`.
+        self.assertNotIn(
+            SHAPE, shapes("def f(x):\n    log.info('saw {count}', x)\n")
+        )
+        self.assertNotIn(
+            SHAPE, shapes("def f(x):\n    warnings.warn('{name} gone', remove=x)\n")
+        )
+
+    def test_fstring_is_silent(self):
+        self.assertNotIn(
+            SHAPE,
+            shapes("import sys\ndef f():\n    raise ValueError(f'for {sys.platform}')\n"),
+        )
+
+    def test_bare_and_numeric_fields_are_silent(self):
+        # `{}` and `{0}` are indistinguishable from regex quantifiers and from
+        # literal braces in a character class -- they dominated the raw pass.
+        self.assertNotIn(SHAPE, shapes("def f():\n    raise ValueError('got {}')\n"))
+        self.assertNotIn(SHAPE, shapes("def f():\n    raise ValueError('got {0}')\n"))
+        self.assertNotIn(
+            SHAPE, shapes(r"def f():" "\n" r"    raise ValueError('\d{4}-\d{2}')" "\n")
+        )
+
+    def test_escaped_braces_are_silent(self):
+        self.assertNotIn(
+            SHAPE, shapes("def f():\n    raise ValueError('literal {{name}} here')\n")
+        )
+
+    def test_template_syntax_is_silent(self):
+        # `${name}` is string.Template / shell, not str.format.
+        self.assertNotIn(
+            SHAPE, shapes("def f():\n    raise ValueError('path is ${prefix}')\n")
+        )
+
+    def test_non_message_call_is_silent(self):
+        # A brace literal on its way to a formatter is the normal case.
+        self.assertNotIn(
+            SHAPE, shapes("def f():\n    register('{name} is deprecated')\n")
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

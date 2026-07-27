@@ -27,8 +27,10 @@ Parse arguments into three categories:
 - `tests` → test-coverage-analyzer
 - `errors` → silent-failure-hunter
 - `pitfalls` → python-pitfall-scanner (concrete correctness defects)
+- `lint` → lint-rule-triager (defect-grade linter rules, tiered)
 - `docs` → documentation-auditor
 - `types` → type-design-analyzer
+- `typing` → typing-integrity-auditor (mypy defects + phantom imports)
 - `dead-code` → dead-code-finder
 - `tech-debt` → tech-debt-inventory
 - `test-invariants` → test-investigation-agent
@@ -138,23 +140,25 @@ Based on the requested aspects (default: all), launch the appropriate agents. Ea
 
 **Group B — Correctness and code quality** (highest-value findings):
 3. **python-pitfall-scanner** — concrete correctness defects (runs first in this group: its findings are behavioural bugs, not smells)
-4. silent-failure-hunter
-5. complexity-simplifier
-6. dead-code-finder
+4. **lint-rule-triager** — defect-grade lint rules; merges with the scanner's findings where a rule overlaps a catalogued shape
+5. silent-failure-hunter
+6. complexity-simplifier
+7. dead-code-finder
 
 **Group C — Interface and documentation**:
-7. test-coverage-analyzer
-8. documentation-auditor
-9. project-docs-auditor
-10. type-design-analyzer
-11. api-surface-reviewer
+8. test-coverage-analyzer
+9. documentation-auditor
+10. project-docs-auditor
+11. type-design-analyzer
+12. **typing-integrity-auditor** — mypy-provable defects and phantom imports
+13. api-surface-reviewer
 
 **Group D — Inventory and investigation**:
-12. tech-debt-inventory
-13. test-investigation-agent
+14. tech-debt-inventory
+15. test-investigation-agent
 
 **Group E — Temporal analysis (runs last)**:
-14. git-history-analyzer
+16. git-history-analyzer
 
 If `parallel` is specified, run agents within each group concurrently. Run at most `--max-parallel` agents concurrently within each group (default: 2). On memory-constrained systems, use `--max-parallel 1` to run agents sequentially. Groups still execute sequentially because later groups may benefit from earlier findings. Group E runs last because it cross-references all other agents' output.
 

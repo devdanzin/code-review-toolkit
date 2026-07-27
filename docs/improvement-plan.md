@@ -116,10 +116,19 @@ campaign slice manifests (built for 358k lines; our benchmarks fit in one run).
 ### 0.6 Nine tracker-derived shapes, three empirically validated
 
 Top of the list is essentially free: **`unformatted-format-string-literal`** — a `{...}` literal
-nothing formats, so the braces reach the user verbatim. **2/2 recall on the known bugs, 0 false
-positives across all of `Lib/`**, completely silent at runtime. Its three-part differential
-(docstring / `.format` receiver / any extra argument) takes raw candidates from 18 to 0 while keeping
-both true positives, and every near-miss is a real guarded twin (`runpy.py:125`, `_pyrepl/trace.py:28`).
+nothing formats, so the braces reach the user verbatim. **0 false positives across all of `Lib/`**,
+completely silent at runtime. Its three-part differential (docstring / `.format` receiver / any extra
+argument) removes every raw candidate that is not a bug, and each near-miss is a real guarded twin
+(`runpy.py:125`, `_pyrepl/trace.py:28`).
+
+> **Corrected on implementation (D-14).** Two figures here were wrong. Recall is **1 true positive in
+> `Lib/`, not 2**, and the raw candidate count is **4, not 18** — because the *candidate definition*
+> was never written down. Defining a candidate as "any string literal with a brace field" yields
+> **2,188 raw / 694 after the differential**, which is useless. The shape works only when candidates
+> are restricted to a **message sink** (an exception constructor, `warnings.warn`, a logging call, a
+> `print`). A fourth filter is also load-bearing and was unrecorded: the field name must be an
+> **identifier**, since `{}` and `{0}` are indistinguishable from a regex quantifier or a literal
+> brace in a character class, and those two classes alone are ~90% of raw candidates.
 
 ---
 
@@ -168,12 +177,16 @@ false-positive regression; the tool reports what moved and leaves the judgement 
 
 ## 2. Phase 1 — External tools
 
-| # | Item | Size |
-|---|---|---|
-| 1.1 | `run_lint_rules.py` + `lint-rule-triager` agent | S |
-| 1.2 | Retune or retire `run_external_tools.py`'s ruff selection | XS |
-| 1.4 | **Pin `ruff==0.16.0` + `rule_validation` in the envelope** (decided, D-10) | S |
-| 1.3 | `check_typing.py` + `typing-integrity-auditor` agent | M |
+| # | Item | Size | Status |
+|---|---|---|---|
+| 1.1 | `run_lint_rules.py` + `lint-rule-triager` agent | S | **DONE** — D-14 |
+| 1.2 | Retune or retire `run_external_tools.py`'s ruff selection | XS | **DONE** — retired, D-14 |
+| 1.4 | **Pin `ruff==0.16.0` + `rule_validation` in the envelope** (decided, D-10) | S | **DONE** — D-14 |
+| 1.3 | `check_typing.py` + `typing-integrity-auditor` agent | M | **DONE** — D-14 |
+
+**Phase 1 is complete.** Measured tier-1 totals for regression comparison: idlelib 67, `_pyrepl` 7,
+coverage.py 19. The tier lists are now constants in `run_lint_rules.py` — they had been measured once
+and lost, which is why this item had to re-derive them.
 
 **1.1** ships the measured tier-1/tier-2/tier-3 selection, `--isolated` by default so results are
 comparable across projects, and two fields that carry the design: `shape_id` (non-null ⇒ merge with the
@@ -220,9 +233,9 @@ opt-in and labelled experimental; `pyrefly` is not integrated until its silent-z
 
 ## 3. Phase 2 — Shape expansion
 
-| # | Item | Size |
-|---|---|---|
-| 2.1 | `unformatted-format-string-literal` | S |
+| # | Item | Size | Status |
+|---|---|---|---|
+| 2.1 | `unformatted-format-string-literal` | S | **DONE** — D-14 |
 | 2.2 | `quadratic-string-consume-or-accumulate` | M |
 | 2.3 | `lazy-shared-cache-published-before-complete` | M |
 | 2.4 | `assert-guards-caller-supplied-input` | M |

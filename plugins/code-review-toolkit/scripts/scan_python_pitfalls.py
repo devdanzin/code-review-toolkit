@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import ast
 import builtins
+import re
 import sys
 from pathlib import Path
 
@@ -3366,6 +3367,123 @@ _INVERSE_OPS = (
     ("insert", "remove"),
 )
 
+
+# A `str.format` replacement field whose name is an IDENTIFIER, optionally with
+# .attr / [key] access, a !conversion and a :spec. Deliberately NOT matching `{}`
+# or `{0}`: a bare or numeric field is indistinguishable from a regex quantifier
+# (`\d{4}`) or a literal brace in a character class, and those dominate the raw
+# candidates. A named field is what an author writes when they meant an f-string.
+_NAMED_FORMAT_FIELD = re.compile(
+    r"(?<!\{)\{"
+    r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*|\[[^\]{}]*\])*"
+    r"(?:![rsa])?"
+    r"(?::[^{}]*)?"
+    r"\}(?!\})"
+)
+
+# Callables whose string argument is a MESSAGE -- something a human eventually
+# reads. A brace literal anywhere else is usually a template on its way to a
+# formatter; a brace literal here has nowhere left to be formatted.
+_MESSAGE_SINKS = frozenset(
+    {
+        "warn",
+        "warn_explicit",
+        "warning",
+        "info",
+        "debug",
+        "error",
+        "critical",
+        "exception",
+        "log",
+        "print",
+        "fail",
+        "skipTest",
+        "abort",
+    }
+)
+
+
+def _is_exception_constructor(func: ast.expr) -> bool:
+    """True if *func* names something that looks like an exception class."""
+    name = func.attr if isinstance(func, ast.Attribute) else getattr(func, "id", "")
+    return bool(name) and name.endswith(("Error", "Exception", "Warning"))
+
+
+def _check_unformatted_format_string(tree: ast.AST) -> list[dict]:
+    """A `{name}` literal reaching a message sink that never formats it."""
+    out: list[dict] = []
+
+    raise_calls: set[int] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
+            raise_calls.add(id(node.exc))
+
+    # Every name bound anywhere in the module. A field naming one of them is the
+    # strong case: the author was reaching for an f-string and dropped the `f`.
+    bound: set[str] = {"self", "cls"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store):
+            bound.add(node.id)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            bound.add(node.name)
+        elif isinstance(node, ast.arg):
+            bound.add(node.arg)
+        elif isinstance(node, ast.alias):
+            bound.add((node.asname or node.name).split(".")[0])
+
+    for call in ast.walk(tree):
+        if not isinstance(call, ast.Call):
+            continue
+        is_sink = (
+            _is_exception_constructor(call.func)
+            or id(call) in raise_calls
+            or (
+                call.func.attr
+                if isinstance(call.func, ast.Attribute)
+                else getattr(call.func, "id", "")
+            )
+            in _MESSAGE_SINKS
+        )
+        if not is_sink:
+            continue
+        # ANY other argument means something may still format the string --
+        # `trace(line, *k, **kw)` in _pyrepl formats only `if k or kw`. This is
+        # the differential that keeps the check at zero false positives.
+        if len(call.args) + len(call.keywords) != 1:
+            continue
+        arg = call.args[0] if call.args else None
+        if not (isinstance(arg, ast.Constant) and isinstance(arg.value, str)):
+            continue
+
+        text = arg.value
+        fields = _NAMED_FORMAT_FIELD.findall(text)
+        if not fields:
+            continue
+        # `${name}` is string.Template / shell syntax, not str.format.
+        if all(text[text.index(f) - 1 : text.index(f)] == "$" for f in fields):
+            continue
+
+        names = {
+            f.lstrip("{").split("}")[0].split("!")[0].split(":")[0].split(".")[0]
+            for f in fields
+        }
+        resolvable = sorted(n for n in names if n in bound)
+        shown = ", ".join(sorted(fields)[:3])
+        out.append(
+            _finding(
+                "unformatted-format-string-literal",
+                "FIX",
+                "high" if resolvable else "medium",
+                arg,
+                f"{shown} is a format field in a message nothing formats — the "
+                f"braces reach the reader verbatim"
+                + (f"; {', '.join(resolvable)} is in scope, so an `f` prefix was "
+                   "probably intended" if resolvable else ""),
+                text[:200],
+            )
+        )
+    return out
+
 _PROJECT_CHECKS = {
     "divergent-sentinel-across-parallel-modules": _check_divergent_sentinel,
     "unguarded-inverse-of-guarded-operation": _check_unguarded_inverse,
@@ -3409,6 +3527,7 @@ _CHECKS = {
     "wrapper-mutates-foreign-collection": _check_wrapper_mutates_foreign_collection,
     "save-state-clobbered-by-reentry": _check_save_state_clobbered,
     "return-ignored-against-checked-family": _check_return_ignored_against_family,
+    "unformatted-format-string-literal": _check_unformatted_format_string,
 }
 
 

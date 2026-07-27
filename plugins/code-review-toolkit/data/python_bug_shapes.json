@@ -1792,6 +1792,28 @@
       "differential": "Recording an ATTEMPT is a legitimate design -- read what the record is used for. If it drives a 'reopen this' menu, it must mean success. Distinct from `flag-not-reset-on-early-exit`: there the early exit skips a reset, here it fails to skip a write.",
       "detected_by": null,
       "detectability": "agent-only"
+    },
+    {
+      "id": "unformatted-format-string-literal",
+      "title": "A `{name}` literal in a message nothing formats, so the braces reach the reader verbatim",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A plain string literal carrying a `str.format` replacement field -- `raise NotImplementedError('cannot guess for {sys.platform}')` -- passed as the sole argument to something that renders a message: an exception constructor, a `warnings.warn`, a logging call, a `print`. Nothing ever calls `.format` on it and it has no `f` prefix, so the field name is shown to the reader exactly as typed. Almost always a dropped `f`.",
+      "guarded_twin": "The same literal with an `f` prefix, or an explicit `.format(...)` on it. Both twins are usually present elsewhere in the same file, because the author writes far more of them correctly than not.",
+      "hunt": "For each instance, check every other message in the same module for the same slip -- a codebase that drops one `f` drops several, and they cluster in rarely-executed branches (a platform fallback, an unreachable `else`, an error path) because a formatted message would have been noticed the first time anyone saw it. Grep the whole tree for a brace field in a message argument, then apply the differential below.",
+      "expected": "the reader sees the value the field names, not the field.",
+      "caught_as": "COMPLETELY SILENT. It is not an error to have braces in a string; the message simply renders wrong. It surfaces only when a human reads the output, which for an error path may be never.",
+      "confirmed_examples": [
+        "CPython Lib/test/test_tarfile.py:3871 -- `raise NotImplementedError(\"Need to guess component length for {sys.platform}\")`, in the `else` branch of a platform check. The ONLY finding across 1,847 files of CPython's Lib/, with zero false positives."
+      ],
+      "validation": "confirmed",
+      "references": [
+        "str.format / format string syntax: replacement fields are only substituted by str.format, str.format_map, or an f-string prefix",
+        "Calibrated over CPython Lib/ (1,847 files): 4 raw candidates, 1 after the three-part differential, 0 false positives. idlelib, _pyrepl and coverage.py each produce 0, so the shape adds no false-positive pressure to the benchmarks."
+      ],
+      "differential": "Three filters carry this shape, and each corresponds to a real guarded twin. (1) ANY other argument on the call means something may still format the string -- `_pyrepl/trace.py` formats `line.format(*k, **kw)` only `if k or kw`, so `trace('{x}', v)` is correct. (2) A literal that is the RECEIVER of `.format`/`.format_map` is formatted in place -- `runpy.py:125` builds a multi-line braced message and formats it on the spot. (3) Only fields whose name is an IDENTIFIER count: `{}` and `{0}` are indistinguishable from a regex quantifier (`\\d{4}`) or a literal brace in a character class, and those two classes alone were 90% of the raw candidates over CPython's `Lib/`. Also skip `${name}`, which is `string.Template` or shell syntax. A template CONSTANT consumed by a formatter elsewhere (`_DEPRECATED_MSG` in `warnings`, `glob._deprecated_function_message`) is the commonest near-miss and is excluded by filter 1 at its call site.",
+      "detected_by": "scan_python_pitfalls.py",
+      "detectability": "implemented"
     }
   ]
 }

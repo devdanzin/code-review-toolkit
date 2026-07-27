@@ -488,3 +488,75 @@ Phases 1, 2 and 3 are unblocked and independent of each other. The natural next 
 own minimum-viable slice, now reduced to **2.1** (`unformatted-format-string-literal`, measured at
 0 FP across all of `Lib/`) and **3.1** (`prior-art`). 2.1 also produces the first idlelib **v3** run,
 which is what finally exercises `diff_findings.py` as a regression gate rather than as a self-test.
+
+---
+
+## D-14 · 2026-07-27 · Phase 2 item 2.1 and Phase 1 — shipped as 1.7.0
+
+### 2.1 `unformatted-format-string-literal` — the pipeline proof
+
+**Measured over CPython `Lib/` (1,847 files): 4 raw candidates, 1 finding, 0 false positives.**
+idlelib, `_pyrepl` and coverage.py each produce **0**, so it adds no FP pressure to the benchmarks.
+The confirmed instance is `Lib/test/test_tarfile.py:3871` — `raise NotImplementedError("Need to guess
+component length for {sys.platform}")` in the `else` branch of a platform check.
+
+**Correction to the plan's §0.6 estimate.** It recorded "**2/2 recall** on the known bugs" and "18
+raw candidates". The reproduction found **1** true positive in `Lib/`, not 2, and 4 raw candidates,
+not 18 — because the candidate definition was never written down. My first attempt at it (any string
+literal containing a brace field) produced **2,188 raw / 694 after the differential**, which is
+useless. The shape only works when candidates are restricted to a **message sink**: an exception
+constructor, a `warnings.warn`, a logging call, a `print`.
+
+Two near-misses that look like true positives and are not — both are template CONSTANTS consumed by a
+formatter elsewhere, and both are excluded by the extra-argument differential at their call site:
+
+- `Lib/_py_warnings.py:814` `_DEPRECATED_MSG` → formatted by `warnings._deprecated(name, message, remove=)`
+- `Lib/glob.py:153` `_deprecated_function_message` → same
+
+**The differential that does the work is the identifier requirement.** `{}` and `{0}` are
+indistinguishable from a regex quantifier (`\d{4}`) or a literal brace in a character class; those two
+classes alone were ~90% of the raw candidates. Requiring the field name to be an identifier removes
+them without losing the archetypal `{name}` slip.
+
+### Phase 1 — the tier lists were measured once and lost
+
+`run_lint_rules.py` had to re-derive the tiering because the previous session measured "59 tiered
+codes" and never wrote the codes down. **They are now constants in the source.** The reconstruction
+lands at tier-1+2 = **997** across the three corpora against the recorded 989, which is close enough
+to treat the tiering as reproduced rather than reinvented.
+
+Measured tier-1 totals, for regression comparison: **idlelib 67, `_pyrepl` 7, coverage.py 19.**
+
+**`rule_validation` earned its keep on its first run.** It flagged two of my own tier-1 codes —
+`PLW1514` and `RUF055` — as preview-gated, meaning they had been selected and silently did nothing.
+ruff reports that on stderr and nowhere else. Three more (`PLC2701`, `PLR0202`, `PLR0203`) were
+caught the same way in tier 2. Without this check the selection would have carried five dead rules
+indefinitely and their absence from the findings would have read as absence in the code.
+
+**The first novel-shape harvest immediately found a mapping gap:** `B019` was being reported as a
+novel candidate while `lru-cache-on-method` had been catalogued since the first wave — a
+double-report waiting to happen. Now mapped, along with `B017`.
+
+**`has_suppression_comment` is as strong as the survey claimed.** 6 of 19 tier-1 findings on
+coverage.py carry one and **every one is a deliberate idiom**, the clearest being
+`open = open  # pylint: disable=redefined-builtin`, which captures the builtin at import time so
+later mocking cannot break the module.
+
+Strongest uncatalogued candidates from the harvest, for Phase 2.7: **`B905`** (`zip()` without
+`strict=`, silently truncating to the shorter iterable — 16 instances across all three corpora, the
+single best candidate), `DTZ005`/`DTZ006` (naive datetime), `PLE0704`, `S608`.
+
+### 1.3 reproduced the typing survey exactly
+
+coverage.py: plain mypy **0 errors**, `--disallow-any-unimported` **3 errors in 1 file**, all from
+`from coverage.plugins import FileReporter`. `_pyrepl` correctly reports **FAILED** with the
+stdlib-shadowing diagnosis rather than a false clean — `failure_reason` now names each known landmine
+and its fix, so a FAILED status is actionable instead of just discouraging.
+
+### Scanner runtime is now a real problem, with numbers
+
+The plan's risk table records "5 min for a full `Lib/` sweep with 10 checks". With 38 checks a full
+`Lib/` run **exceeded 20 minutes and was killed**. The new check alone over the same 1,847 files takes
+**64 seconds**, and on a 40-file directory it is ~10% of total runtime — so no single check dominates
+and the cost is broad. This makes Phase 4's profiling item load-bearing rather than housekeeping:
+**a benchmark nobody can afford to run stops being run.**

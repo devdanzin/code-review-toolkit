@@ -346,9 +346,21 @@ def run_ruff(
     cmd = ["ruff", "check", "--output-format=json"]
 
     if args.ignore_config or not has_project_config("ruff", project_root):
-        rules = args.ruff_rules or "F,B,SIM,S,RET,PIE,UP,PERF"
-        cmd.extend(["--select", rules])
-        config_source = "curated"
+        # DEFECT-GRADE selection is `run_lint_rules.py`'s job, not this script's.
+        # This script answers "what does the PROJECT's own tooling say?"; when
+        # the project has no ruff config there is nothing to report, so fall
+        # back to ruff's own default rather than inventing a second, competing
+        # curated list. The previous default here was
+        # `F,B,SIM,S,RET,PIE,UP,PERF`, which measured 65-92% style-grade across
+        # the three benchmark corpora while missing a quarter of the tier-1
+        # defects (it excluded PL, RUF, DTZ and ASYNC entirely). Shipping it
+        # alongside run_lint_rules.py's tiers would put two contradictory ruff
+        # configurations in one toolkit.
+        if args.ruff_rules:
+            cmd.extend(["--select", args.ruff_rules])
+            config_source = "explicit"
+        else:
+            config_source = "ruff-default"
     else:
         if args.ruff_config:
             cmd.extend(["--config", args.ruff_config])
