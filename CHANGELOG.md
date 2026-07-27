@@ -6,6 +6,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-07-27
+
+Phase 4 items 4.6 and 4.5b.
+
+### Added
+
+- **`measure_complexity.py` crosses complexity with git fix history** (item 4.6). Each hotspot gains
+  `fix_commits_2y`, `fix_density`, `risk_rank` and a `verdict` of `active-risk` / `settled` /
+  `quiet`, emitted as a first-class output so the crossing cannot be forgotten. On coverage.py the
+  most-repaired function in the codebase (`sysmon_py_start`, 5 fix commits) scores **7.5** while
+  `pytracer._trace` scores 9.0 with 2 — complexity alone ranks them backwards, which is what this
+  exists to correct.
+  - `active-risk` is gated on the **fix history alone**. A first cut required high complexity *as
+    well* and duly labelled the single most-repaired function `quiet`.
+  - The threshold is the constant `ACTIVE_RISK_FIXES = 2`, not a median: over a handful of hotspots a
+    median-derived gate lands on whichever value sits in the middle and moves with it.
+  - **A missing or shallow history yields `unknown`, never zero.** Treating absent history as zero
+    fix commits would mark every hotspot `settled` and reproduce the inversion exactly.
+- **`tools/`** (item 4.5b), with the boundary stated: `scripts/` answers questions about a reviewed
+  project, `tools/` about the toolkit itself. First inhabitant `shape_coverage.py` measures Phase 0's
+  metric on demand, since it decays silently otherwise.
+
+### Changed
+
+- **`nesting_depth` recalibrated to reader-facing depth.** An `elif` chain is modelled by the AST as
+  an `If` inside each `orelse`, so a flat if/elif/elif/else was counted as **depth 3**; and
+  `if False:` debug blocks counted their whole contents. `pytracer._trace` moved 10.0 → 9.0 as a
+  result, so complexity scores are **not comparable across this release**.
+
 ## [1.8.0] - 2026-07-27
 
 Phase 3 of `docs/improvement-plan.md` — verification infrastructure. The toolkit can now gate a

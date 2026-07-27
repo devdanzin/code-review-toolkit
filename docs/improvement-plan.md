@@ -307,8 +307,8 @@ is `AUDIT-RESULT: FIX=n CONSIDER=n ... -- NEEDS-SIGN-OFF`, and a crashed scanner
 | 4.3 | Reachability tiering (`public` / `protocol` / `internal`) | M |
 | 4.4 | `python_version_matrix.json` + version-compat agent | M |
 | 4.5 | Denominator honesty in the scan envelope | S |
-| 4.5b | **Create `tools/`** (decided, D-08) — home for the calibration and validation harnesses | XS |
-| 4.6 | **`measure_complexity` ingests git history directly** (decided, D-08) | M |
+| 4.5b | **Create `tools/`** (decided, D-08) — home for the calibration and validation harnesses | XS | **DONE** — D-16 |
+| 4.6 | **`measure_complexity` ingests git history directly** (decided, D-08) | M | **DONE** — D-16 |
 | 4.7 | Dataflow-dependent shapes (tracker survey 6-8) | L |
 
 **4.1** fixes a whole *class* of bug rather than an instance. `find_dead_symbols` and `correlate_tests`

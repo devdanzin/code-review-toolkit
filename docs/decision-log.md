@@ -611,3 +611,59 @@ footguns produce a *silent empty result* that reads exactly like "not reported":
 phrases. The `prior-art` command adds the verdict vocabulary — `none` / `known` / `known-sharper` /
 `partial` / `reverted` / `refuted` — where `reverted` exists because a merged-then-backed-out fix
 reads as closed on the tracker and is live in the code.
+
+---
+
+## D-16 · 2026-07-27 · Phase 4 item 4.6 — complexity crossed with fix history
+
+### The inversion reproduces, and the crossing corrects it
+
+`measure_complexity.py` now runs a git-history pass and emits `fix_commits_2y`, `fix_density`,
+`risk_rank` and `verdict` per hotspot. On coverage.py:
+
+| rank | score | fixes/2y | verdict | function |
+|---|---|---|---|---|
+| 1 | 7.5 | 5 | `active-risk` | `sysmon.SysMonitor.sysmon_py_start` |
+| 2 | 9.0 | 2 | `active-risk` | `pytracer.PyTracer._trace` |
+| 3 | 5.0 | 2 | `active-risk` | `html.HtmlReporter.write_html_page` |
+| 4 | 8.0 | 1 | `settled` | `data.combine_parallel_data` |
+
+The most-repaired function in the codebase ranks **below three others on complexity alone**. That is
+D-05's lesson, now enforced by the output rather than left to the reader.
+
+### My first verdict rule reproduced the very bug it was written to fix
+
+The first cut gated `active-risk` on `fix_commits >= busy AND score >= 8.0`. That labelled
+`sysmon_py_start` — 5 fix commits, the most of any hotspot — **`quiet`**, because its score is 7.5.
+
+**`active-risk` is gated on the fix history ALONE.** Complexity decides `settled` vs `quiet`;
+history decides `active-risk`. Adding a complexity conjunct anywhere re-introduces the inversion.
+
+### The threshold is a constant, not a median
+
+The median-derived gate (`max(2, median + 1)`) was unstable: over a handful of hotspots the median
+lands on whichever value sits in the middle and the gate moves with it. With two hotspots at 0 and 5
+fixes, the median is 5 and the 5-fix hotspot fails its own threshold. Now `ACTIVE_RISK_FIXES = 2` —
+two independent repairs to one function inside two years is a real signal at any codebase size.
+
+**A missing history yields `unknown`, never zero.** Treating an absent or shallow history as zero fix
+commits would mark every hotspot `settled` and reproduce the inverted ranking exactly.
+
+### nesting_depth recalibrated
+
+Two constructs the AST nests and a reader does not:
+
+- **`elif` chains.** The AST models `elif` as an `If` inside each `orelse`, so `generic_visit`
+  charged a level per arm and a flat if/elif/elif/else read as **depth 3**.
+- **`if False:` / `if 0:` debug blocks**, common in older stdlib code, counted their whole contents.
+
+`pytracer._trace` moved 10.0 → 9.0 as a direct result. Any comparison against a pre-1.9.0 complexity
+number is invalid.
+
+### 4.5b — `tools/`
+
+Created, with the boundary stated: `plugins/.../scripts/` answers questions about a *reviewed
+project*; `tools/` answers questions about *the toolkit*. Nothing in `plugins/` may import from it.
+First inhabitant is `shape_coverage.py`, which measures Phase 0's metric on demand — it decays
+silently otherwise, since every ad-hoc shape name that never reaches the catalog drops the ratio and
+nothing else notices. It carries its own baseline history (36% → 100%).

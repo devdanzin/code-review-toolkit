@@ -17,6 +17,8 @@ Usage:
 
 import ast
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -28,8 +30,20 @@ from scan_common import (  # noqa: E402
 )
 
 
+def _is_always_false(test: ast.expr) -> bool:
+    """True for `if 0:` / `if False:` -- a disabled block, not a branch."""
+    return isinstance(test, ast.Constant) and not test.value
+
+
 class _NestingVisitor(ast.NodeVisitor):
-    """Walk a function body tracking nesting depth of control flow."""
+    """Walk a function body tracking nesting depth of control flow.
+
+    Measures *reader-facing* depth. Two constructs that the AST nests and a
+    reader does not are deliberately flattened: an `elif` chain (which the AST
+    models as an `If` inside each `orelse`) and a disabled `if False:` block.
+    Counting either inflates every enclosing function and made complexity a
+    worse ranking signal than it needed to be.
+    """
 
     def __init__(self) -> None:
         self.max_depth = 0
@@ -44,8 +58,27 @@ class _NestingVisitor(ast.NodeVisitor):
 
     # Control flow nodes that increase nesting.
     def visit_If(self, node: ast.If) -> None:
+        # `if 0:` / `if False:` is a disabled debug block. It costs the reader
+        # nothing and counting it overstates depth for the whole enclosing
+        # function -- a common idiom in older stdlib code.
+        if _is_always_false(node.test):
+            return
         self._enter()
-        self.generic_visit(node)
+        for child in node.body:
+            self.visit(child)
+        # An `elif` is an `If` sitting in `orelse`. Descending into it through
+        # generic_visit charges a level per arm, so a flat if/elif/elif chain
+        # reads as depth 3. A reader sees one decision point.
+        orelse = node.orelse
+        while len(orelse) == 1 and isinstance(orelse[0], ast.If):
+            elif_node = orelse[0]
+            if _is_always_false(elif_node.test):
+                return
+            for child in elif_node.body:
+                self.visit(child)
+            orelse = elif_node.orelse
+        for child in orelse:
+            self.visit(child)
         self._exit()
 
     def visit_For(self, node: ast.For) -> None:
@@ -390,9 +423,8 @@ def analyze_file(filepath: Path, project_root: Path) -> dict:
             "line_end": end,
             "is_method": class_name is not None,
             "is_async": isinstance(node, ast.AsyncFunctionDef),
-            "is_test": node.name.startswith("test") or (
-                class_name is not None and class_name.startswith("Test")
-            ),
+            "is_test": node.name.startswith("test")
+            or (class_name is not None and class_name.startswith("Test")),
             "has_decorators": len(node.decorator_list) > 0,
             "decorator_count": len(node.decorator_list),
             "metrics": metrics,
@@ -409,6 +441,189 @@ def analyze_file(filepath: Path, project_root: Path) -> dict:
                     result["functions"].append(_process_func(child, node.name))
 
     return result
+
+
+# Commit-subject keywords that mean "this commit repaired a defect". Kept local
+# rather than imported so a history pass cannot be broken by a refactor of
+# analyze_history.py's classification table.
+_FIX_KEYWORDS = (
+    "fix",
+    "bug",
+    "crash",
+    "regression",
+    "broken",
+    "incorrect",
+    "wrong",
+    "fail",
+    "error",
+    "leak",
+    "race",
+    "segfault",
+    "traceback",
+    "revert",
+)
+
+
+def _fix_commits_by_file(
+    project_root: Path, since: str, timeout: int = 120
+) -> dict[str, list[tuple[str, list[int]]]] | None:
+    """Per file, the fix commits touching it and the lines each one changed.
+
+    Returns None when history is unavailable (not a repo, git missing, shallow
+    clone with nothing in the window) so the caller can say so rather than
+    reporting zero fix commits everywhere -- which would mark every hotspot
+    `settled` and invert the ranking exactly as the plain complexity score does.
+    """
+    cmd = [
+        "git",
+        "log",
+        f"--since={since}",
+        "--no-merges",
+        "--format=%x00%H%x00%s",
+        "--unified=0",
+        "-p",
+    ]
+    try:
+        out = subprocess.run(
+            cmd,
+            cwd=str(project_root),
+            capture_output=True,
+            text=True,
+            errors="replace",
+            timeout=timeout,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+
+    by_file: dict[str, list[tuple[str, list[int]]]] = {}
+    sha = ""
+    is_fix = False
+    current: str | None = None
+    lines_touched: list[int] = []
+
+    def flush() -> None:
+        if current and is_fix and lines_touched:
+            by_file.setdefault(current, []).append((sha, list(lines_touched)))
+
+    for line in out.stdout.splitlines():
+        if line.startswith("\x00"):
+            flush()
+            current, lines_touched = None, []
+            parts = line.split("\x00")
+            sha = parts[1] if len(parts) > 1 else ""
+            subject = parts[2] if len(parts) > 2 else ""
+            is_fix = any(k in subject.lower() for k in _FIX_KEYWORDS)
+        elif line.startswith("+++ b/"):
+            flush()
+            current, lines_touched = line[6:], []
+        elif line.startswith("@@") and current:
+            # @@ -old,n +new,m @@
+            match = re.search(r"\+(\d+)(?:,(\d+))?", line)
+            if match:
+                start = int(match.group(1))
+                count = int(match.group(2) or 1)
+                lines_touched.extend(range(start, start + max(count, 1)))
+    flush()
+    return by_file
+
+
+# Two independent fix commits to the same function inside two years is a real
+# signal on a codebase of any size. A median-derived threshold was tried first
+# and is unstable: over a handful of hotspots the median lands on whichever
+# value happens to sit in the middle, and the gate moves with it.
+ACTIVE_RISK_FIXES = 2
+HIGH_COMPLEXITY_SCORE = 8.0
+
+
+def verdict_for(fix_commits: int, score: float) -> str:
+    """Cross a complexity score with a fix count.
+
+    `active-risk` is gated on the FIX HISTORY ALONE, deliberately not on the
+    complexity score as well. Requiring both inverts the ranking all over again:
+    on coverage.py `sysmon_py_start` has the most fix commits of any hotspot (5)
+    and a score of 7.5, so an `and score >= 8.0` clause labelled the single
+    most-repaired function in the codebase `quiet`.
+
+    Complexity decides `settled` vs `quiet`; history decides `active-risk`.
+    `settled` is the actionable one -- it says DEPRIORITIZE, which is the
+    opposite of what a complexity ranking alone would say.
+    """
+    if fix_commits >= ACTIVE_RISK_FIXES:
+        return "active-risk"
+    if score >= HIGH_COMPLEXITY_SCORE:
+        return "settled"
+    return "quiet"
+
+
+def cross_with_history(
+    hotspots: list[dict], project_root: Path, since: str = "2 years ago"
+) -> dict:
+    """Annotate hotspots with fix density and a verdict.
+
+    This encodes the session's sharpest calibration lesson. On coverage.py,
+    churn and complexity were **inverted**: `pytracer._trace` scores 10.0 with 2
+    fix commits in two years, while `sysmon.py` scores 7.5 with 11. High
+    complexity marked *settled* code, so complexity-driven triage pointed at
+    exactly the wrong files. Crossing the two is emitted as a first-class output
+    rather than left to the reader, so the crossing cannot be forgotten.
+    """
+    history = _fix_commits_by_file(project_root, since)
+    if history is None:
+        for h in hotspots:
+            h["fix_commits_2y"] = None
+            h["fix_density"] = None
+            h["verdict"] = "unknown"
+        return {
+            "history_available": False,
+            "note": (
+                "no usable git history (not a repo, git unavailable, or a "
+                "shallow clone). Every verdict is `unknown`: treating a missing "
+                "history as zero fix commits would mark every hotspot `settled` "
+                "and reproduce exactly the inverted ranking this crossing exists "
+                "to correct."
+            ),
+        }
+
+    # Index fix-touched lines by file basename; the diff paths are repo-relative
+    # and the hotspot paths are project-relative, which usually but not always
+    # agree.
+    touched: dict[str, list[tuple[str, set[int]]]] = {}
+    for path, commits in history.items():
+        touched.setdefault(Path(path).name, []).extend(
+            (sha, set(lines)) for sha, lines in commits
+        )
+
+    for h in hotspots:
+        rel = h["qualified_name"].split("::")[0]
+        span = set(range(h["line_start"], h["line_end"] + 1))
+        shas = {sha for sha, lines in touched.get(Path(rel).name, []) if lines & span}
+        length = max(h["line_end"] - h["line_start"] + 1, 1)
+        h["fix_commits_2y"] = len(shas)
+        h["fix_density"] = round(len(shas) / length, 4)
+
+    ranked = sorted(hotspots, key=lambda h: -(h["fix_commits_2y"] or 0))
+    for rank, h in enumerate(ranked, 1):
+        h["risk_rank"] = rank
+
+    fixes = sorted(h["fix_commits_2y"] for h in hotspots)
+    median = fixes[len(fixes) // 2] if fixes else 0
+    for h in hotspots:
+        h["verdict"] = verdict_for(h["fix_commits_2y"], h["score"])
+
+    return {
+        "history_available": True,
+        "since": since,
+        "fix_commits_seen": sum(len(v) for v in history.values()),
+        "median_fix_commits_per_hotspot": median,
+        "active_risk_threshold": ACTIVE_RISK_FIXES,
+        "note": (
+            "`settled` means high complexity and low fix density -- deprioritize "
+            "it, and say so. Complexity alone ranked coverage.py's files in "
+            "almost the reverse of their fix history."
+        ),
+    }
 
 
 def main() -> None:
@@ -450,6 +665,7 @@ def main() -> None:
     test_funcs = [f for f in all_functions if f["is_test"]]
 
     hotspots = [f for f in source_funcs if f["score"] >= 5.0]
+    history_meta = cross_with_history(hotspots[:30], project_root)
 
     output = {
         "project_root": str(project_root),
@@ -462,30 +678,28 @@ def main() -> None:
             "source_functions": len(source_funcs),
             "test_functions": len(test_funcs),
             "hotspots_score_5_plus": len(hotspots),
-            "hotspots_score_8_plus": len(
-                [f for f in hotspots if f["score"] >= 8.0]
-            ),
+            "hotspots_score_8_plus": len([f for f in hotspots if f["score"] >= 8.0]),
             "avg_score_source": (
                 round(
-                    sum(f["score"] for f in source_funcs)
-                    / len(source_funcs),
+                    sum(f["score"] for f in source_funcs) / len(source_funcs),
                     1,
                 )
-                if source_funcs else 0
+                if source_funcs
+                else 0
             ),
             "avg_cognitive_complexity_source": (
                 round(
-                    sum(
-                        f["metrics"]["cognitive_complexity"]
-                        for f in source_funcs
-                    )
+                    sum(f["metrics"]["cognitive_complexity"] for f in source_funcs)
                     / len(source_funcs),
                     1,
                 )
-                if source_funcs else 0
+                if source_funcs
+                else 0
             ),
         },
         "hotspots": hotspots[:30],  # Top 30 hotspots.
+        # 4.6: the crossing is a first-class output, not the reader's job.
+        "history_crossing": history_meta,
         "files": file_analyses,
     }
 
