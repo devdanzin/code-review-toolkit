@@ -1,7 +1,7 @@
 # coverage.py informed-explore v3 — findings
 
 `coverage/` @ `6b3259abb64a3cb80b4800f58fe1c71b24970110` (main, 2026-07-26) · 44 files / 16,426 lines
-· toolkit v1.13.0 · 16 agents + 12 scanners · **12 of 16 agents landed at time of writing**
+· toolkit v1.13.0 · 16 agents + 12 scanners · **13 of 16 agents landed at time of writing**
 
 **This is a re-review at an unchanged tree.** `git diff d37859cd HEAD -- coverage/` is **empty** — only
 CI workflow files moved since the v1/v2 review. So every new finding here is informed-pass yield, not
@@ -82,6 +82,23 @@ Same object, same purpose, two lines missing. Agent-measured: `concurrency=multi
 spelled `coverage.plugin`. `importlib.util.find_spec("coverage.plugins")` → `None`. It never runs,
 nothing raises, and every annotation using `FileReporter` in that file degrades to `Any`.
 
+### V6 · FIX · `tomlconfig.py:150` — a wrong-typed config value crashes with a traceback where its twin reports cleanly
+
+`TomlConfigParser.get()` is annotated `-> Any` and is the **only** getter that skips `_check_type`.
+Verified, same file, same config section, one line apart in effect:
+
+```
+[tool.coverage.report]      →  AttributeError: 'int' object has no attribute 'lower'
+sort = 2                       at coverage/report.py:252, uncaught, full traceback
+
+[tool.coverage.report]      →  Couldn't read config file pyproject.toml: Option
+precision = "two"              [tool.coverage.report]precision couldn't convert to an integer: 'two'
+```
+
+The guarded twin is the *other* getter in the same class. Annotating the return `-> str` makes mypy
+report it directly — `warn_return_any` is already enabled — so the fix and its regression test are
+the same one-line change.
+
 ---
 
 ## REFUTED OR DOWNGRADED BY THE ORCHESTRATOR
@@ -114,6 +131,7 @@ under-reports coverage, since that is the failure mode that matters most in this
 | FIX | 5 sites | `env-flag-parsed-as-strict-int`: `COVERAGE_SYSMON_LOG=true` — or **empty** — breaks `import coverage`, then `pth_file.py:13`'s bare `except:` swallows it, so subprocesses contribute zero data silently |
 | CONSIDER | `jsonreport.py:83`, `sqldata.py:368` | Naive `datetime.now()` into a versioned JSON format and a documented SQLite schema. Two runs 3600s apart across a DST fall-back produce byte-identical timestamps; the HTML backend gets it right via `misc.py:288-290` |
 | CONSIDER | `control.py:654` | `atexit.register(self._atexit)` with `atexit.unregister` nowhere; 5/5 `Coverage` objects survive `del` + `gc.collect()`. Twin eight lines below saves and restores the SIGTERM handler |
+| FIX | `sysmon.py:410,413,440,466,476` | 8 unscoped `# type: ignore` suppress 16 diagnostics, including 6 `union-attr` that are the **machine proof of CRF-COVPY-0022** — the guarded twin sits 13 lines below at `sysmon.py:426`, commented *"somehow code_info can be None here"*. Each ignore also swallows an unrelated `arg-type`, so fixing the None bug will not free the ignore: `unused-ignore` stays silent and the proof stays erased |
 | CONSIDER | `control.py:803-848` | `clear_exclude(which="partial_branches")` silently creates a phantom `config.partial_branches_list`; you can add regexes and read them back and coverage.py never uses it — fully consistent fictional feedback |
 
 ## Systemic root
@@ -132,7 +150,9 @@ The proposed fix is one change, not eleven: a `BaseReporter` lifecycle plus a si
 
 ## TOOLKIT DEFECT FOUND BY THIS RUN — fixed and pushed (`36d0976`)
 
-**`check_typing.py` reported `0 type errors` while mypy reported 3.**
+**`check_typing.py` reported `0 type errors` while mypy reported 3.** Found independently by the
+orchestrator and by the typing-integrity agent, which arrived at the same root cause and the same
+`env -u FORCE_COLOR` demonstration — convergence from two directions on a scanner defect.
 
 `FORCE_COLOR=3` is set in this environment. mypy honours it even when stdout is a pipe, and the ANSI
 codes land between the `file:line:` prefix and `error:` — so `_LINE` stopped matching and **every
@@ -156,6 +176,11 @@ smaller one. Same class as D-13, same fix.
   methods). Corrected: **72.7% of modules, 86.9% of statements.**
 - `unvalidated-numeric-from-environment` needs a numeric-use test; its `detail` for `sysmon.py:50,53`
   is factually wrong.
+- **My `check_typing` scoping was wrong twice over.** The whole-repo `FAILED` was a local untracked
+  `build/` directory, not a project defect — I reported it as the script refusing a bad root, which
+  it was, but the root was bad because of my working copy. And narrowing to `coverage/` covered
+  **45 of the 145 files** the project's own gate checks (`tox.ini:117-130` runs
+  `mypy --strict coverage tests setup.py`). Run the project's gate, not a subdirectory.
 - `scan_python_pitfalls`'s `coverage/`-only scope missed the run's only true `zip` instance, in `tests/`.
 
 ## PROCESS DEFECT — mine
