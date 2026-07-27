@@ -307,3 +307,97 @@ Each stranded shape already has a title, location, consequence, guarded twin and
 `migrate` (dropped), `reproduce`/OOM sweep, `recursion-guard-auditor`, `parity-checker` as an agent,
 `data/playbooks/`, campaign slice manifests — reasons in plan §0.5. Upstream reporting of the 111
 existing findings is out of scope by decision.
+
+---
+
+## D-12 · 2026-07-27 · Phase 0 items 0.1, 0.3 and 0.4 — the write-back direction is repaired
+
+**Metric moved 40/111 (36%) → 111/111.** Catalog 40 → 89 shapes, schema 1 → 2, zero stranded.
+Reproduce with the command in D-11; it now prints `catalog=89 used=71 stranded=0` / `covered=111/111`.
+
+### What 0.1 actually consisted of
+
+49 new catalog entries. Each stranded shape had a title, location, consequence, guarded twin and fix
+in `findings.json`; what it needed was the reusable half — `pattern`, `hunt`, `expected`,
+`caught_as`, `differential` — plus the implement-or-not decision. That decision is now a field.
+
+**`detectability`, the new schema-2 field, is the deliverable as much as the prose is:**
+
+| value | n | meaning |
+|---|---|---|
+| `implemented` | 38 | a check in `detected_by` emits candidates; the agent triages them |
+| `implementable` | 19 | AST-decidable, not yet written — Phase 2's queue |
+| `agent-only` | 32 | no scanner will ever produce it; the `hunt` directive **is** the method |
+
+The plan predicted "roughly a third AST-decidable". For the 49 new shapes it is 19 (39%) — close
+enough that the estimate can be trusted for the next corpus.
+
+`aliases` is the second new field: a shape's earlier names, so findings and report prose written
+before a merge still resolve. Added because the alternative — renaming across `findings.json`, three
+TSVs, three INDEX.md files and a 685-line report — is how drift gets created while fixing drift.
+
+### Two shape names were duplicates
+
+- `divergent-capability-across-parallel-modules` (2 findings) → **`one-concern-implemented-per-backend`**
+  (5). Identical hunt directive: enumerate the interchangeable implementations, build a
+  feature × backend matrix, look at every cell that is not full. Now 7 findings — the corpus's most
+  productive single shape.
+- `guard-names-abbreviated-sibling` (1) → **`isinstance-on-container-not-element`**, which was
+  already catalogued and whose own `guarded_twin` text *already cited that finding's twin*. The name
+  had been invented for a shape that existed. This is the write-back gap in miniature.
+
+### Ownership rule, adopted here
+
+`python-pitfall-scanner` had ended up owning 58 of 89 shapes, giving it a 122 KB briefing. The rule
+that fixed it, and that new shapes should follow:
+
+> **A scanner-backed shape (`implemented`/`implementable`) belongs to `python-pitfall-scanner`,
+> which runs the scanner and triages its output. An `agent-only` shape belongs to the agent whose
+> METHOD finds it — its `hunt` directive is that agent's job description.**
+
+Thirteen shapes moved. `python-pitfall-scanner` 58 → 45, `pattern-consistency-checker` → 14,
+`silent-failure-hunter` → 7, `type-design-analyzer` → 5, and `api-surface-reviewer` got its first.
+
+`build_informed_briefing.py` now renders `detectability` in each entry, because the decision is
+worthless if it does not reach the agent: an `agent-only` shape is explicitly labelled *"no scanner
+will ever hand you this"*.
+
+### 0.4 — the recorded diagnosis was wrong
+
+The plan said "11 malformed rows … column mismatch". They were **not** malformed: all eleven were
+well-formed 5-column rows carrying a literal `-` in the shape column. Eleven idlelib findings had
+simply never been assigned a shape, because nine of them needed a shape that did not exist yet.
+Those nine are now catalogued (`falsy-test-on-a-zero-valued-enum-member`,
+`mirrored-direction-handles-fewer-cases`, `serialize-and-parse-use-different-grammars`,
+`attribute-created-outside-init`, `handler-reads-a-name-the-try-may-not-have-bound`,
+`recognizer-rejects-a-legal-variant-spelling`, `reinitializer-resets-a-subset-of-its-state`,
+`index-computed-before-a-mutation-used-after-it`, `commit-side-effect-outside-the-success-guard`);
+the other two mapped onto stranded shapes that now exist.
+
+**Lesson worth keeping:** a data defect recorded from a summary statistic was mis-diagnosed. Eleven
+rows failing to parse was inferred; it was never checked. Look at the rows.
+
+### 0.3 — folded into the existing generator rather than a new script
+
+The plan called for a new `gen_known_findings.py`. The findings repo already had
+`scripts/gen_index.py` carrying exactly the right convention ("single source of truth is
+`findings.json`; never hand-edit the generated tables") — and regenerating everything **except** the
+TSVs, which is precisely why they drifted. TSV emission now lives there. Verified idempotent: it
+reproduces all three INDEX.md files byte-identically.
+
+It also prints `N without a shape` per project and a warning line when any are found — item 4.5's
+"report the denominator with every zero", applied at the point the zero is created.
+
+### Open, and now measurable
+
+- **Briefing size.** `python-pitfall-scanner`'s briefing is ~95 KB (~24k tokens) even after the
+  rebalance, because it legitimately owns 38 implemented checks. Inherent, not a defect — but
+  `implemented` shapes could render a short form (the agent needs the *differential* far more than
+  the pattern, since the scanner already emits the message). Worth doing before Phase 5's big runs.
+- **The 19 `implementable` shapes need code, not design.** Cheapest four:
+  `type-checking-import-of-a-nonexistent-module`, `dead-cross-reference-in-a-docstring`,
+  `partial-traversal-of-a-node-family` (one grep string: `getattr(node, "body", ())`),
+  `handler-reads-a-name-the-try-may-not-have-bound`.
+- **Coverage is now 100% by construction and will decay the same way it did before** unless every
+  new finding names a catalogued shape. `gen_index.py`'s warning is the tripwire; wiring it into
+  `informed-explore`'s write-back is the durable fix.

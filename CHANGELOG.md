@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — the calibration loop's write-back direction (improvement plan, Phase 0)
+
+- **`data/python_bug_shapes.json`: 40 → 89 shapes, schema 1 → 2.** Forty-nine shapes that the
+  idlelib, `_pyrepl` and coverage.py runs had produced existed only as prose in the findings repo,
+  where no scanner and no briefing could reach them. Every one is now a catalog entry with the full
+  `pattern` / `guarded_twin` / `hunt` / `expected` / `caught_as` / `differential` set, and cites the
+  findings that confirmed it. **Findings mapping to a catalogued shape: 40/111 (36%) → 111/111.**
+- **Two new schema-2 fields.** `detectability` records the standing decision for each shape —
+  `implemented` (38), `implementable` (19, AST-decidable and queued), `agent-only` (32, where the
+  `hunt` directive *is* the deliverable). `aliases` carries a shape's earlier names so findings and
+  reports written before a merge still resolve.
+- **`build_informed_briefing.py` renders `detectability`**, so an agent reading an `agent-only`
+  shape is told outright that no scanner will hand it the candidate.
+
+### Changed
+
+- **Shape ownership rebalanced by detectability.** A scanner-backed shape belongs to
+  `python-pitfall-scanner`, which triages the scanner's output; an `agent-only` shape belongs to the
+  agent whose method finds it. Thirteen shapes moved, taking `python-pitfall-scanner` from 58 of 89
+  to 45 and giving `pattern-consistency-checker` 14, `silent-failure-hunter` 7 and
+  `api-surface-reviewer` its first.
+- **Two duplicate shape names merged.** `divergent-capability-across-parallel-modules` →
+  `one-concern-implemented-per-backend` (now 7 findings, the corpus's most productive shape), and
+  `guard-names-abbreviated-sibling` → `isinstance-on-container-not-element`, whose own
+  `guarded_twin` text already cited that finding's twin. Both recorded as `aliases`.
+
 ### Fixed — three bugs found by the coverage.py benchmark
 
 - **`analyze_imports` fan-in absorbed every submodule import into the package `__init__`.** The

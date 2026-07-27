@@ -88,13 +88,29 @@ def _shapes_by_agent(shapes: list[dict]) -> dict[str, list[dict]]:
     return grouped
 
 
+# How each `detectability` value changes what the reading agent has to do.
+_DETECTABILITY_NOTE = {
+    "implemented": "a scanner check emits candidates for this — triage them, don't re-derive",
+    "implementable": "AST-decidable but NOT yet implemented — hunt it by hand this run",
+    "agent-only": "no scanner will ever hand you this — the sibling hunt below IS the method",
+}
+
+
 def _render_shape(shape: dict) -> str:
     """Render one bug shape as a briefing entry."""
+    detectability = shape.get("detectability")
     lines = [
         f"#### `{shape.get('id', '?')}` — {shape.get('title', '')}",
         "",
         f"- **Default severity:** {shape.get('severity', 'CONSIDER')} "
         f"(before triage) · **grounding:** {shape.get('validation', 'unknown')}",
+    ]
+    if detectability:
+        note = _DETECTABILITY_NOTE.get(detectability, "")
+        lines.append(
+            f"- **How you find it:** {detectability}" + (f" — {note}" if note else "")
+        )
+    lines += [
         f"- **Pattern:** {shape.get('pattern', '')}",
         f"- **Guarded twin (the fix):** {shape.get('guarded_twin', '')}",
         f"- **Sibling hunt:** {shape.get('hunt', '')}",

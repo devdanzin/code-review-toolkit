@@ -21,10 +21,11 @@ not in what seemed plausible.
 ### 0.1 The calibration loop is broken in the write-back direction
 
 ```
-catalog shapes                                     40
-distinct shapes named in the findings repo         64
-STRANDED (used in findings, absent from catalog)   43
-findings mapping to a catalogued shape         40 / 111  (36%)
+                                              BEFORE      AFTER (item 0.1)
+catalog shapes                                    40                    89
+distinct shapes named in the findings repo        64                    71
+STRANDED (used in findings, absent from catalog)  43                     0
+findings mapping to a catalogued shape    40/111 (36%)          111/111 (100%)
 ```
 
 coverage.py contributed **60 findings and 7 catalogued shapes**. Shape names were invented ad-hoc
@@ -124,36 +125,36 @@ both true positives, and every near-miss is a real guarded twin (`runpy.py:125`,
 
 ## 1. Phase 0 — Repair the loop *(blocking; nothing else should ship first)*
 
-| # | Item | Size |
-|---|---|---|
-| 0.1 | **Reconcile the 43 stranded shapes** into `python_bug_shapes.json` | L |
-| 0.2 | Implement `--catalog-dir` in `build_informed_briefing.py` | S |
-| 0.3 | `gen_known_findings.py` — reports → TSV, marked GENERATED | S |
-| 0.4 | Fix the 11 malformed rows in one findings-repo TSV (column mismatch) | XS |
-| 0.5 | `diff_findings.py` — compare two report dirs, emit added/gone/unchanged | S |
-| 0.6 | Release discipline: bump the plugin version whenever an agent is added | XS |
+| # | Item | Size | Status |
+|---|---|---|---|
+| 0.1 | **Reconcile the 43 stranded shapes** into `python_bug_shapes.json` | L | **DONE** — D-12 |
+| 0.2 | Implement `--catalog-dir` in `build_informed_briefing.py` | S | open |
+| 0.3 | `gen_known_findings.py` — reports → TSV, marked GENERATED | S | **DONE** — folded into `gen_index.py`, D-12 |
+| 0.4 | Fix the 11 malformed rows in one findings-repo TSV (column mismatch) | XS | **DONE** — diagnosis was wrong, D-12 |
+| 0.5 | `diff_findings.py` — compare two report dirs, emit added/gone/unchanged | S | open |
+| 0.6 | Release discipline: bump the plugin version whenever an agent is added | XS | open |
 
-**0.1 is the bulk.** Each stranded shape already has a title, location, consequence, guarded twin and
-fix in `findings.json`; what it needs is the catalog's `pattern` / `hunt` / `expected` / `caught_as` /
-`differential` / `detectability` fields, and a decision: **implement as a check, or mark
-`agent-only`**. Expect roughly a third to be AST-decidable. Candidates that look immediately
-implementable, from the coverage.py set:
+**0.1 was the bulk, and it is done.** 49 shapes catalogued (40 → 89), schema bumped to 2, and the
+metric moved from **40/111 (36%) to 111/111**. Full account in `docs/decision-log.md` D-12, including
+the two duplicate names that were merged and the ownership rebalance that followed. Each entry
+carries the decision the plan asked for, in a new `detectability` field: **38 `implemented`, 19
+`implementable`, 32 `agent-only`** — so "roughly a third AST-decidable" was close for the *new*
+shapes (19 of 49 ≈ 39%).
 
-- `type-checking-import-of-a-nonexistent-module` — trivially decidable, and §0.4 shows the payoff
-- `hand-mirrored-wrapper-drifts-from-its-interface` — compare a wrapper class's methods to what it wraps
-- `subclass-only-method-called-through-the-base`
-- `partial-traversal-of-a-node-family` — an AST visitor that only reads `.body`
-- `dead-cross-reference-in-a-docstring` — the documentation agent's single most productive query
-- `empty-container-read-as-absent`, `prefix-rewrite-done-as-a-content-search`,
-  `one-predicate-two-implementations`, `identity-key-from-a-non-artifact-proxy` *(the four banked
-  novel shapes from coverage.py, still unimplemented)*
+The 19 `implementable` shapes are Phase 2's queue and are already written down as catalog entries
+with a differential; they need code, not more design. The cheapest are
+`type-checking-import-of-a-nonexistent-module` (resolve a TYPE_CHECKING import against the package
+tree), `dead-cross-reference-in-a-docstring` (the documentation agent's single most productive
+query), `partial-traversal-of-a-node-family` (grep `getattr(node, "body", ())` — one string) and
+`handler-reads-a-name-the-try-may-not-have-bound`.
 
 **0.6 is a process fix for a real incident:** `python-pitfall-scanner` and `test-investigation-agent`
 were both invisible to the agent registry this session because they were added after 1.3.0 was cut.
 The user's installed plugin genuinely did not contain them.
 
 **Checkpoint:** re-run `diff_findings.py` on idlelib v2 → v3. Expect **zero** FP regression and a
-measurable rise in shape coverage (`findings mapping to a catalogued shape`, currently 36%).
+measurable rise in shape coverage — the coverage half is now met (36% → 100%); the FP-regression
+half still needs 0.5 and an idlelib v3 run.
 
 ---
 
