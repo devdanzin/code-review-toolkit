@@ -1,0 +1,32 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "files_total": 44,
+  "files_analyzed": 44,
+  "files_capped": false,
+  "summary": {
+    "unused_imports": 0,
+    "unreferenced_symbols": 0,
+    "external_reference_scopes": [
+      "setup.py",
+      "tests",
+      "doc"
+    ],
+    "orphan_files": 0,
+    "commented_code_blocks": 1,
+    "high_confidence_items": 0,
+    "medium_confidence_items": 0
+  },
+  "unused_imports": [],
+  "unreferenced_symbols": [],
+  "orphan_files": [],
+  "commented_code_blocks": [
+    {
+      "file": "coverage/cmdline.py",
+      "line_start": 750,
+      "line_end": 754,
+      "line_count": 5,
+      "preview": "# entry_points={\"console_scripts\":...} on Windows makes files"
+    }
+  ]
+}

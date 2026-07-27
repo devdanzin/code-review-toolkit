@@ -1,0 +1,24 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "status": "OK",
+  "failure_reason": null,
+  "mypy_version": "1.20.2",
+  "config_file": "/home/danzin/projects/coveragepy/pyproject.toml",
+  "uses_project_config": true,
+  "returncode": 0,
+  "stderr": "",
+  "files_checked": 45,
+  "summary": {
+    "total": 0,
+    "defects": 0,
+    "missing_annotations": 0,
+    "other": 0,
+    "by_code": {},
+    "stale_ignores": 0,
+    "phantom_imports": 0,
+    "strict_pass_ran": true
+  },
+  "findings": [],
+  "phantom_import_findings": []
+}

@@ -1,0 +1,2562 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy",
+  "time_range": {
+    "start": "2026-04-28T09:04:29.202389+00:00",
+    "end": "2026-07-27T09:04:29.202389+00:00",
+    "days": 90,
+    "commit_cap_applied": false
+  },
+  "summary": {
+    "total_commits": 98,
+    "commits_by_type": {
+      "unknown": 10,
+      "test": 10,
+      "chore": 28,
+      "refactor": 2,
+      "docs": 28,
+      "fix": 19,
+      "feature": 1
+    },
+    "files_changed": 100,
+    "functions_changed": 92,
+    "authors": 13
+  },
+  "file_churn": [
+    {
+      "file": "CHANGES.rst",
+      "commits": 44,
+      "lines_added": 227,
+      "lines_removed": 55,
+      "churn_rate": 0.11,
+      "authors": 9,
+      "first_commit_in_range": "2026-05-03T11:29:36-04:00",
+      "last_modified": "2026-07-15T14:58:36-04:00"
+    },
+    {
+      "file": ".github/workflows/coverage.yml",
+      "commits": 15,
+      "lines_added": 61,
+      "lines_removed": 49,
+      "churn_rate": 0.3,
+      "authors": 2,
+      "first_commit_in_range": "2026-04-29T20:03:38-04:00",
+      "last_modified": "2026-07-26T21:18:56-04:00"
+    },
+    {
+      "file": "coverage/version.py",
+      "commits": 15,
+      "lines_added": 29,
+      "lines_removed": 29,
+      "churn_rate": 1.66,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:41-04:00",
+      "last_modified": "2026-07-15T14:58:36-04:00"
+    },
+    {
+      "file": ".github/workflows/codeql-analysis.yml",
+      "commits": 8,
+      "lines_added": 23,
+      "lines_removed": 23,
+      "churn_rate": 0.55,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-17T09:06:59-04:00",
+      "last_modified": "2026-07-26T14:38:38-04:00"
+    },
+    {
+      "file": ".github/workflows/kit.yml",
+      "commits": 8,
+      "lines_added": 13,
+      "lines_removed": 13,
+      "churn_rate": 0.08,
+      "authors": 2,
+      "first_commit_in_range": "2026-04-29T20:03:38-04:00",
+      "last_modified": "2026-07-12T14:22:08-04:00"
+    },
+    {
+      "file": "CONTRIBUTORS.txt",
+      "commits": 8,
+      "lines_added": 8,
+      "lines_removed": 0,
+      "churn_rate": 0.03,
+      "authors": 4,
+      "first_commit_in_range": "2026-05-06T07:12:54-04:00",
+      "last_modified": "2026-07-11T18:11:39+05:30"
+    },
+    {
+      "file": "requirements/dev.pip",
+      "commits": 8,
+      "lines_added": 680,
+      "lines_removed": 660,
+      "churn_rate": 1.53,
+      "authors": 1,
+      "first_commit_in_range": "2026-04-29T19:13:40-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "doc/sample_html/class_index.html",
+      "commits": 7,
+      "lines_added": 77,
+      "lines_removed": 77,
+      "churn_rate": 0.18,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/function_index.html",
+      "commits": 7,
+      "lines_added": 268,
+      "lines_removed": 268,
+      "churn_rate": 0.14,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/index.html",
+      "commits": 7,
+      "lines_added": 41,
+      "lines_removed": 41,
+      "churn_rate": 0.28,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80___init___py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.57,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80___main___py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.57,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_cogapp_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.08,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_errors_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.43,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_hashhandler_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.22,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_makefiles_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.44,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_options_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.15,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_test_cogapp_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_test_makefiles_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.28,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_test_whiteutils_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.3,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_utils_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.37,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/sample_html/z_7b071bdc2a35fa80_whiteutils_py.html",
+      "commits": 7,
+      "lines_added": 30,
+      "lines_removed": 30,
+      "churn_rate": 0.36,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:54-04:00",
+      "last_modified": "2026-07-15T14:14:03-04:00"
+    },
+    {
+      "file": "doc/conf.py",
+      "commits": 7,
+      "lines_added": 21,
+      "lines_removed": 21,
+      "churn_rate": 0.16,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:41-04:00",
+      "last_modified": "2026-07-15T14:13:52-04:00"
+    },
+    {
+      "file": "requirements/tox.pip",
+      "commits": 7,
+      "lines_added": 75,
+      "lines_removed": 75,
+      "churn_rate": 1.2,
+      "authors": 1,
+      "first_commit_in_range": "2026-04-29T19:13:40-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "coverage/parser.py",
+      "commits": 6,
+      "lines_added": 124,
+      "lines_removed": 49,
+      "churn_rate": 0.14,
+      "authors": 2,
+      "first_commit_in_range": "2026-07-06T19:07:27-04:00",
+      "last_modified": "2026-07-15T20:05:33-04:00"
+    },
+    {
+      "file": ".github/workflows/testsuite.yml",
+      "commits": 6,
+      "lines_added": 8,
+      "lines_removed": 13,
+      "churn_rate": 0.12,
+      "authors": 2,
+      "first_commit_in_range": "2026-04-29T20:03:38-04:00",
+      "last_modified": "2026-07-12T14:22:08-04:00"
+    },
+    {
+      "file": "requirements/kit.pip",
+      "commits": 6,
+      "lines_added": 283,
+      "lines_removed": 301,
+      "churn_rate": 1.21,
+      "authors": 1,
+      "first_commit_in_range": "2026-04-29T19:13:40-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "requirements/pip.pip",
+      "commits": 6,
+      "lines_added": 54,
+      "lines_removed": 54,
+      "churn_rate": 2.84,
+      "authors": 1,
+      "first_commit_in_range": "2026-04-29T19:13:40-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": ".github/workflows/python-nightly.yml",
+      "commits": 6,
+      "lines_added": 8,
+      "lines_removed": 6,
+      "churn_rate": 0.12,
+      "authors": 2,
+      "first_commit_in_range": "2026-04-29T20:03:38-04:00",
+      "last_modified": "2026-06-28T09:19:33-04:00"
+    },
+    {
+      "file": ".github/workflows/quality.yml",
+      "commits": 5,
+      "lines_added": 16,
+      "lines_removed": 16,
+      "churn_rate": 0.16,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-14T18:01:08-04:00",
+      "last_modified": "2026-07-19T11:39:45-04:00"
+    },
+    {
+      "file": "doc/requirements.pip",
+      "commits": 5,
+      "lines_added": 298,
+      "lines_removed": 300,
+      "churn_rate": 0.81,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T20:39:10-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "requirements/mypy.pip",
+      "commits": 5,
+      "lines_added": 337,
+      "lines_removed": 302,
+      "churn_rate": 2.1,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T20:39:10-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "coverage/control.py",
+      "commits": 4,
+      "lines_added": 26,
+      "lines_removed": 30,
+      "churn_rate": 0.04,
+      "authors": 2,
+      "first_commit_in_range": "2026-06-08T07:36:37-04:00",
+      "last_modified": "2026-07-15T14:04:48-04:00"
+    },
+    {
+      "file": "coverage/sysmon.py",
+      "commits": 4,
+      "lines_added": 63,
+      "lines_removed": 59,
+      "churn_rate": 0.24,
+      "authors": 2,
+      "first_commit_in_range": "2026-06-08T07:36:37-04:00",
+      "last_modified": "2026-07-12T14:05:59-06:00"
+    },
+    {
+      "file": ".pre-commit-config.yaml",
+      "commits": 4,
+      "lines_added": 4,
+      "lines_removed": 4,
+      "churn_rate": 0.22,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-16T11:19:47-07:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "requirements/light-threads.pip",
+      "commits": 4,
+      "lines_added": 349,
+      "lines_removed": 307,
+      "churn_rate": 2.4,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T20:39:10-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "requirements/pytest.pip",
+      "commits": 4,
+      "lines_added": 18,
+      "lines_removed": 18,
+      "churn_rate": 0.32,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T20:39:10-04:00",
+      "last_modified": "2026-07-06T20:50:23-04:00"
+    },
+    {
+      "file": "tests/test_cmdline.py",
+      "commits": 4,
+      "lines_added": 199,
+      "lines_removed": 64,
+      "churn_rate": 0.15,
+      "authors": 2,
+      "first_commit_in_range": "2026-05-05T03:45:37-07:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": ".github/workflows/publish.yml",
+      "commits": 3,
+      "lines_added": 7,
+      "lines_removed": 7,
+      "churn_rate": 0.1,
+      "authors": 2,
+      "first_commit_in_range": "2026-04-29T20:03:38-04:00",
+      "last_modified": "2026-07-12T14:22:08-04:00"
+    },
+    {
+      "file": "igor.py",
+      "commits": 3,
+      "lines_added": 1,
+      "lines_removed": 27,
+      "churn_rate": 0.05,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-07-06T19:54:29-04:00"
+    },
+    {
+      "file": "howto.txt",
+      "commits": 3,
+      "lines_added": 7,
+      "lines_removed": 6,
+      "churn_rate": 0.17,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:41-04:00",
+      "last_modified": "2026-07-02T09:24:17-04:00"
+    },
+    {
+      "file": ".github/workflows/dependency-review.yml",
+      "commits": 3,
+      "lines_added": 3,
+      "lines_removed": 3,
+      "churn_rate": 0.15,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-24T21:22:25-04:00",
+      "last_modified": "2026-06-28T09:19:33-04:00"
+    },
+    {
+      "file": "coverage/cmdline.py",
+      "commits": 3,
+      "lines_added": 17,
+      "lines_removed": 3,
+      "churn_rate": 0.02,
+      "authors": 2,
+      "first_commit_in_range": "2026-05-05T03:45:37-07:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "tox.ini",
+      "commits": 3,
+      "lines_added": 8,
+      "lines_removed": 6,
+      "churn_rate": 0.09,
+      "authors": 1,
+      "first_commit_in_range": "2026-04-29T20:03:38-04:00",
+      "last_modified": "2026-06-20T11:10:19-04:00"
+    },
+    {
+      "file": "coverage/html.py",
+      "commits": 2,
+      "lines_added": 17,
+      "lines_removed": 5,
+      "churn_rate": 0.03,
+      "authors": 2,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-07-11T18:11:39+05:30"
+    },
+    {
+      "file": "tests/test_html.py",
+      "commits": 2,
+      "lines_added": 28,
+      "lines_removed": 2,
+      "churn_rate": 0.02,
+      "authors": 2,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-07-11T18:11:39+05:30"
+    },
+    {
+      "file": "coverage/execfile.py",
+      "commits": 2,
+      "lines_added": 13,
+      "lines_removed": 4,
+      "churn_rate": 0.05,
+      "authors": 2,
+      "first_commit_in_range": "2026-06-28T08:29:47-04:00",
+      "last_modified": "2026-07-02T15:20:49+03:00"
+    },
+    {
+      "file": "tests/test_process.py",
+      "commits": 2,
+      "lines_added": 21,
+      "lines_removed": 0,
+      "churn_rate": 0.01,
+      "authors": 2,
+      "first_commit_in_range": "2026-06-19T10:51:18-04:00",
+      "last_modified": "2026-07-02T15:20:49+03:00"
+    },
+    {
+      "file": "doc/commands/cmd_reporting.rst",
+      "commits": 2,
+      "lines_added": 6,
+      "lines_removed": 1,
+      "churn_rate": 0.13,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "tests/test_api.py",
+      "commits": 2,
+      "lines_added": 8,
+      "lines_removed": 4,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-06-19T10:51:18-04:00"
+    },
+    {
+      "file": "tests/test_arcs.py",
+      "commits": 2,
+      "lines_added": 3,
+      "lines_removed": 8,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-04-30T05:56:40-04:00",
+      "last_modified": "2026-05-16T13:25:17-07:00"
+    },
+    {
+      "file": "coverage/python.py",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 1,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-15T14:04:48-04:00",
+      "last_modified": "2026-07-15T14:04:48-04:00"
+    },
+    {
+      "file": "coverage/report_core.py",
+      "commits": 1,
+      "lines_added": 8,
+      "lines_removed": 2,
+      "churn_rate": 0.08,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-15T14:04:48-04:00",
+      "last_modified": "2026-07-15T14:04:48-04:00"
+    },
+    {
+      "file": "coverage/bytecode.py",
+      "commits": 1,
+      "lines_added": 89,
+      "lines_removed": 136,
+      "churn_rate": 1.08,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-12T14:05:59-06:00",
+      "last_modified": "2026-07-12T14:05:59-06:00"
+    },
+    {
+      "file": "tests/test_parser.py",
+      "commits": 1,
+      "lines_added": 170,
+      "lines_removed": 1,
+      "churn_rate": 0.11,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-12T13:22:49-06:00",
+      "last_modified": "2026-07-12T13:22:49-06:00"
+    },
+    {
+      "file": "tests/test_sysmon.py",
+      "commits": 1,
+      "lines_added": 76,
+      "lines_removed": 0,
+      "churn_rate": 1.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-12T13:22:49-06:00",
+      "last_modified": "2026-07-12T13:22:49-06:00"
+    },
+    {
+      "file": "doc/changes.rst",
+      "commits": 1,
+      "lines_added": 14,
+      "lines_removed": 12,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-10T04:21:23+05:30",
+      "last_modified": "2026-07-10T04:21:23+05:30"
+    },
+    {
+      "file": "doc/python-coverage.1.txt",
+      "commits": 1,
+      "lines_added": 29,
+      "lines_removed": 5,
+      "churn_rate": 0.07,
+      "authors": 1,
+      "first_commit_in_range": "2026-07-02T08:31:05-04:00",
+      "last_modified": "2026-07-02T08:31:05-04:00"
+    },
+    {
+      "file": "tests/modules/checkspec.py",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 0,
+      "churn_rate": 1.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-28T08:29:47-04:00",
+      "last_modified": "2026-06-28T08:29:47-04:00"
+    },
+    {
+      "file": "tests/test_execfile.py",
+      "commits": 1,
+      "lines_added": 7,
+      "lines_removed": 0,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-28T08:29:47-04:00",
+      "last_modified": "2026-06-28T08:29:47-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_annotate.rst",
+      "commits": 1,
+      "lines_added": 3,
+      "lines_removed": 1,
+      "churn_rate": 0.05,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T16:01:00-04:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_html.rst",
+      "commits": 1,
+      "lines_added": 5,
+      "lines_removed": 3,
+      "churn_rate": 0.07,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T16:01:00-04:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_json.rst",
+      "commits": 1,
+      "lines_added": 3,
+      "lines_removed": 1,
+      "churn_rate": 0.06,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T16:01:00-04:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_lcov.rst",
+      "commits": 1,
+      "lines_added": 3,
+      "lines_removed": 1,
+      "churn_rate": 0.07,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T16:01:00-04:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_report.rst",
+      "commits": 1,
+      "lines_added": 3,
+      "lines_removed": 1,
+      "churn_rate": 0.03,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T16:01:00-04:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_xml.rst",
+      "commits": 1,
+      "lines_added": 3,
+      "lines_removed": 1,
+      "churn_rate": 0.04,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T16:01:00-04:00",
+      "last_modified": "2026-06-27T16:01:00-04:00"
+    },
+    {
+      "file": "coverage/lcovreport.py",
+      "commits": 1,
+      "lines_added": 6,
+      "lines_removed": 1,
+      "churn_rate": 0.03,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T18:31:10+02:00",
+      "last_modified": "2026-06-27T18:31:10+02:00"
+    },
+    {
+      "file": "tests/test_lcov.py",
+      "commits": 1,
+      "lines_added": 95,
+      "lines_removed": 0,
+      "churn_rate": 0.13,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-27T18:31:10+02:00",
+      "last_modified": "2026-06-27T18:31:10+02:00"
+    },
+    {
+      "file": "coverage/env.py",
+      "commits": 1,
+      "lines_added": 8,
+      "lines_removed": 1,
+      "churn_rate": 0.06,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-23T01:22:08+03:00",
+      "last_modified": "2026-06-23T01:22:08+03:00"
+    },
+    {
+      "file": "coverage/config.py",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 1,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-21T09:27:06-07:00",
+      "last_modified": "2026-06-21T09:27:06-07:00"
+    },
+    {
+      "file": "tests/test_coverage.py",
+      "commits": 1,
+      "lines_added": 30,
+      "lines_removed": 0,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-21T09:27:06-07:00",
+      "last_modified": "2026-06-21T09:27:06-07:00"
+    },
+    {
+      "file": "tests/test_oddball.py",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 4,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-20T11:10:19-04:00",
+      "last_modified": "2026-06-20T11:10:19-04:00"
+    },
+    {
+      "file": "coverage/sqldata.py",
+      "commits": 1,
+      "lines_added": 24,
+      "lines_removed": 0,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-20T14:55:13+01:00",
+      "last_modified": "2026-06-20T14:55:13+01:00"
+    },
+    {
+      "file": "tests/test_data.py",
+      "commits": 1,
+      "lines_added": 39,
+      "lines_removed": 0,
+      "churn_rate": 0.03,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-20T14:55:13+01:00",
+      "last_modified": "2026-06-20T14:55:13+01:00"
+    },
+    {
+      "file": "tests/test_xml.py",
+      "commits": 1,
+      "lines_added": 2,
+      "lines_removed": 2,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-19T10:51:18-04:00",
+      "last_modified": "2026-06-19T10:51:18-04:00"
+    },
+    {
+      "file": "coverage/core.py",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 2,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-06-08T07:36:37-04:00",
+      "last_modified": "2026-06-08T07:36:37-04:00"
+    },
+    {
+      "file": "doc/sample_html/{style_cb_9ff733b0.css => style_cb_4667309f.css}",
+      "commits": 1,
+      "lines_added": 2,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-17T08:58:28-07:00",
+      "last_modified": "2026-05-17T08:58:28-07:00"
+    },
+    {
+      "file": "setup.py",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-17T08:21:18-07:00",
+      "last_modified": "2026-05-17T08:21:18-07:00"
+    },
+    {
+      "file": "coverage/htmlfiles/style.css",
+      "commits": 1,
+      "lines_added": 2,
+      "lines_removed": 0,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "coverage/htmlfiles/style.scss",
+      "commits": 1,
+      "lines_added": 4,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/other/blah_blah_other_py.html",
+      "commits": 1,
+      "lines_added": 10,
+      "lines_removed": 10,
+      "churn_rate": 0.2,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/other/class_index.html",
+      "commits": 1,
+      "lines_added": 10,
+      "lines_removed": 10,
+      "churn_rate": 0.15,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/other/function_index.html",
+      "commits": 1,
+      "lines_added": 10,
+      "lines_removed": 10,
+      "churn_rate": 0.15,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/other/index.html",
+      "commits": 1,
+      "lines_added": 10,
+      "lines_removed": 10,
+      "churn_rate": 0.16,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/styled/style.css",
+      "commits": 1,
+      "lines_added": 2,
+      "lines_removed": 0,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/support/{coverage_html_cb_bcae5fc4.js => coverage_html_cb_dd2e7eb5.js}",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/support/{favicon_32_cb_58284776.png => favicon_32_cb_c827f16f.png}",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/support/{keybd_closed_cb_ce680311.png => keybd_closed_cb_900cfef5.png}",
+      "commits": 1,
+      "lines_added": 0,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/gold/html/support/{style_cb_a5a05ca4.css => style_cb_a90a112a.css}",
+      "commits": 1,
+      "lines_added": 2,
+      "lines_removed": 0,
+      "churn_rate": 0.0,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "tests/test_report_common.py",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 1,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-13T06:27:35-07:00",
+      "last_modified": "2026-05-13T06:27:35-07:00"
+    },
+    {
+      "file": "README.rst",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 1,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:41-04:00",
+      "last_modified": "2026-05-10T13:07:41-04:00"
+    },
+    {
+      "file": "doc/index.rst",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 1,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-10T13:07:41-04:00",
+      "last_modified": "2026-05-10T13:07:41-04:00"
+    },
+    {
+      "file": "coverage/collector.py",
+      "commits": 1,
+      "lines_added": 20,
+      "lines_removed": 8,
+      "churn_rate": 0.06,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T20:54:15-04:00",
+      "last_modified": "2026-05-09T20:54:15-04:00"
+    },
+    {
+      "file": "coverage/data.py",
+      "commits": 1,
+      "lines_added": 18,
+      "lines_removed": 6,
+      "churn_rate": 0.09,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-05-09T13:35:56-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_combine.rst",
+      "commits": 1,
+      "lines_added": 7,
+      "lines_removed": 4,
+      "churn_rate": 0.09,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-05-09T13:35:56-04:00"
+    },
+    {
+      "file": "doc/commands/cmd_debug.rst",
+      "commits": 1,
+      "lines_added": 3,
+      "lines_removed": 0,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-05-09T13:35:56-04:00"
+    },
+    {
+      "file": "tests/test_concurrency.py",
+      "commits": 1,
+      "lines_added": 6,
+      "lines_removed": 3,
+      "churn_rate": 0.01,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-09T13:35:56-04:00",
+      "last_modified": "2026-05-09T13:35:56-04:00"
+    },
+    {
+      "file": "coverage/phystokens.py",
+      "commits": 1,
+      "lines_added": 5,
+      "lines_removed": 0,
+      "churn_rate": 0.02,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-03T11:29:36-04:00",
+      "last_modified": "2026-05-03T11:29:36-04:00"
+    },
+    {
+      "file": "tests/test_phystokens.py",
+      "commits": 1,
+      "lines_added": 14,
+      "lines_removed": 0,
+      "churn_rate": 0.05,
+      "authors": 1,
+      "first_commit_in_range": "2026-05-03T11:29:36-04:00",
+      "last_modified": "2026-05-03T11:29:36-04:00"
+    },
+    {
+      "file": "requirements/dev.in",
+      "commits": 1,
+      "lines_added": 1,
+      "lines_removed": 0,
+      "churn_rate": 0.04,
+      "authors": 1,
+      "first_commit_in_range": "2026-04-29T20:03:38-04:00",
+      "last_modified": "2026-04-29T20:03:38-04:00"
+    }
+  ],
+  "function_churn": [
+    {
+      "function": "_raw_parse",
+      "file": "coverage/parser.py",
+      "line_start": 165,
+      "line_end": 267,
+      "commits": 3,
+      "lines_changed": 103
+    },
+    {
+      "function": "command_line",
+      "file": "coverage/cmdline.py",
+      "line_start": 793,
+      "line_end": 956,
+      "commits": 3,
+      "lines_changed": 164
+    },
+    {
+      "function": "test_annotate",
+      "file": "tests/test_cmdline.py",
+      "line_start": 271,
+      "line_end": 344,
+      "commits": 3,
+      "lines_changed": 74
+    },
+    {
+      "function": "test_html",
+      "file": "tests/test_cmdline.py",
+      "line_start": 528,
+      "line_end": 637,
+      "commits": 3,
+      "lines_changed": 110
+    },
+    {
+      "function": "test_json",
+      "file": "tests/test_cmdline.py",
+      "line_start": 639,
+      "line_end": 757,
+      "commits": 3,
+      "lines_changed": 119
+    },
+    {
+      "function": "test_lcov",
+      "file": "tests/test_cmdline.py",
+      "line_start": 759,
+      "line_end": 841,
+      "commits": 3,
+      "lines_changed": 83
+    },
+    {
+      "function": "test_report",
+      "file": "tests/test_cmdline.py",
+      "line_start": 843,
+      "line_end": 997,
+      "commits": 3,
+      "lines_changed": 155
+    },
+    {
+      "function": "test_xml",
+      "file": "tests/test_cmdline.py",
+      "line_start": 1320,
+      "line_end": 1420,
+      "commits": 3,
+      "lines_changed": 101
+    },
+    {
+      "function": "_analyze_ast",
+      "file": "coverage/parser.py",
+      "line_start": 333,
+      "line_end": 358,
+      "commits": 2,
+      "lines_changed": 26
+    },
+    {
+      "function": "_analyze",
+      "file": "coverage/control.py",
+      "line_start": 1001,
+      "line_end": 1011,
+      "commits": 2,
+      "lines_changed": 11
+    },
+    {
+      "function": "fix_with_jumps",
+      "file": "coverage/parser.py",
+      "line_start": 360,
+      "line_end": 398,
+      "commits": 2,
+      "lines_changed": 39
+    },
+    {
+      "function": "sysmon_py_start",
+      "file": "coverage/sysmon.py",
+      "line_start": 317,
+      "line_end": 395,
+      "commits": 2,
+      "lines_changed": 79
+    },
+    {
+      "function": "sysmon_branch_either",
+      "file": "coverage/sysmon.py",
+      "line_start": 445,
+      "line_end": 479,
+      "commits": 2,
+      "lines_changed": 35
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/sysmon.py",
+      "line_start": 190,
+      "line_end": 233,
+      "commits": 2,
+      "lines_changed": 44
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/parser.py",
+      "line_start": 76,
+      "line_end": 140,
+      "commits": 2,
+      "lines_changed": 65
+    },
+    {
+      "function": "with_jump_fixers",
+      "file": "coverage/parser.py",
+      "line_start": 745,
+      "line_end": 769,
+      "commits": 2,
+      "lines_changed": 25
+    },
+    {
+      "function": "test_combine_parallel_data",
+      "file": "tests/test_api.py",
+      "line_start": 1480,
+      "line_end": 1509,
+      "commits": 2,
+      "lines_changed": 30
+    },
+    {
+      "function": "test_combine_parallel_data_with_a_corrupt_file",
+      "file": "tests/test_api.py",
+      "line_start": 1511,
+      "line_end": 1542,
+      "commits": 2,
+      "lines_changed": 32
+    },
+    {
+      "function": "test_exception_group",
+      "file": "tests/test_arcs.py",
+      "line_start": 1385,
+      "line_end": 1407,
+      "commits": 2,
+      "lines_changed": 23
+    },
+    {
+      "function": "test_help_option",
+      "file": "tests/test_cmdline.py",
+      "line_start": 516,
+      "line_end": 519,
+      "commits": 2,
+      "lines_changed": 4
+    },
+    {
+      "function": "test_cmd_help",
+      "file": "tests/test_cmdline.py",
+      "line_start": 524,
+      "line_end": 526,
+      "commits": 2,
+      "lines_changed": 3
+    },
+    {
+      "function": "test_run_module_from_config",
+      "file": "tests/test_cmdline.py",
+      "line_start": 1271,
+      "line_end": 1284,
+      "commits": 2,
+      "lines_changed": 14
+    },
+    {
+      "function": "test_run_from_config_but_empty",
+      "file": "tests/test_cmdline.py",
+      "line_start": 1286,
+      "line_end": 1295,
+      "commits": 2,
+      "lines_changed": 10
+    },
+    {
+      "function": "test_run_dashm_only",
+      "file": "tests/test_cmdline.py",
+      "line_start": 1297,
+      "line_end": 1314,
+      "commits": 2,
+      "lines_changed": 18
+    },
+    {
+      "function": "test_cant_append_parallel",
+      "file": "tests/test_cmdline.py",
+      "line_start": 1316,
+      "line_end": 1318,
+      "commits": 2,
+      "lines_changed": 3
+    },
+    {
+      "function": "get_analysis_to_report",
+      "file": "coverage/report_core.py",
+      "line_start": 71,
+      "line_end": 123,
+      "commits": 1,
+      "lines_changed": 53
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/bytecode.py",
+      "line_start": 18,
+      "line_end": 28,
+      "commits": 1,
+      "lines_changed": 11
+    },
+    {
+      "function": "line_at",
+      "file": "coverage/bytecode.py",
+      "line_start": 153,
+      "line_end": 158,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "resolve",
+      "file": "coverage/bytecode.py",
+      "line_start": 160,
+      "line_end": 208,
+      "commits": 1,
+      "lines_changed": 49
+    },
+    {
+      "function": "multiline_map_from_tokens",
+      "file": "coverage/parser.py",
+      "line_start": 29,
+      "line_end": 55,
+      "commits": 1,
+      "lines_changed": 27
+    },
+    {
+      "function": "multiline_map_from_text",
+      "file": "coverage/parser.py",
+      "line_start": 58,
+      "line_end": 65,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "compute_multiline_map",
+      "file": "coverage/sysmon.py",
+      "line_start": 489,
+      "line_end": 503,
+      "commits": 1,
+      "lines_changed": 15
+    },
+    {
+      "function": "multiline_map",
+      "file": "tests/test_parser.py",
+      "line_start": 1332,
+      "line_end": 1334,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "test_single_line_statements_have_no_entries",
+      "file": "tests/test_parser.py",
+      "line_start": 1336,
+      "line_end": 1347,
+      "commits": 1,
+      "lines_changed": 12
+    },
+    {
+      "function": "test_parenthesized_expression",
+      "file": "tests/test_parser.py",
+      "line_start": 1349,
+      "line_end": 1356,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "test_backslash_continuation",
+      "file": "tests/test_parser.py",
+      "line_start": 1358,
+      "line_end": 1362,
+      "commits": 1,
+      "lines_changed": 5
+    },
+    {
+      "function": "test_triple_quoted_string",
+      "file": "tests/test_parser.py",
+      "line_start": 1364,
+      "line_end": 1369,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "test_multiline_signature",
+      "file": "tests/test_parser.py",
+      "line_start": 1371,
+      "line_end": 1378,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "test_multiline_if_header",
+      "file": "tests/test_parser.py",
+      "line_start": 1380,
+      "line_end": 1385,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "test_blank_and_comment_lines_inside_statement",
+      "file": "tests/test_parser.py",
+      "line_start": 1387,
+      "line_end": 1397,
+      "commits": 1,
+      "lines_changed": 11
+    },
+    {
+      "function": "test_statements_map_to_their_own_starts",
+      "file": "tests/test_parser.py",
+      "line_start": 1399,
+      "line_end": 1406,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "test_unparsable_text_raises",
+      "file": "tests/test_parser.py",
+      "line_start": 1408,
+      "line_end": 1410,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "test_agrees_with_python_parser",
+      "file": "tests/test_parser.py",
+      "line_start": 1484,
+      "line_end": 1491,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "test_python_file",
+      "file": "tests/test_sysmon.py",
+      "line_start": 24,
+      "line_end": 26,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "test_missing_file",
+      "file": "tests/test_sysmon.py",
+      "line_start": 28,
+      "line_end": 30,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "test_non_python_file",
+      "file": "tests/test_sysmon.py",
+      "line_start": 32,
+      "line_end": 40,
+      "commits": 1,
+      "lines_changed": 9
+    },
+    {
+      "function": "test_indentation_error",
+      "file": "tests/test_sysmon.py",
+      "line_start": 42,
+      "line_end": 44,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "test_each_file_computed_at_most_once",
+      "file": "tests/test_sysmon.py",
+      "line_start": 51,
+      "line_end": 65,
+      "commits": 1,
+      "lines_changed": 15
+    },
+    {
+      "function": "test_cache_dies_with_the_tracer",
+      "file": "tests/test_sysmon.py",
+      "line_start": 67,
+      "line_end": 76,
+      "commits": 1,
+      "lines_changed": 10
+    },
+    {
+      "function": "write_html_page",
+      "file": "coverage/html.py",
+      "line_start": 467,
+      "line_end": 568,
+      "commits": 1,
+      "lines_changed": 102
+    },
+    {
+      "function": "test_context_labels_cant_break_out_of_script",
+      "file": "tests/test_html.py",
+      "line_start": 1549,
+      "line_end": 1568,
+      "commits": 1,
+      "lines_changed": 20
+    },
+    {
+      "function": "do_combine_html",
+      "file": "igor.py",
+      "line_start": 228,
+      "line_end": 242,
+      "commits": 1,
+      "lines_changed": 15
+    },
+    {
+      "function": "process_raise_exits",
+      "file": "coverage/parser.py",
+      "line_start": 546,
+      "line_end": 548,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "process_return_exits",
+      "file": "coverage/parser.py",
+      "line_start": 550,
+      "line_end": 552,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/control.py",
+      "line_start": 142,
+      "line_end": 350,
+      "commits": 1,
+      "lines_changed": 209
+    },
+    {
+      "function": "_init_for_start",
+      "file": "coverage/control.py",
+      "line_start": 569,
+      "line_end": 664,
+      "commits": 1,
+      "lines_changed": 96
+    },
+    {
+      "function": "switch_context",
+      "file": "coverage/control.py",
+      "line_start": 781,
+      "line_end": 801,
+      "commits": 1,
+      "lines_changed": 21
+    },
+    {
+      "function": "get_data",
+      "file": "coverage/control.py",
+      "line_start": 913,
+      "line_end": 936,
+      "commits": 1,
+      "lines_changed": 24
+    },
+    {
+      "function": "_post_save_work",
+      "file": "coverage/control.py",
+      "line_start": 938,
+      "line_end": 964,
+      "commits": 1,
+      "lines_changed": 27
+    },
+    {
+      "function": "branch_stats",
+      "file": "coverage/control.py",
+      "line_start": 1013,
+      "line_end": 1025,
+      "commits": 1,
+      "lines_changed": 13
+    },
+    {
+      "function": "_get_file_reporter",
+      "file": "coverage/control.py",
+      "line_start": 1027,
+      "line_end": 1053,
+      "commits": 1,
+      "lines_changed": 27
+    },
+    {
+      "function": "_get_file_reporters",
+      "file": "coverage/control.py",
+      "line_start": 1055,
+      "line_end": 1077,
+      "commits": 1,
+      "lines_changed": 23
+    },
+    {
+      "function": "prepare",
+      "file": "coverage/execfile.py",
+      "line_start": 88,
+      "line_end": 131,
+      "commits": 1,
+      "lines_changed": 44
+    },
+    {
+      "function": "test_isolated_dashm_runme",
+      "file": "tests/test_process.py",
+      "line_start": 1003,
+      "line_end": 1007,
+      "commits": 1,
+      "lines_changed": 5
+    },
+    {
+      "function": "_prepare2",
+      "file": "coverage/execfile.py",
+      "line_start": 133,
+      "line_end": 178,
+      "commits": 1,
+      "lines_changed": 46
+    },
+    {
+      "function": "test_no_spec_deprecation",
+      "file": "tests/test_execfile.py",
+      "line_start": 346,
+      "line_end": 351,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "__init__",
+      "file": "coverage/cmdline.py",
+      "line_start": 387,
+      "line_end": 430,
+      "commits": 1,
+      "lines_changed": 44
+    },
+    {
+      "function": "assert_same_mock_calls",
+      "file": "tests/test_cmdline.py",
+      "line_start": 217,
+      "line_end": 235,
+      "commits": 1,
+      "lines_changed": 19
+    },
+    {
+      "function": "lcov_functions",
+      "file": "coverage/lcovreport.py",
+      "line_start": 55,
+      "line_end": 104,
+      "commits": 1,
+      "lines_changed": 50
+    },
+    {
+      "function": "test_excluded_functions",
+      "file": "tests/test_lcov.py",
+      "line_start": 391,
+      "line_end": 447,
+      "commits": 1,
+      "lines_changed": 57
+    },
+    {
+      "function": "test_all_functions_excluded",
+      "file": "tests/test_lcov.py",
+      "line_start": 449,
+      "line_end": 484,
+      "commits": 1,
+      "lines_changed": 36
+    },
+    {
+      "function": "test_default_ellipsis_multiline_return_type",
+      "file": "tests/test_coverage.py",
+      "line_start": 1506,
+      "line_end": 1534,
+      "commits": 1,
+      "lines_changed": 29
+    },
+    {
+      "function": "_reap_dead_thread_dbs",
+      "file": "coverage/sqldata.py",
+      "line_start": 373,
+      "line_end": 394,
+      "commits": 1,
+      "lines_changed": 22
+    },
+    {
+      "function": "_connect",
+      "file": "coverage/sqldata.py",
+      "line_start": 396,
+      "line_end": 401,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "test_dead_thread_dbs_are_reaped",
+      "file": "tests/test_data.py",
+      "line_start": 617,
+      "line_end": 654,
+      "commits": 1,
+      "lines_changed": 38
+    },
+    {
+      "function": "thread_main",
+      "file": "tests/test_data.py",
+      "line_start": 601,
+      "line_end": 606,
+      "commits": 1,
+      "lines_changed": 6
+    },
+    {
+      "function": "test_pth_and_source_work_together",
+      "file": "tests/test_process.py",
+      "line_start": 1694,
+      "line_end": 1774,
+      "commits": 1,
+      "lines_changed": 81
+    },
+    {
+      "function": "test_stdout_is_only_json",
+      "file": "tests/test_process.py",
+      "line_start": 1780,
+      "line_end": 1788,
+      "commits": 1,
+      "lines_changed": 9
+    },
+    {
+      "function": "test_default_file_placement",
+      "file": "tests/test_xml.py",
+      "line_start": 121,
+      "line_end": 125,
+      "commits": 1,
+      "lines_changed": 5
+    },
+    {
+      "function": "test_argument_affects_xml_placement",
+      "file": "tests/test_xml.py",
+      "line_start": 127,
+      "line_end": 134,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "start",
+      "file": "coverage/sysmon.py",
+      "line_start": 241,
+      "line_end": 268,
+      "commits": 1,
+      "lines_changed": 28
+    },
+    {
+      "function": "escape",
+      "file": "coverage/html.py",
+      "line_start": 852,
+      "line_end": 859,
+      "commits": 1,
+      "lines_changed": 8
+    },
+    {
+      "function": "pair",
+      "file": "coverage/html.py",
+      "line_start": 862,
+      "line_end": 864,
+      "commits": 1,
+      "lines_changed": 3
+    },
+    {
+      "function": "compare_html",
+      "file": "tests/test_html.py",
+      "line_start": 777,
+      "line_end": 807,
+      "commits": 1,
+      "lines_changed": 31
+    },
+    {
+      "function": "test_accented_directory",
+      "file": "tests/test_html.py",
+      "line_start": 1422,
+      "line_end": 1441,
+      "commits": 1,
+      "lines_changed": 20
+    },
+    {
+      "function": "test_map_paths_during_html_report",
+      "file": "tests/test_report_common.py",
+      "line_start": 137,
+      "line_end": 143,
+      "commits": 1,
+      "lines_changed": 7
+    },
+    {
+      "function": "flush_data",
+      "file": "coverage/collector.py",
+      "line_start": 442,
+      "line_end": 501,
+      "commits": 1,
+      "lines_changed": 60
+    },
+    {
+      "function": "combine_parallel_data",
+      "file": "coverage/data.py",
+      "line_start": 132,
+      "line_end": 240,
+      "commits": 1,
+      "lines_changed": 109
+    },
+    {
+      "function": "try_multiprocessing_code",
+      "file": "tests/test_concurrency.py",
+      "line_start": 455,
+      "line_end": 497,
+      "commits": 1,
+      "lines_changed": 43
+    },
+    {
+      "function": "command_line",
+      "file": "tests/test_cmdline.py",
+      "line_start": 1635,
+      "line_end": 1650,
+      "commits": 1,
+      "lines_changed": 16
+    },
+    {
+      "function": "find_soft_key_lines",
+      "file": "coverage/phystokens.py",
+      "line_start": 93,
+      "line_end": 110,
+      "commits": 1,
+      "lines_changed": 18
+    },
+    {
+      "function": "test_soft_keyword_lazy",
+      "file": "tests/test_phystokens.py",
+      "line_start": 230,
+      "line_end": 241,
+      "commits": 1,
+      "lines_changed": 12
+    }
+  ],
+  "recent_fixes": [
+    {
+      "commit": "78cab6e1770e55951c84a78d80b90c60ccfba4d5",
+      "commit_short": "78cab6e",
+      "message": "fix: reduce memory use during reporting. #2229 (#2231)",
+      "date": "2026-07-15T14:04:48-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst",
+        "coverage/control.py",
+        "coverage/parser.py",
+        "coverage/python.py",
+        "coverage/report_core.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_analyze",
+          "file": "coverage/control.py"
+        },
+        {
+          "function": "_analyze_ast",
+          "file": "coverage/parser.py"
+        },
+        {
+          "function": "fix_with_jumps",
+          "file": "coverage/parser.py"
+        },
+        {
+          "function": "get_analysis_to_report",
+          "file": "coverage/report_core.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 981d0227..ef81e870 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,7 +23,12 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n-Nothing yet.\n+- Fix: one of the performance improvements in 7.15.1 (pull 2215) dramatically\n+  increased memory use during reporting for large projects. Now we use a\n+  different approach that is both faster and slimmer than 7.15.0. Fixes `issue\n+  2229`_.\n+\n+.. _issue 2229:  https://github.com/coveragepy/coveragepy/issues/2229\n \n \n .. start-releases\ndiff --git a/coverage/control.py b/coverage/control.py\nindex 8567614c..698e2428 100644\n--- a/coverage/control.py\n+++ b/coverage/control.py\n@@ -304,8 +304,6 @@ class Coverage(TConfigurable):\n         self._file_mapper: Callable[[str], str] = abs_file\n         self._data_suffix = self._run_suffix = None\n         self._exclude_re: dict[str, str] = {}\n-        self._analysis_cache: dict[TMorf, Analysis] = {}\n-        self._file_reporter_cache: dict[TMorf, FileReporter] = {}\n         self._old_sigterm: Callable[[int, FrameType | None], Any] | None = None\n \n         # State machine variables:\n@@ -567,7 +565,6 @@ class Coverage(TConfigurable):\n         if not should_skip:\n             assert self._data is not None\n             self._data.read()\n-        self._clear_analysis_caches()\n \n     def _init_for_start(self) -> None:\n         \"\"\"Initialization for start()\"\"\"\n@@ -780,7 +777,6 @@ class Coverage(TConfigurable):\n         self._data.erase(parallel=self.config.parallel)\n         self._data = None\n         self._inited_for_start = False\n-        self._clear_analysis_caches()\n \n     def switch_context(self, new_context: str) -> None:\n         \"\"\"Switch to a new dynamic context.\n@@ -913,7 +909,6 @@ class Coverage(TConfigurable):\n             keep=keep,\n             message=self._message,\n         )\n-        self._clear_analysis_caches()\n \n     def get_data(self) -> CoverageData:\n         \"\"\"Get the collected data.\n@@ -935,7 +930,6 @@ class Coverage(TConfigurable):\n                     self._collector.plugin_was_disabled(plugin)\n \n             if self._collector.flush_data():\n-                self._clear_analysis_caches()\n                 self._post_save_work()\n \n         assert self._data is not None\n@@ -1004,27 +998,18 @@ class Coverage(TConfigurable):\n             analysis.missing_formatted(),\n         )\n \n-    def _analyze(self, morf: TMorf) -> Analysis:\n+    def _analyze(self, morf: TMorf, file_reporter: FileReporter | None = None) -> Analysis:\n         \"\"\"Analyze a module or file.  Private for now.\"\"\"\n-        analysis = self._analysis_cache.get(morf)\n-        if analysis is not None:\n-            return analysis\n-\n         self._init()\n         self._post_init()\n \n         data = self.get_data()\n-        file_reporter = self._get_file_reporter(morf)\n+        if file_reporter is None:\n+            file_reporter = self._get_file_reporter(morf)\n         filename = self._file_mapper(file_reporter.filename)\n         analysis = analysis_from_file_reporter(data, self.config.precision, file_reporter, filename)\n-        self._analysis_cache[morf] = analysis\n         return analysis\n \n-    def _clear_analysis_caches(self) -> None:\n-        \"\"\"Forget cached analyses and file reporters, because data changed.\"\"\"\n-        self._analysis_cache.clear()\n-        self._file_reporter_cache.clear()\n-\n     def branch_stats(self, morf: TMorf) -> dict[TLineNo, tuple[int, int]]:\n         \"\"\"Get branch statistics about a module.\n \n@@ -1041,9 +1026,6 @@ class Coverage(TConfigurable):\n \n     def _get_file_reporter(self, morf: TMorf) -> FileReporter:\n         \"\"\"Get a FileReporter for a module or file name.\"\"\"\n-        cached = self._file_reporter_cache.get(morf)\n-        if cached is not None:\n-            return cached\n         assert self._data is not None\n         plugin = None\n         file_reporter: str | FileReporter = \"python\"\n@@ -1068,7 +1050,6 @@ class Coverage(TConfigurable):\n             file_reporter = PythonFileReporter(morf, self)\n \n         assert isinstance(file_reporter, FileReporter)\n-        self._file_reporter_cache[morf] = file_reporter\n         return file_reporter\n \n     def _get_file_reporters(\n@@ -1093,7 +1074,6 @@ class Coverage(TConfigurable):\n         if not isinstance(morfs, (list, tuple, set)):\n             morfs = [morfs]  # type: ignore[list-item]\n \n-        morfs = sorted(morfs, key=lambda m: m if isinstance(m, str) else m.__name__)\n         return [(self._get_file_reporter(morf), morf) for morf in morfs]\n \n     def _prepare_data_for_reporting(self) -> None:\ndiff --git a/coverage/parser.py b/coverage/parser.py\nindex e672c2db..6ee5bc01 100644\n--- a/coverage/parser.py\n+++ b/coverage/parser.py\n@@ -336,8 +336,10 @@ class PythonParser:\n         `_all_arcs` is the set of arcs in the code.\n \n         \"\"\"\n-        assert self._ast_root is not None\n-        aaa = AstArcAnalyzer(self.filename, self._ast_root, self.raw_statements, self.multiline_map)\n+        ast_root = self._ast_root\n+        if ast_root is None:\n+            ast_root = ast.parse(self.text)\n+        aaa = AstArcAnalyzer(self.filename, ast_root, self.raw_statements, self.multiline_map)\n         aaa.analyze()\n         arcs = aaa.arcs\n         self._with_jump_fixers = aaa.with_jump_fixers()\n@@ -353,6 +355,10 @@ class PythonParser:\n \n         self._missing_arc_fragments = aaa.missing_arc_fragments\n \n+        # The AST is large and no longer needed: everything derived from it is\n+        # memoized above.  Release it so long-lived parsers don't hold it.\n+        self._ast_root = None\n+\n     def fix_with_jumps(self, arcs: Iterable[TArc]) -> set[TArc]:\n         \"\"\"Adjust arcs to fix jumps leaving `with` statements.\n \ndiff --git a/coverage/python.py b/coverage/python.py\nindex 36dd7a1c..c3c36e7c 100644\n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "182b010b63a2661c86df1ca3b3f84ce8511ee435",
+      "commit_short": "182b010",
+      "message": "perf: resolve sysmon branch events lazily, one pair at a time (#2221)",
+      "date": "2026-07-12T14:05:59-06:00",
+      "author": "Paul Kehrer",
+      "files": [
+        "CHANGES.rst",
+        "coverage/bytecode.py",
+        "coverage/sysmon.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "__init__",
+          "file": "coverage/bytecode.py"
+        },
+        {
+          "function": "line_at",
+          "file": "coverage/bytecode.py"
+        },
+        {
+          "function": "resolve",
+          "file": "coverage/bytecode.py"
+        },
+        {
+          "function": "sysmon_py_start",
+          "file": "coverage/sysmon.py"
+        },
+        {
+          "function": "sysmon_branch_either",
+          "file": "coverage/sysmon.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex d647b1c5..e9379a91 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -30,7 +30,8 @@ Unreleased\n \n - A number of performance improvements thanks to Paul Kehrer, in pull requests\n   `2213 <pull 2213_>`_, `2214 <pull 2214_>`_, `2215 <pull 2215_>`_, `2216\n-  <pull 2216_>`_, `2218 <pull 2218_>`_, and `2220 <pull 2220_>`_.\n+  <pull 2216_>`_, `2218 <pull 2218_>`_, `2220 <pull 2220_>`_, and `2221 <pull\n+  2221_>`_.\n \n .. _pull 2213: https://github.com/coveragepy/coveragepy/pull/2213\n .. _pull 2214: https://github.com/coveragepy/coveragepy/pull/2214\n@@ -38,6 +39,7 @@ Unreleased\n .. _pull 2216: https://github.com/coveragepy/coveragepy/pull/2216\n .. _pull 2218: https://github.com/coveragepy/coveragepy/pull/2218\n .. _pull 2220: https://github.com/coveragepy/coveragepy/pull/2220\n+.. _pull 2221: https://github.com/coveragepy/coveragepy/pull/2221\n .. _pull 2224: https://github.com/coveragepy/coveragepy/pull/2224\n \n .. start-releases\ndiff --git a/coverage/bytecode.py b/coverage/bytecode.py\nindex 78bc866f..0546b97e 100644\n--- a/coverage/bytecode.py\n+++ b/coverage/bytecode.py\n@@ -5,11 +5,9 @@\n \n from __future__ import annotations\n \n-import collections\n import dis\n from collections.abc import Iterable, Mapping\n from types import CodeType\n-from typing import Optional\n \n from coverage.types import TArc, TLineNo, TOffset\n \n@@ -108,148 +106,103 @@ RETURNS = op_set(\n     \"RETURN_GENERATOR\",\n )\n \n-# Opcodes that do nothing.\n-NOPS = op_set(\n-    \"NOP\",\n-    \"NOT_TAKEN\",\n-)\n-\n-\n-class InstructionWalker:\n-    \"\"\"Utility to step through trails of instructions.\n \n-    We have two reasons to need sequences of instructions from a code object:\n-    First, in strict sequence to visit all the instructions in the object.\n-    This is `walk(follow_jumps=False)`.  Second, we want to follow jumps to\n-    understand how execution will flow: `walk(follow_jumps=True)`.\n-    \"\"\"\n-\n-    def __init__(self, code: CodeType) -> None:\n-        self.code = code\n-        self.insts: dict[TOffset, dis.Instruction] = {}\n+# CACHE doesn't exist in Python 3.10, but the branch resolver is only used\n+# on 3.14+, so a placeholder value is fine.\n+_CACHE = dis.opmap.get(\"CACHE\", -1)\n+_EXTENDED_ARG = dis.opmap[\"EXTENDED_ARG\"]\n \n-        inst = None\n-        for inst in dis.get_instructions(code):\n-            self.insts[inst.offset] = inst\n+# All opcodes with a jump target.\n+JUMPS = set(dis.hasjrel) | set(dis.hasjabs)\n \n-        assert inst is not None\n-        self.max_offset = inst.offset\n+# Opcodes that jump backwards.\n+BACKWARD_JUMPS = {op for op in JUMPS if \"JUMP_BACKWARD\" in dis.opname[op]}\n \n-    def walk(\n-        self, *, start_at: TOffset = 0, follow_jumps: bool = True\n-    ) -> Iterable[dis.Instruction]:\n-        \"\"\"\n-        Yield instructions starting from `start_at`.  Follow unconditional\n-        jumps if `follow_jumps` is true.\n-        \"\"\"\n-        seen = set()\n-        offset = start_at\n-        while offset < self.max_offset + 1:\n-            if offset in seen:\n-                break\n-            seen.add(offset)\n-            if inst := self.insts.get(offset):\n-                yield inst\n-                if follow_jumps and inst.opcode in ALWAYS_JUMPS:\n-                    offset = inst.jump_target\n-                    continue\n-            offset += 2\n \n+class BranchArcResolver:\n+    \"\"\"Resolve branch events to line arcs, one (source, dest) pair at a time.\n \n-TBranchTrailsOneSource = dict[Optional[TArc], set[TOffset]]\n-TBranchTrails = dict[TOffset, TBranchTrailsOneSource]\n+    Branch events are one-shot (they are DISABLEd after firing), so each\n+    (source offset, destination offset) pair is resolved at most a couple of\n+    times per code object.  Resolving pairs on demand is much cheaper than\n+    precomputing trails for every branch in the code object, most of which\n+    never fire.  We walk the raw bytecode bytes so that we never need to\n+    disassemble whole code objects with `dis`.\n \n+    To resolve one pair:\n+    starting from the destination, follow the trail of instructions (through\n+    unconditional jumps) until we reach an instruction on a new source line\n+    (giving us the arc), a return (an arc to leaving the code object), or\n+    another branch possibility (no arc: that branch will produce its own\n+    events).\n \n-def branch_trails(\n-    code: CodeType,\n-    multiline_map: Mapping[TLineNo, TLineNo],\n-) -> TBranchTrails:\n     \"\"\"\n-    Calculate branch trails for `code`.\n-\n-    `multiline_map` maps line numbers to the first line number of a\n-    multi-line statement.\n \n-    Instructions can have a jump_target, where they might jump to next.  Some\n-    instructions with a jump_target are unconditional jumps (ALWAYS_JUMPS), so\n-    they aren't interesting to us, since they aren't the start of a branch\n-    possibility.\n-\n-    Instructions that might or might not jump somewhere else are branch\n-    possibilities.  For each of those, we track a trail of instructions.  These\n-    are lists of instruction offsets, the next instructions that can execute.\n-    We follow the trail until we get to a new source line.  That gives us the\n-    arc from the original instruction's line to the new source line.\n-\n-    \"\"\"\n-    the_trails: TBranchTrails = collections.defaultdict(lambda: collections.defaultdict(set))\n-    iwalker = InstructionWalker(code)\n-    for inst in iwalker.walk(follow_jumps=False):\n-        if not inst.jump_target:\n-            # We only care about instructions with jump targets.\n-            continue\n-        if inst.opcode in ALWAYS_JUMPS:\n-            # We don't care about unconditional jumps.\n-            continue\n-\n-        from_line = inst.line_number\n+    def __init__(\n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "dd806350de678c9e4f137ffdda5cb131d269019c",
+      "commit_short": "dd80635",
+      "message": "fix: escape context labels in html report inline script block (#2224)",
+      "date": "2026-07-11T18:11:39+05:30",
+      "author": "rajath201",
+      "files": [
+        "CHANGES.rst",
+        "CONTRIBUTORS.txt",
+        "coverage/html.py",
+        "tests/test_html.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "write_html_page",
+          "file": "coverage/html.py"
+        },
+        {
+          "function": "test_context_labels_cant_break_out_of_script",
+          "file": "tests/test_html.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex fa37dad1..d590176a 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,6 +23,11 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n+- Fix: in the HTML report with ``show_contexts`` enabled, a context label\n+  containing ``</script>`` (for example a parametrized pytest node id) could\n+  close the inline ``<script>`` element in a file page early, injecting markup.\n+  Context labels are now fully escaped. Thanks, `Rajath Mohare <pull 2224_>`_.\n+\n - A number of performance improvements thanks to Paul Kehrer, in pull requests\n   `2213 <pull 2213_>`_, `2214 <pull 2214_>`_, `2215 <pull 2215_>`_, `2216\n   <pull 2216_>`_, and `2218 <pull 2218_>`_.\n@@ -32,6 +37,7 @@ Unreleased\n .. _pull 2215: https://github.com/coveragepy/coveragepy/pull/2215\n .. _pull 2216: https://github.com/coveragepy/coveragepy/pull/2216\n .. _pull 2218: https://github.com/coveragepy/coveragepy/pull/2218\n+.. _pull 2224: https://github.com/coveragepy/coveragepy/pull/2224\n \n .. start-releases\n \ndiff --git a/CONTRIBUTORS.txt b/CONTRIBUTORS.txt\nindex 2b8ec358..5b504cea 100644\n--- a/CONTRIBUTORS.txt\n+++ b/CONTRIBUTORS.txt\n@@ -213,6 +213,7 @@ Peter Baughman\n Peter Ebden\n Peter Portante\n Phebe Polk\n+Rajath Mohare\n Reya B\n Ricardo Newbery\n Robert Harris\ndiff --git a/coverage/html.py b/coverage/html.py\nindex dc7c7eb3..991a0863 100644\n--- a/coverage/html.py\n+++ b/coverage/html.py\n@@ -483,9 +483,18 @@ class HtmlReporter:\n         contexts = collections.Counter(c for cline in file_data.lines for c in cline.contexts)\n         context_codes = {y: i for (i, y) in enumerate(x[0] for x in contexts.most_common())}\n         if context_codes:\n-            contexts_json = json.dumps(\n-                {encode_int(v): k for (k, v) in context_codes.items()},\n-                indent=2,\n+            # This JSON is dropped straight into an inline <script> element, so\n+            # the HTML-significant characters have to be escaped as \\uXXXX to keep\n+            # a context label like \"</script>\" from closing the element early.\n+            # The escapes are still valid JSON, so the parsed values are unchanged.\n+            contexts_json = (\n+                json.dumps(\n+                    {encode_int(v): k for (k, v) in context_codes.items()},\n+                    indent=2,\n+                )\n+                .replace(\"<\", r\"\\u003c\")\n+                .replace(\">\", r\"\\u003e\")\n+                .replace(\"&\", r\"\\u0026\")\n             )\n         else:\n             contexts_json = None\ndiff --git a/tests/test_html.py b/tests/test_html.py\nindex 3d277e8f..ec4023b0 100644\n--- a/tests/test_html.py\n+++ b/tests/test_html.py\n@@ -25,6 +25,7 @@ import coverage.html\n from coverage import env, Coverage\n from coverage.exceptions import NoDataError, NotPython, NoSource\n from coverage.files import abs_file, flat_rootname\n+from coverage.misc import import_local_file\n from coverage.report_core import get_analysis_to_report\n from coverage.types import TLineNo, TMorf\n \n@@ -1545,6 +1546,27 @@ class HtmlWithContextsTest(HtmlTestHelpers, CoverageTest):\n             ]\n             assert sorted(expected) == sorted(actual)\n \n+    def test_context_labels_cant_break_out_of_script(self) -> None:\n+        # switch_context takes an arbitrary string (pytest-cov passes test node\n+        # ids), so a label can contain \"</script>\".  It's dropped into an inline\n+        # <script> block in the file page, and must not close the element early.\n+        label = \"</script><img src=x onerror=alert(1)>\"\n+        self.make_file(\"two_tests.py\", self.SOURCE)\n+        cov = coverage.Coverage(source=[\".\"])\n+        cov.set_option(\"html:show_contexts\", True)\n+        with cov.collect():\n+            cov.switch_context(label)\n+            mod = import_local_file(\"two_tests\")\n+        cov.html_report(mod, directory=\"htmlcov\")\n+\n+        html = self.get_html_report_content(\"two_tests.py\")\n+        assert label not in html\n+        assert \"\\\\u003c/script\\\\u003e\" in html\n+        # The escaped JSON still decodes to the original label.\n+        blob = re.search(r\"contexts = (\\{.*?\\n\\s*\\})\", html, re.DOTALL)\n+        assert blob is not None\n+        assert label in json.loads(blob.group(1)).values()\n+\n \n class HtmlHelpersTest(HtmlTestHelpers, CoverageTest):\n     \"\"\"Tests of the helpers in HtmlTestHelpers.\"\"\"\n"
+    },
+    {
+      "commit": "6f9fa1e1e8a89f62c69dbf3b38e0adb744d6d4b2",
+      "commit_short": "6f9fa1e",
+      "message": "fix: preserve isolated sys.path on Python 3.10 (#2211)",
+      "date": "2026-07-02T15:20:49+03:00",
+      "author": "Ilia Sorokin",
+      "files": [
+        "CHANGES.rst",
+        "CONTRIBUTORS.txt",
+        "coverage/execfile.py",
+        "tests/test_process.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "prepare",
+          "file": "coverage/execfile.py"
+        },
+        {
+          "function": "test_isolated_dashm_runme",
+          "file": "tests/test_process.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex dafce7e0..f7d0e0ab 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -37,12 +37,19 @@ Unreleased\n   avoiding the deprecation warning described in `issue 2208`_. Thanks, `A5rocks\n   <pull 2209_>`_.\n \n+- Fix: with Python 3.10, running with the ``-I`` (isolated mode) option didn't\n+  correctly omit the current directory from the module search path, as\n+  described in `issue 2103`_. That is now fixed thanks to `Ilia Sorokin <pull\n+  2211_>`_.\n+\n .. _--loader--: https://docs.python.org/3/reference/datamodel.html#module.__loader__\n+.. _issue 2103:  https://github.com/coveragepy/coveragepy/issues/2103\n .. _issue 2198:  https://github.com/coveragepy/coveragepy/issues/2198\n .. _issue 2205:  https://github.com/coveragepy/coveragepy/issues/2205\n .. _pull 2206: https://github.com/coveragepy/coveragepy/pull/2206\n .. _issue 2208:  https://github.com/coveragepy/coveragepy/issues/2208\n .. _pull 2209: https://github.com/coveragepy/coveragepy/pull/2209\n+.. _pull 2211: https://github.com/coveragepy/coveragepy/pull/2211\n \n \n .. start-releases\ndiff --git a/CONTRIBUTORS.txt b/CONTRIBUTORS.txt\nindex 7e121712..511d6da1 100644\n--- a/CONTRIBUTORS.txt\n+++ b/CONTRIBUTORS.txt\n@@ -106,6 +106,7 @@ Holger Krekel\n Hugo van Kemenade\n Ian Moore\n Ilia Meerovich\n+Ilia Sorokin\n Imri Goldberg\n Ionel Cristian M\u0103rie\u0219\n Ivan Ciuvalschii\ndiff --git a/coverage/execfile.py b/coverage/execfile.py\nindex d55058d9..649c49cf 100644\n--- a/coverage/execfile.py\n+++ b/coverage/execfile.py\n@@ -91,7 +91,10 @@ class PyRunner:\n         This needs to happen before any importing, and without importing anything.\n         \"\"\"\n         path0: str | None\n-        if getattr(sys.flags, \"safe_path\", False):\n+        if getattr(sys.flags, \"safe_path\", False) or getattr(sys.flags, \"isolated\", False):\n+            # PYVERSION\n+            # Python 3.10 isolated mode predates sys.flags.safe_path.\n+            # Remove the isolated fallback when coverage drops 3.10 support.\n             # See https://docs.python.org/3/using/cmdline.html#cmdoption-P\n             path0 = None\n         elif self.as_module:\ndiff --git a/tests/test_process.py b/tests/test_process.py\nindex 97d64d22..5569a9a6 100644\n--- a/tests/test_process.py\n+++ b/tests/test_process.py\n@@ -1000,6 +1000,12 @@ class EnvironmentTest(CoverageTest):\n         actual = self.run_command(\"python -m coverage run run_me.py\")\n         self.assert_tryexecfile_output(expected, actual)\n \n+    def test_isolated_dashm_runme(self) -> None:\n+        self.make_file(\"run_me.py\", TRY_EXECFILE_CODE)\n+        expected = self.run_command(\"python -I run_me.py\")\n+        actual = self.run_command(\"python -Im coverage run run_me.py\")\n+        self.assert_tryexecfile_output(expected, actual)\n+\n     @pytest.mark.skipif(env.PYVERSION < (3, 11), reason=\"PYTHONSAFEPATH is new in 3.11\")\n     def test_pythonsafepath_dashm(self) -> None:\n         self.make_file(\"with_main/__main__.py\", TRY_EXECFILE_CODE)\n"
+    },
+    {
+      "commit": "1ed39982fe550fc542a9ed3d5561dec29737b0dc",
+      "commit_short": "1ed3998",
+      "message": "fix: start attaching the loader on `__spec__` #2208 (#2209)",
+      "date": "2026-06-28T08:29:47-04:00",
+      "author": "A5rocks",
+      "files": [
+        "CHANGES.rst",
+        "coverage/execfile.py",
+        "tests/modules/checkspec.py",
+        "tests/test_execfile.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_prepare2",
+          "file": "coverage/execfile.py"
+        },
+        {
+          "function": "test_no_spec_deprecation",
+          "file": "tests/test_execfile.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 8e94167d..dafce7e0 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -32,9 +32,17 @@ Unreleased\n   as described in `issue 2205`_. This is now fixed thanks to `Martin Kuntz\n   Jacobsen <pull 2206_>`_.\n \n+- When running your program, coverage now correctly sets\n+  ``yourmodule.__spec__.loader`` as `strongly recommended <--loader--_>`_,\n+  avoiding the deprecation warning described in `issue 2208`_. Thanks, `A5rocks\n+  <pull 2209_>`_.\n+\n+.. _--loader--: https://docs.python.org/3/reference/datamodel.html#module.__loader__\n .. _issue 2198:  https://github.com/coveragepy/coveragepy/issues/2198\n .. _issue 2205:  https://github.com/coveragepy/coveragepy/issues/2205\n .. _pull 2206: https://github.com/coveragepy/coveragepy/pull/2206\n+.. _issue 2208:  https://github.com/coveragepy/coveragepy/issues/2208\n+.. _pull 2209: https://github.com/coveragepy/coveragepy/pull/2209\n \n \n .. start-releases\ndiff --git a/coverage/execfile.py b/coverage/execfile.py\nindex 04946be8..d55058d9 100644\n--- a/coverage/execfile.py\n+++ b/coverage/execfile.py\n@@ -140,6 +140,7 @@ class PyRunner:\n             if self.spec is not None:\n                 self.modulename = self.spec.name\n             self.loader = DummyLoader(self.modulename)\n+            self.spec.loader = self.loader  # type: ignore[assignment]\n             assert pathname is not None\n             self.pathname = os.path.abspath(pathname)\n             self.args[0] = self.arg0 = self.pathname\n@@ -157,12 +158,17 @@ class PyRunner:\n             else:\n                 raise NoSource(f\"Can't find '__main__' module in '{self.arg0}'\")\n \n-            # Make a spec. I don't know if this is the right way to do it.\n             try_filename = python_reported_file(try_filename)\n-            self.spec = importlib.machinery.ModuleSpec(\"__main__\", None, origin=try_filename)\n-            self.spec.has_location = True\n             self.package = \"\"\n             self.loader = DummyLoader(\"__main__\")\n+\n+            # Make a spec. I don't know if this is the right way to do it.\n+            self.spec = importlib.machinery.ModuleSpec(\n+                \"__main__\",\n+                self.loader,  # type: ignore[arg-type]\n+                origin=try_filename,\n+            )\n+            self.spec.has_location = True\n         else:\n             self.loader = DummyLoader(\"__main__\")\n \ndiff --git a/tests/modules/checkspec.py b/tests/modules/checkspec.py\nnew file mode 100644\nindex 00000000..c76eb72c\n--- /dev/null\n+++ b/tests/modules/checkspec.py\n@@ -0,0 +1 @@\n+assert __spec__.loader == __loader__  # type: ignore[name-defined]\ndiff --git a/tests/test_execfile.py b/tests/test_execfile.py\nindex d4cc9229..1ab80841 100644\n--- a/tests/test_execfile.py\n+++ b/tests/test_execfile.py\n@@ -342,3 +342,10 @@ class RunModuleTest(UsingModulesMixin, CoverageTest):\n     def test_no_main(self) -> None:\n         with pytest.raises(NoSource):\n             run_python_module([\"pkg2\", \"hi\"])\n+\n+    def test_no_spec_deprecation(self) -> None:\n+        # https://github.com/coveragepy/coveragepy/issues/2208\n+        run_python_module([\"checkspec\"])\n+        out, err = self.stdouterr()\n+        assert out == \"\"\n+        assert err == \"\"\n"
+    },
+    {
+      "commit": "65979cc05b7f6b10c3e27c84408867fd9bc30846",
+      "commit_short": "65979cc",
+      "message": "fix: skip excluded functions in LCOV function totals (#2206)",
+      "date": "2026-06-27T18:31:10+02:00",
+      "author": "Martin Kuntz Jacobsen",
+      "files": [
+        "CHANGES.rst",
+        "CONTRIBUTORS.txt",
+        "coverage/lcovreport.py",
+        "tests/test_lcov.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "lcov_functions",
+          "file": "coverage/lcovreport.py"
+        },
+        {
+          "function": "test_excluded_functions",
+          "file": "tests/test_lcov.py"
+        },
+        {
+          "function": "test_all_functions_excluded",
+          "file": "tests/test_lcov.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 07dc2b6f..06a61cf6 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,7 +23,12 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n-Nothing yet.\n+- Fix: the LCOV report would incorrectly count excluded functions as uncovered,\n+  as described in `issue 2205`_. This is now fixed thanks to, `Martin Kuntz\n+  Jacobsen <pull 2206_>`_.\n+\n+.. _issue 2205:  https://github.com/coveragepy/coveragepy/issues/2205\n+.. _pull 2206: https://github.com/coveragepy/coveragepy/pull/2206\n \n \n .. start-releases\ndiff --git a/CONTRIBUTORS.txt b/CONTRIBUTORS.txt\nindex 66fbcd78..7e121712 100644\n--- a/CONTRIBUTORS.txt\n+++ b/CONTRIBUTORS.txt\n@@ -166,6 +166,7 @@ Mariatta\n Marius Gedminas\n Mark van der Wal\n Martin Fuzzey\n+Martin Kuntz Jacobsen\n Mathieu Kniewallner\n Matt Bachmann\n Matthew Boehm\ndiff --git a/coverage/lcovreport.py b/coverage/lcovreport.py\nindex 003f214f..42895dda 100644\n--- a/coverage/lcovreport.py\n+++ b/coverage/lcovreport.py\n@@ -84,18 +84,23 @@ def lcov_functions(\n     narrower.add_regions(r.lines for _, _, r in functions)\n \n     functions.sort()\n+    functions_found = 0\n     functions_hit = 0\n     for first_line, last_line, region in functions:\n         # A function counts as having been executed if any of it has been\n         # executed.\n         analysis = narrower.narrow(region.lines)\n+        if analysis.numbers.n_statements == 0:\n+            continue\n+\n+        functions_found += 1\n         hit = int(analysis.numbers.n_executed > 0)\n         functions_hit += hit\n \n         outfile.write(f\"FN:{first_line},{last_line},{region.name}\\n\")\n         outfile.write(f\"FNDA:{hit},{region.name}\\n\")\n \n-    outfile.write(f\"FNF:{len(functions)}\\n\")\n+    outfile.write(f\"FNF:{functions_found}\\n\")\n     outfile.write(f\"FNH:{functions_hit}\\n\")\n \n \ndiff --git a/tests/test_lcov.py b/tests/test_lcov.py\nindex 261a6eca..e303e980 100644\n--- a/tests/test_lcov.py\n+++ b/tests/test_lcov.py\n@@ -388,6 +388,101 @@ class LcovTest(CoverageTest):\n         actual_result = self.get_lcov_report_content()\n         assert expected_result == actual_result\n \n+    def test_excluded_functions(self) -> None:\n+        self.make_file(\n+            \".coveragerc\",\n+            \"\"\"\\\n+            [report]\n+            exclude_also =\n+                @(abc\\\\.)?abstractmethod\n+                raise NotImplementedError\n+            \"\"\",\n+        )\n+        self.make_file(\n+            \"runme.py\",\n+            \"\"\"\\\n+            from abc import ABC, abstractmethod\n+\n+            class Base(ABC):\n+                @abstractmethod\n+                def excluded_abstract(self):\n+                    raise NotImplementedError\n+\n+                def covered(self):\n+                    return 1\n+\n+            class Concrete(Base):\n+                def excluded_abstract(self):\n+                    return 2\n+\n+            assert Concrete().covered() == 1\n+            assert Concrete().excluded_abstract() == 2\n+            \"\"\",\n+        )\n+        cov = coverage.Coverage(source=\".\")\n+        self.start_import_stop(cov, \"runme\")\n+        cov.lcov_report()\n+        expected_result = textwrap.dedent(\"\"\"\\\n+            SF:runme.py\n+            DA:1,1\n+            DA:3,1\n+            DA:8,1\n+            DA:9,1\n+            DA:11,1\n+            DA:12,1\n+            DA:13,1\n+            DA:15,1\n+            DA:16,1\n+            LF:9\n+            LH:9\n+            FN:8,9,Base.covered\n+            FNDA:1,Base.covered\n+            FN:12,13,Concrete.excluded_abstract\n+            FNDA:1,Concrete.excluded_abstract\n+            FNF:2\n+            FNH:2\n+            end_of_record\n+            \"\"\")\n+        actual_result = self.get_lcov_report_content()\n+        assert expected_result == actual_result\n+\n+    def test_all_functions_excluded(self) -> None:\n+        self.make_file(\n+            \".coveragerc\",\n+            \"\"\"\\\n+            [report]\n+            exclude_also =\n+                raise NotImplementedError\n+            \"\"\",\n+        )\n+        self.make_file(\n+            \"runme.py\",\n+            \"\"\"\\\n+            x = 1\n+\n+            def excluded():\n+                raise NotImplementedError\n+\n+            assert x == 1\n+            \"\"\",\n+        )\n+        cov = coverage.Coverage(source=\".\")\n+        self.start_import_stop(cov, \"runme\")\n+        cov.lcov_report()\n+        expected_result = textwrap.dedent(\"\"\"\\\n+            SF:runme.py\n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "f36248d7ba313734d4fcf3d6eab713b5eba2c259",
+      "commit_short": "f36248d",
+      "message": "fix: don't emit 'Couldn't import C tracer' warning for 3.13t (#2203)",
+      "date": "2026-06-23T01:22:08+03:00",
+      "author": "Hugo van Kemenade",
+      "files": [
+        "coverage/env.py"
+      ],
+      "functions_modified": [],
+      "diff": "diff --git a/coverage/env.py b/coverage/env.py\nindex 8cf8230e..6e84de86 100644\n--- a/coverage/env.py\n+++ b/coverage/env.py\n@@ -8,6 +8,7 @@ from __future__ import annotations\n import os\n import platform\n import sys\n+import sysconfig\n from collections.abc import Iterable\n from typing import Any, Final\n \n@@ -42,8 +43,14 @@ else:\n # Do we have a GIL?\n GIL = getattr(sys, \"_is_gil_enabled\", lambda: True)()\n \n+# Is this a free-threaded build of CPython? Checks the build, not runtime GIL\n+# state, since the GIL can be re-enabled at runtime on a free-threaded build.\n+FREE_THREADED = bool(sysconfig.get_config_var(\"Py_GIL_DISABLED\"))\n+\n # Do we ship compiled coveragepy wheels for this version?\n-SHIPPING_WHEELS = CPYTHON and PYVERSION[:2] <= (3, 14)\n+SHIPPING_WHEELS = (\n+    CPYTHON and PYVERSION[:2] <= (3, 14) and not (FREE_THREADED and PYVERSION[:2] == (3, 13))\n+)\n \n # Should we default to sys.monitoring?\n SYSMON_DEFAULT = CPYTHON and PYVERSION >= (3, 14)\n"
+    },
+    {
+      "commit": "f4b2b4d35e1b7cd8f33f1ee88d354b0debeeed08",
+      "commit_short": "f4b2b4d",
+      "message": "fix: exclude `...` bodies after multi-line return-type annotations (#2185) (#2196)",
+      "date": "2026-06-21T09:27:06-07:00",
+      "author": "MJSHANG",
+      "files": [
+        "CHANGES.rst",
+        "coverage/config.py",
+        "tests/test_coverage.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "test_default_ellipsis_multiline_return_type",
+          "file": "tests/test_coverage.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 52de1e69..31450e52 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,7 +23,12 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n-Nothing yet.\n+- Fix: the default ``...`` exclusion rule now also matches function bodies\n+  whose closing return-type bracket is on its own line (for example, after a\n+  long ``-> dict[ ... ]`` annotation that a formatter has split over multiple\n+  lines). Closes `issue 2185`_.\n+\n+.. _issue 2185: https://github.com/coveragepy/coveragepy/issues/2185\n \n \n .. start-releases\n@@ -58,6 +63,7 @@ Version 7.14.2 \u2014 2026-06-20\n .. _issue 2197: https://github.com/coveragepy/coveragepy/issues/2197\n .. _no-13t: https://py-free-threading.github.io/ci/#building-free-threaded-wheels-with-cibuildwheel\n \n+\n .. _changes_7-14-1:\n \n Version 7.14.1 \u2014 2026-05-26\ndiff --git a/coverage/config.py b/coverage/config.py\nindex 3722e698..87473124 100644\n--- a/coverage/config.py\n+++ b/coverage/config.py\n@@ -149,7 +149,7 @@ TConfigParser = HandyConfigParser | TomlConfigParser\n # The default line exclusion regexes.\n DEFAULT_EXCLUDE = [\n     r\"#\\s*(pragma|PRAGMA)[:\\s]?\\s*(no|NO)\\s*(cover|COVER)\",\n-    r\"^\\s*(((async )?def .*?)?\\)(\\s*->.*?)?:\\s*)?\\.\\.\\.\\s*(#|$)\",\n+    r\"^\\s*(((async )?def .*?)?[\\])]+(\\s*->.*?)?:\\s*)?\\.\\.\\.\\s*(#|$)\",\n     r\"if (typing\\.)?TYPE_CHECKING:\",\n ]\n \ndiff --git a/tests/test_coverage.py b/tests/test_coverage.py\nindex 7d4dd832..fe1c03aa 100644\n--- a/tests/test_coverage.py\n+++ b/tests/test_coverage.py\n@@ -1503,6 +1503,36 @@ class ExcludeTest(CoverageTest):\n             lines=[1, 3, 5, 7, 9, 11, 19, 24, 25],\n         )\n \n+    def test_default_ellipsis_multiline_return_type(self) -> None:\n+        # Issue #2185: the default `...` exclusion should still apply when the\n+        # return type annotation is split over multiple lines (a common shape\n+        # produced by formatters like Ruff when the annotation is long).\n+        # The trailing block also pins down what should NOT be excluded by\n+        # the widened pattern: a `...`-valued annotated assignment, and a\n+        # def whose return type contains `]` but has a real body.\n+        self.check_coverage(\n+            \"\"\"\\\n+            a = 1\n+            def short() -> dict[str, str]: ...\n+            def split_return() -> dict[\n+                str, str\n+            ]: ...\n+            def split_param_and_return(\n+                arg: int,\n+            ) -> dict[\n+                str, str\n+            ]: ...\n+            def split_param_with_inner_ellipsis(arg: tuple[\n+                int, ...\n+            ]) -> int: ...\n+            # Not stubs, and so not excluded:\n+            x: list[int] = ...\n+            def with_body() -> dict[str, str]: return {}\n+            z = 17\n+            \"\"\",\n+            lines=[1, 15, 16, 17],\n+        )\n+\n     def test_two_excludes(self) -> None:\n         self.check_coverage(\n             \"\"\"\\\n"
+    },
+    {
+      "commit": "f960696bd4f5fab32c8fd9086386d5ff4e99df82",
+      "commit_short": "f960696",
+      "message": "Fix: close SQLite connections from terminated threads (#2192) (#2193)",
+      "date": "2026-06-20T14:55:13+01:00",
+      "author": "Matthew Lloyd",
+      "files": [
+        "CHANGES.rst",
+        "coverage/sqldata.py",
+        "tests/test_data.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_reap_dead_thread_dbs",
+          "file": "coverage/sqldata.py"
+        },
+        {
+          "function": "_connect",
+          "file": "coverage/sqldata.py"
+        },
+        {
+          "function": "test_dead_thread_dbs_are_reaped",
+          "file": "tests/test_data.py"
+        },
+        {
+          "function": "thread_main",
+          "file": "tests/test_data.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex dfec76f7..6a59c6a3 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -27,16 +27,25 @@ Unreleased\n   -`` useless for capturing JSON output. Now messages are written to stderr,\n   fixing `issue 2197`_.\n \n+- Fix: ``CoverageData`` kept one SQLite connection per thread that recorded\n+  coverage, but never closed them when those threads terminated. On long runs\n+  with many short-lived threads this leaked one file descriptor per dead\n+  thread, eventually failing with ``OSError: [Errno 24] Too many open files``.\n+  Connections belonging to terminated threads are now closed and dropped.\n+  Fixes `issue 2192`_.\n+\n - Fix: when using sys.monitoring, we were assuming we could use the\n   ``COVERAGE_ID`` tool id.  But other tools might also assume they could use\n   that id.  Pre-allocated ids don't really make sense, so now we search for a\n-  usable one instead. Fixes `issue 2187`_.\n+  usable one instead. Fixes `issue 2187`_. Thanks, `Matt Lloyd <pull 2198_>`_.\n \n - Following `the advice of cibuildwheel <no-13t_>`_, we no longer distribute\n   wheels for Python 3.13 free-threaded.\n \n .. _issue 2187: https://github.com/coveragepy/coveragepy/issues/2187\n+.. _issue 2192: https://github.com/coveragepy/coveragepy/issues/2192\n .. _issue 2197: https://github.com/coveragepy/coveragepy/issues/2197\n+.. _pull 2198: https://github.com/coveragepy/coveragepy/pull/2198\n .. _no-13t: https://py-free-threading.github.io/ci/#building-free-threaded-wheels-with-cibuildwheel\n \n .. start-releases\ndiff --git a/coverage/sqldata.py b/coverage/sqldata.py\nindex cb406ddd..9701a63b 100644\n--- a/coverage/sqldata.py\n+++ b/coverage/sqldata.py\n@@ -370,9 +370,33 @@ class CoverageData:\n             )\n         db.executemany_void(\"INSERT OR IGNORE INTO meta (key, value) VALUES (?, ?)\", meta_data)\n \n+    def _reap_dead_thread_dbs(self) -> None:\n+        \"\"\"Close and drop SqliteDb connections held by terminated threads.\n+\n+        Connections are keyed by thread id in ``self._dbs`` and are otherwise\n+        only closed at process end. On workloads with many short-lived threads\n+        whose ids are not recycled, this leaks one open fd per dead thread.\n+        Closing is safe from another thread because connections use\n+        ``check_same_thread=False``.\n+        \"\"\"\n+        with self._lock:\n+            live_idents = {thread.ident for thread in threading.enumerate()}\n+            dead_idents = [ident for ident in self._dbs if ident not in live_idents]\n+            for ident in dead_idents:\n+                db = self._dbs.pop(ident)\n+                if self._debug.should(\"dataio\"):\n+                    self._debug.write(f\"Reaping dead thread's data file: {db!r}\")\n+                try:\n+                    db.close(force=True)\n+                except Exception:\n+                    # Closing is best-effort; a failure here must not break\n+                    # collection. The entry has already been dropped.\n+                    pass\n+\n     def _connect(self) -> SqliteDb:\n         \"\"\"Get the SqliteDb object to use.\"\"\"\n         if threading.get_ident() not in self._dbs:\n+            self._reap_dead_thread_dbs()\n             self._open_db()\n         return self._dbs[threading.get_ident()]\n \ndiff --git a/tests/test_data.py b/tests/test_data.py\nindex 07a053ba..2f0f2d10 100644\n--- a/tests/test_data.py\n+++ b/tests/test_data.py\n@@ -614,6 +614,45 @@ class CoverageDataTest(CoverageTest):\n         assert_lines1_data(covdata)\n         assert not exceptions\n \n+    def test_dead_thread_dbs_are_reaped(self) -> None:\n+        # Each thread that records coverage opens its own SqliteDb. Those\n+        # connections must be closed and dropped when the thread terminates,\n+        # so _dbs (and the fds it holds) stays bounded by the live-thread\n+        # count rather than growing without limit. See issue 2192.\n+        covdata = CoverageData(no_disk=True)\n+\n+        nthreads = 50\n+        # Keep the workers concurrent so they get distinct thread ids. A naive\n+        # sequential start/join loop can let the OS recycle a single id and\n+        # hide the leak.\n+        barrier = threading.Barrier(nthreads + 1)\n+\n+        def thread_main() -> None:\n+            covdata.add_lines(LINES_1)\n+            barrier.wait()\n+\n+        threads = [threading.Thread(target=thread_main) for _ in range(nthreads)]\n+        for t in threads:\n+            t.start()\n+        barrier.wait()\n+        for t in threads:\n+            t.join()\n+\n+        assert threading.active_count() == 1\n+        # The dead threads each opened a connection; they are retained until\n+        # something triggers reaping.\n+        assert len(covdata._dbs) == nthreads\n+\n+        # The main thread hasn't recorded any coverage yet, so recording now\n+        # runs the cold path of _connect, which reaps the dead threads'\n+        # connections before opening the main thread's own.\n+        covdata.add_lines(LINES_1)\n+\n+        # Only the live main thread's connection remains; all of the dead\n+        # threads were reaped.\n+        assert threading.active_count() == 1\n+        assert len(covdata._dbs) == 1\n+\n     def test_purge_files_lines(self) -> None:\n         covdata = DebugCoverageData()\n         covdata.add_lines(LINES_1)\n"
+    },
+    {
+      "commit": "24296156fc0b6650ff1224682ca5170a696ba1f7",
+      "commit_short": "2429615",
+      "message": "docs: fix a changelog entry",
+      "date": "2026-06-20T07:41:53-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst"
+      ],
+      "functions_modified": [],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 886de03e..dfec76f7 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,9 +23,9 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n-- Fix: some messages were being written to stdout, making ``-o -`` useless for\n-  capturing the JSON output of ``coverage json``. Now messages are written to\n-  stderr, fixing `issue 2197`.\n+- Fix: some messages were being written to stdout, making ``coverage json -o\n+  -`` useless for capturing JSON output. Now messages are written to stderr,\n+  fixing `issue 2197`_.\n \n - Fix: when using sys.monitoring, we were assuming we could use the\n   ``COVERAGE_ID`` tool id.  But other tools might also assume they could use\n"
+    },
+    {
+      "commit": "27c11f1b08051ed291138bb2772de0f7fab2ce5a",
+      "commit_short": "27c11f1",
+      "message": "fix: write messages to stderr. #2197",
+      "date": "2026-06-19T10:51:18-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst",
+        "coverage/control.py",
+        "tests/test_api.py",
+        "tests/test_process.py",
+        "tests/test_xml.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "test_combine_parallel_data",
+          "file": "tests/test_api.py"
+        },
+        {
+          "function": "test_combine_parallel_data_with_a_corrupt_file",
+          "file": "tests/test_api.py"
+        },
+        {
+          "function": "test_pth_and_source_work_together",
+          "file": "tests/test_process.py"
+        },
+        {
+          "function": "test_stdout_is_only_json",
+          "file": "tests/test_process.py"
+        },
+        {
+          "function": "test_default_file_placement",
+          "file": "tests/test_xml.py"
+        },
+        {
+          "function": "test_argument_affects_xml_placement",
+          "file": "tests/test_xml.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 354ce00f..affb8b03 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,12 +23,17 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n+- Fix: some messages were being written to stdout, making ``-o -`` useless for\n+  capturing the JSON output of ``coverage json``. Now messages are written to\n+  stderr, fixing `issue 2197`.\n+\n - Fix: when using sys.monitoring, we were assuming we could use the\n   ``COVERAGE_ID`` tool id.  But other tools might also assume they could use\n   that id.  Pre-allocated ids don't really make sense, so now we search for a\n   usable one instead. Fixes `issue 2187`_.\n \n .. _issue 2187: https://github.com/coveragepy/coveragepy/issues/2187\n+.. _issue 2197: https://github.com/coveragepy/coveragepy/issues/2197\n \n \n .. start-releases\ndiff --git a/coverage/control.py b/coverage/control.py\nindex 57531d39..87f89e3a 100644\n--- a/coverage/control.py\n+++ b/coverage/control.py\n@@ -502,7 +502,7 @@ class Coverage(TConfigurable):\n     def _message(self, msg: str) -> None:\n         \"\"\"Write a message to the user, if configured to do so.\"\"\"\n         if self._messages:\n-            print(msg)\n+            print(msg, file=sys.stderr)\n \n     def get_option(self, option_name: str) -> TConfigValueOut | None:\n         \"\"\"Get an option from the configuration.\ndiff --git a/tests/test_api.py b/tests/test_api.py\nindex ba457248..336c9a2b 100644\n--- a/tests/test_api.py\n+++ b/tests/test_api.py\n@@ -1485,7 +1485,7 @@ class CombiningTest(CoverageTest):\n         # Combine the parallel coverage data files into .coverage .\n         cov = coverage.Coverage(messages=True)\n         cov.combine(strict=True)\n-        assert self.stdout() == \"Combined 2 files\\n\"\n+        assert self.stderr() == \"Combined 2 files\\n\"\n         self.assert_exists(\".coverage\")\n \n         # After combining, there should be only the .coverage file.\n@@ -1526,7 +1526,9 @@ class CombiningTest(CoverageTest):\n                 r\"Couldn't use data file '.*[/\\\\]\\.coverage\\.bad': \" + BAD_SQLITE_REGEX,\n             ),\n         )\n-        assert self.stdout() == \"Combined 2 files, 1 file errored\\n\"\n+        # Stderr has messages about the bad files. We want to see the last line\n+        # is the summary.\n+        assert self.stderr().splitlines()[-1] == \"Combined 2 files, 1 file errored\"\n \n         # After combining, those two should be the only data files.\n         self.assert_exists(\".coverage\")\ndiff --git a/tests/test_process.py b/tests/test_process.py\nindex 1d1e233f..97d64d22 100644\n--- a/tests/test_process.py\n+++ b/tests/test_process.py\n@@ -8,6 +8,7 @@ from __future__ import annotations\n import csv\n import glob\n import itertools\n+import json\n import os\n import os.path\n import platform\n@@ -1765,3 +1766,17 @@ class ProcessStartupWithSourceTest(CoverageTest):\n         summary = line_counts(data)\n         assert summary[source + \".py\"] == 3\n         assert len(summary) == 1\n+\n+\n+class StdoutStderrTest(CoverageTest):\n+    \"\"\"Tests that messages go to stderr, data goes to stdout.\"\"\"\n+\n+    def test_stdout_is_only_json(self) -> None:\n+        self.make_file(\"code.py\", \"\".join(f\"a{i} = {i}\\n\" for i in range(5)))\n+        self.make_data_file(suffix=\"1\", lines={abs_file(\"code.py\"): [1, 2]})\n+        self.make_data_file(suffix=\"2\", lines={abs_file(\"code.py\"): [4, 5]})\n+        output = self.run_command(\"coverage json -o - > data.json\")\n+        assert output == \"Combined 2 files\\n\"\n+        with open(\"data.json\", encoding=\"utf-8\") as fdata:\n+            d = json.load(fdata)\n+        assert d[\"files\"][\"code.py\"][\"executed_lines\"] == [1, 2, 4, 5]\ndiff --git a/tests/test_xml.py b/tests/test_xml.py\nindex 94bdd1c8..75c84f56 100644\n--- a/tests/test_xml.py\n+++ b/tests/test_xml.py\n@@ -122,14 +122,14 @@ class XmlReportTest(XmlTestHelpers, CoverageTest):\n         self.make_mycode_data()\n         self.run_xml_report()\n         self.assert_exists(\"coverage.xml\")\n-        assert self.stdout() == \"\"\n+        assert self.stderr() == \"\"\n \n     def test_argument_affects_xml_placement(self) -> None:\n         self.make_mycode_data()\n         cov = coverage.Coverage(messages=True)\n         cov.load()\n         cov.xml_report(outfile=\"put_it_there.xml\")\n-        assert self.stdout() == \"Wrote XML report to put_it_there.xml\\n\"\n+        assert self.stderr() == \"Wrote XML report to put_it_there.xml\\n\"\n         self.assert_doesnt_exist(\"coverage.xml\")\n         self.assert_exists(\"put_it_there.xml\")\n \n"
+    },
+    {
+      "commit": "4b0fc85715053e96238137908e45b8ff9d6aa4f7",
+      "commit_short": "4b0fc85",
+      "message": "fix: find a usable sys.monitoring toolid instead of assuming COVERAGE_ID is available. #2187",
+      "date": "2026-06-08T07:36:37-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst",
+        "coverage/control.py",
+        "coverage/core.py",
+        "coverage/sysmon.py",
+        "igor.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "__init__",
+          "file": "coverage/sysmon.py"
+        },
+        {
+          "function": "start",
+          "file": "coverage/sysmon.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex fd805fe1..354ce00f 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,7 +23,12 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n-Nothing yet.\n+- Fix: when using sys.monitoring, we were assuming we could use the\n+  ``COVERAGE_ID`` tool id.  But other tools might also assume they could use\n+  that id.  Pre-allocated ids don't really make sense, so now we search for a\n+  usable one instead. Fixes `issue 2187`_.\n+\n+.. _issue 2187: https://github.com/coveragepy/coveragepy/issues/2187\n \n \n .. start-releases\ndiff --git a/coverage/control.py b/coverage/control.py\nindex dd19732a..57531d39 100644\n--- a/coverage/control.py\n+++ b/coverage/control.py\n@@ -301,7 +301,6 @@ class Coverage(TConfigurable):\n         self._data_to_close: list[CoverageData] = []\n         self._core: Core | None = None\n         self._collector: Collector | None = None\n-        self._metacov = False\n \n         self._file_mapper: Callable[[str], str] = abs_file\n         self._data_suffix = self._run_suffix = None\n@@ -596,7 +595,6 @@ class Coverage(TConfigurable):\n             debug=(self._debug if self._debug.should(\"core\") else None),\n             config=self.config,\n             dynamic_contexts=(should_start_context is not None),\n-            metacov=self._metacov,\n         )\n         self._collector = Collector(\n             core=self._core,\ndiff --git a/coverage/core.py b/coverage/core.py\nindex 64616a69..d6e65a84 100644\n--- a/coverage/core.py\n+++ b/coverage/core.py\n@@ -61,7 +61,6 @@ class Core:\n         debug: TDebugCtl | None,\n         config: CoverageConfig,\n         dynamic_contexts: bool,\n-        metacov: bool,\n     ) -> None:\n         def _debug(msg: str) -> None:\n             if debug:\n@@ -115,7 +114,6 @@ class Core:\n \n         if core_name == \"sysmon\":\n             self.tracer_class = SysMonitor\n-            self.tracer_kwargs[\"tool_id\"] = 3 if metacov else 1\n             self.file_disposition_class = FileDisposition\n             self.supports_plugins = False\n             self.packed_arcs = False\ndiff --git a/coverage/sysmon.py b/coverage/sysmon.py\nindex 8161a777..dbd2dd12 100644\n--- a/coverage/sysmon.py\n+++ b/coverage/sysmon.py\n@@ -193,7 +193,7 @@ class SysMonitor(Tracer):\n \n     # One of these will be used across threads. Be careful.\n \n-    def __init__(self, tool_id: int) -> None:\n+    def __init__(self) -> None:\n         # Attributes set from the collector:\n         self.data: TTraceData\n         self.trace_arcs = False\n@@ -208,7 +208,11 @@ class SysMonitor(Tracer):\n         # TODO: warn is unused.\n         self.warn: TWarnFn\n \n-        self.myid = tool_id\n+        assert sys_monitoring is not None\n+        # sys.monitoring pre-allocates tool ids, but it's kind of pointless.\n+        # There's no guarantee that \"our\" tool id will still be available, so\n+        # we have to search for a usable one in start() anyway.\n+        self.myid = sys_monitoring.COVERAGE_ID\n \n         # Map id(code_object) -> CodeInfo\n         self.code_infos: dict[int, CodeInfo] = {}\n@@ -241,7 +245,15 @@ class SysMonitor(Tracer):\n         \"\"\"Start this Tracer.\"\"\"\n         with self.lock:\n             assert sys_monitoring is not None\n-            sys_monitoring.use_tool_id(self.myid, \"coverage.py\")\n+            while self.myid <= 5:\n+                try:\n+                    sys_monitoring.use_tool_id(self.myid, \"coverage.py\")\n+                    break\n+                except ValueError:\n+                    self.myid += 1\n+                    continue\n+            else:\n+                raise RuntimeError(\"No sys.monitoring tool id is available\")\n             register = functools.partial(sys_monitoring.register_callback, self.myid)\n             events = sys.monitoring.events\n \ndiff --git a/igor.py b/igor.py\nindex 266a3d16..dfa16dc8 100644\n--- a/igor.py\n+++ b/igor.py\n@@ -194,7 +194,6 @@ def run_tests_with_coverage(core, *runner_args):\n     cov = coverage.Coverage(config_file=\"metacov.ini\")\n     cov._warn_unimported_source = False\n     cov._warn_preimported_source = False\n-    cov._metacov = True\n     cov.start()\n \n     try:\n"
+    },
+    {
+      "commit": "64d9b66fd852c1920ffe6cb8b58d7e4fdae90226",
+      "commit_short": "64d9b66",
+      "message": "docs: correct the date for 7.14.1",
+      "date": "2026-05-26T15:44:37-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst"
+      ],
+      "functions_modified": [],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex c1219234..a8462045 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -24,7 +24,7 @@ upgrading your version of coverage.py.\n \n .. _changes_7-14-1:\n \n-Version 7.14.1 \u2014 2026-05-17\n+Version 7.14.1 \u2014 2026-05-26\n ---------------------------\n \n - Fix: the HTML report used typographic niceties to make file paths more\n"
+    },
+    {
+      "commit": "7996dfdcccb9dffaf4f9d3d435d2bce3a7772109",
+      "commit_short": "7996dfd",
+      "message": "fix: use CSS for slash-space to let ctrl-f work. #2170",
+      "date": "2026-05-13T06:27:35-07:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst",
+        "coverage/html.py",
+        "coverage/htmlfiles/style.css",
+        "coverage/htmlfiles/style.scss",
+        "tests/gold/html/other/blah_blah_other_py.html",
+        "tests/gold/html/other/class_index.html",
+        "tests/gold/html/other/function_index.html",
+        "tests/gold/html/other/index.html",
+        "tests/gold/html/styled/style.css",
+        "tests/gold/html/support/{coverage_html_cb_bcae5fc4.js => coverage_html_cb_dd2e7eb5.js}",
+        "tests/gold/html/support/{favicon_32_cb_58284776.png => favicon_32_cb_c827f16f.png}",
+        "tests/gold/html/support/{keybd_closed_cb_ce680311.png => keybd_closed_cb_900cfef5.png}",
+        "tests/gold/html/support/{style_cb_a5a05ca4.css => style_cb_a90a112a.css}",
+        "tests/test_html.py",
+        "tests/test_report_common.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "escape",
+          "file": "coverage/html.py"
+        },
+        {
+          "function": "pair",
+          "file": "coverage/html.py"
+        },
+        {
+          "function": "compare_html",
+          "file": "tests/test_html.py"
+        },
+        {
+          "function": "test_accented_directory",
+          "file": "tests/test_html.py"
+        },
+        {
+          "function": "test_map_paths_during_html_report",
+          "file": "tests/test_report_common.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex b2be80ad..b73db2b1 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -23,7 +23,13 @@ upgrading your version of coverage.py.\n Unreleased\n ----------\n \n-Nothing yet.\n+- Fix: the HTML report used typographic niceties to make file paths more\n+  readable by adding a small amount of space around slashes. Those spaces\n+  interfered with searching the page for file paths of interest. Now the report\n+  uses CSS to accomplish the same visual tweak so that searches with slashes\n+  work correctly. Closes `issue 2170`_.\n+\n+.. _issue 2170: https://github.com/coveragepy/coveragepy/issues/2170\n \n \n .. start-releases\ndiff --git a/coverage/html.py b/coverage/html.py\nindex 548003da..dc7c7eb3 100644\n--- a/coverage/html.py\n+++ b/coverage/html.py\n@@ -856,5 +856,8 @@ def pair(ratio: tuple[int, int]) -> str:\n \n \n def pretty_file(filename: str) -> str:\n-    \"\"\"Return a prettier version of `filename` for display.\"\"\"\n-    return re.sub(r\"[/\\\\]\", \"\\N{THIN SPACE}\\\\g<0>\\N{THIN SPACE}\", filename)\n+    \"\"\"Return a prettier version of `filename` for display.\n+\n+    This is a filter for the template engine, so HTML output is literal.\n+    \"\"\"\n+    return re.sub(r\"[/\\\\]\", '<span class=\"sep\">\\\\g<0></span>', filename)\ndiff --git a/coverage/htmlfiles/style.css b/coverage/htmlfiles/style.css\nindex 5e304ce5..f82a185d 100644\n--- a/coverage/htmlfiles/style.css\n+++ b/coverage/htmlfiles/style.css\n@@ -164,6 +164,8 @@ header button.par.show_par { background: #ffa; border: 2px solid #bbbb00; margin\n \n kbd { border: 1px solid black; border-color: #888 #333 #333 #888; padding: .1em .35em; font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: bold; background: #eee; border-radius: 3px; }\n \n+.sep { padding: 0 .1em; }\n+\n #source { padding: 1em 0 1em 3.5rem; font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace; }\n \n #source p { position: relative; white-space: pre; }\ndiff --git a/coverage/htmlfiles/style.scss b/coverage/htmlfiles/style.scss\nindex 5e33c21e..b41df2eb 100644\n--- a/coverage/htmlfiles/style.scss\n+++ b/coverage/htmlfiles/style.scss\n@@ -425,6 +425,10 @@ kbd {\n     border-radius: 3px;\n }\n \n+.sep {\n+    padding: 0 .1em;\n+}\n+\n // Source file styles\n \n // The slim bar at the left edge of the source lines, colored by coverage.\ndiff --git a/tests/gold/html/other/blah_blah_other_py.html b/tests/gold/html/other/blah_blah_other_py.html\nindex 76f486a4..b9f05779 100644\n--- a/tests/gold/html/other/blah_blah_other_py.html\n+++ b/tests/gold/html/other/blah_blah_other_py.html\n@@ -2,22 +2,22 @@\n <html lang=\"en\">\n <head>\n     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n-    <title>Coverage for /private/var/folders/89/ljvtxf9s1xq2k8z55tzww8qc0000gn/T/pytest-of-ryuta/pytest-99/popen-gw4/t95/othersrc/other.py: 100%</title>\n-    <link rel=\"icon\" sizes=\"32x32\" href=\"favicon_32_cb_58284776.png\">\n-    <link rel=\"stylesheet\" href=\"style_cb_baf449ae.css\" type=\"text/css\">\n-    <script src=\"coverage_html_cb_7aca8e62.js\" defer></script>\n+    <title>Coverage for /private/var/folders/6j/khn0mcrj35d1k3yylpl8zl080000gn/T/pytest-of-ned/pytest-268/popen-gw3/t0/othersrc/other.py: 100%</title>\n+    <link rel=\"icon\" sizes=\"32x32\" href=\"favicon_32_cb_c827f16f.png\">\n+    <link rel=\"stylesheet\" href=\"style_cb_a90a112a.css\" type=\"text/css\">\n+    <script src=\"coverage_html_cb_dd2e7eb5.js\" defer></script>\n </head>\n <body class=\"pyfile\">\n <header>\n     <div class=\"content\">\n         <h1>\n-            <span class=\"text\">Coverage for </span><b>&#8201;/&#8201;private&#8201;/&#8201;var&#8201;/&#8201;folders&#8201;/&#8201;89&#8201;/&#8201;ljvtxf9s1xq2k8z55tzww8qc0000gn&#8201;/&#8201;T&#8201;/&#8201;pytest-of-ryuta&#8201;/&#8201;pytest-99&#8201;/&#8201;popen-gw4&#8201;/&#8201;t95&#8201;/&#8201;othersrc&#8201;/&#8201;other.py</b>:\n+            <span class=\"text\">Coverage for </span><b><span class=\"sep\">/</span>private<span class=\"sep\">/</span>var<span class=\"sep\">/</span>folders<span class=\"sep\">/</span>6j<span class=\"sep\">/</span>khn0mcrj35d1k3yylpl8zl080000gn<span class=\"sep\">/</span>T<span class=\"sep\">/</span>pytest-of-ned<span class=\"sep\">/</span>pytest-268<span class=\"sep\">/</span>popen-gw3<span class=\"sep\">/</span>t0<span class=\"sep\">/</span>othersrc<span class=\"sep\">/</span>other.py</b>:\n             <span class=\"pc_cov\">100%</span>\n         </h1>\n         <aside id=\"help_panel_wrapper\">\n             <input id=\"help_panel_state\" type=\"checkbox\">\n             <label for=\"help_panel_state\">\n-                <img id=\"keyboard_icon\" src=\"keybd_closed_cb_ce680311.png\" alt=\"Show/hide keyboard shortcuts\">\n+                <img id=\"keyboard_icon\" src=\"keybd_closed_cb_900cfef5.png\" alt=\"Show/hide keyboard shortcuts\">\n             </label>\n             <div id=\"help_panel\">\n                 <p class=\"legend\">Shortcuts on this page</p>\n@@ -64,8 +64,8 @@\n             <a id=\"indexLink\" class=\"nav\" href=\"index.html\">&Hat; index</a> &nbsp; &nbsp;\n             <a id=\"nextFileLink\" class=\"nav\" href=\"here_py.html\">&#xbb; next</a>\n             &nbsp; &nbsp; &nbsp;\n-            <a class=\"nav\" href=\"https://coverage.readthedocs.io/en/7.11.4a0.dev1\">coverage.py v7.11.4a0.dev1</a>,\n-            created at 2025-11-15 23:12 +0900\n+            <a class=\"nav\" href=\"https://coverage.readthedocs.io/en/7.14.1a0.dev1\">coverage.py v7.14.1a0.dev1</a>,\n+            created at 2026-05-13 06:13 -0700\n         </p>\n         <aside class=\"hidden\">\n             <button type=\"button\" class=\"button_next_chunk\" data-shortcut=\"j\"></button>\n@@ -92,8 +92,8 @@\n             <a class=\"nav\" href=\"index.html\">&Hat; index</a> &nbsp; &nbsp;\n             <a class=\"nav\" href=\"here_py.html\">&#xbb; next</a>\n             &nbsp; &nbsp; &nbsp;\n-            <a class=\"nav\" href=\"https://coverage.readthedocs.io/en/7.11.4a0.dev1\">coverage.py v7.11.4a0.dev1</a>,\n-            created at 2025-11-15 23:12 +0900\n+            <a class=\"nav\" href=\"https://coverage.readthedocs.io/en/7.14.1a0.dev1\">coverage.py v7.14.1a0.dev1</a>,\n+            created at 2026-05-13 06:13 -0700\n         </p>\n     </div>\n </footer>\ndiff --git a/tests/gold/html/other/class_index.html b/tests/gold/html/other/class_index.html\nindex aacb988e..722bfd6a 100644\n--- a/tests/gold/html/other/class_index.html\n+++ b/tests/gold/html/other/class_index.html\n@@ -3,9 +3,9 @@\n <head>\n     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n     <title>Coverage report</title>\n-    <link rel=\"icon\" sizes=\"32x32\" href=\"favicon_32_cb_58284776.png\">\n-    <link rel=\"stylesheet\" href=\"style_cb_8432e98f.css\" type=\"text/css\">\n-    <script src=\"coverage_html_cb_bcae5fc4.js\" defer></script>\n+    <link rel=\"icon\" sizes=\"32x32\" href=\"favicon_32_cb_c827f16f.png\">\n+    <link rel=\"stylesheet\" href=\"style_cb_a90a112a.css\" type=\"text/css\">\n+    <script src=\"coverage_html_cb_dd2e7eb5.js\" defer></script>\n </head>\n <body class=\"indexfile\">\n <header>\n@@ -16,7 +16,7 @@\n         <aside id=\"help_panel_wrapper\">\n             <input id=\"help_panel_state\" type=\"checkbox\">\n             <label for=\"help_panel_state\">\n-                <img id=\"keyboard_icon\" src=\"keybd_closed_cb_ce680311.png\" alt=\"Show/hide keyboard shortcuts\">\n+                <img id=\"keyboard_icon\" src=\"keybd_closed_cb_900cfef5.png\" alt=\"Show/hide keyboard shortcuts\">\n             </label>\n             <div id=\"help_panel\">\n                 <p class=\"legend\">Shortcuts on this page</p>\n@@ -54,8 +54,8 @@\n                 <a class=\"button current\">Classes</a>\n         </h2>\n         <p class=\"text\">\n-            <a class=\"nav\" href=\"https://coverage.readthedocs.io/en/7.11.4a0.dev1\">coverage.py v7.11.4a0.dev1</a>,\n-            created at 2025-11-16 16:02 -0500\n+            <a class=\"nav\" href=\"https://coverage.readthedocs.io/en/7.14.1a0.dev1\">coverage.py v7.14.1a0.dev1</a>,\n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "8cd392e3b5c4bc15d534aaec0c21714f9f518469",
+      "commit_short": "8cd392e",
+      "message": "fix: snapshot data in Collector.flush_data to avoid threading race (#2165)",
+      "date": "2026-05-09T20:54:15-04:00",
+      "author": "Alex Vandiver",
+      "files": [
+        "CHANGES.rst",
+        "coverage/collector.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "flush_data",
+          "file": "coverage/collector.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 89d6678c..1bef46a9 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -37,6 +37,12 @@ Unreleased\n - Fix: running a Python file through a symlink now sets the sys.path correctly,\n   matching regular Python behavior. Fixes `issue 2157`_.\n \n+- Fix: ``Collector.flush_data`` could fail with \"RuntimeError: Set changed\n+  size during iteration\" when a tracer in another thread added a line to the\n+  per-file set that ``add_lines`` (or ``add_arcs``) was iterating. The values\n+  passed to ``CoverageData`` are now snapshotted via ``dict.copy()`` and\n+  ``set.copy()``, which are atomic under the GIL.\n+\n - Fix: the soft keyword ``lazy`` is now bolded in HTML reports.\n \n - We are no longer testing eventlet support. Eventlet started issuing stern\ndiff --git a/coverage/collector.py b/coverage/collector.py\nindex 289995e5..e1263798 100644\n--- a/coverage/collector.py\n+++ b/coverage/collector.py\n@@ -9,7 +9,7 @@ import contextlib\n import functools\n import os\n import sys\n-from collections.abc import Callable, Mapping\n+from collections.abc import Callable, Collection, Mapping\n from types import FrameType\n from typing import Any, TypeVar, cast\n \n@@ -450,19 +450,25 @@ class Collector:\n         if not self._activity():\n             return False\n \n+        # dict.copy() and set.copy() are atomic in CPython (the GIL is\n+        # held for the duration of the C-level copy), so we get clean\n+        # snapshots of the dict and each per-file set even while tracers\n+        # in other threads continue to add data. Without these copies,\n+        # add_arcs() and add_lines() iterate the live sets and can fail\n+        # with \"RuntimeError: Set changed size during iteration\" when a\n+        # tracer thread mutates them mid-iteration.\n         if self.branch:\n+            arc_data: dict[str, Collection[TArc]]\n             if self.core.packed_arcs:\n                 # Unpack the line number pairs packed into integers.  See\n                 # tracer.c:CTracer_record_pair for the C code that creates\n                 # these packed ints.\n-                arc_data: dict[str, list[TArc]] = {}\n+                arc_data = {}\n                 packed_data = cast(dict[str, set[int]], self.data)\n \n-                # The list() here and in the inner loop are to get a clean copy\n-                # even as tracers are continuing to add data.\n-                for fname, packeds in list(packed_data.items()):\n+                for fname, packeds in packed_data.copy().items():\n                     tuples = []\n-                    for packed in list(packeds):\n+                    for packed in packeds.copy():\n                         l1 = packed & 0xFFFFFFF\n                         l2 = (packed & (0xFFFFFFF << 28)) >> 28\n                         if packed & (1 << 56):\n@@ -472,10 +478,16 @@ class Collector:\n                         tuples.append((l1, l2))\n                     arc_data[fname] = tuples\n             else:\n-                arc_data = cast(dict[str, list[TArc]], self.data)\n+                arc_data = {\n+                    fname: arcs.copy()\n+                    for fname, arcs in cast(dict[str, set[TArc]], self.data).copy().items()\n+                }\n             self.covdata.add_arcs(self.mapped_file_dict(arc_data))\n         else:\n-            line_data = cast(dict[str, set[int]], self.data)\n+            line_data = {\n+                fname: linenos.copy()\n+                for fname, linenos in cast(dict[str, set[int]], self.data).copy().items()\n+            }\n             self.covdata.add_lines(self.mapped_file_dict(line_data))\n \n         file_tracers = {\n"
+    },
+    {
+      "commit": "c48e0edc2ebe44621b0053176e90f77b0c79bec1",
+      "commit_short": "c48e0ed",
+      "message": "fix: less output for combining",
+      "date": "2026-05-09T13:35:56-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst",
+        "coverage/data.py",
+        "doc/commands/cmd_combine.rst",
+        "doc/commands/cmd_debug.rst",
+        "doc/commands/cmd_reporting.rst",
+        "igor.py",
+        "tests/test_api.py",
+        "tests/test_concurrency.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "combine_parallel_data",
+          "file": "coverage/data.py"
+        },
+        {
+          "function": "test_combine_parallel_data",
+          "file": "tests/test_api.py"
+        },
+        {
+          "function": "test_combine_parallel_data_with_a_corrupt_file",
+          "file": "tests/test_api.py"
+        },
+        {
+          "function": "try_multiprocessing_code",
+          "file": "tests/test_concurrency.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex d0172d4b..89d6678c 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -29,6 +29,11 @@ Unreleased\n   us know if you have a use case that requires it.  Thanks, `Tim Hatch\n   <pull 2162_>`_. Closes `issue 1781`_.\n \n+- Fix: the output from ``combine`` was too verbose, listing each file\n+  considered. Now it shows a single line with the counts of files combined,\n+  files skipped, and files with errors. The ``-q`` flag suppresses this line.\n+  The old detailed lines are available with the new ``--debug=combine`` option.\n+\n - Fix: running a Python file through a symlink now sets the sys.path correctly,\n   matching regular Python behavior. Fixes `issue 2157`_.\n \ndiff --git a/coverage/data.py b/coverage/data.py\nindex 209722b2..d382df2c 100644\n--- a/coverage/data.py\n+++ b/coverage/data.py\n@@ -177,6 +177,7 @@ def combine_parallel_data(\n     classifier = DataFileClassifier()\n     combined_any = False\n \n+    combined = skipped = errored = 0\n     for f in files_to_combine:\n         if f == data.data_filename():\n             # Sometimes we are combining into a file which is one of the\n@@ -203,21 +204,24 @@ def combine_parallel_data(\n                 new_data = CoverageData(f, debug=data._debug)\n                 new_data.read()\n             except CoverageException as exc:\n+                errored += 1\n                 if data._warn:\n                     # The CoverageException has the file name in it, so just\n                     # use the message as the warning.\n                     data._warn(str(exc))\n-                if message:\n-                    message(f\"Couldn't combine data file {rel_file_name}: {exc}\")\n+                if data._debug.should(\"combine\"):\n+                    data._debug.write(f\"Couldn't combine data file {rel_file_name}: {exc}\")\n                 delete_this_one = False\n             else:\n                 data.update(new_data, map_path=map_path)\n+                combined += 1\n                 combined_any = True\n-                if message:\n-                    message(f\"Combined data file {rel_file_name}\")\n+                if data._debug.should(\"combine\"):\n+                    data._debug.write(f\"Combined data file {rel_file_name}\")\n         else:\n-            if message:\n-                message(f\"Skipping duplicate data {rel_file_name}\")\n+            skipped += 1\n+            if data._debug.should(\"combine\"):\n+                data._debug.write(f\"Skipping duplicate data {rel_file_name}\")\n \n         if delete_this_one:\n             if data._debug.should(\"dataio\"):\n@@ -227,6 +231,14 @@ def combine_parallel_data(\n     if strict and not combined_any:\n         raise NoDataError(\"No usable data files\")\n \n+    if message and (combined + skipped + errored > 0):\n+        msg = f\"Combined {plural(combined, 'file')}\"\n+        if skipped:\n+            msg += f\", skipped {skipped}\"\n+        if errored:\n+            msg += f\", {plural(errored, 'file')} errored\"\n+        message(msg)\n+\n \n def debug_data_file(filename: str) -> None:\n     \"\"\"Implementation of 'coverage debug data'.\"\"\"\ndiff --git a/doc/commands/cmd_combine.rst b/doc/commands/cmd_combine.rst\nindex 94c82ba0..b68700a4 100644\n--- a/doc/commands/cmd_combine.rst\n+++ b/doc/commands/cmd_combine.rst\n@@ -24,13 +24,16 @@ then combine all the separate data files into one combined file for reporting.\n The **combine** command reads a number of separate data files, matches the data\n by source file name, and writes a combined data file with all of the data.\n \n+As of version 7.14.0, files are combined by the :ref:`reporting commands\n+<cmd_reporting>`, so there is less need to use an explicit ``combine`` command.\n+\n Coverage normally writes data to a filed named \".coverage\".  The ``run\n --parallel-mode`` switch (or ``[run] parallel=True`` configuration option)\n-tells coverage to expand the file name to include machine name, process id, and\n-a random number so that every data file is distinct::\n+tells coverage to expand the file name to include distinguising information\n+so that every data file is distinct::\n \n-    .coverage.Neds-MacBook-Pro.local.88335.316857\n-    .coverage.Geometer.8044.799674\n+    .coverage.Neds-MacBook-Pro.pid88335.XSpwmKEx.HFOd8LCkdg8h\n+    .coverage.Geometer.pid8044.XJeYqEYx.H7cDrkGAlTVh\n \n You can also define a new data file name with the ``[run] data_file`` option.\n \ndiff --git a/doc/commands/cmd_debug.rst b/doc/commands/cmd_debug.rst\nindex 8d9a8712..361aff51 100644\n--- a/doc/commands/cmd_debug.rst\n+++ b/doc/commands/cmd_debug.rst\n@@ -74,6 +74,9 @@ of activity to log:\n * ``callers``: annotate each debug message with a stack trace of the callers\n   to that point.\n \n+* ``combine``: show each file considered for data combining and whether it was\n+  combined or skipped because it offered no new data.\n+\n * ``config``: before starting, dump all the :ref:`configuration <config>`\n   values.\n \ndiff --git a/doc/commands/cmd_reporting.rst b/doc/commands/cmd_reporting.rst\nindex 9f23446d..d6144ec1 100644\n--- a/doc/commands/cmd_reporting.rst\n+++ b/doc/commands/cmd_reporting.rst\n@@ -28,6 +28,9 @@ commands.  They share a number of common options.\n The command-line arguments are module or file names to report on if you'd like\n to report on a subset of the data collected.\n \n+If parallel data files are present, the are implicitly combined as if you had\n+used the :ref:`combine <cmd_combine>` command.\n+\n The ``--include`` and ``--omit`` flags specify lists of file name patterns.\n They control which files to report on, and are described in more detail in\n :ref:`source`.\ndiff --git a/igor.py b/igor.py\nindex 2beb76ad..266a3d16 100644\n--- a/igor.py\n+++ b/igor.py\n@@ -226,27 +226,6 @@ def run_tests_with_coverage(core, *runner_args):\n     return status\n \n \n-class CombiningMessageFilter:\n-    \"\"\"Coverage.combine() is all-or-nothing on messages. Summarize them.\"\"\"\n-\n-    def __init__(self) -> None:\n-        self.combined = 0\n-        self.skipped = 0\n-\n-    def message(self, msg: str) -> None:\n-        \"\"\"All messages come through here, keep the data we want.\"\"\"\n-        if re.match(r\"Combined data file\", msg):\n-            self.combined += 1\n-        elif re.match(r\"Skipping duplicate data\", msg):\n-            self.skipped += 1\n-        else:\n-            print(msg)\n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "1cd47aa6ac1da4e150da44055295d4e4f3a014e8",
+      "commit_short": "1cd47aa",
+      "message": "fix: implicit combine-during-report now removes the combined data files",
+      "date": "2026-05-07T07:18:23-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/cmdline.py",
+        "tests/test_cmdline.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "command_line",
+          "file": "coverage/cmdline.py"
+        },
+        {
+          "function": "test_annotate",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_help_option",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_cmd_help",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_html",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_json",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_lcov",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_report",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_run_module_from_config",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_run_from_config_but_empty",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_run_dashm_only",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_cant_append_parallel",
+          "file": "tests/test_cmdline.py"
+        },
+        {
+          "function": "test_xml",
+          "file": "tests/test_cmdline.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/cmdline.py b/coverage/cmdline.py\nindex f5a202c1..a5375c94 100644\n--- a/coverage/cmdline.py\n+++ b/coverage/cmdline.py\n@@ -874,7 +874,7 @@ class CoverageScript:\n         sys.path.insert(0, \"\")\n \n         self.coverage.load()\n-        self.coverage.combine(strict=False, keep=True)\n+        self.coverage.combine(strict=False, keep=False)\n \n         total = None\n         if options.action == \"report\":\ndiff --git a/tests/test_cmdline.py b/tests/test_cmdline.py\nindex b2a71068..54bb8616 100644\n--- a/tests/test_cmdline.py\n+++ b/tests/test_cmdline.py\n@@ -265,7 +265,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.annotate()\n             \"\"\",\n         )\n@@ -274,7 +274,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.annotate(directory=\"dir1\")\n             \"\"\",\n         )\n@@ -283,7 +283,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.annotate(ignore_errors=True)\n             \"\"\",\n         )\n@@ -292,7 +292,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage(omit=[\"fooey\"])\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.annotate(omit=[\"fooey\"])\n             \"\"\",\n         )\n@@ -301,7 +301,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage(omit=[\"fooey\", \"booey\"])\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.annotate(omit=[\"fooey\", \"booey\"])\n             \"\"\",\n         )\n@@ -310,7 +310,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.annotate(morfs=[\"mod1\"])\n             \"\"\",\n         )\n@@ -319,7 +319,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.annotate(morfs=[\"mod1\", \"mod2\", \"mod3\"])\n             \"\"\",\n         )\n@@ -513,7 +513,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report()\n             \"\"\",\n         )\n@@ -522,7 +522,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report(directory=\"dir1\")\n             \"\"\",\n         )\n@@ -531,7 +531,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report(ignore_errors=True)\n             \"\"\",\n         )\n@@ -540,7 +540,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage(omit=[\"fooey\"])\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report(omit=[\"fooey\"])\n             \"\"\",\n         )\n@@ -549,7 +549,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage(omit=[\"fooey\", \"booey\"])\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report(omit=[\"fooey\", \"booey\"])\n             \"\"\",\n         )\n@@ -558,7 +558,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report(morfs=[\"mod1\"])\n             \"\"\",\n         )\n@@ -567,7 +567,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report(morfs=[\"mod1\", \"mod2\", \"mod3\"])\n             \"\"\",\n         )\n@@ -576,7 +576,7 @@ class CmdLineTest(BaseCmdLineTest):\n             \"\"\"\\\n             cov = Coverage()\n             cov.load()\n-            cov.combine(strict=False, keep=True)\n+            cov.combine(strict=False, keep=False)\n             cov.html_report(precision=3)\n[diff truncated, full diff available via git show HASH]"
+    },
+    {
+      "commit": "9fbdcdfee1c122fac43f1bf9a5e2d1f4d835f21c",
+      "commit_short": "9fbdcdf",
+      "message": "fix: lazy soft keywords are bolded",
+      "date": "2026-05-03T11:29:36-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "CHANGES.rst",
+        "coverage/phystokens.py",
+        "tests/test_phystokens.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "find_soft_key_lines",
+          "file": "coverage/phystokens.py"
+        },
+        {
+          "function": "test_soft_keyword_lazy",
+          "file": "tests/test_phystokens.py"
+        }
+      ],
+      "diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 788412ef..039e08ca 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -26,6 +26,8 @@ Unreleased\n - Fix: running a Python file through a symlink now sets the sys.path correctly,\n   matching regular Python behavior. Fixes `issue 2157`_.\n \n+- Fix: the soft keyword ``lazy`` is now bolded in HTML reports.\n+\n - We are no longer testing eventlet support. Eventlet issues stern deprecation\n   warnings that break our tests. Our support code is still there.\n \ndiff --git a/coverage/phystokens.py b/coverage/phystokens.py\nindex bac06c0b..48b0d47c 100644\n--- a/coverage/phystokens.py\n+++ b/coverage/phystokens.py\n@@ -95,12 +95,17 @@ def find_soft_key_lines(source: str) -> set[TLineNo]:\n     soft_key_lines: set[TLineNo] = set()\n \n     for node in ast.walk(ast.parse(source)):\n+        # PYVERSION: we use sys.version_info here so that mypy will be ok with\n+        # us accessing attributes that appeared in those versions.\n         if isinstance(node, ast.Match):\n             soft_key_lines.add(node.lineno)\n             for case in node.cases:\n                 soft_key_lines.add(case.pattern.lineno)\n         elif sys.version_info >= (3, 12) and isinstance(node, ast.TypeAlias):\n             soft_key_lines.add(node.lineno)\n+        elif sys.version_info >= (3, 15) and isinstance(node, (ast.Import, ast.ImportFrom)):\n+            if node.is_lazy:\n+                soft_key_lines.add(node.lineno)\n \n     return soft_key_lines\n \ndiff --git a/tests/test_phystokens.py b/tests/test_phystokens.py\nindex 54972ac7..4af1b2f7 100644\n--- a/tests/test_phystokens.py\n+++ b/tests/test_phystokens.py\n@@ -226,6 +226,20 @@ class SoftKeywordTest(CoverageTest):\n         assert tokens[0][0] == (\"key\", \"type\")\n         assert tokens[1][0] == (\"nam\", \"type\")\n \n+    @pytest.mark.skipif(sys.version_info < (3, 15), reason=\"lazy isn't a soft keyword until 3.15\")\n+    def test_soft_keyword_lazy(self) -> None:\n+        source = textwrap.dedent(\"\"\"\\\n+            lazy import foo\n+            lazy from foo import bar\n+            def lazy(f): pass\n+            lazy(12)\n+            \"\"\")\n+        tokens = list(source_token_lines(source))\n+        assert tokens[0][0] == (\"key\", \"lazy\")\n+        assert tokens[1][0] == (\"key\", \"lazy\")\n+        assert tokens[2][2] == (\"nam\", \"lazy\")\n+        assert tokens[3][0] == (\"nam\", \"lazy\")\n+\n \n # The default source file encoding.\n DEF_ENCODING = \"utf-8\"\n"
+    },
+    {
+      "commit": "715a1160827fb4d292636aca764a509357d90f76",
+      "commit_short": "715a116",
+      "message": "test: a pypy bug was fixed",
+      "date": "2026-04-30T05:56:40-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "tests/test_arcs.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "test_exception_group",
+          "file": "tests/test_arcs.py"
+        }
+      ],
+      "diff": "diff --git a/tests/test_arcs.py b/tests/test_arcs.py\nindex 80ddff3f..cf95e604 100644\n--- a/tests/test_arcs.py\n+++ b/tests/test_arcs.py\n@@ -1383,8 +1383,8 @@ class ExceptionArcTest(CoverageTest):\n \n     @pytest.mark.skipif(env.PYVERSION < (3, 11), reason=\"ExceptionGroup is new in Python 3.11\")\n     def test_exception_group(self) -> None:\n-        # PyPy3.11 traces this incorrectly: https://github.com/pypy/pypy/issues/5354\n-        if env.PYPY:\n+        if env.PYPY and env.PYPYVERSION < (7, 3, 22):\n+            # PyPy3.11 traces this incorrectly: https://github.com/pypy/pypy/issues/5354\n             missing = \"5, 11\"\n         else:\n             missing = \"5-6, 11-12\"\n"
+    }
+  ],
+  "recent_features": [
+    {
+      "commit": "5c32db47b34b05200f6eb4ab1294953576587fac",
+      "commit_short": "5c32db4",
+      "message": "perf: enable only sys.monitoring events that have registered callbacks (#2218)",
+      "date": "2026-07-06T19:11:15-04:00",
+      "author": "Paul Kehrer",
+      "files": [
+        "coverage/sysmon.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "sysmon_py_start",
+          "file": "coverage/sysmon.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/sysmon.py b/coverage/sysmon.py\nindex dbd2dd12..c5e2cfbf 100644\n--- a/coverage/sysmon.py\n+++ b/coverage/sysmon.py\n@@ -359,7 +359,8 @@ class SysMonitor(Tracer):\n                 finally:\n                     self.unlock_data()\n                 file_data = self.data[tracename]\n-                b2l = bytes_to_lines(code)\n+                # byte_to_line is only read by the arc callbacks\n+                b2l = bytes_to_lines(code) if self.trace_arcs else None\n             else:\n                 file_data = None\n                 b2l = None\n@@ -381,10 +382,12 @@ class SysMonitor(Tracer):\n                 with self.lock:\n                     if self.sysmon_on:\n                         assert sys_monitoring is not None\n-                        local_events = events.PY_RETURN | events.PY_RESUME | events.LINE\n+                        local_events = events.LINE\n                         if self.trace_arcs:\n                             assert env.PYBEHAVIOR.branch_right_left\n-                            local_events |= events.BRANCH_RIGHT | events.BRANCH_LEFT\n+                            local_events |= (\n+                                events.PY_RETURN | events.BRANCH_RIGHT | events.BRANCH_LEFT\n+                            )\n                         sys_monitoring.set_local_events(self.myid, code, local_events)\n \n                         if LOG:  # pragma: debugging\n"
+    }
+  ],
+  "recent_refactors": [
+    {
+      "commit": "887b366ee7d126d1ed1f794d0c4b3dbb5acf8429",
+      "commit_short": "887b366",
+      "message": "refactor: now self._ast_root is never None",
+      "date": "2026-07-15T20:05:33-04:00",
+      "author": "Ned Batchelder",
+      "files": [
+        "coverage/parser.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "_analyze_ast",
+          "file": "coverage/parser.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/parser.py b/coverage/parser.py\nindex 6ee5bc01..38eda019 100644\n--- a/coverage/parser.py\n+++ b/coverage/parser.py\n@@ -336,10 +336,8 @@ class PythonParser:\n         `_all_arcs` is the set of arcs in the code.\n \n         \"\"\"\n-        ast_root = self._ast_root\n-        if ast_root is None:\n-            ast_root = ast.parse(self.text)\n-        aaa = AstArcAnalyzer(self.filename, ast_root, self.raw_statements, self.multiline_map)\n+        assert self._ast_root is not None\n+        aaa = AstArcAnalyzer(self.filename, self._ast_root, self.raw_statements, self.multiline_map)\n         aaa.analyze()\n         arcs = aaa.arcs\n         self._with_jump_fixers = aaa.with_jump_fixers()\n"
+    },
+    {
+      "commit": "fc76909288f6f73cb65fe8eb7e8b0ee35225e22e",
+      "commit_short": "fc76909",
+      "message": "perf: remove a cast that occurs in the hot path in AstArcAnalyzer (#2213)",
+      "date": "2026-07-06T19:07:27-04:00",
+      "author": "Paul Kehrer",
+      "files": [
+        "coverage/parser.py"
+      ],
+      "functions_modified": [
+        {
+          "function": "with_jump_fixers",
+          "file": "coverage/parser.py"
+        }
+      ],
+      "diff": "diff --git a/coverage/parser.py b/coverage/parser.py\nindex fa814748..f96a663e 100644\n--- a/coverage/parser.py\n+++ b/coverage/parser.py\n@@ -752,9 +752,10 @@ class AstArcAnalyzer:\n \n         \"\"\"\n         node_name = node.__class__.__name__\n-        handler = cast(\n-            Optional[Callable[[ast.AST], TLineNo]],\n-            getattr(self, f\"_line__{node_name}\", None),\n+        handler: Callable[[ast.AST], TLineNo] | None = getattr(\n+            self,\n+            f\"_line__{node_name}\",\n+            None,\n         )\n         if handler is not None:\n             line = handler(node)\n@@ -836,9 +837,10 @@ class AstArcAnalyzer:\n \n         \"\"\"\n         node_name = node.__class__.__name__\n-        handler = cast(\n-            Optional[Callable[[ast.AST], set[ArcStart]]],\n-            getattr(self, f\"_handle__{node_name}\", None),\n+        handler: Callable[[ast.AST], set[ArcStart]] | None = getattr(\n+            self,\n+            f\"_handle__{node_name}\",\n+            None,\n         )\n         if handler is not None:\n             arc_starts = handler(node)\n"
+    }
+  ],
+  "co_change_clusters": [
+    {
+      "file_a": "CHANGES.rst",
+      "file_b": "coverage/version.py",
+      "co_change_count": 15,
+      "total_commits_a": 44,
+      "total_commits_b": 15
+    },
+    {
+      "file_a": "CHANGES.rst",
+      "file_b": "CONTRIBUTORS.txt",
+      "co_change_count": 8,
+      "total_commits_a": 44,
+      "total_commits_b": 8
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/function_index.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/index.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80___init___py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80___main___py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_cogapp_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_errors_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_hashhandler_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_makefiles_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_options_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_test_cogapp_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_test_makefiles_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_test_whiteutils_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_utils_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/class_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_whiteutils_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/index.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80___init___py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80___main___py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_cogapp_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_errors_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_hashhandler_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_makefiles_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_options_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_test_cogapp_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_test_makefiles_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_test_whiteutils_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_utils_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/function_index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80_whiteutils_py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    },
+    {
+      "file_a": "doc/sample_html/index.html",
+      "file_b": "doc/sample_html/z_7b071bdc2a35fa80___init___py.html",
+      "co_change_count": 7,
+      "total_commits_a": 7,
+      "total_commits_b": 7
+    }
+  ],
+  "notes": []
+}

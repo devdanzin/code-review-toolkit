@@ -1,0 +1,3 @@
+catalog: coveragepy: 60 finding(s) from /home/danzin/projects/code-review-findings/coveragepy/project-local/findings.json
+catalog: cpython-idlelib: 73 finding(s) from /home/danzin/projects/code-review-findings/cpython-idlelib/project-local/findings.json
+catalog: cpython-pyrepl: 25 finding(s) from /home/danzin/projects/code-review-findings/cpython-pyrepl/project-local/findings.json
