@@ -1,7 +1,7 @@
 # coverage.py informed-explore v3 — findings
 
 `coverage/` @ `6b3259abb64a3cb80b4800f58fe1c71b24970110` (main, 2026-07-26) · 44 files / 16,426 lines
-· toolkit v1.13.0 · 16 agents + 12 scanners · **14 of 16 agents landed at time of writing**
+· toolkit v1.13.0 · 16 agents + 12 scanners · **15 of 16 agents landed** (test-investigation still running)
 
 **This is a re-review at an unchanged tree.** `git diff d37859cd HEAD -- coverage/` is **empty** — only
 CI workflow files moved since the v1/v2 review. So every new finding here is informed-pass yield, not
@@ -99,6 +99,22 @@ The guarded twin is the *other* getter in the same class. Annotating the return 
 report it directly — `warn_return_any` is already enabled — so the fix and its regression test are
 the same one-line change.
 
+### V7 · CONSIDER · `--sort=branch` is documented unconditionally and rejected without branch coverage
+
+Verified:
+
+```
+$ coverage report --sort=branch      # no branch coverage configured
+Invalid sorting option: 'branch'
+$ coverage report --sort=name        # control
+TOTAL       1      0   100%
+```
+
+`report.py:233-235` registers the `branch`/`brpart` columns only when branches are on; three
+documentation sites list them with no such condition. A second instance of the same generated-doc
+shape as CRF-COVPY-0056 — and because the cog blocks are **verified in sync** (39 blocks, 0 drift,
+gated in CI), regeneration cannot fix it. The error is permanent until the source string changes.
+
 ---
 
 ## REFUTED OR DOWNGRADED BY THE ORCHESTRATOR
@@ -153,6 +169,28 @@ propagated:
 | CONSIDER | `[run] sigterm` / `--save-signal` | Two halves of one feature on disjoint surfaces, neither reachable from the library API |
 | CONSIDER | `control.py:803-848` `exclude(which=)` | The only closed vocabulary in coverage.py with no validation — a typo raises `AttributeError` where the seven other vocabularies raise `ConfigError`. Its third valid value `partial_always` is documented nowhere |
 | CONSIDER | region reports | `function_index.html`, `class_index.html` and the JSON `"functions"`/`"classes"` keys ship, documented only on the plugin-author page — three siblings of catalogued CRF-COVPY-0057 |
+
+## Documentation — 8 novel, and the generator is *correct*, which is the finding
+
+An independent reimplementation of cog's check found **39 blocks, 0 drift**, and CI gates on it. That
+is exactly `generated-doc-propagates-a-source-error`: the generator is faithful, so every error in a
+source string is reproduced into ten files plus a hand-maintained eleventh copy in the man page, and
+**re-running the generator cannot fix any of it**. Same conclusion the idlelib run reached about
+`help.html`, reached here by a different route.
+
+Beyond V7: the `+` sort prefix is accepted and documented nowhere (`-` in only 1 of 3 places);
+`doc/contexts.rst:141` says contexts work in "both `report` and `html`" while `json` accepts
+`--contexts` *and* emits them; the plugin limitation is documented for `sysmon` and omitted for
+`pytrace`, which has the same one (`core.py:130`); `contributing.rst:160` still says
+`tox -e py38,py39`, below the 3.10 floor and stale since 2023; and the man page — the one document
+`igor.py` never touches — carries six independent drifts including a `:Date:` 344 days behind its own
+last edit.
+
+**Directions verified empty and recorded so nobody redoes them:** CHANGES.rst vs git for two
+releases, config and CLI options in both directions, a real nitpicky Sphinx build (0 warnings,
+mutation-tested), runtime-message deep links both ways, env vars, toctree, `[paths]`, `version_info`,
+the public API surface, extras. One measurement trap recorded with them: a hyphen-only regex reports
+all 15 message anchors broken, because docutils normalises the underscore labels.
 
 ## Systemic root
 
