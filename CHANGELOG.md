@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **`check_typing.py` reported `0 type errors` whenever `FORCE_COLOR` is set in the
+  environment.** mypy honours `FORCE_COLOR` even when its stdout is a pipe, and the ANSI codes land
+  between the `file:line:` prefix and `error:`, so `_LINE` stopped matching and **every finding was
+  dropped** — while the summary line still parsed, because its regex only needs the digits. Found by
+  running the toolkit against coverage.py: mypy reported 3 `no-any-unimported` errors and the script
+  reported none, silently losing the one defect this script exists to find (a `TYPE_CHECKING` import
+  of a module that does not exist — `coverage/html.py:42` imports `coverage.plugins`, which is
+  spelled `coverage.plugin`). Fixed three ways: `--no-color-output`, a `FORCE_COLOR=0`/`NO_COLOR=1`
+  subprocess environment, and a defensive ANSI strip in `parse_output`.
+- **`check_typing.py` now cross-checks its own parse against mypy's error count** and reports
+  `FAILED` with a `parse_mismatch` reason when they disagree. This is the durable half of the fix:
+  the script *had* the right number in `stats["errors"]` the whole time and reported the smaller one.
+  Any future output-format change now fails loudly instead of silently returning zero.
+
 ### Added
 
 - **`per-redraw-binding-never-released`** (shape 97) — a binding, callback, or native handle created

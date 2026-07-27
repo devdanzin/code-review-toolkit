@@ -40,6 +40,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -101,6 +102,9 @@ _SUMMARY = re.compile(
     r"\(checked (?P<checked>\d+) source files?\)"
 )
 _CLEAN = re.compile(r"Success: no issues found in (?P<checked>\d+) source files?")
+# Belt and braces with --no-color-output: any ANSI a future mypy or wrapper emits
+# would otherwise sit between `file:line:` and `error:` and defeat _LINE.
+_ANSI = re.compile(r"\x1b\[[0-9;]*[A-Za-z]|\x1b\([A-Za-z]")
 
 
 def mypy_version(mypy_bin: str) -> str | None:
@@ -146,7 +150,7 @@ def parse_output(stdout: str) -> tuple[list[dict], dict]:
         "files_checked": None,
     }
     for raw in stdout.splitlines():
-        line = raw.rstrip()
+        line = _ANSI.sub("", raw).rstrip()
         clean = _CLEAN.search(line)
         if clean:
             stats.update(
@@ -188,13 +192,23 @@ def parse_output(stdout: str) -> tuple[list[dict], dict]:
 def _run_mypy(
     mypy_bin: str, target: Path, config: str | None, extra: list[str]
 ) -> tuple[str, str, int | None]:
-    cmd = [mypy_bin, "--show-error-codes"]
+    # --no-color-output is load-bearing, not cosmetic. mypy honours FORCE_COLOR
+    # even when stdout is a pipe, and the ANSI codes it injects sit between the
+    # `file:line:` prefix and `error:`, so _LINE stops matching and every finding
+    # is silently dropped -- while the summary line still parses, because its
+    # regex only needs the digits. The result is a confident "0 type errors" on
+    # any machine with FORCE_COLOR set. Found on coverage.py, where mypy reported
+    # 3 errors and this script reported none.
+    cmd = [mypy_bin, "--show-error-codes", "--no-color-output"]
     if config:
         cmd.extend(["--config-file", config])
     cmd.extend(extra)
     cmd.append(str(target))
+    env = {**os.environ, "FORCE_COLOR": "0", "MYPY_FORCE_COLOR": "0", "NO_COLOR": "1"}
     try:
-        out = subprocess.run(cmd, capture_output=True, text=True, timeout=_MYPY_TIMEOUT)
+        out = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=_MYPY_TIMEOUT, env=env
+        )
     except subprocess.TimeoutExpired:
         return "", f"mypy timed out after {_MYPY_TIMEOUT}s", None
     except OSError as exc:
@@ -287,6 +301,22 @@ def analyze(
             f["pass"] = "disallow-any-unimported"
             phantom_imports.append(f)
 
+    # mypy's summary line states how many errors it found. If our parse produced a
+    # different number we dropped findings, and silently reporting the smaller one
+    # is exactly how three real errors went unreported on coverage.py. Fail loudly.
+    parse_mismatch = None
+    if (
+        status == "OK"
+        and stats["errors"] is not None
+        and len(findings) != stats["errors"]
+    ):
+        parse_mismatch = (
+            f"parsed {len(findings)} finding(s) but mypy reported "
+            f"{stats['errors']} error(s) -- output format not understood"
+        )
+        status = "FAILED"
+        failure_reason = parse_mismatch
+
     # Stale ignores come ONLY from mypy's own unused-ignore code. Never grep.
     stale_ignores = [f for f in findings if f["code"] == "unused-ignore"]
 
@@ -319,6 +349,7 @@ def analyze(
             # Pre-correlated deliverable: an import that resolves to Any silently
             # disables every annotation that uses the name.
             "phantom_imports": len(phantom_imports),
+            "parse_mismatch": parse_mismatch,
             "strict_pass_ran": bool(strict_stats),
         },
         "findings": findings,

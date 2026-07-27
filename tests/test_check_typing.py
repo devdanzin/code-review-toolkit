@@ -21,6 +21,33 @@ class TestParseOutput(unittest.TestCase):
         self.assertEqual(f["kind"], "defect")
         self.assertEqual(stats["files_checked"], 45)
 
+    def test_ansi_coloured_output_still_parses(self):
+        """mypy honours FORCE_COLOR even when piped, and the codes land between
+        `file:line:` and `error:`. Before --no-color-output this parsed to ZERO
+        findings while the summary line still read 3 -- a confident "0 type
+        errors" on any machine with FORCE_COLOR set. Found on coverage.py, where
+        it hid three real `no-any-unimported` errors."""
+        coloured = (
+            "coverage/html.py:134: \x1b[1m\x1b[31merror:\x1b(B\x1b[m Argument 2 to "
+            '\x1b[1m"data_for_file"\x1b(B\x1b[m becomes \x1b[1m"Any"\x1b(B\x1b[m '
+            "due to an unfollowed import  \x1b(B\x1b[33m[no-any-unimported]\x1b(B\x1b[m\n"
+            "\x1b[1m\x1b[31mFound 1 error in 1 file (checked 45 source files)\x1b(B\x1b[m\n"
+        )
+        findings, stats = mod.parse_output(coloured)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0]["code"], "no-any-unimported")
+        self.assertEqual(findings[0]["line"], 134)
+        # The whole point: our count must agree with mypy's own.
+        self.assertEqual(len(findings), stats["errors"])
+
+    def test_run_mypy_forces_colour_off(self):
+        """Two independent belts: the flag and the environment."""
+        import inspect
+
+        src = inspect.getsource(mod._run_mypy)
+        self.assertIn("--no-color-output", src)
+        self.assertIn("FORCE_COLOR", src)
+
     def test_parses_the_clean_summary(self):
         _, stats = mod.parse_output("Success: no issues found in 45 source files\n")
         self.assertEqual(
