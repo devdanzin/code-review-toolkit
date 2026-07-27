@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — four shapes from the coverage.py v3 run, every instance verified before it was written
+
+- **`env-flag-parsed-as-strict-int`** [FIX] — a debug toggle read as `bool(int(os.getenv(...)))`. The
+  `bool()` says boolean; the parser accepts only decimal digits, so `true`, `yes` and **the empty
+  string `export FLAG=` produces** all raise `ValueError` at import, before any of the project's own
+  error handling exists. The differential separates it from `unvalidated-numeric-from-environment`:
+  the `bool()` wrapper tells you the author meant a flag and reached for the wrong parser.
+- **`naive-datetime-in-a-persisted-artifact`** [CONSIDER] — the hunt directive is what makes it
+  usable: **do not grep `datetime.now()` and report the count.** Follow the value to its
+  *destination* and keep only what reaches an artifact another program reads. A naive timestamp in a
+  log line or a filename is fine.
+- **`diagnostic-channel-controlled-by-the-subject-under-observation`** [FIX] — an instrumentation
+  tool reporting its own failures through `warnings`/`logging`, which the observed program owns and
+  reconfigures. Needs the observer/observed split: a library warning its *caller* is correct design.
+- **`atexit-registration-never-unregistered`** [CONSIDER] — a bound method registered with `atexit`
+  and never removed, pinning the object for the process. The guarded twin is usually in the same
+  function: a signal handler that IS saved and restored.
+
+`assertion-against-a-stub-that-cannot-fail` gains a **second confirmed example on a second
+codebase**, found by mutation rather than by reading — coverage.py's `files.py:35`, whose only test
+patches `os.path.normcase` into a tautology. The mutant survives on both tracer cores; the inverse
+mutant kills 92 tests, proving non-equivalence. Catalog **97 → 101 shapes**.
+
 ### Fixed
 
 - **`check_typing.py` reported `0 type errors` whenever `FORCE_COLOR` is set in the

@@ -1928,7 +1928,8 @@
       "caught_as": "NEVER. The test passes, the line is covered, and no coverage tool reports anything. The defect it was meant to catch ships.",
       "confirmed_examples": [
         "CPython Lib/idlelib/idle_test/test_debugger.py:53,59 -- both user_line (guarded) and user_exception (unguarded) tested with `self.gui = Mock()`; a Mock never raises TclError, so both pass identically. This is what hid CRF-IDLELIB-0025",
-        "CPython Lib/idlelib/idle_test/test_searchengine.py:279 -- `cls.text.index = lambda index: '4.0'` freezes every index expression; two mutations of search_backward's wrap survive the full 623-test suite while the mirrored search_forward mutation kills five tests"
+        "CPython Lib/idlelib/idle_test/test_searchengine.py:279 -- `cls.text.index = lambda index: '4.0'` freezes every index expression; two mutations of search_backward's wrap survive the full 623-test suite while the mirrored search_forward mutation kills five tests",
+        "CRF-COVPY-0065 -- coverage.py files.py:35: the system-root separator guard, whose only test (test_files.py:93) patches os.path.normcase to return curdir, making its own assertion a tautology. Mutant survives on BOTH tracer cores; the inverse mutant kills 92 tests, proving non-equivalence. Second codebase, and found by mutation rather than reading"
       ],
       "validation": "confirmed",
       "references": [],
@@ -1956,6 +1957,88 @@
       "differential": "Not this shape if the framework releases on element destruction AND elements are destroyed per redraw -- measure before reporting, because that is the common case and it is a non-issue. The real instance is a container that outlives its elements: the container is destroyed rarely (a browser window open for a session) while elements are re-rendered constantly. A long-lived XXX naming the leak is corroboration, not proof; the measurement is the proof.",
       "detected_by": null,
       "detectability": "agent-only"
+    },
+    {
+      "id": "env-flag-parsed-as-strict-int",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "title": "A debug env flag parsed with bare `int()`, so any non-decimal value crashes import",
+      "pattern": "A module-scope toggle read as `bool(int(os.getenv(\"FLAG\", 0)))` or `int(os.environ.get(...))`. The name and the `bool()` say boolean, but the parser accepts only decimal digits, so the spellings a user actually reaches for -- `true`, `yes`, `on`, and the EMPTY STRING that `export FLAG=` produces -- raise `ValueError` at import time, before any of the project's error handling exists.",
+      "guarded_twin": "The project's own config layer, which almost always has a checked boolean reader: a `getboolean` that maps `{'true': True, 'false': False}` and raises a contextualised error naming the option and the bad value. The env path bypasses it because it runs at module scope, before the config object exists.",
+      "hunt": "Grep for `int(os.getenv` / `int(os.environ` at module scope. For each, TRY THE SPELLINGS: `true`, `yes`, `on`, `1`, and empty. Then ask what swallows the ValueError -- a bare `except:` in a sitecustomize/.pth bootstrap turns the crash into a silent no-op, which is far worse than the crash.",
+      "expected": "an unparseable flag is either ignored with a warning or rejected with a message naming the variable.",
+      "caught_as": "LOUD as a traceback at import -- unless something upstream swallows it, and for a tool injected via a .pth file or sitecustomize something usually does. Then it is SILENT and the tool simply does not run.",
+      "confirmed_examples": [
+        "CRF-COVPY-0061 -- coverage.py sysmon.py:50,53: COVERAGE_SYSMON_LOG=true, =yes, or empty all raise ValueError from `import coverage`; only `1` works. pth_file.py:13's bare `except:` then swallows it, so subprocesses contribute zero data with no diagnostic"
+      ],
+      "validation": "confirmed",
+      "references": [
+        "A shell `export FLAG=` sets the variable to the empty string, which is the single most likely way a user disables a flag"
+      ],
+      "differential": "Not this shape when the value is genuinely numeric (a timeout, a level, a size) -- that is `unvalidated-numeric-from-environment`. The discriminator is the `bool()` wrapper or a name reading as an on/off toggle: it tells you the author meant a flag and reached for the wrong parser.",
+      "detected_by": null,
+      "detectability": "implementable"
+    },
+    {
+      "id": "naive-datetime-in-a-persisted-artifact",
+      "agent": "lint-rule-triager",
+      "severity": "CONSIDER",
+      "title": "A naive `datetime.now()` written into a versioned file format or a public schema",
+      "pattern": "`datetime.now().isoformat()` or `.strftime(...)` with no `tz` and no offset in the format, where the result is written into an artifact OTHER PROGRAMS READ -- a versioned JSON report, a documented database column, an export consumed by a dashboard. The timestamp is unanchored, so two runs an hour apart across a DST transition are byte-identical and no consumer can order them.",
+      "guarded_twin": "A sibling emitter in the same project that gets it right -- an epoch value, or a helper doing `.astimezone()` with `%z`. When one exists, the fix is an import away and the divergence is the whole argument.",
+      "hunt": "Do NOT grep for `datetime.now()` and report the count -- that is a style pass with a terrible hit rate. Follow the value to its DESTINATION and keep only the ones that reach a persisted or exported artifact. Then check the project's other timestamp emitters: if they disagree about offsets, that disagreement is the finding.",
+      "expected": "a timestamp leaving the process carries its offset, or is epoch-based.",
+      "caught_as": "SILENT, and only near a DST boundary or across machines in different zones -- which is exactly when someone is trying to order two runs to explain a regression.",
+      "confirmed_examples": [
+        "CRF-COVPY-0062 -- coverage.py jsonreport.py:83 emits '2026-07-27T06:25:25.765492' into a FORMAT_VERSION'd JSON report and sqldata.py:368 writes the same shape into the documented `meta.when` column, while the html backend's misc.py:288 format_local_datetime correctly emits '2026-07-27 06:25 -0400'"
+      ],
+      "validation": "confirmed",
+      "references": [
+        "ruff DTZ005 / DTZ006 flag the call site; the destination is what decides whether it matters"
+      ],
+      "differential": "A naive timestamp used only for an in-process duration, a log line, or a filename is fine -- do not report it. The destination is the entire test: it must be read by something outside this process.",
+      "detected_by": null,
+      "detectability": "implementable"
+    },
+    {
+      "id": "diagnostic-channel-controlled-by-the-subject-under-observation",
+      "agent": "silent-failure-hunter",
+      "severity": "FIX",
+      "title": "A tool reports its own failures through a channel the observed program can switch off",
+      "pattern": "An instrumentation tool -- profiler, tracer, coverage measurer, linter plugin -- emits its diagnostics via `warnings.warn`, the `logging` root, or `sys.stdout`, all of which the program being measured owns and reconfigures. Two lines in the subject (`warnings.simplefilter('ignore')`, `logging.disable()`) silence every diagnostic the tool has, including the ones that say its measurement is wrong.",
+      "guarded_twin": "A second output path in the same tool that writes straight to `sys.stderr` (or to its own file) and cannot be reconfigured from outside. Its existence proves the author knew some messages must survive -- the finding is that the wrong messages went down the reconfigurable channel.",
+      "hunt": "Enumerate every diagnostic the tool can emit and sort them by channel. Then write a subject program that suppresses that channel and re-run: whatever disappears is the list. Weight by severity -- a suppressed 'measurement may be wrong' is far worse than a suppressed 'nothing to do'.",
+      "expected": "a tool's statements about its own correctness are not suppressible by the code it is observing.",
+      "caught_as": "SILENT, and specifically silent in the situation the diagnostic exists for. Common in CI, where a project sets a global warning filter for its own reasons and unknowingly mutes its coverage tool.",
+      "confirmed_examples": [
+        "CRF-COVPY-0063 -- coverage.py control.py:495 routes all 18 diagnostics through warnings.warn; two lines of warnings.simplefilter('ignore') in the measured program take the CoverageWarning count from 2 to 0, including 'Trace function changed, data is likely wrong'. The twin _message() at :501-504 prints to stderr unconditionally"
+      ],
+      "validation": "confirmed",
+      "references": [],
+      "differential": "Not this shape for a library reporting on ITS CALLER's misuse -- `warnings.warn` is exactly right there, and the caller silencing it is the caller's choice. The shape needs the observer/observed split: the program muting the message is not the program the message is about.",
+      "detected_by": null,
+      "detectability": "agent-only"
+    },
+    {
+      "id": "atexit-registration-never-unregistered",
+      "agent": "python-pitfall-scanner",
+      "severity": "CONSIDER",
+      "title": "`atexit.register(self.method)` with no `unregister`, pinning the object for the process lifetime",
+      "pattern": "An object registers a BOUND METHOD with `atexit` (or `signal`, or a global registry) in its setup path, and nothing ever unregisters it. The bound method holds `self`, so the object and everything it references survive `del` and every collection, for the whole process -- and the hook still fires at exit on an object the user finished with long ago.",
+      "guarded_twin": "Very often in the SAME function: a sibling process-level hook that IS reversed -- a signal handler saved with `signal.getsignal` and restored on teardown. One function installs two hooks and undoes one.",
+      "hunt": "Grep `atexit.register`, then grep `atexit.unregister` -- the second returning nothing is the finding. MEASURE it: build N objects, `del` them, `gc.collect()`, and count surviving instances via `gc.get_objects()`; `gc.get_referrers` will name the bound method. Then ask whether the exit hook is still CORRECT on a stale object, which is usually the sharper problem.",
+      "expected": "an object's process-level registrations are reversed when it is finished with.",
+      "caught_as": "SILENT for a short-lived process. It surfaces in long-lived hosts that construct the object repeatedly -- a test runner, a notebook kernel, a worker that reloads config -- as growth plus surprising exit-time behaviour from an object nobody is using.",
+      "confirmed_examples": [
+        "CRF-COVPY-0064 -- coverage.py control.py:654 `atexit.register(self._atexit)` with `atexit.unregister` nowhere in the package; 5/5 Coverage objects survive del+gc.collect(), referrers naming the bound method. Seven lines below, :661 saves the old SIGTERM handler and :761 restores it"
+      ],
+      "validation": "confirmed",
+      "references": [
+        "atexit.unregister exists precisely for this and is rarely reached for"
+      ],
+      "differential": "A module-level singleton that is meant to live for the process is not this shape. It needs an object with a lifecycle shorter than the process -- one the API invites you to create more than once.",
+      "detected_by": null,
+      "detectability": "implementable"
     }
   ]
 }
