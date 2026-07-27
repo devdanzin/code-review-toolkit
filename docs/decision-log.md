@@ -834,3 +834,71 @@ expression to a constant.
 **This reframes `test-cannot-fail`.** The high-value variant is not "no assertion" but **"assertion
 against a stub that cannot express the failure"** — which is exactly how CRF-IDLELIB-0025 hid, and
 what `mock_idle.get_selection_indices` does today. Worth a catalog entry of its own.
+
+---
+
+## D-20 · 2026-07-27 · Session boundary — state at handoff, and how to resume
+
+Written before a context compaction. Between this and `docs/improvement-plan.md` the reasoning is
+complete; nothing below needs re-deriving.
+
+### State
+
+| | |
+|---|---|
+| Toolkit | `main` @ `fb94994`, pushed, 0 unpushed. **v1.13.0** — 96 shapes, 47 FP classes, **671 tests passing**, ruff clean |
+| Findings repo | `main` @ `8cb5319`, pushed. Private. 3 projects, 111 findings, coverage **111/111** |
+| Improvement plan | Phases **0, 1, 3, 5, 6 complete**; **2 and 4 partial**. Status columns are current in the plan |
+| Benchmarks | `reports/{idlelib_v1..v4, pyrepl_v1, coveragepy_v1, coveragepy_v2, tkinter_v1, asyncio_v1}` |
+| Targets | CPython `~/projects/3.14` @ `6080c866096` — **clean, verified by SHA**. coveragepy @ `d37859cd` — clean (its 5 untracked files are ctracer artifacts from March, not this session) |
+| Venvs | `~/venvs/cext-review-toolkit` (Python 3.14 debug; ruff 0.15.10 — the WRONG version for `run_lint_rules.py`). **Pinned ruff 0.16.0 at `~/venvs/code-review-lint/bin/ruff`, pass via `--ruff-bin`** |
+| Background jobs | none |
+
+### The user is on plugin 1.6.0; the repo is 1.13.0
+
+`/plugin` was last run before 1.7.0. Consequence, observed live: `lint-rule-triager` and
+`typing-integrity-auditor` were **not dispatchable** and had to be routed through `general-purpose`
+with their definition files. Item 0.6's tripwire fires in the repo; nothing can make a user update.
+**Ask them to re-run `/plugin` before the next agent run.**
+
+### What remains, in priority order
+
+1. **Phase 2 items 2.2-2.8** — five shapes plus the ruff-derived harvest. Also **23 `implementable`
+   shapes** are now catalogued and un-coded; that queue grew from 19 with the idlelib write-back.
+2. **Phase 4 items 4.1-4.5, 4.7** — notably **4.3 reachability tiering**, without which the tkinter
+   run could not stress the dead-code FP classes as intended (D-17), and **4.1
+   `discover_python_project.py`**, which would have prevented D-19's `analyze_imports` failure class.
+3. **Phase 6 items 6.3/6.4** — confidence-tier precision, `_pyrepl` under `known-issues`.
+4. **Scanner runtime** (plan §9) — a full `Lib/` sweep with 38 checks exceeded 20 minutes and was
+   killed; the recorded baseline is 5 min for 10 checks. A benchmark nobody can afford to run stops
+   being run.
+5. **`analyze_imports` fan-in for a non-root package** — `internal_graph` keys sources on file paths
+   and targets on dotted module names, which agree only when the package root IS the project root.
+   idlelib resolves 113 edges and still reports 0 cycles; `resolution: PARTIAL` says so honestly, but
+   the underlying mismatch is unfixed.
+
+### The idlelib findings are NOT yet in the findings repo
+
+`reports/idlelib_v4/FINDINGS.md` holds ~15 verified findings plus the agent-reported set. They have
+**not** been migrated into `code-review-findings/cpython-idlelib/project-local/findings.json`, so the
+111/111 coverage figure does not include them. Migrating them is the obvious next write-back, and
+`gen_index.py` will regenerate the TSV and INDEX automatically.
+
+### Traps that cost real time this session
+
+- **`ruff format <dir>` reformats every file in the directory.** It rewrote 19 unrelated files; I had
+  to `git checkout --` all of them. Format only the files you edited.
+- **`git status` can report a file modified when only its mtime changed.** Check
+  `git hash-object <f>` against `git rev-parse HEAD:<f>` before concluding an agent edited something,
+  and `git update-index --refresh` to clear it.
+- **Agents patch-test the live tree** unless told otherwise in the BRIEFING (rule 7 now). A doc they
+  do not read does not count.
+- `scan_common.load_data()` takes a filename **with** the `.json` extension; passing the stem
+  silently returns `{}` and the caller degrades without saying so.
+- The subagent concurrency cap is 20; a full 18-agent dispatch plus leftovers hits it.
+
+### Deliberately not doing
+
+`migrate` (dropped), `reproduce`/OOM sweep, `recursion-guard-auditor`, `parity-checker` as an agent,
+`data/playbooks/`, campaign slice manifests. Upstream reporting of any finding — including the ten
+verified idlelib bugs — is **out of scope by the user's decision**.
