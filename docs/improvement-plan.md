@@ -128,11 +128,13 @@ both true positives, and every near-miss is a real guarded twin (`runpy.py:125`,
 | # | Item | Size | Status |
 |---|---|---|---|
 | 0.1 | **Reconcile the 43 stranded shapes** into `python_bug_shapes.json` | L | **DONE** — D-12 |
-| 0.2 | Implement `--catalog-dir` in `build_informed_briefing.py` | S | open |
+| 0.2 | Implement `--catalog-dir` in `build_informed_briefing.py` | S | **DONE** — D-13 |
 | 0.3 | `gen_known_findings.py` — reports → TSV, marked GENERATED | S | **DONE** — folded into `gen_index.py`, D-12 |
 | 0.4 | Fix the 11 malformed rows in one findings-repo TSV (column mismatch) | XS | **DONE** — diagnosis was wrong, D-12 |
-| 0.5 | `diff_findings.py` — compare two report dirs, emit added/gone/unchanged | S | open |
-| 0.6 | Release discipline: bump the plugin version whenever an agent is added | XS | open |
+| 0.5 | `diff_findings.py` — compare two report dirs, emit added/gone/unchanged | S | **DONE** — D-13 |
+| 0.6 | Release discipline: bump the plugin version whenever an agent is added | XS | **DONE** — D-13, shipped as 1.6.0 |
+
+**Phase 0 is complete.** Nothing blocks Phases 1–3 any longer.
 
 **0.1 was the bulk, and it is done.** 49 shapes catalogued (40 → 89), schema bumped to 2, and the
 metric moved from **40/111 (36%) to 111/111**. Full account in `docs/decision-log.md` D-12, including
@@ -152,9 +154,15 @@ query), `partial-traversal-of-a-node-family` (grep `getattr(node, "body", ())` �
 were both invisible to the agent registry this session because they were added after 1.3.0 was cut.
 The user's installed plugin genuinely did not contain them.
 
-**Checkpoint:** re-run `diff_findings.py` on idlelib v2 → v3. Expect **zero** FP regression and a
-measurable rise in shape coverage — the coverage half is now met (36% → 100%); the FP-regression
-half still needs 0.5 and an idlelib v3 run.
+**Checkpoint — met, with one half deferred by construction.** Shape coverage: **36% → 100%**.
+`diff_findings.py` exists and reproduces the recorded idlelib v1 → v2 numbers exactly
+(`100 → 101, added 1, gone 0, unchanged 100`), which is the tool validating itself against a known
+result. The FP-regression half needs an idlelib **v3** run, which cannot happen until Phase 1 or 2
+ships something that changes the scanner's output — Phase 0 deliberately added no checks.
+
+One correction to the checkpoint's framing: `diff_findings.py` does **not** emit a pass/fail verdict.
+Nothing mechanical can distinguish a new true positive (the point of a shape wave) from a
+false-positive regression; the tool reports what moved and leaves the judgement to triage.
 
 ---
 

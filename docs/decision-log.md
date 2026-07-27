@@ -401,3 +401,90 @@ It also prints `N without a shape` per project and a warning line when any are f
 - **Coverage is now 100% by construction and will decay the same way it did before** unless every
   new finding names a catalogued shape. `gen_index.py`'s warning is the tripwire; wiring it into
   `informed-explore`'s write-back is the durable fix.
+
+---
+
+## D-13 · 2026-07-27 · Phase 0 items 0.2, 0.5 and 0.6 — Phase 0 is complete, shipped as 1.6.0
+
+### 0.5 `diff_findings.py` — the regression gate
+
+**Findings are keyed WITHOUT line numbers.** Inserting a line above a finding must not read as one
+regression plus one fix. A keyed match whose line changed is reported as `moved`.
+
+**It emits a `verdict` string, not a pass/fail boolean.** Nothing mechanical can tell a new true
+positive from a false-positive regression — that is exactly what a shape wave is *supposed* to
+produce. An earlier draft had `"regression": added > 0`, which would have marked every successful
+wave a failure. The tool reports what moved; triage decides.
+
+**Every list it compares is registered explicitly** in `_FINDING_LISTS`, not sniffed. A heuristic
+that silently stopped recognising a list would make a regression look like an improvement. Anything
+unregistered, unreadable, missing, or present in only one run goes to `notes` — the denominator is
+part of the answer (plan item 4.5, applied at the point the zero is produced).
+
+Validated against the shipped benchmarks: idlelib v1 → v2 comes out as `100 → 101, added 1, gone 0,
+unchanged 100`, matching D-02 exactly. `coveragepy_v1` against itself is stable across 248 findings.
+
+### 0.2 `--catalog` — the external-catalog read path
+
+`informed-explore.md` had documented this flag since the command was written; nothing implemented it.
+It accepts a `findings.json`, a project directory, or a findings-repo root, and splits what it finds:
+
+- **This project's findings** → "verify, then move on". **Never** narrowed by `--agent`: an entry
+  dropped from the do-not-re-derive set is one the agent will cheerfully re-derive.
+- **Other projects' findings** → explicitly *not* claims about this codebase; shapes confirmed
+  elsewhere that are worth hunting here. A hit is a new finding, a miss is not a finding at all.
+  This list **is** narrowed to the agent's shapes, with the dropped count stated.
+
+Target-project matching is by name containment in either direction, so `coveragepy` matches a target
+directory named `coverage` and `cpython-idlelib` matches `idlelib`. Catalog problems go to **stderr**,
+so a `--catalog` that resolved to nothing cannot masquerade as a complete briefing on stdout.
+`--catalog-dir` is accepted as a synonym because the plan named it that way and the command docs
+named it `--catalog`; making both work is cheaper than deciding which document was wrong.
+
+### 0.6 Release discipline — a tripwire, honestly scoped
+
+Nothing in a repository can detect that a user has not updated their installed plugin. What it can do
+is make adding an agent impossible to do *silently*. `tests/test_release_discipline.py` asserts the
+agent/command/script inventory against explicit counts; adding one fails the suite, and the fix is to
+update the count **and** bump `plugin.json`. Deliberately annoying, in proportion to a defect that
+cost a session.
+
+**It caught its own author within a minute of being written** — the script count was set to 14 when
+the real count was 13.
+
+It also checks the wiring that makes an agent reachable at all: frontmatter present, `name` matching
+the filename (Claude Code dispatches on the frontmatter name, so a mismatch is an unreachable agent),
+dispatch from some command, and that every agent and script the shape catalog points at exists. That
+last check exists because D-12's ownership rebalance moved shapes onto agents by name.
+
+**Shipped as 1.6.0**, since Phase 0 added a script, 49 shapes, a schema version and a CLI flag. The
+`[Unreleased]` content was folded into a dated `## [1.6.0]` section.
+
+### Three bugs found while building the above
+
+- **`analyze_history.py` leaked its `git log` pipes.** The `ResourceWarning` is emitted at collection
+  time — *after* the JSON is written — so it landed inside
+  `reports/coveragepy_v1/analyze_history.json` and made that report unparseable. Found because
+  `diff_findings.py` tried to read it. Fixed with a `with` block; the artifact is repaired.
+- **The same function passed `stderr=PIPE` and never drained it.** Nothing read that pipe, so `git`
+  would block writing stderr once it filled while the script blocked reading stdout — a latent
+  deadlock on any repo whose `git log` is noisy enough. Now `DEVNULL`.
+- **`duplicated-guard-wrong-operand` printed every simple name twice, unbounded** — *"though text,
+  text, line, col, chars, chars, m, m, …"*. A plain assignment target was yielded both by
+  `_dotted_name` and by the `ast.walk` beside it. Deduplicated in source order and capped. Detection
+  unchanged: idlelib still reports 101.
+
+Also: `CHANGELOG.md` had **two `[Unreleased]` sections** for the whole 1.4.0 and 1.5.0 cycles — the
+heading was never renamed when 1.4.0 was cut, so released work sat under "Unreleased". The orphan is
+now labelled as the earlier 1.4.0 batch, and a test enforces at most one.
+
+**Lesson, consistent with D-12's:** every one of these was found by *using* the artifacts rather than
+reading them. The corrupt report had been sitting in the repo since the coverage.py benchmark and no
+one noticed, because nothing had ever tried to parse it back.
+
+### Where Phase 0 leaves things
+
+Phases 1, 2 and 3 are unblocked and independent of each other. The natural next step is the plan's
+own minimum-viable slice, now reduced to **2.1** (`unformatted-format-string-literal`, measured at
+0 FP across all of `Lib/`) and **3.1** (`prior-art`). 2.1 also produces the first idlelib **v3** run,
+which is what finally exercises `diff_findings.py` as a regression gate rather than as a self-test.

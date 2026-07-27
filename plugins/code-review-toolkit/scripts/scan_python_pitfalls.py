@@ -395,6 +395,15 @@ def _names_used(node: ast.AST) -> set[str]:
     return {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
 
 
+def _name_list(names: list[str], limit: int = 6) -> str:
+    """Render identifiers for a finding message, capped so it stays readable."""
+    if not names:
+        return "a value"
+    if len(names) <= limit:
+        return ", ".join(names)
+    return ", ".join(names[:limit]) + f" and {len(names) - limit} more"
+
+
 def _is_snapshot(node: ast.AST) -> bool:
     """True if *node* evaluates to a copy rather than the live container."""
     if isinstance(node, ast.Call):
@@ -2035,16 +2044,20 @@ def _check_duplicated_guard(tree: ast.AST) -> list[dict]:
                 # Every name bound between the guards, INCLUDING tuple targets
                 # (`token, value = get_fws(value)`) -- missing those made the
                 # discriminator blind to the commonest reassignment idiom.
-                names: list[str] = []
+                # dict.fromkeys dedupes while preserving order: a plain `x = ...`
+                # target is yielded BOTH by _dotted_name and by the ast.walk
+                # below, which put every simple name in the message twice.
+                seen_names: dict[str, None] = {}
                 for n in between:
                     targets = n.targets if isinstance(n, ast.Assign) else [n.target]
                     for t in targets:
                         dotted = _dotted_name(t)
                         if dotted:
-                            names.append(dotted)
-                        names.extend(
-                            sub.id for sub in ast.walk(t) if isinstance(sub, ast.Name)
-                        )
+                            seen_names[dotted] = None
+                        for sub in ast.walk(t):
+                            if isinstance(sub, ast.Name):
+                                seen_names[sub.id] = None
+                names: list[str] = list(seen_names)
                 # If the guard's OWN operand was reassigned in between, the
                 # repeat is a deliberate re-test of a new value -- the
                 # `path = ...; if path.is_file()` loop idiom. Only a guard whose
@@ -2063,7 +2076,7 @@ def _check_duplicated_guard(tree: ast.AST) -> list[dict]:
                         "high",
                         stmt,
                         f"this guard repeats the test at line {first.lineno} verbatim, "
-                        f"though {', '.join(names) or 'a value'} was computed in between",
+                        f"though {_name_list(names)} was computed in between",
                         "a copied guard whose operand was not updated: it re-checks the "
                         "already-validated value and never checks the new one",
                     )

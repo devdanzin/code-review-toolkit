@@ -203,10 +203,10 @@ class TestCompositeScore(unittest.TestCase):
         for v in "abcdefghi":
             lines.append(f"    if {v}:")
             lines.append(f"        for x in {v}:")
-            lines.append(f"            if x > 0:")
-            lines.append(f"                for y in x:")
-            lines.append(f"                    if y:")
-            lines.append(f"                        print(y)")
+            lines.append("            if x > 0:")
+            lines.append("                for y in x:")
+            lines.append("                    if y:")
+            lines.append("                        print(y)")
         lines.append("    return None")
         source = "\n".join(lines) + "\n"
 

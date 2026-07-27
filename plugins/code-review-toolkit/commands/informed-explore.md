@@ -21,7 +21,8 @@ i.e. the `plugins/code-review-toolkit/` directory. Resolve it relative to this f
 Identical to [`explore`](explore.md) — scope, aspects, and options are parsed the same way. The
 informed run additionally honors:
 
-- `--catalog <path>` → also fold in an external findings catalog (see *Phase 1.5*).
+- `--catalog <path>` → also fold in an external findings catalog (see *Phase 1.5*). Accepts a
+  `findings.json`, a project directory, or a findings-repo root. `--catalog-dir` is a synonym.
 - `--shapes-only` → restrict each agent to hunting catalogued shapes and their siblings, skipping
   open-ended analysis. Fastest way to answer "does this codebase have any of the known shapes?"
 
@@ -68,8 +69,29 @@ The briefing assembles three things:
    loud, behavioural-divergence-outranks-stylistic, confirm-don't-re-litigate, cite-or-drop.
 
 If the target codebase carries a findings memory at `<scope>/.code-review/findings.json` from prior
-runs, its **confirmed** entries are folded in automatically as "verify, then move on" items. Pass
-`--catalog <path>` to fold in an external catalog as well.
+runs, its **confirmed** entries are folded in automatically as "verify, then move on" items.
+
+`--catalog <path>` folds in an external findings repo as well — the usual case being one of the
+`*-review-findings` companions:
+
+```bash
+python <plugin_root>/scripts/build_informed_briefing.py [scope] \
+    --agent pattern-consistency-checker \
+    --catalog ~/projects/code-review-findings
+```
+
+It splits what it finds in two, and the distinction matters:
+
+- **Findings recorded for THIS project** — settled. Verify each still exists, then move on. Never
+  narrowed by `--agent`, because an entry dropped from the do-not-re-derive set is one the agent will
+  cheerfully re-derive.
+- **Findings from OTHER projects** — *not* claims about this codebase. Each is a shape confirmed
+  somewhere else, so it is worth a targeted look here. A hit is a new finding; a miss is not a
+  finding at all, so absence is never reported. This list IS narrowed to the requested agent's
+  shapes, with the dropped count stated.
+
+Problems reading a catalog (a path that resolved to nothing, an unreadable file) go to **stderr**, so
+a `--catalog` that silently found no memory cannot masquerade as a complete briefing on stdout.
 
 ### Phase 2: Targeted Analysis (informed)
 

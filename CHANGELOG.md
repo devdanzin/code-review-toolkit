@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-07-27
+
+Phase 0 of `docs/improvement-plan.md` in full — the calibration loop is repaired in both directions.
+
+### Added — the false-positive regression gate and the external-catalog read path
+
+- **`diff_findings.py`** (item 0.5) — diffs two report directories and reports added / gone / moved /
+  unchanged per finding list. Findings are keyed **without line numbers**, so a finding that shifted
+  because lines were inserted above it is `moved`, not one regression plus one fix. Every list it
+  compares is registered explicitly rather than sniffed, and anything unregistered, unreadable, or
+  present in only one run lands in `notes` — a report that could not be compared must never read as
+  "no change". It emits a `verdict` string rather than a pass/fail boolean, because nothing
+  mechanical can tell a new true positive from a false-positive regression; only triage can.
+  Verified against the shipped benchmarks: it reproduces idlelib v1→v2 as `100 → 101, added 1,
+  gone 0, unchanged 100`, matching `docs/decision-log.md` D-02 exactly.
+- **`--catalog PATH` in `build_informed_briefing.py`** (item 0.2) — folds an external findings repo
+  into the briefing. `informed-explore.md` had documented this flag since the command was written and
+  nothing implemented it. Accepts a `findings.json`, a project directory, or a findings-repo root.
+  Entries for the target project are rendered as "verify, then move on"; entries from *other*
+  projects are rendered separately as cross-project evidence — explicitly **not** claims about this
+  codebase, but shapes confirmed elsewhere that are worth hunting here. The cross-project list is
+  narrowed to the shapes the requested agent owns (with the dropped count stated); the target-project
+  list never is, because dropping an entry from the do-not-re-derive set invites re-derivation.
+  `--catalog-dir` is accepted as a synonym, since the plan named it that way.
+- **`tests/test_release_discipline.py`** (item 0.6) — the tripwire for the incident where two agents
+  were added without a release and were invisible to the agent registry for a session. Asserts the
+  agent/command/script inventory against explicit counts, so adding one fails the suite and the fix
+  is to bump `plugin.json`. Also checks what makes an agent reachable at all: frontmatter present,
+  `name` matching the filename, dispatch from some command, and that every agent and script the shape
+  catalog points at exists.
+
 ### Added — the calibration loop's write-back direction (improvement plan, Phase 0)
 
 - **`data/python_bug_shapes.json`: 40 → 89 shapes, schema 1 → 2.** Forty-nine shapes that the
@@ -31,6 +62,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `one-concern-implemented-per-backend` (now 7 findings, the corpus's most productive shape), and
   `guard-names-abbreviated-sibling` → `isinstance-on-container-not-element`, whose own
   `guarded_twin` text already cited that finding's twin. Both recorded as `aliases`.
+
+### Fixed — three bugs surfaced while building the Phase 0 tooling
+
+- **`analyze_history.py` leaked its `git log` pipes and could deadlock.** `_run_git_streaming`
+  returned a `Popen` whose `stdout` was never closed, so a `ResourceWarning` was emitted at
+  collection time — *after* the JSON had been written — and landed inside
+  `reports/coveragepy_v1/analyze_history.json`, making that report unparseable. The pipes are now
+  closed via a `with` block, and stderr goes to `DEVNULL` rather than an undrained `PIPE`: nothing
+  read that pipe, so `git` would block writing stderr once it filled while the script blocked reading
+  stdout. The corrupt report artifact has been repaired.
+- **`analyze_history.py` passed a possibly-`None` stream to `parse_git_log`.** `Popen.stdout` is
+  `Optional`; a failed spawn would have crashed with a `TypeError` inside the parser rather than
+  reporting a git problem. (Pre-existing; mypy had been flagging it.)
+- **`duplicated-guard-wrong-operand` printed every simple name twice** and without a bound, producing
+  messages like *"though text, text, line, col, chars, chars, m, m, … was computed in between"*. A
+  plain assignment target was yielded both by `_dotted_name` and by the `ast.walk` beside it. Names
+  are now deduplicated in source order and the list is capped with an "and N more" tail. Detection is
+  unaffected — idlelib still reports 101 findings.
 
 ### Fixed — three bugs found by the coverage.py benchmark
 
@@ -162,9 +211,13 @@ decidable container-vs-element form.
   exactly one distinct codec per side — which is what "the two sides disagree" presupposes —
   removed the class outright.
 
-## [Unreleased]
+> **Note.** The entries below were written under an `[Unreleased]` heading that was never renamed
+> when 1.4.0 was cut, leaving the file with two `[Unreleased]` sections. The work shipped in 1.4.0.
+> It is kept as a separate block rather than merged into the one above so the two calibration batches
+> stay distinguishable: this batch took the catalog to 22 shapes, the block above took it to 28.
+> A test now enforces at most one `[Unreleased]` heading (see `tests/test_release_discipline.py`).
 
-### Added
+### Added — earlier in the 1.4.0 cycle
 
 - New shape `test-cannot-fail` — tests that pass regardless of what the code under test does: empty
   bodies, constant-only assertions, `assertTrue(all(filter(...)))` (where `filter` already dropped
@@ -227,7 +280,7 @@ decidable container-vs-element form.
 - `CLAUDE.md` — development guide covering architecture, conventions, the data catalogs and their
   `validation` grades, gotchas, and an explicit list of known gaps.
 
-### Fixed
+### Fixed — earlier in the 1.4.0 cycle
 
 - `analyze_imports.py`: `from .X import Y` resolved to the *parent* package instead of the containing
   one (`Lib.terminfo` rather than `Lib._pyrepl.terminfo`), so resolved targets matched no file and

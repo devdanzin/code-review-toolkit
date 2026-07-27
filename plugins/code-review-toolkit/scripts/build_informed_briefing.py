@@ -17,12 +17,26 @@ codebase. If the target carries a per-project findings memory at
 runs), those are folded in as "confirm, don't re-litigate" entries so a re-run of
 the same project is genuinely informed rather than cold.
 
-That findings file uses the same schema as the ``crate-local/findings.json`` in
+That findings file uses the same schema as the ``project-local/findings.json`` in
 the ``*-review-findings`` companion repositories, so a project's accumulated
-memory can be lifted into a findings repo without transformation.
+memory can be lifted into a findings repo without transformation -- and, via
+``--catalog``, read straight back out of one.
 
 Usage:
-    python build_informed_briefing.py [path] [--agent NAME] [--max-files N]
+    python build_informed_briefing.py [path] [--agent NAME] [--catalog PATH]
+                                      [--max-files N]
+
+``--catalog`` accepts any of three things, so it can point at whatever level of a
+findings repo is convenient:
+
+  * a ``findings.json`` file,
+  * a project directory containing ``project-local/findings.json``, or
+  * a findings-repo root containing ``*/project-local/findings.json``.
+
+Entries whose project matches the target are folded in as "verify, then move on".
+Entries from OTHER projects are folded in separately as cross-project evidence:
+they are not claims about this codebase, they are shapes confirmed elsewhere that
+are worth hunting here.
 """
 
 from __future__ import annotations
@@ -59,6 +73,56 @@ def _load_fp_taxonomy() -> str:
         return (_DATA / "python_non_bugs.md").read_text(encoding="utf-8")
     except OSError:
         return ""
+
+
+def _catalog_findings_files(catalog: Path) -> list[Path]:
+    """Every findings.json reachable from *catalog*, whatever level it names."""
+    if catalog.is_file():
+        return [catalog]
+    direct = catalog / "project-local" / "findings.json"
+    if direct.is_file():
+        return [direct]
+    return sorted(catalog.glob("*/project-local/findings.json"))
+
+
+def _load_catalog_findings(catalog: str, target: str) -> tuple[list[dict], list[str]]:
+    """Load an external findings catalog, tagging each entry with its project.
+
+    Returns ``(findings, notes)``; *notes* records what was read and what could
+    not be, because a catalog path that silently resolves to nothing would make
+    the briefing look complete while carrying none of the memory it promised.
+    """
+    root = Path(catalog).expanduser()
+    if not root.exists():
+        return [], [f"catalog path does not exist: {root}"]
+
+    files = _catalog_findings_files(root)
+    if not files:
+        return [], [f"no findings.json found under {root}"]
+
+    target_name = Path(target).expanduser().resolve().name
+    findings: list[dict] = []
+    notes: list[str] = []
+    for path in files:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            notes.append(f"unreadable: {path} ({type(exc).__name__})")
+            continue
+        project = data.get("project") or path.parent.parent.name
+        entries = data.get("findings", []) if isinstance(data, dict) else data
+        entries = [f for f in entries if isinstance(f, dict)]
+        for finding in entries:
+            finding = dict(finding)
+            finding["_project"] = project
+            # A catalog project matches the target when either name contains the
+            # other: `coveragepy` vs `coverage`, `cpython-idlelib` vs `idlelib`.
+            finding["_is_target"] = (
+                target_name in project or project in target_name
+            ) and bool(target_name)
+            findings.append(finding)
+        notes.append(f"{project}: {len(entries)} finding(s) from {path}")
+    return findings, notes
 
 
 def _load_project_findings(target: str) -> list[dict]:
@@ -148,11 +212,85 @@ TRIAGE_RULES = """\
 """
 
 
+def _render_catalog_section(
+    catalog_findings: list[dict], owned_shapes: set[str] | None = None
+) -> list[str]:
+    """Render an external findings catalog, split by whether it is this project.
+
+    When *owned_shapes* is given (a per-agent run), the OTHER-projects list is
+    narrowed to shapes this agent owns -- that list is speculative "worth hunting
+    here" material, so an entry the agent could not act on is pure noise. The
+    THIS-project list is never narrowed: it is the do-not-re-derive set, and
+    dropping an entry from it invites exactly the re-derivation it prevents.
+    """
+    if not catalog_findings:
+        return []
+
+    def line(finding: dict, with_project: bool) -> str:
+        loc = finding.get("location") or finding.get("file") or "?"
+        prefix = f"[{finding['_project']}] " if with_project else ""
+        shape = finding.get("shape")
+        shape_ref = f" · shape `{shape}`" if shape else ""
+        return (
+            f"- {prefix}**{finding.get('id', '?')}** "
+            f"[{finding.get('severity', '?')}] {finding.get('title', '')} — "
+            f"`{loc}`{shape_ref}"
+        )
+
+    mine = [f for f in catalog_findings if f.get("_is_target")]
+    theirs = [f for f in catalog_findings if not f.get("_is_target")]
+    dropped = 0
+    if owned_shapes is not None:
+        kept = [f for f in theirs if f.get("shape") in owned_shapes]
+        dropped = len(theirs) - len(kept)
+        theirs = kept
+    parts: list[str] = []
+
+    if mine:
+        parts += [
+            f"## Already recorded for THIS project in the findings catalog ({len(mine)})",
+            "",
+            "These are settled. Verify each still exists, then move on — do not "
+            "re-derive them, and do not report them as new.",
+            "",
+            *[line(f, with_project=False) for f in mine],
+            "",
+        ]
+    if theirs:
+        shapes_seen = sorted({f["shape"] for f in theirs if f.get("shape")})
+        parts += [
+            f"## Confirmed in OTHER projects ({len(theirs)}) — hunt them here",
+            "",
+            "These are **not** claims about this codebase. Each is a shape that "
+            "was confirmed somewhere else, which makes it worth a targeted look "
+            "here. A hit is a new finding for this project; a miss is not a "
+            "finding at all, so do not report absence.",
+            "",
+            *[line(f, with_project=True) for f in theirs],
+            "",
+        ]
+        if shapes_seen:
+            parts += [
+                "Shapes represented above, in catalog terms: "
+                + ", ".join(f"`{s}`" for s in shapes_seen),
+                "",
+            ]
+    # Report the denominator: a narrowed list must not read as the whole catalog.
+    if dropped:
+        parts += [
+            f"_{dropped} further cross-project finding(s) were omitted here "
+            f"because they belong to shapes another agent owns._",
+            "",
+        ]
+    return parts
+
+
 def build_briefing(
     shapes: list[dict],
     fp_taxonomy: str,
     project_findings: list[dict],
     agent: str | None = None,
+    catalog_findings: list[dict] | None = None,
 ) -> str:
     """Assemble the full Markdown briefing."""
     grouped = _shapes_by_agent(shapes)
@@ -215,6 +353,11 @@ def build_briefing(
             )
         parts.append("")
 
+    owned_shapes = (
+        {s["id"] for owned in grouped.values() for s in owned} if agent else None
+    )
+    parts += _render_catalog_section(catalog_findings or [], owned_shapes)
+
     if fp_taxonomy:
         parts += [
             "## Known false positives — suppress these",
@@ -232,13 +375,24 @@ def build_briefing(
     return "\n".join(parts) + "\n"
 
 
-def analyze(target: str, *, max_files: int = 0, agent: str | None = None) -> dict:
+def analyze(
+    target: str,
+    *,
+    max_files: int = 0,
+    agent: str | None = None,
+    catalog: str | None = None,
+) -> dict:
     """Build the briefing for *target*. ``max_files`` is accepted for interface
     parity with the other scripts; this script does not walk the file tree."""
     shapes = _load_shapes()
     fp_taxonomy = _load_fp_taxonomy()
     project_findings = _load_project_findings(target)
-    briefing = build_briefing(shapes, fp_taxonomy, project_findings, agent)
+    catalog_findings, catalog_notes = (
+        _load_catalog_findings(catalog, target) if catalog else ([], [])
+    )
+    briefing = build_briefing(
+        shapes, fp_taxonomy, project_findings, agent, catalog_findings
+    )
     return {
         "target": target,
         "shapes_total": len(shapes),
@@ -246,32 +400,46 @@ def analyze(target: str, *, max_files: int = 0, agent: str | None = None) -> dic
             len(_shapes_by_agent(shapes).get(agent, [])) if agent else len(shapes)
         ),
         "project_findings": len(project_findings),
+        "catalog": catalog,
+        "catalog_findings": len(catalog_findings),
+        "catalog_findings_this_project": sum(
+            1 for f in catalog_findings if f.get("_is_target")
+        ),
+        "catalog_notes": catalog_notes,
         "has_fp_taxonomy": bool(fp_taxonomy),
         "briefing_markdown": briefing,
     }
 
 
-def _extract_agent(argv: list[str]) -> tuple[list[str], str | None]:
-    """Pull ``--agent NAME`` out of argv, returning the remainder."""
+def _extract_flags(argv: list[str]) -> tuple[list[str], str | None, str | None]:
+    """Pull ``--agent NAME`` and ``--catalog PATH`` out of argv."""
     rest: list[str] = []
     agent: str | None = None
+    catalog: str | None = None
     i = 0
     while i < len(argv):
         if argv[i] == "--agent" and i + 1 < len(argv):
             agent = argv[i + 1]
             i += 2
+        elif argv[i] in ("--catalog", "--catalog-dir") and i + 1 < len(argv):
+            catalog = argv[i + 1]
+            i += 2
         else:
             rest.append(argv[i])
             i += 1
-    return rest, agent
+    return rest, agent, catalog
 
 
 def main() -> None:
     try:
-        argv, agent = _extract_agent(sys.argv[1:])
+        argv, agent, catalog = _extract_flags(sys.argv[1:])
         target, max_files = parse_common_args(argv)
-        result = analyze(target, max_files=max_files, agent=agent)
-        # Markdown, not JSON: the output IS the agent briefing.
+        result = analyze(target, max_files=max_files, agent=agent, catalog=catalog)
+        # Markdown, not JSON: the output IS the agent briefing. Catalog problems
+        # go to stderr so a path that resolved to nothing is visible without
+        # corrupting the briefing on stdout.
+        for note in result["catalog_notes"]:
+            print(f"catalog: {note}", file=sys.stderr)
         sys.stdout.write(result["briefing_markdown"])
     except Exception as exc:  # noqa: BLE001 -- top-level guard
         emit({"error": str(exc), "type": type(exc).__name__})

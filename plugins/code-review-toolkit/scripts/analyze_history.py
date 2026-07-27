@@ -94,12 +94,17 @@ def _run_git(
 def _run_git_streaming(
     args: list[str], cwd: Path,
 ) -> subprocess.Popen[str]:
-    """Run a git command with streaming stdout."""
+    """Run a git command with streaming stdout.
+
+    stderr goes to DEVNULL rather than a pipe. Nothing reads this process's
+    stderr, and an undrained pipe deadlocks once git writes more than the pipe
+    buffer to it -- git blocks writing stderr while we block reading stdout.
+    """
     # See _run_git: a non-UTF-8 commit message must not kill the stream.
     return subprocess.Popen(
         ["git"] + args,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
         text=True,
         errors="replace",
         cwd=str(cwd),
@@ -601,11 +606,14 @@ def analyze(argv: list[str] | None = None) -> dict:
     if rel_scope != ".":
         git_args.append(rel_scope)
 
-    proc = _run_git_streaming(git_args, project_root)
-    commits, file_churn = parse_git_log(
-        proc.stdout, max_commits, project_root,
-    )
-    proc.wait()
+    # `with` closes the stdout pipe. Leaking it emitted a ResourceWarning that
+    # landed in reports/coveragepy_v1/analyze_history.json and made the report
+    # unparseable -- the warning is written when the object is collected, which
+    # is after the JSON has been dumped.
+    with _run_git_streaming(git_args, project_root) as proc:
+        commits, file_churn = parse_git_log(
+            proc.stdout or [], max_commits, project_root,
+        )
 
     # If using --last, derive time range from actual commits.
     commit_cap_applied = len(commits) >= max_commits

@@ -1,7 +1,9 @@
 """Tests for build_informed_briefing.py -- the informed-explore briefing."""
 
 import json
+import tempfile
 import unittest
+from pathlib import Path
 
 from helpers import TempProject, import_script
 
@@ -205,17 +207,113 @@ class TestAnalyze(unittest.TestCase):
 
 
 class TestArgExtraction(unittest.TestCase):
-    """--agent is stripped before the shared arg parser sees argv."""
+    """--agent and --catalog are stripped before the shared arg parser sees argv."""
 
     def test_extracts_agent(self):
-        rest, agent = mod._extract_agent(["path", "--agent", "x", "--max-files", "5"])
+        rest, agent, catalog = mod._extract_flags(
+            ["path", "--agent", "x", "--max-files", "5"]
+        )
         self.assertEqual(agent, "x")
+        self.assertIsNone(catalog)
         self.assertEqual(rest, ["path", "--max-files", "5"])
 
-    def test_absent_agent_is_none(self):
-        rest, agent = mod._extract_agent(["path"])
+    def test_absent_flags_are_none(self):
+        rest, agent, catalog = mod._extract_flags(["path"])
         self.assertIsNone(agent)
+        self.assertIsNone(catalog)
         self.assertEqual(rest, ["path"])
+
+    def test_extracts_catalog(self):
+        rest, agent, catalog = mod._extract_flags(["p", "--catalog", "/some/where"])
+        self.assertEqual(catalog, "/some/where")
+        self.assertEqual(rest, ["p"])
+
+    def test_catalog_dir_is_accepted_as_a_synonym(self):
+        # The plan named the flag --catalog-dir; informed-explore.md documents
+        # --catalog. Both work so neither document is wrong.
+        _, _, catalog = mod._extract_flags(["p", "--catalog-dir", "/some/where"])
+        self.assertEqual(catalog, "/some/where")
+
+
+class TestExternalCatalog(unittest.TestCase):
+    """--catalog folds an external findings repo into the briefing."""
+
+    def _repo(self, root: Path) -> None:
+        for project, fid, title in (
+            ("coveragepy", "CRF-COVPY-0001", "A coverage finding"),
+            ("cpython-idlelib", "CRF-IDLELIB-0001", "An idlelib finding"),
+        ):
+            path = root / project / "project-local"
+            path.mkdir(parents=True)
+            (path / "findings.json").write_text(
+                json.dumps(
+                    {
+                        "project": project,
+                        "findings": [
+                            {
+                                "id": fid,
+                                "title": title,
+                                "severity": "FIX",
+                                "status": "reproduced",
+                                "location": "mod.py:1",
+                                "shape": "mutable-default-argument",
+                            }
+                        ],
+                    }
+                )
+            )
+
+    def test_repo_root_finds_every_project(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._repo(root)
+            findings, notes = mod._load_catalog_findings(str(root), "/x/coveragepy")
+            self.assertEqual(len(findings), 2)
+            self.assertEqual(len(notes), 2)
+
+    def test_target_project_is_distinguished_from_the_others(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._repo(root)
+            findings, _ = mod._load_catalog_findings(str(root), "/src/coverage")
+            mine = [f for f in findings if f["_is_target"]]
+            self.assertEqual([f["_project"] for f in mine], ["coveragepy"])
+
+    def test_a_single_project_directory_is_accepted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._repo(root)
+            findings, notes = mod._load_catalog_findings(
+                str(root / "coveragepy"), "/x/coveragepy"
+            )
+            self.assertEqual(len(findings), 1)
+
+    def test_a_missing_catalog_is_reported_not_silently_empty(self):
+        findings, notes = mod._load_catalog_findings("/no/such/path", "/x/y")
+        self.assertEqual(findings, [])
+        self.assertTrue(any("does not exist" in n for n in notes))
+
+    def test_a_directory_with_no_findings_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            findings, notes = mod._load_catalog_findings(tmp, "/x/y")
+            self.assertEqual(findings, [])
+            self.assertTrue(any("no findings.json" in n for n in notes))
+
+    def test_other_projects_are_narrowed_to_the_agent_shapes(self):
+        theirs = [
+            {"_is_target": False, "_project": "p", "id": "A", "shape": "mine"},
+            {"_is_target": False, "_project": "p", "id": "B", "shape": "someone-elses"},
+        ]
+        rendered = "\n".join(mod._render_catalog_section(theirs, {"mine"}))
+        self.assertIn("**A**", rendered)
+        self.assertNotIn("**B**", rendered)
+        # The dropped count must be stated, not silently omitted.
+        self.assertIn("1 further cross-project finding(s) were omitted", rendered)
+
+    def test_target_findings_are_never_narrowed_by_agent(self):
+        mine = [{"_is_target": True, "_project": "p", "id": "A", "shape": "not-owned"}]
+        rendered = "\n".join(mod._render_catalog_section(mine, {"something-else"}))
+        self.assertIn("**A**", rendered)
 
 
 if __name__ == "__main__":

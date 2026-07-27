@@ -1,9 +1,3 @@
-/home/danzin/projects/code-review-toolkit/plugins/code-review-toolkit/scripts/analyze_history.py:720: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='UTF-8'>
-  result = analyze()
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/home/danzin/projects/code-review-toolkit/plugins/code-review-toolkit/scripts/analyze_history.py:720: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='UTF-8'>
-  result = analyze()
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
 {
   "project_root": "/home/danzin/projects/coveragepy",
   "scan_root": "/home/danzin/projects/coveragepy/coverage",
