@@ -1814,6 +1814,127 @@
       "differential": "Three filters carry this shape, and each corresponds to a real guarded twin. (1) ANY other argument on the call means something may still format the string -- `_pyrepl/trace.py` formats `line.format(*k, **kw)` only `if k or kw`, so `trace('{x}', v)` is correct. (2) A literal that is the RECEIVER of `.format`/`.format_map` is formatted in place -- `runpy.py:125` builds a multi-line braced message and formats it on the spot. (3) Only fields whose name is an IDENTIFIER count: `{}` and `{0}` are indistinguishable from a regex quantifier (`\\d{4}`) or a literal brace in a character class, and those two classes alone were 90% of the raw candidates over CPython's `Lib/`. Also skip `${name}`, which is `string.Template` or shell syntax. A template CONSTANT consumed by a formatter elsewhere (`_DEPRECATED_MSG` in `warnings`, `glob._deprecated_function_message`) is the commonest near-miss and is excluded by filter 1 at its call site.",
       "detected_by": "scan_python_pitfalls.py",
       "detectability": "implemented"
+    },
+    {
+      "id": "zip-truncates-on-length-mismatch",
+      "title": "`zip()` without `strict=` silently truncates when the two sides disagree in length",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "`zip(a, b)` where the two operands come from DIFFERENT computations over the same underlying data -- one from arithmetic over an index (`range(...)`, a parsed line number, a slice bound), the other from the data itself (`.splitlines()`, `.readlines()`, a widget query, a directory listing). When they disagree, `zip` stops at the shorter one and the surplus is dropped with no error and no log line.",
+      "guarded_twin": "`zip(a, b, strict=True)`, which raises `ValueError` on the first mismatch. The twin is frequently in the project's OWN TESTS for the very function that lacks it -- idlelib's `idle_test/test_sidebar.py:764` passes `strict=True` while `pyshell.py:1002`, the production code it tests, does not.",
+      "hunt": "Rank every un-stricted `zip` by whether the operands share a derivation. Same expression on both sides, or two calls with an identical count argument, are structurally equal -- skip them. Escalate when one side comes from `range()`/`int()`/a slice bound and the other from a split, a read, or a query. Then grep the tests for the same pairing done with `strict=True`.",
+      "expected": "every element of both sequences is consumed; disagreeing lengths are a bug the program surfaces.",
+      "caught_as": "SILENT -- a short file, a missing last row, a clipboard one line short. In test code it is worse than silent: the test still passes, having asserted less than it claims.",
+      "confirmed_examples": [
+        "CPython Lib/idlelib/pyshell.py:1002 -- copy-with-prompts drops the last selected line whenever the selection ends at a column that is a multiple of 10; verified against a live tkinter.Text",
+        "CPython Lib/idlelib/idle_test/test_searchbase.py:122,134 -- zip(declared_options, actually_packed_widgets); a dialog packing too few buttons would pass vacuously"
+      ],
+      "validation": "confirmed",
+      "references": [
+        "PEP 618 -- Add Optional Length-Checking To zip",
+        "ruff B905 / flake8-bugbear"
+      ],
+      "differential": "Do NOT report when both operands are provably equal-length: a list zipped against a comprehension over it, `zip(x[::2], x[1::2])` over a contract-even sequence, or two generators sharing a count argument. Ragged truncation must be REACHABLE, not merely unproven. Conversely a `zip` in a test pairing EXPECTED against ACTUAL is worth flagging even when currently balanced -- there truncation silently weakens the assertion, which is `test-cannot-fail` arriving by another route.",
+      "detected_by": null,
+      "detectability": "implementable"
+    },
+    {
+      "id": "guard-conjoined-with-a-preference-flag",
+      "title": "A validity guard ANDed with a preference flag, so turning the preference off removes the guard",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "An early return that combines a validity test with a configuration flag governing only a side effect: `if value is None and self.NOTIFY: notify(); return`. Turn the preference off and the guard disappears entirely, letting the invalid value reach code that dereferences it. It reads correctly because the null test IS present and the preference defaults to on -- so the bug is unreachable in every default configuration and in every test.",
+      "guarded_twin": "Split the conjunction: the guard unconditional, only the side effect optional. Sibling callers in the same module almost always already return unconditionally on their own None conditions.",
+      "hunt": "Grep `if <null/validity test> and <FLAG>:` and its mirror, where FLAG is a module/class constant, a settings lookup, or a name matching BELL/VERBOSE/WARN/NOTIFY/DEBUG/QUIET/STRICT. Ask what the flag controls: a NOTIFICATION conjoined with a VALIDITY condition is the shape. Then flip the flag off and re-trace every consumer past the guard for a subscript or attribute access.",
+      "expected": "the invalid value is rejected on every path; the preference only decides whether the user is told.",
+      "caught_as": "SILENT under every default configuration, then a hard TypeError/AttributeError once the preference is changed -- reported as 'turning off the bell broke bracket matching', which points at the notification rather than the guard.",
+      "confirmed_examples": [
+        "CPython Lib/idlelib/parenmatch.py:97 -- `if indices is None and self.BELL:`; unchecking 'Bell on Mismatch' makes an unmatched bracket raise TypeError out of a Tk callback and leaves the restore bindings registered"
+      ],
+      "validation": "confirmed",
+      "references": [],
+      "differential": "Not this shape when both conjuncts are data conditions, nor when the flag selects a different valid behaviour rather than a notification. Discriminator: does the code after the guard tolerate the value the guard was testing for? If it dereferences it, the conjunction is the bug.",
+      "detected_by": null,
+      "detectability": "implementable"
+    },
+    {
+      "id": "per-line-property-derived-from-the-aggregate",
+      "title": "A per-element property computed once from the concatenated whole, then applied to every element",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A property that belongs to each ELEMENT -- a comment prefix, an indent width, a field separator, a record header -- is derived once from the joined value (`header = get_header('\\n'.join(lines))`) and applied to all of them. An anchored regex or a `split()[0]` answers for element one only; the consumer then does `line[len(header):]` on every element, so each one that lacked the property loses that many leading characters.",
+      "guarded_twin": "The sibling path that ESTABLISHES the invariant before relying on it -- typically a loop extending the region only while `get_header(line) == header`. That twin usually exists in the same module for the auto-detect case, with the bug living in the explicit/user-supplied-range case.",
+      "hunt": "Find every helper named or documented for a single line/record and grep its call sites for one passing a joined or multi-line value. Then check whether the consumer applies the result per-element. Reproduce with a two-element input whose first element has the property and the second does not -- the shape is invisible on homogeneous input, which is why every test passes.",
+      "expected": "each element is transformed according to its own properties, or the operation refuses a heterogeneous region.",
+      "caught_as": "SILENT DATA LOSS. Nothing raises; a fixed number of leading characters simply disappears from every non-conforming element, proportional to the first element's prefix length.",
+      "confirmed_examples": [
+        "CPython Lib/idlelib/format.py:57-59 -- Format Paragraph over a selection whose first line is a comment: verified by execution, `result = compute(a, b)` becomes `esult = compute(a, b)` and the result is written back to the buffer"
+      ],
+      "validation": "confirmed",
+      "references": [],
+      "differential": "Fine when the aggregate genuinely has one answer (a file-level encoding, a uniform delimiter). The evidence is an ANCHORED match (`^`) or a first-element pick applied across a multi-element value, plus a consumer that slices by the derived length.",
+      "detected_by": null,
+      "detectability": "implementable"
+    },
+    {
+      "id": "viewport-scoped-index-consumed-globally",
+      "title": "A render-scoped cache read by a consumer that iterates the whole model",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A dict or list built for RENDERING -- populated only while walking the currently-visible rows, reset on every redraw -- is later read by a consumer that iterates the FULL range and treats a missing key as a legitimate 'no value' (`.get(k)` -> None) rather than as 'not indexed'. The display cache silently doubles as a data model.",
+      "guarded_twin": "A consumer that recomputes the property from the underlying model rather than the render cache, or a producer that indexes the whole model and only DRAWS the visible slice.",
+      "hunt": "For every attribute assigned inside a paint/redraw/update method, find every reader outside that method. Flag any reader whose key range comes from the full model rather than the same visible window. `.get(k)` with an implicit None default is the strongest tell, because it converts 'absent' into a valid value. Reproduce by making the model taller than the viewport and scrolling before invoking the consumer.",
+      "expected": "the consumer sees a value for every element of the model, not only those currently on screen.",
+      "caught_as": "SILENT and SCROLL-DEPENDENT. The output is well-formed and merely incomplete, and it is correct whenever the model fits on one screen -- so it survives every small-input test and every interactive check.",
+      "confirmed_examples": [
+        "CPython Lib/idlelib/sidebar.py:466-486 -> pyshell.py:997 -- shell prompts are indexed with `@0,0` + `dlineinfo` (viewport-only) and consumed across the whole buffer on save, so every prompt scrolled off-screen is missing from the saved file"
+      ],
+      "validation": "confirmed",
+      "references": [],
+      "differential": "Not this shape when the consumer's range is itself bounded by the same viewport, nor when a missing key is explicitly distinguished from a null value. The bug requires BOTH the render-scoped producer AND a full-range consumer that cannot tell absent from empty.",
+      "detected_by": null,
+      "detectability": "agent-only"
+    },
+    {
+      "id": "structured-index-tested-by-string-suffix",
+      "title": "A structured index interrogated with a string operation instead of being parsed",
+      "agent": "python-pitfall-scanner",
+      "severity": "FIX",
+      "pattern": "A value with internal structure -- a Tk text index `line.col`, a dotted version, an `ip:port`, a `path:lineno` -- is tested with `[-1]`, `endswith`, `startswith` or a slice in place of splitting it and comparing the field numerically. The test then agrees with the intended predicate only for a subset of values: `sellast[-1] != '0'` means `column != 0` for single-digit columns and silently means the wrong thing for 10, 20, 100.",
+      "guarded_twin": "Parse then compare -- `int(index.split('.')[1]) != 0` -- or use the API's own arithmetic. A correct sibling is usually adjacent: idlelib's own `text.index('sel.first linestart')` on the line above does exactly this for the start index while the end index is tested by suffix.",
+      "hunt": "Grep for `[-1] ==`, `[-1] !=`, `.endswith(` and `.startswith(` applied to a variable produced by an index-, version-, address- or location-returning API. For each, ask which values of the underlying FIELD the character test misclassifies; a non-empty reachable set is a defect.",
+      "expected": "the predicate holds for every value of the structured field, not only its single-character encodings.",
+      "caught_as": "SILENT and PERIODIC -- fails for one value in ten (or one in twenty-six), which reads as an intermittent glitch and is very hard to attribute from a bug report.",
+      "confirmed_examples": [
+        "CPython Lib/idlelib/pyshell.py:1020 -- `if sellast[-1] != '0'` intends `column != 0`; verified against live Tk, selecting to column 10 or 20 drops the last line from the clipboard"
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Tk text index format `line.char`, Tcl/Tk text(n)"
+      ],
+      "differential": "A string test on a genuinely flat string (a file extension, a scheme prefix) is correct and not this shape. The shape requires the value to have a PARSED field the test stands in for. Exclude cases where the field is provably single-character by construction.",
+      "detected_by": null,
+      "detectability": "implementable"
+    },
+    {
+      "id": "assertion-against-a-stub-that-cannot-fail",
+      "title": "A test whose assertion is made against a stub incapable of expressing the failure",
+      "agent": "test-investigation-agent",
+      "severity": "FIX",
+      "pattern": "A test achieves full line coverage of a guarded path while asserting against a mock or stub that can never produce the condition the guard exists for. `self.gui = Mock()` then asserting `interaction` was called proves nothing about a `try/except TclError` around it, because a Mock never raises TclError. Likewise a fake widget whose `index()` is frozen to a constant, or a stub returning a value unconditionally where the real object returns a sentinel.",
+      "guarded_twin": "The same test with `side_effect` set to the exception, or a real object in place of the stub. A sibling test in the same file usually already does one or the other.",
+      "hunt": "MUTATION-TEST the guarded line: break it and run the suite. A surviving mutant is proof, not a guess. Then look for the stub in the fixture -- `Mock()` with no `side_effect`, a lambda assigned over a method (`cls.text.index = lambda i: '4.0'`), or a fake returning a value unconditionally where the real API can fail. Compare against the real object's contract: which states can it reach that the stub cannot?",
+      "expected": "a test covering a guard can distinguish the guarded code from the unguarded code.",
+      "caught_as": "NEVER. The test passes, the line is covered, and no coverage tool reports anything. The defect it was meant to catch ships.",
+      "confirmed_examples": [
+        "CPython Lib/idlelib/idle_test/test_debugger.py:53,59 -- both user_line (guarded) and user_exception (unguarded) tested with `self.gui = Mock()`; a Mock never raises TclError, so both pass identically. This is what hid CRF-IDLELIB-0025",
+        "CPython Lib/idlelib/idle_test/test_searchengine.py:279 -- `cls.text.index = lambda index: '4.0'` freezes every index expression; two mutations of search_backward's wrap survive the full 623-test suite while the mirrored search_forward mutation kills five tests"
+      ],
+      "validation": "confirmed",
+      "references": [],
+      "differential": "A stub is correct when the test's subject is the CALL, not the guard -- verifying an argument was forwarded needs no ability to raise. The shape requires a guard, branch or sentinel handler whose condition the stub cannot produce. Distinct from `test-cannot-fail`, where the assertion is tautological or absent; here the assertion is real and the FIXTURE is what cannot fail.",
+      "detected_by": null,
+      "detectability": "agent-only"
     }
   ]
 }

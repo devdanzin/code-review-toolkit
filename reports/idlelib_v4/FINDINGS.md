@@ -475,3 +475,56 @@ default is `lpr`, and `config-main.def:48` tells the user to change settings *th
 which for these four is impossible.
 
 Inverse direction: **`[EditorWindow] encoding`** (`config-main.def:67`) has **no consumer anywhere**.
+
+## F10 · FIX · `<<python-context-help>>` — listed in Settings, bound by nothing, dead since 2001
+
+VERIFIED. The string appears in **exactly six places in all 283 idlelib files**: the `GetCoreKeys`
+fallback table (`config.py:614`) and one entry in each of the five shipped keysets
+(`config-keys.def:21,92,151,201,297`). **There is no handler.** `git log -S python_context_help`
+returns zero commits — it never existed.
+
+Because `IsCoreBinding` is True, the action **appears in Options → Configure IDLE → Keys**. A user can
+select it, assign any key, and save a custom keyset — and the key still does nothing, with no error.
+`apply_bindings` does `event_add('<<python-context-help>>', '<Shift-Key-F1>')`, so Shift-F1 is
+consumed as a virtual event with zero handlers on every platform.
+
+Guarded twin: the other 57 entries of the same table, every one of which has a `.bind` site.
+
+## F11 · FIX · Three shipped keysyms the config dialog cannot spell — the CRF-PYREPL-0018 analogue
+
+VERIFIED by evaluating `config_key.py`'s own vocabulary tables:
+
+```
+AVAILABLE_KEYS: 89 entries
+  'KP_Enter'  producible by the Basic dialog -> False
+  'Escape'    producible by the Basic dialog -> False
+  'backslash' producible by the Basic dialog -> False
+PUNCTUATION_KEYS = '~!@#%^&*()_-+={}[]|;:,.<>/?'      <- no backslash
+```
+
+Each is used by **all five shipped keysets** (`newline-and-indent`, `remove-selection`,
+`force-open-calltip`). A user who rebinds any of the three cannot restore the shipped default from
+the Basic dialog — the key is not in the list. They must find the Advanced tab, whose own help text
+says *"These bindings will not be checked for validity!"* and which bypasses `keys_ok` entirely.
+
+`KP_Enter` is **literally the same key** as the confirmed sibling-project instance CRF-PYREPL-0018.
+
+Guarded twin: 67 of the 70 keysyms the shipped keysets use *are* expressible — the majority is the
+specification.
+
+**Same shape, other direction:** 17 shipped specs are rejected by IDLE's own validator.
+`<Key-BackSpace>`, `<Key-Return>`, `<Key-Tab>` are offered by the dialog and then refused by
+`keys_ok` ("No modifier key(s) specified") — the validator rejects the product's own defaults.
+
+## THE EXHAUSTIVE SET-DIFFERENCES (api-surface-reviewer)
+
+Negative results are results; these directions were checked and are **empty**, so nobody need
+re-derive them: config options read-but-not-defined; `config-highlight.def` vs `GetThemeDict` both
+ways; theme-vs-theme element sets; de-extensioned back-compat options; `GetCoreKeys` events missing
+from keysets; dead rmenu entries; `macosx.py` event drift.
+
+Non-empty: `<<open-python-shell>>` is on the Run menu of the Find-in-Files window and bound only in
+`PyShellEditorWindow`, so it silently does nothing there — and unlike every sibling skipped bind
+(`editor.py:305,313`; `pyshell.py:957`), it is **not** paired with `update_menu_state(..., 'disabled')`.
+`<<dump-undo-state>>` is bound and reachable from nothing. `<<end-of-line>>` is defined in one keyset
+and read by nothing. `[EditorWindow] encoding` has no consumer.

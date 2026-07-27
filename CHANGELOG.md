@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-07-27
+
+The write-back from the idlelib run. Catalog **90 → 96 shapes**, FP taxonomy **37 → 47 classes**.
+Findings in `reports/idlelib_v4/FINDINGS.md`; reasoning in `docs/decision-log.md` D-19.
+
+### Added — six shapes, every one confirmed against a verified idlelib instance
+
+- **`zip-truncates-on-length-mismatch`** — the standing top candidate, now confirmed. The guarded
+  twin is often in the project's own tests for the very function that lacks it.
+- **`guard-conjoined-with-a-preference-flag`** — a validity guard ANDed with a notification flag, so
+  turning the preference off removes the guard. Unreachable in every default configuration and every
+  test, which is why it survives.
+- **`per-line-property-derived-from-the-aggregate`** — a per-element property computed once from the
+  joined whole. Verified: Format Paragraph turns `result` into `esult` and writes it back.
+- **`viewport-scoped-index-consumed-globally`** — a render cache doubling as a data model; correct
+  whenever the model fits on one screen.
+- **`structured-index-tested-by-string-suffix`** — `sellast[-1] != '0'` standing in for
+  `column != 0`. Fails for one value in ten, which reads as an intermittent glitch.
+- **`assertion-against-a-stub-that-cannot-fail`** — the high-value variant of `test-cannot-fail`.
+  The assertion is real; the FIXTURE cannot fail. This is what hid CRF-IDLELIB-0025, and mutation
+  testing is the hunt directive: a surviving mutant is proof, not a guess.
+
+### Added — ten false-positive classes (38-47)
+
+Class **39** is the valuable one: a commented-out block that is prose rather than code. The
+discriminator kills the whole class mechanically — **strip the `#` and `ast.parse()`; prose raises
+`SyntaxError`**. Class **44** runs the other way: `ChangeLog` / `HISTORY*` / `NEWS*` mentions are
+records of an old change, not references, and treating them as references *suppresses* real
+dead-code findings.
+
+Class **38** accounts for **163 of idlelib's 164** unreferenced symbols by itself: `unittest`
+discovery selects by base class, never by name.
+
 ## [1.12.0] - 2026-07-27
 
 Fixes found by running a full 18-agent `informed-explore` against CPython's idlelib. Findings in

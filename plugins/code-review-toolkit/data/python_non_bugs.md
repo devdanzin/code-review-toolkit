@@ -369,3 +369,106 @@ or a name bound only inside a conditional branch. Check for an assignment in *an
 before dismissing, and note that `F821` on a version-gated builtin (`ExceptionGroup`,
 `BaseExceptionGroup`) is a third thing again: it means `--target-version` was not passed, and the fix
 is to pass it rather than to dismiss the finding.
+
+### 38. A `unittest.TestCase` subclass reported as an unreferenced symbol
+
+**Looks like:** `dead-code-finder` unreferenced symbols, at scale — **163 of idlelib's 164** were this
+one class.
+
+**Why it is not a bug:** `unittest.TestLoader` selects by `issubclass(obj, TestCase)`, never by name.
+Zero literal references is the correct and expected state.
+
+**Discriminator:** `unittest.TestCase` in the MRO **and** the filename matches the `pattern=` of a
+reachable `loader.discover(...)`. Both must hold — a `TestCase` in a file the discovery pattern
+excludes really is unreachable, and that is a finding.
+
+### 39. A commented-out block that is prose, not code
+
+**Looks like:** `commented_code_blocks`, because the regex matches `# for `, `# if `, `# from `,
+`# return `, `# while `, `# raise `, `# with `, `# print `.
+
+**Why it is not a bug:** English sentences that happen to start with a Python keyword —
+`# for the handler to run after it finishes...`.
+
+**Discriminator, and it kills the whole class mechanically:** strip the `#` and `ast.parse()` the
+block. **Prose raises `SyntaxError`.** Same test disposes of pseudocode algorithm sketches, whose
+bodies are English (`delete it`, `do indent-region`).
+
+**What the REAL bug looks like:** a block that parses cleanly *and* does not self-describe as a
+template or example.
+
+### 40. A class-body import creating a class attribute
+
+**Looks like:** an unused import, at high confidence.
+
+**Why it is not a bug:** names imported inside a `class` statement become class attributes read as
+`self.X` — text sharing nothing with the import. idlelib's `editor.py:39-52` places 14 imports in the
+`EditorWindow` class body as a deliberate dependency-injection idiom, with subclasses substituting
+implementations by overriding the attribute.
+
+**Discriminator:** if the `ImportFrom` node's parent is a `ClassDef`, search for `self.<name>` and
+`<ClassName>.<name>` across the whole subclass tree before reporting; downgrade to medium regardless.
+
+### 41. An import that IS the assertion
+
+**Looks like:** an unused import in a test module.
+
+**Why it is not a bug:** `from tokenize import open, detect_encoding` under a comment reading *"Fail
+if either tokenize.open and t.detect_encoding does not exist."* Removing the import removes coverage.
+
+**Discriminator:** an unused import in a `test_*.py` whose line or preceding comment contains
+"fail" / "exist" / "available". **Real bug:** the same shape with no such comment.
+
+### 42. An import for its side effect
+
+**Looks like:** an unused import.
+
+**Why it is not a bug:** `import idlelib.pyshell  # Set Windows DPI awareness before Tk().`
+
+**Discriminator:** a trailing comment describing an *effect* rather than a use, or a module known for
+import-time registration. **Real bug:** the same shape with no comment and no registration.
+
+### 43. A placeholder identifier in a scaffold file
+
+**Discriminator:** filename is `template.py` / `*_template.py`, or the file contains other unfilled
+blanks (idlelib's has the docstring `"Test , coverage %."`). Exclude the whole file.
+
+### 44. A changelog entry read as a reference
+
+**Looks like:** a symbol that appears "referenced" in project text, suppressing a real dead-code
+finding — the inverse of the usual false positive.
+
+**Why it is wrong:** idlelib ships `ChangeLog` (1591 lines) and `HISTORY.txt` (296). A symbol's only
+non-definition occurrences there are **records of a 1990s change, not references**.
+
+**Discriminator:** exclude `ChangeLog`, `HISTORY*`, `NEWS*` from the reference corpus. The rule
+remains correct for `README`, `Doc/` and `*.def`.
+
+### 45. `PLE0704` inside a documented from-handler callback
+
+**Looks like:** a bare `raise` outside an exception handler.
+
+**Why it is not a bug:** `socketserver.BaseServer.handle_error` is invoked by the stdlib only from
+inside `except Exception:`, so the bare `raise` has a live exception. ruff cannot see dynamic context.
+
+**Discriminator:** the enclosing function overrides a documented callback whose contract is "invoked
+from within a handler". **Real bug:** a bare `raise` with no such contract — `RuntimeError: No active
+exception to reraise`.
+
+### 46. `S608` on English prose
+
+**Why it is not a bug:** ruff's `select … from` heuristic fires on natural language. idlelib's hit is
+GUI help text: *"Select the desired modifier keys above, and the final key from the list on the right."*
+
+**Discriminator:** dismiss immediately when the module imports no DB-API driver. **Real bug:** an
+f-string or `%`/`+` interpolation feeding `cursor.execute`.
+
+### 47. `B018` as a deliberate probe
+
+**Why it is not a bug:** `obj.attr` bare inside `try: … except AttributeError:` is a hasattr-probe; a
+bare undefined name inside `try: … except NameError:` exists to manufacture a traceback; a bare
+attribute read followed by an assertion about a cache exercises `__getattr__` for its side effect.
+B018 scored **0 of 5** on idlelib.
+
+**Discriminator:** an expression statement with no side effect **and** no surrounding handler —
+typically a dropped `assert` or a `==` that should have been `=`.
