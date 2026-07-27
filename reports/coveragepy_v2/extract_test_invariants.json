@@ -1,0 +1,18 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "summary": {
+    "source_files": 44,
+    "test_files": 0,
+    "source_functions": 728,
+    "total_test_functions": 0,
+    "selected_test_functions": 0,
+    "invariants_extracted": 0,
+    "similar_functions_found": 0,
+    "untested_similar_functions": 0,
+    "bug_fix_tests_found": 0
+  },
+  "invariants": [],
+  "bug_fix_tests": [],
+  "untested_similar_functions": []
+}

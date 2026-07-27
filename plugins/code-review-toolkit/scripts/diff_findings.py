@@ -36,8 +36,24 @@ from scan_common import emit  # noqa: E402
 # identify one. `line` is deliberately never part of a key -- see the module
 # docstring. A list absent from here is inventory, not findings.
 _FINDING_LISTS: dict[str, dict[str, tuple[str, ...]]] = {
+    # `message` is deliberately NOT part of the key. It carries the finding's
+    # explanatory detail, so improving the wording of a check re-splits every
+    # finding it produces into one `gone` plus one `added` -- the same spurious
+    # pair the line-number exclusion exists to prevent, arriving by another
+    # route. Caught on the idlelib v2 -> v3 gate: a message dedup fix reported a
+    # regression and a fix at the same file, line and shape.
     "scan_python_pitfalls": {
-        "findings": ("file", "shape", "type", "message"),
+        "findings": ("file", "shape", "type"),
+    },
+    "run_lint_rules": {
+        "findings": ("file", "code"),
+    },
+    "check_typing": {
+        "findings": ("file", "code"),
+        "phantom_import_findings": ("file", "code"),
+    },
+    "check_known_findings": {
+        "findings": ("id", "shape"),
     },
     "find_dead_symbols": {
         "unused_imports": ("file", "name", "module"),
@@ -67,6 +83,7 @@ _SEQUENCE_LISTS = {"analyze_imports": ("cycles",)}
 
 # Fields carried into the diff output for a human to act on, when present.
 _CARRY = (
+    "code",
     "file",
     "line",
     "location",
@@ -199,6 +216,19 @@ def analyze(argv: list[str]) -> dict:
             continue
 
         assert old_data is not None and new_data is not None
+        # Two runs of the same script over DIFFERENT trees are not comparable.
+        # Caught on the coveragepy v1 -> v2 gate: v1's extract_test_invariants
+        # had been run against `coveragepy/tests` and v2 against
+        # `coveragepy/coverage`, and the diff reported 30 findings "gone" from a
+        # tree the second run never looked at.
+        old_root = old_data.get("scan_root")
+        new_root = new_data.get("scan_root")
+        if old_root and new_root and old_root != new_root:
+            notes.append(
+                f"{script}: NOT COMPARED — different scan roots "
+                f"({old_root} vs {new_root}). A diff across scopes is meaningless."
+            )
+            continue
         for list_name, fields in registered.items():
             old_items = old_data.get(list_name) or []
             new_items = new_data.get(list_name) or []

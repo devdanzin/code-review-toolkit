@@ -1,0 +1,4834 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "files_total": 44,
+  "files_analyzed": 44,
+  "files_capped": false,
+  "summary": {
+    "source_files": 44,
+    "test_files": 101,
+    "source_files_with_tests": 27,
+    "source_files_without_tests": 17,
+    "coverage_percentage": 61.4,
+    "total_test_methods": 601,
+    "total_skipped_tests": 13,
+    "external_test_roots": [
+      "tests"
+    ]
+  },
+  "untested_sources": [
+    "coverage/control.py",
+    "coverage/disposition.py",
+    "coverage/env.py",
+    "coverage/exceptions.py",
+    "coverage/inorout.py",
+    "coverage/jsonreport.py",
+    "coverage/lcovreport.py",
+    "coverage/multiproc.py",
+    "coverage/patch.py",
+    "coverage/plugin.py",
+    "coverage/plugin_support.py",
+    "coverage/pth_file.py",
+    "coverage/pytracer.py",
+    "coverage/sqldata.py",
+    "coverage/tomlconfig.py",
+    "coverage/types.py",
+    "coverage/xmlreport.py"
+  ],
+  "source_coverage": [
+    {
+      "source_file": "coverage/__init__.py",
+      "test_files": [
+        "tests/__init__.py",
+        "tests/modules/aa/__init__.py",
+        "tests/modules/aa/bb/__init__.py",
+        "tests/modules/aa/bb/cc/__init__.py",
+        "tests/modules/ambiguous/__init__.py",
+        "tests/modules/ambiguous/pkg1/__init__.py",
+        "tests/modules/namespace_420/sub1/__init__.py",
+        "tests/modules/pkg1/__init__.py",
+        "tests/modules/pkg1/sub/__init__.py",
+        "tests/modules/pkg2/__init__.py",
+        "tests/modules/plugins/__init__.py",
+        "tests/modules/process_test/__init__.py",
+        "tests/moremodules/namespace_420/sub2/__init__.py",
+        "tests/moremodules/othermods/__init__.py",
+        "tests/moremodules/othermods/sub/__init__.py",
+        "tests/zipsrc/zip1/__init__.py"
+      ],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/__main__.py",
+      "test_files": [
+        "tests/modules/pkg1/__main__.py",
+        "tests/modules/pkg1/sub/__main__.py"
+      ],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/annotate.py",
+      "test_files": [
+        "tests/test_annotate.py"
+      ],
+      "test_method_count": 5,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 2,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/bytecode.py",
+      "test_files": [
+        "tests/test_bytecode.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 2,
+      "public_surface_size": 6,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/cmdline.py",
+      "test_files": [
+        "tests/test_cmdline.py"
+      ],
+      "test_method_count": 53,
+      "skipped_test_count": 1,
+      "public_classes": 6,
+      "public_functions": 6,
+      "public_surface_size": 14,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/collector.py",
+      "test_files": [
+        "tests/test_collector.py"
+      ],
+      "test_method_count": 1,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 16,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/config.py",
+      "test_files": [
+        "tests/test_config.py"
+      ],
+      "test_method_count": 52,
+      "skipped_test_count": 4,
+      "public_classes": 2,
+      "public_functions": 5,
+      "public_surface_size": 25,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/context.py",
+      "test_files": [
+        "tests/test_context.py"
+      ],
+      "test_method_count": 16,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 3,
+      "public_surface_size": 3,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/control.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 2,
+      "public_surface_size": 27,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/core.py",
+      "test_files": [
+        "tests/test_core.py"
+      ],
+      "test_method_count": 5,
+      "skipped_test_count": 3,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/data.py",
+      "test_files": [
+        "tests/test_data.py"
+      ],
+      "test_method_count": 81,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 7,
+      "public_surface_size": 8,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/debug.py",
+      "test_files": [
+        "tests/test_debug.py"
+      ],
+      "test_method_count": 34,
+      "skipped_test_count": 0,
+      "public_classes": 7,
+      "public_functions": 23,
+      "public_surface_size": 36,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/disposition.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 2,
+      "public_surface_size": 2,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/env.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/exceptions.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 9,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/execfile.py",
+      "test_files": [
+        "tests/test_execfile.py"
+      ],
+      "test_method_count": 26,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 5,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/files.py",
+      "test_files": [
+        "tests/test_files.py"
+      ],
+      "test_method_count": 37,
+      "skipped_test_count": 2,
+      "public_classes": 5,
+      "public_functions": 14,
+      "public_surface_size": 22,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/html.py",
+      "test_files": [
+        "tests/test_html.py"
+      ],
+      "test_method_count": 60,
+      "skipped_test_count": 0,
+      "public_classes": 9,
+      "public_functions": 8,
+      "public_surface_size": 25,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/inorout.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 5,
+      "public_surface_size": 13,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/jsonreport.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 5,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/lcovreport.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 4,
+      "public_surface_size": 6,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/misc.py",
+      "test_files": [
+        "tests/test_misc.py"
+      ],
+      "test_method_count": 14,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 16,
+      "public_surface_size": 20,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/multiproc.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/numbits.py",
+      "test_files": [
+        "tests/test_numbits.py"
+      ],
+      "test_method_count": 10,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 7,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/parser.py",
+      "test_files": [
+        "tests/test_parser.py"
+      ],
+      "test_method_count": 68,
+      "skipped_test_count": 0,
+      "public_classes": 8,
+      "public_functions": 4,
+      "public_surface_size": 35,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/patch.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 1,
+      "public_surface_size": 1,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/phystokens.py",
+      "test_files": [
+        "tests/test_phystokens.py"
+      ],
+      "test_method_count": 17,
+      "skipped_test_count": 2,
+      "public_classes": 0,
+      "public_functions": 4,
+      "public_surface_size": 4,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/plugin.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 5,
+      "public_functions": 0,
+      "public_surface_size": 24,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/plugin_support.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 5,
+      "public_functions": 0,
+      "public_surface_size": 30,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/pth_file.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/python.py",
+      "test_files": [
+        "tests/test_python.py"
+      ],
+      "test_method_count": 4,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 5,
+      "public_surface_size": 22,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/pytracer.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 6,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/regions.py",
+      "test_files": [
+        "tests/test_regions.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 1,
+      "public_surface_size": 7,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/report.py",
+      "test_files": [
+        "tests/test_report.py"
+      ],
+      "test_method_count": 56,
+      "skipped_test_count": 1,
+      "public_classes": 1,
+      "public_functions": 1,
+      "public_surface_size": 8,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/report_core.py",
+      "test_files": [
+        "tests/test_report_core.py"
+      ],
+      "test_method_count": 3,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 2,
+      "public_surface_size": 3,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/results.py",
+      "test_files": [
+        "tests/test_results.py"
+      ],
+      "test_method_count": 10,
+      "skipped_test_count": 0,
+      "public_classes": 3,
+      "public_functions": 4,
+      "public_surface_size": 22,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/sqldata.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 3,
+      "public_surface_size": 31,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/sqlitedb.py",
+      "test_files": [
+        "tests/test_sqlitedb.py"
+      ],
+      "test_method_count": 8,
+      "skipped_test_count": 0,
+      "public_classes": 1,
+      "public_functions": 0,
+      "public_surface_size": 8,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/sysmon.py",
+      "test_files": [
+        "tests/test_sysmon.py"
+      ],
+      "test_method_count": 6,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 1,
+      "public_surface_size": 13,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/templite.py",
+      "test_files": [
+        "tests/test_templite.py"
+      ],
+      "test_method_count": 29,
+      "skipped_test_count": 0,
+      "public_classes": 4,
+      "public_functions": 0,
+      "public_surface_size": 6,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/tomlconfig.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 0,
+      "public_surface_size": 13,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/types.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 8,
+      "public_functions": 0,
+      "public_surface_size": 11,
+      "has_tests": false
+    },
+    {
+      "source_file": "coverage/version.py",
+      "test_files": [
+        "tests/test_version.py"
+      ],
+      "test_method_count": 2,
+      "skipped_test_count": 0,
+      "public_classes": 0,
+      "public_functions": 0,
+      "public_surface_size": 0,
+      "has_tests": true
+    },
+    {
+      "source_file": "coverage/xmlreport.py",
+      "test_files": [],
+      "test_method_count": 0,
+      "skipped_test_count": 0,
+      "public_classes": 2,
+      "public_functions": 3,
+      "public_surface_size": 5,
+      "has_tests": false
+    }
+  ],
+  "test_details": {
+    "tests/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/conftest.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os",
+        "sys",
+        "warnings",
+        "collections.abc",
+        "hypothesis",
+        "pytest",
+        "coverage.files",
+        "tests"
+      ]
+    },
+    "tests/coveragetest.py": {
+      "classes": [
+        {
+          "name": "CoverageTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 65
+        },
+        {
+          "name": "UsingModulesMixin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 506
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "collections",
+        "contextlib",
+        "datetime",
+        "glob",
+        "io",
+        "os",
+        "os.path",
+        "random",
+        "re",
+        "shlex",
+        "sys",
+        "collections.abc",
+        "types",
+        "typing",
+        "coverage",
+        "coverage",
+        "coverage.cmdline",
+        "coverage.data",
+        "coverage.misc",
+        "coverage.types",
+        "tests.helpers",
+        "tests.helpers",
+        "tests.mixins"
+      ]
+    },
+    "tests/covmodzip1.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/goldtest.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "difflib",
+        "filecmp",
+        "fnmatch",
+        "os",
+        "os.path",
+        "re",
+        "xml.etree.ElementTree",
+        "collections.abc",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/helpers.py": {
+      "classes": [
+        {
+          "name": "CheckUniqueFilenames",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 170
+        },
+        {
+          "name": "FailingProxy",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 358
+        },
+        {
+          "name": "DebugControlString",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 390
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "collections",
+        "contextlib",
+        "dis",
+        "io",
+        "locale",
+        "os",
+        "os.path",
+        "re",
+        "shutil",
+        "subprocess",
+        "sys",
+        "textwrap",
+        "warnings",
+        "collections.abc",
+        "pathlib",
+        "typing",
+        "coverage",
+        "coverage.debug",
+        "coverage.exceptions",
+        "coverage.types"
+      ]
+    },
+    "tests/mixins.py": {
+      "classes": [
+        {
+          "name": "PytestBase",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 26
+        },
+        {
+          "name": "TempDirMixin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 58
+        },
+        {
+          "name": "RestoreModulesMixin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 95
+        },
+        {
+          "name": "StdStreamCapturingMixin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 124
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "importlib",
+        "os",
+        "os.path",
+        "sys",
+        "collections.abc",
+        "typing",
+        "pytest",
+        "coverage.misc",
+        "tests.helpers"
+      ]
+    },
+    "tests/modules/aa/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/aa/afile.odd.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/aa/afile.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/aa/bb/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/aa/bb/bfile.odd.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/aa/bb/bfile.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/aa/bb/cc/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/aa/bb/cc/cfile.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/aa/bb.odd/bfile.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/aa/zfile.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/ambiguous/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/ambiguous/pkg1/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/ambiguous/pkg1/ambiguous.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/checkspec.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/covmod1.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/namespace_420/sub1/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/pkg1/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/pkg1/__main__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__main__.py"
+      ],
+      "imported_modules": [
+        "sys"
+      ]
+    },
+    "tests/modules/pkg1/p1a.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "os",
+        "sys"
+      ]
+    },
+    "tests/modules/pkg1/p1b.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/pkg1/p1c.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/pkg1/runmod2.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "sys"
+      ]
+    },
+    "tests/modules/pkg1/sub/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/pkg1/sub/__main__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__main__.py"
+      ],
+      "imported_modules": [
+        "sys"
+      ]
+    },
+    "tests/modules/pkg1/sub/ps1a.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/pkg1/sub/runmod3.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "sys"
+      ]
+    },
+    "tests/modules/pkg2/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/pkg2/p2a.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/pkg2/p2b.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/modules/plugins/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/plugins/a_plugin.py": {
+      "classes": [
+        {
+          "name": "Plugin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 11
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "typing",
+        "coverage",
+        "coverage.plugin_support"
+      ]
+    },
+    "tests/modules/plugins/another.py": {
+      "classes": [
+        {
+          "name": "Plugin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 14
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "typing",
+        "coverage",
+        "coverage.plugin_support"
+      ]
+    },
+    "tests/modules/process_test/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/modules/process_test/try_execfile.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "itertools",
+        "json",
+        "os",
+        "sys",
+        "typing",
+        "__main__"
+      ]
+    },
+    "tests/modules/runmod1.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "sys"
+      ]
+    },
+    "tests/modules/usepkgs.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "pkg1.p1a",
+        "pkg1.p1b",
+        "pkg1.sub",
+        "pkg2.p2a",
+        "pkg2.p2b",
+        "othermods.othera",
+        "othermods.otherb",
+        "othermods.sub.osa",
+        "othermods.sub.osb",
+        "ambiguous",
+        "ambiguous.pkg1.ambiguous"
+      ]
+    },
+    "tests/moremodules/namespace_420/sub2/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/moremodules/othermods/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/moremodules/othermods/othera.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/moremodules/othermods/otherb.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/moremodules/othermods/sub/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/moremodules/othermods/sub/osa.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/moremodules/othermods/sub/osb.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    },
+    "tests/osinfo.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "sys",
+        "ctypes",
+        "ctypes",
+        "os",
+        "resource"
+      ]
+    },
+    "tests/plugin1.py": {
+      "classes": [
+        {
+          "name": "Plugin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 18
+        },
+        {
+          "name": "MyFileTracer",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 31
+        },
+        {
+          "name": "MyFileReporter",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 51
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os.path",
+        "types",
+        "typing",
+        "coverage",
+        "coverage.plugin_support",
+        "coverage.types"
+      ]
+    },
+    "tests/plugin2.py": {
+      "classes": [
+        {
+          "name": "Plugin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 26
+        },
+        {
+          "name": "RenderFileTracer",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 38
+        },
+        {
+          "name": "MyFileReporter",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 59
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os.path",
+        "types",
+        "typing",
+        "coverage",
+        "coverage.plugin_support",
+        "coverage.types",
+        "third.render"
+      ]
+    },
+    "tests/plugin_config.py": {
+      "classes": [
+        {
+          "name": "Plugin",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 15
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "typing",
+        "coverage",
+        "coverage.plugin_support",
+        "coverage.types"
+      ]
+    },
+    "tests/select_plugin.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "subprocess"
+      ]
+    },
+    "tests/strategies.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "collections.abc",
+        "hypothesis"
+      ]
+    },
+    "tests/test_annotate.py": {
+      "classes": [
+        {
+          "name": "AnnotationGoldTest",
+          "test_methods": [
+            "test_multi",
+            "test_annotate_dir",
+            "test_encoding",
+            "test_white",
+            "test_missing_after_else"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 14
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/annotate.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "coverage",
+        "tests.coveragetest",
+        "tests.goldtest"
+      ]
+    },
+    "tests/test_api.py": {
+      "classes": [
+        {
+          "name": "ApiTest",
+          "test_methods": [
+            "test_unexecuted_file",
+            "test_filenames",
+            "test_stdlib",
+            "test_include_can_measure_stdlib",
+            "test_stdlib_symlink",
+            "test_exclude_list",
+            "test_exclude_partial_list",
+            "test_exclude_and_partial_are_separate_lists",
+            "test_datafile_default",
+            "test_datafile_specified",
+            "test_datafile_and_suffix_specified",
+            "test_datafile_from_rcfile",
+            "test_deep_datafile",
+            "test_datafile_none",
+            "test_empty_reporting",
+            "test_completely_zero_reporting",
+            "test_start_stop_start_stop",
+            "test_start_save_stop",
+            "test_start_save_nostop",
+            "test_two_getdata_only_warn_once",
+            "test_two_getdata_warn_twice",
+            "test_combining_bad_data",
+            "test_combining_twice",
+            "test_combining_with_a_used_coverage",
+            "test_ordered_combine",
+            "test_warnings",
+            "test_warnings_suppressed",
+            "test_warn_once",
+            "test_warnings_with_urls",
+            "test_source_and_include_dont_conflict",
+            "test_config_crash",
+            "test_config_crash_no_crash",
+            "test_run_debug_sys"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 33,
+          "line_start": 48
+        },
+        {
+          "name": "SwitchContextTest",
+          "test_methods": [
+            "test_switch_context_testrunner",
+            "test_switch_context_with_static",
+            "test_dynamic_context_conflict",
+            "test_unknown_dynamic_context",
+            "test_switch_context_unstarted"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 740
+        },
+        {
+          "name": "CurrentInstanceTest",
+          "test_methods": [
+            "test_current"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 859
+        },
+        {
+          "name": "NamespaceModuleTest",
+          "test_methods": [
+            "test_explicit_namespace_module",
+            "test_bug_572"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 892
+        },
+        {
+          "name": "IncludeOmitTestsMixin",
+          "test_methods": [
+            "test_nothing_specified",
+            "test_include",
+            "test_include_2",
+            "test_include_as_string",
+            "test_omit",
+            "test_omit_2",
+            "test_omit_as_string",
+            "test_omit_and_include"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 915
+        },
+        {
+          "name": "SourceIncludeOmitTest",
+          "test_methods": [
+            "test_source_include_exclusive",
+            "test_source_package_as_package",
+            "test_source_package_as_dir",
+            "test_source_package_dotted_sub",
+            "test_source_package_dotted_p1b",
+            "test_source_package_part_omitted",
+            "test_source_package_as_package_part_omitted",
+            "test_ambiguous_source_package_as_dir",
+            "test_ambiguous_source_package_as_package",
+            "test_source_dirs",
+            "test_non_existent_source_dir"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 976
+        },
+        {
+          "name": "ReportIncludeOmitTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 1103
+        },
+        {
+          "name": "XmlIncludeOmitTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 1116
+        },
+        {
+          "name": "AnalysisTest",
+          "test_methods": [
+            "test_many_missing_branches"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1133
+        },
+        {
+          "name": "TestRunnerPluginTest",
+          "test_methods": [
+            "test_pretend_to_be_nose_with_cover",
+            "test_pretend_to_be_pytestcov"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1182
+        },
+        {
+          "name": "ImmutableConfigTest",
+          "test_methods": [
+            "test_config_doesnt_change"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1269
+        },
+        {
+          "name": "RelativePathTest",
+          "test_methods": [
+            "test_moving_stuff",
+            "test_moving_stuff_with_relative",
+            "test_combine_relative",
+            "test_combine_no_suffix_multiprocessing",
+            "test_files_up_one_level"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 1281
+        },
+        {
+          "name": "CombiningTest",
+          "test_methods": [
+            "test_combine_parallel_data",
+            "test_combine_parallel_data_with_a_corrupt_file",
+            "test_combine_no_usable_files",
+            "test_combine_parallel_data_in_two_steps",
+            "test_combine_parallel_data_no_append",
+            "test_combine_parallel_data_keep",
+            "test_combine_absolute_then_relative_1752"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 1454
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "fnmatch",
+        "glob",
+        "io",
+        "os",
+        "os.path",
+        "re",
+        "shutil",
+        "sys",
+        "textwrap",
+        "collections.abc",
+        "typing",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.data",
+        "coverage.exceptions",
+        "coverage.files",
+        "coverage.misc",
+        "coverage.types",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers",
+        "colorsys",
+        "usepkgs",
+        "usepkgs",
+        "usepkgs"
+      ]
+    },
+    "tests/test_arcs.py": {
+      "classes": [
+        {
+          "name": "SimpleArcTest",
+          "test_methods": [
+            "test_simple_sequence",
+            "test_function_def",
+            "test_if",
+            "test_if_else",
+            "test_compact_if",
+            "test_multiline",
+            "test_if_return",
+            "test_dont_confuse_exit_and_else",
+            "test_bug_1184",
+            "test_bug_1991",
+            "test_bug_576"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 23
+        },
+        {
+          "name": "WithTest",
+          "test_methods": [
+            "test_with",
+            "test_with_return",
+            "test_bug_146",
+            "test_nested_with_return",
+            "test_break_through_with",
+            "test_continue_through_with",
+            "test_raise_through_with",
+            "test_untaken_if_through_with",
+            "test_untaken_raise_through_with",
+            "test_leaving_module",
+            "test_with_with_lambda",
+            "test_multiline_with",
+            "test_multi_multiline_with",
+            "test_multi_multiline_with_backslash"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 14,
+          "line_start": 243
+        },
+        {
+          "name": "LoopArcTest",
+          "test_methods": [
+            "test_loop",
+            "test_nested_loop",
+            "test_break",
+            "test_continue",
+            "test_nested_breaks",
+            "test_if_1",
+            "test_while_1",
+            "test_while_true",
+            "test_while_false",
+            "test_while_not_false",
+            "test_zero_coverage_while_loop",
+            "test_bug_496_continue_in_constant_while",
+            "test_missing_while_body",
+            "test_for_if_else_for",
+            "test_for_else",
+            "test_split_for",
+            "test_while_else",
+            "test_confusing_for_loop_bug_175",
+            "test_incorrect_loop_exit_bug_1175",
+            "test_incorrect_if_bug_1175",
+            "test_generator_expression",
+            "test_generator_expression_another_way",
+            "test_other_comprehensions",
+            "test_multiline_dict_comp"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 24,
+          "line_start": 473
+        },
+        {
+          "name": "ExceptionArcTest",
+          "test_methods": [
+            "test_try_except",
+            "test_raise_followed_by_statement",
+            "test_hidden_raise",
+            "test_except_with_type",
+            "test_try_finally",
+            "test_finally_in_loop",
+            "test_break_through_finally",
+            "test_break_continue_without_finally",
+            "test_continue_through_finally",
+            "test_finally_in_loop_bug_92",
+            "test_bug_212",
+            "test_except_finally",
+            "test_multiple_except_clauses",
+            "test_return_finally",
+            "test_except_jump_finally",
+            "test_else_jump_finally"
+          ],
+          "skipped_methods": [
+            "test_exception_group"
+          ],
+          "total_test_methods": 17,
+          "line_start": 929
+        },
+        {
+          "name": "YieldTest",
+          "test_methods": [
+            "test_yield_in_loop",
+            "test_padded_yield_in_loop",
+            "test_bug_308",
+            "test_bug_324",
+            "test_coroutines",
+            "test_yield_from",
+            "test_abandoned_yield"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 1410
+        },
+        {
+          "name": "MatchCaseTest",
+          "test_methods": [
+            "test_match_case_with_default",
+            "test_match_case_with_named_default",
+            "test_match_case_with_wildcard",
+            "test_match_case_without_wildcard",
+            "test_absurd_wildcards",
+            "test_split_match_case"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 1553
+        },
+        {
+          "name": "OptimizedIfTest",
+          "test_methods": [
+            "test_optimized_away_if_0",
+            "test_optimized_away_if_1",
+            "test_optimized_away_if_1_no_else",
+            "test_optimized_if_nested",
+            "test_dunder_debug",
+            "test_if_debug",
+            "test_if_not_debug"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 1708
+        },
+        {
+          "name": "MiscArcTest",
+          "test_methods": [
+            "test_dict_literal",
+            "test_unpacked_literals",
+            "test_pathologically_long_code_object",
+            "test_partial_generators",
+            "test_failing_open"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 1833
+        },
+        {
+          "name": "DecoratorArcTest",
+          "test_methods": [
+            "test_function_decorator",
+            "test_class_decorator",
+            "test_bug_466a",
+            "test_bug_466b"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 1967
+        },
+        {
+          "name": "LambdaArcTest",
+          "test_methods": [
+            "test_multiline_lambda",
+            "test_unused_lambdas_are_confusing_bug_90",
+            "test_raise_with_lambda_looks_like_partial_branch",
+            "test_lambda_in_dict"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 2057
+        },
+        {
+          "name": "AsyncTest",
+          "test_methods": [
+            "test_async",
+            "test_async_for",
+            "test_async_with",
+            "test_async_decorator",
+            "test_bug_1158",
+            "test_bug_1176",
+            "test_bug_1205",
+            "test_bug_1999"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 2141
+        },
+        {
+          "name": "AnnotationTest",
+          "test_methods": [
+            "test_annotations"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 2318
+        },
+        {
+          "name": "ExcludeTest",
+          "test_methods": [
+            "test_default",
+            "test_custom_pragmas"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 2335
+        },
+        {
+          "name": "LineDataTest",
+          "test_methods": [
+            "test_branch"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 2379
+        },
+        {
+          "name": "NonPythonFileTest",
+          "test_methods": [
+            "test_non_python_file"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 2402
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "textwrap",
+        "unittest",
+        "pytest",
+        "tests.coveragetest",
+        "tests.helpers",
+        "coverage",
+        "coverage.python",
+        "coverage",
+        "coverage.data",
+        "coverage.files"
+      ]
+    },
+    "tests/test_bytecode.py": {
+      "classes": [
+        {
+          "name": "BytecodeTest",
+          "test_methods": [
+            "test_code_objects",
+            "test_op_set"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 18
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/bytecode.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "dis",
+        "textwrap",
+        "tests.coveragetest",
+        "coverage",
+        "coverage.bytecode"
+      ]
+    },
+    "tests/test_cmdline.py": {
+      "classes": [
+        {
+          "name": "BaseCmdLineTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 36
+        },
+        {
+          "name": "BaseCmdLineTestTest",
+          "test_methods": [
+            "test_cmd_executes_same"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 258
+        },
+        {
+          "name": "CmdLineTest",
+          "test_methods": [
+            "test_annotate",
+            "test_combine",
+            "test_combine_doesnt_confuse_options_with_args",
+            "test_debug",
+            "test_debug_sys",
+            "test_debug_config",
+            "test_debug_pybehave",
+            "test_debug_premain",
+            "test_debug_sqlite",
+            "test_erase",
+            "test_version",
+            "test_help_option",
+            "test_help_command",
+            "test_cmd_help",
+            "test_html",
+            "test_json",
+            "test_lcov",
+            "test_report",
+            "test_run",
+            "test_multiprocessing_needs_config_file",
+            "test_run_debug",
+            "test_run_module",
+            "test_run_nothing",
+            "test_run_from_config",
+            "test_run_module_from_config",
+            "test_run_from_config_but_empty",
+            "test_run_dashm_only",
+            "test_cant_append_parallel",
+            "test_xml",
+            "test_no_arguments_at_all",
+            "test_bad_command",
+            "test_save_signal_wrong"
+          ],
+          "skipped_methods": [
+            "test_save_signal_windows"
+          ],
+          "total_test_methods": 33,
+          "line_start": 268
+        },
+        {
+          "name": "CmdLineDebugDataTest",
+          "test_methods": [
+            "test_debug_data",
+            "test_debug_data_with_no_data_file",
+            "test_debug_combinable_data",
+            "test_debug_multiple_files"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 1442
+        },
+        {
+          "name": "CmdLineStdoutTest",
+          "test_methods": [
+            "test_minimum_help",
+            "test_version",
+            "test_help_contains_command_name",
+            "test_help_contains_command_name_from_package",
+            "test_help",
+            "test_cmd_help",
+            "test_unknown_topic",
+            "test_error",
+            "test_option_error",
+            "test_doc_url"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 10,
+          "line_start": 1545
+        },
+        {
+          "name": "CmdMainTest",
+          "test_methods": [
+            "test_normal",
+            "test_raise",
+            "test_internalraise",
+            "test_exit"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 1627
+        },
+        {
+          "name": "CoverageReportingFake",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 1683
+        },
+        {
+          "name": "FailUnderTest",
+          "test_methods": [
+            "test_fail_under",
+            "test_fail_under_with_precision"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1730
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/cmdline.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "ast",
+        "os",
+        "pprint",
+        "re",
+        "sys",
+        "textwrap",
+        "collections.abc",
+        "pathlib",
+        "typing",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage.cmdline",
+        "coverage",
+        "coverage.control",
+        "coverage.config",
+        "coverage.exceptions",
+        "coverage.types",
+        "coverage.version",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_collector.py": {
+      "classes": [
+        {
+          "name": "CollectorTest",
+          "test_methods": [
+            "test_should_trace_cache"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 16
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/collector.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "os.path",
+        "coverage",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_concurrency.py": {
+      "classes": [
+        {
+          "name": "LineCountTest",
+          "test_methods": [
+            "test_line_count"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 74
+        },
+        {
+          "name": "ConcurrencyTest",
+          "test_methods": [
+            "test_gevent_simple_code",
+            "test_greenlet",
+            "test_greenlet_simple_code",
+            "test_bad_concurrency",
+            "test_bad_concurrency_in_config",
+            "test_no_multiple_light_concurrency",
+            "test_no_multiple_light_concurrency_in_config",
+            "test_multiprocessing_needs_config_file"
+          ],
+          "skipped_methods": [
+            "test_threads",
+            "test_threads_simple_code",
+            "test_gevent",
+            "test_bug_330",
+            "test_threads_with_gevent"
+          ],
+          "total_test_methods": 13,
+          "line_start": 188
+        },
+        {
+          "name": "WithoutConcurrencyModuleTest",
+          "test_methods": [
+            "test_missing_module"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 381
+        },
+        {
+          "name": "MultiprocessingTest",
+          "test_methods": [
+            "test_multiprocessing_simple",
+            "test_multiprocessing_append",
+            "test_multiprocessing_bootstrap_error_handling",
+            "test_bug_890"
+          ],
+          "skipped_methods": [
+            "test_multiprocessing_with_branching"
+          ],
+          "total_test_methods": 5,
+          "line_start": 452
+        },
+        {
+          "name": "SigtermTest",
+          "test_methods": [
+            "test_sigterm_multiprocessing_saves_data",
+            "test_sigterm_threading_saves_data",
+            "test_sigterm_still_runs"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 696
+        }
+      ],
+      "standalone_tests": [
+        "test_coverage_stop_in_threads",
+        "test_thread_safe_save_data"
+      ],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "glob",
+        "multiprocessing",
+        "os",
+        "pathlib",
+        "random",
+        "re",
+        "sys",
+        "threading",
+        "time",
+        "types",
+        "collections.abc",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.data",
+        "coverage.exceptions",
+        "coverage.files",
+        "coverage.misc",
+        "coverage.sqldata",
+        "tests",
+        "tests.coveragetest",
+        "gevent",
+        "greenlet"
+      ]
+    },
+    "tests/test_config.py": {
+      "classes": [
+        {
+          "name": "ConfigTest",
+          "test_methods": [
+            "test_default_config",
+            "test_arguments",
+            "test_config_file",
+            "test_named_config_file",
+            "test_toml_config_file",
+            "test_toml_ints_can_be_floats",
+            "test_ignored_config_file",
+            "test_config_file_then_args",
+            "test_data_file_from_environment",
+            "test_debug_from_environment",
+            "test_rcfile_from_environment",
+            "test_missing_rcfile_from_environment",
+            "test_force_environment",
+            "test_parse_errors",
+            "test_toml_parse_errors",
+            "test_environment_vars_in_config",
+            "test_environment_vars_in_toml_config",
+            "test_tilde_in_config",
+            "test_tilde_in_toml_config",
+            "test_tweaks_after_constructor",
+            "test_tweaks_paths_after_constructor",
+            "test_tweak_error_checking",
+            "test_tweak_plugin_options",
+            "test_unknown_option",
+            "test_unknown_option_toml",
+            "test_unknown_patch",
+            "test_misplaced_option",
+            "test_unknown_option_in_other_ini_file",
+            "test_exceptions_from_missing_things",
+            "test_exclude_also",
+            "test_partial_also",
+            "test_core_option"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 32,
+          "line_start": 28
+        },
+        {
+          "name": "ConfigFileTest",
+          "test_methods": [
+            "test_config_file_settings",
+            "test_config_file_settings_in_setupcfg",
+            "test_config_file_settings_in_toxini",
+            "test_config_file_settings_in_setupcfg_if_coveragerc_specified",
+            "test_config_file_settings_in_tox_if_coveragerc_specified",
+            "test_setupcfg_only_if_not_coveragerc",
+            "test_toxini_only_if_not_coveragerc",
+            "test_setupcfg_only_if_prefixed",
+            "test_toxini_only_if_prefixed",
+            "test_tox_ini_even_if_setup_cfg",
+            "test_read_prefixed_sections_from_explicit_file",
+            "test_non_ascii",
+            "test_unreadable_config",
+            "test_nocoveragerc_file_when_specified",
+            "test_no_toml_installed_no_toml",
+            "test_exceptions_from_missing_toml_things",
+            "test_coveragerc_toml_priority",
+            "test_coveragerc_toml_unprefixed_syntax",
+            "test_pyproject_toml_ignores_unprefixed_sections"
+          ],
+          "skipped_methods": [
+            "test_no_toml_installed_explicit_toml",
+            "test_no_toml_installed_pyproject_toml",
+            "test_no_toml_installed_pyproject_toml_shorter_syntax",
+            "test_no_toml_installed_pyproject_no_coverage"
+          ],
+          "total_test_methods": 23,
+          "line_start": 675
+        },
+        {
+          "name": "SerializeConfigTest",
+          "test_methods": [
+            "test_them"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1108
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/config.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "os",
+        "tempfile",
+        "pathlib",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage.config",
+        "coverage.tomlconfig",
+        "coverage",
+        "coverage.config",
+        "coverage.exceptions",
+        "coverage.tomlconfig",
+        "coverage.types",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_context.py": {
+      "classes": [
+        {
+          "name": "StaticContextTest",
+          "test_methods": [
+            "test_no_context",
+            "test_static_context",
+            "test_combining_line_contexts",
+            "test_combining_arc_contexts"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 26
+        },
+        {
+          "name": "DynamicContextTest",
+          "test_methods": [
+            "test_dynamic_alone",
+            "test_static_and_dynamic"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 138
+        },
+        {
+          "name": "Parent",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 227
+        },
+        {
+          "name": "Child",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 236
+        },
+        {
+          "name": "SomethingElse",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 240
+        },
+        {
+          "name": "MultiChild",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 244
+        },
+        {
+          "name": "QualnameTest",
+          "test_methods": [
+            "test_method",
+            "test_inherited_method",
+            "test_mi_inherited_method",
+            "test_no_arguments",
+            "test_plain_old_function",
+            "test_fake_out",
+            "test_property",
+            "test_changeling",
+            "test_bug_829",
+            "test_bug_1210"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 10,
+          "line_start": 267
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/context.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "inspect",
+        "os.path",
+        "typing",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage.context",
+        "coverage.data",
+        "coverage.types",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_core.py": {
+      "classes": [
+        {
+          "name": "CoverageCoreTest",
+          "test_methods": [
+            "test_core_default",
+            "test_core_request_pytrace",
+            "test_core_request_sysmon_no_dyncontext",
+            "test_core_request_sysmon_no_branches",
+            "test_core_request_nosuchcore"
+          ],
+          "skipped_methods": [
+            "test_core_request_ctrace",
+            "test_core_request_ctrace_but_missing",
+            "test_core_request_sysmon"
+          ],
+          "total_test_methods": 8,
+          "line_start": 19
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/core.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.exceptions",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers",
+        "coverage.tracer"
+      ]
+    },
+    "tests/test_coverage.py": {
+      "classes": [
+        {
+          "name": "TestCoverageTest",
+          "test_methods": [
+            "test_successful_coverage",
+            "test_failed_coverage",
+            "test_exceptions_really_fail"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 17
+        },
+        {
+          "name": "BasicCoverageTest",
+          "test_methods": [
+            "test_simple",
+            "test_indentation_wackiness",
+            "test_multiline_initializer",
+            "test_list_comprehension"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 82
+        },
+        {
+          "name": "SimpleStatementTest",
+          "test_methods": [
+            "test_expression",
+            "test_assert",
+            "test_assignment",
+            "test_assign_tuple",
+            "test_more_assignments",
+            "test_attribute_assignment",
+            "test_list_of_attribute_assignment",
+            "test_augmented_assignment",
+            "test_triple_string_stuff",
+            "test_pass",
+            "test_del",
+            "test_raise",
+            "test_raise_followed_by_statement",
+            "test_return",
+            "test_return_followed_by_statement",
+            "test_yield",
+            "test_break",
+            "test_continue",
+            "test_strange_unexecuted_continue",
+            "test_import",
+            "test_global",
+            "test_exec",
+            "test_extra_doc_string",
+            "test_nonascii",
+            "test_module_docstring"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 25,
+          "line_start": 140
+        },
+        {
+          "name": "CompoundStatementTest",
+          "test_methods": [
+            "test_statement_list",
+            "test_if",
+            "test_elif",
+            "test_elif_no_else",
+            "test_elif_bizarre",
+            "test_split_if",
+            "test_pathological_split_if",
+            "test_absurd_split_if",
+            "test_constant_if",
+            "test_while",
+            "test_while_else",
+            "test_split_while",
+            "test_for",
+            "test_for_else",
+            "test_split_for",
+            "test_try_except",
+            "test_try_except_stranded_else",
+            "test_try_finally",
+            "test_function_def",
+            "test_class_def"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 20,
+          "line_start": 732
+        },
+        {
+          "name": "AnnotationTest",
+          "test_methods": [
+            "test_attribute_annotation",
+            "test_attribute_annotation_from_future"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1436
+        },
+        {
+          "name": "ExcludeTest",
+          "test_methods": [
+            "test_default",
+            "test_default_ellipsis_multiline_return_type",
+            "test_two_excludes",
+            "test_excluding_elif_suites",
+            "test_excluding_try_except",
+            "test_excluding_try_except_stranded_else",
+            "test_excluded_comprehension_branches"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 1467
+        },
+        {
+          "name": "Py24Test",
+          "test_methods": [
+            "test_function_decorators",
+            "test_function_decorators_with_args",
+            "test_double_function_decorators"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 1631
+        },
+        {
+          "name": "Py25Test",
+          "test_methods": [
+            "test_with_statement",
+            "test_try_except_finally",
+            "test_try_except_finally_stranded_else"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 1709
+        },
+        {
+          "name": "ModuleTest",
+          "test_methods": [
+            "test_not_singleton",
+            "test_old_name_and_new_name"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1854
+        },
+        {
+          "name": "ReportingTest",
+          "test_methods": [
+            "test_no_data_to_report_on_annotate",
+            "test_no_data_to_report_on_html",
+            "test_no_data_to_report_on_xml"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 1868
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.exceptions",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_data.py": {
+      "classes": [
+        {
+          "name": "CoverageDataTest",
+          "test_methods": [
+            "test_empty_data_is_false",
+            "test_empty_data_is_false_when_read",
+            "test_line_data_is_true",
+            "test_arc_data_is_true",
+            "test_empty_line_data_is_false",
+            "test_empty_arc_data_is_false",
+            "test_adding_lines",
+            "test_adding_arcs",
+            "test_ok_to_add_lines_twice",
+            "test_ok_to_add_arcs_twice",
+            "test_ok_to_add_empty_arcs",
+            "test_cant_add_arcs_with_lines",
+            "test_cant_add_lines_with_arcs",
+            "test_touch_file_with_lines",
+            "test_touch_file_with_arcs",
+            "test_set_query_contexts",
+            "test_no_lines_vs_unmeasured_file",
+            "test_lines_with_contexts",
+            "test_contexts_by_lineno_with_lines",
+            "test_no_duplicate_lines",
+            "test_no_duplicate_arcs",
+            "test_no_arcs_vs_unmeasured_file",
+            "test_arcs_with_contexts",
+            "test_contexts_by_lineno_with_arcs",
+            "test_contexts_by_lineno_with_unknown_file",
+            "test_context_by_lineno_with_query_contexts_with_lines",
+            "test_context_by_lineno_with_query_contexts_with_arcs",
+            "test_file_tracer_name",
+            "test_ok_to_repeat_file_tracer",
+            "test_ok_to_set_empty_file_tracer",
+            "test_cant_change_file_tracer_name",
+            "test_update_lines",
+            "test_update_arcs",
+            "test_update_cant_mix_lines_and_arcs",
+            "test_update_file_tracers",
+            "test_update_conflicting_file_tracers",
+            "test_update_file_tracer_vs_no_file_tracer",
+            "test_update_lines_empty",
+            "test_update_arcs_empty",
+            "test_asking_isnt_measuring",
+            "test_add_to_hash_with_lines",
+            "test_add_to_hash_with_arcs",
+            "test_add_to_lines_hash_with_missing_file",
+            "test_add_to_arcs_hash_with_missing_file",
+            "test_empty_lines_are_still_lines",
+            "test_empty_arcs_are_still_arcs",
+            "test_cant_touch_in_empty_data",
+            "test_read_and_write_are_opposites",
+            "test_thread_stress",
+            "test_dead_thread_dbs_are_reaped",
+            "test_purge_files_lines",
+            "test_purge_files_arcs",
+            "test_cant_purge_in_empty_data"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 53,
+          "line_start": 140
+        },
+        {
+          "name": "CoverageDataInTempDirTest",
+          "test_methods": [
+            "test_read_write_lines",
+            "test_read_write_arcs",
+            "test_read_errors",
+            "test_hard_read_error",
+            "test_error_when_closing",
+            "test_wrong_schema_version",
+            "test_wrong_schema_schema"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 686
+        },
+        {
+          "name": "CoverageDataFilesTest",
+          "test_methods": [
+            "test_reading_missing",
+            "test_writing_and_reading",
+            "test_debug_output_with_debug_option",
+            "test_debug_output_without_debug_option",
+            "test_explicit_suffix",
+            "test_true_suffix",
+            "test_combining",
+            "test_erasing",
+            "test_erasing_parallel",
+            "test_combining_with_aliases",
+            "test_combining_from_different_directories",
+            "test_combining_from_files",
+            "test_combining_from_nonexistent_directories",
+            "test_interleaved_erasing_bug716",
+            "test_combining_with_crazy_filename",
+            "test_meta_data",
+            "test_skipping_duplicates"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 17,
+          "line_start": 756
+        },
+        {
+          "name": "DumpsLoadsTest",
+          "test_methods": [
+            "test_serialization",
+            "test_misfed_serialization"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1096
+        },
+        {
+          "name": "NoDiskTest",
+          "test_methods": [
+            "test_updating",
+            "test_erase_doesnt_leak_memory"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1124
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/data.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "gc",
+        "glob",
+        "os",
+        "os.path",
+        "re",
+        "sqlite3",
+        "threading",
+        "collections.abc",
+        "typing",
+        "unittest",
+        "pytest",
+        "coverage.data",
+        "coverage.data",
+        "coverage.exceptions",
+        "coverage.files",
+        "coverage.types",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_debug.py": {
+      "classes": [
+        {
+          "name": "InfoFormatterTest",
+          "test_methods": [
+            "test_info_formatter",
+            "test_info_formatter_with_generator",
+            "test_too_long_label"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 42
+        },
+        {
+          "name": "DebugTraceTest",
+          "test_methods": [
+            "test_debug_no_trace",
+            "test_debug_trace",
+            "test_debug_trace_pid",
+            "test_debug_callers",
+            "test_debug_config",
+            "test_debug_sys",
+            "test_debug_sys_ctracer",
+            "test_debug_pybehave",
+            "test_debug_sqlite",
+            "test_debug_process",
+            "test_debug_pytest"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 142
+        },
+        {
+          "name": "DebugOutputTest",
+          "test_methods": [
+            "test_stderr_default",
+            "test_envvar",
+            "test_config_file",
+            "test_stdout_alias"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 284
+        },
+        {
+          "name": "DebugControlTest",
+          "test_methods": [
+            "test_debug_control",
+            "test_debug_write_exceptions",
+            "test_debug_write_self"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 327
+        },
+        {
+          "name": "ShortStackTest",
+          "test_methods": [
+            "test_short_stack",
+            "test_short_stack_skip",
+            "test_short_stack_full",
+            "test_short_stack_short_filenames",
+            "test_short_stack_frame_ids"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 392
+        },
+        {
+          "name": "ShortFilenameTest",
+          "test_methods": [
+            "test_short_filename"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 448
+        }
+      ],
+      "standalone_tests": [
+        "test_info_header",
+        "test_short_id",
+        "test_clipped_repr",
+        "test_filter_text",
+        "test_relevant_environment_display",
+        "test_exc_one_line",
+        "test_auto_repr"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/debug.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "ast",
+        "io",
+        "os",
+        "re",
+        "sys",
+        "collections.abc",
+        "typing",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.debug",
+        "coverage.exceptions",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_execfile.py": {
+      "classes": [
+        {
+          "name": "RunFileTest",
+          "test_methods": [
+            "test_run_python_file",
+            "test_no_extra_file",
+            "test_universal_newlines",
+            "test_missing_final_newline",
+            "test_no_such_file",
+            "test_directory_with_main",
+            "test_directory_without_main",
+            "test_code_throws",
+            "test_code_exits",
+            "test_excepthook_exit",
+            "test_excepthook_throw"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 31
+        },
+        {
+          "name": "RunPycFileTest",
+          "test_methods": [
+            "test_running_pyc",
+            "test_running_pyo",
+            "test_running_pyc_from_wrong_python",
+            "test_running_hashed_pyc",
+            "test_no_such_pyc_file",
+            "test_running_py_from_binary"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 219
+        },
+        {
+          "name": "RunModuleTest",
+          "test_methods": [
+            "test_runmod1",
+            "test_runmod2",
+            "test_runmod3",
+            "test_pkg1_main",
+            "test_pkg1_sub_main",
+            "test_pkg1_init",
+            "test_no_such_module",
+            "test_no_main",
+            "test_no_spec_deprecation"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 293
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/execfile.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "compileall",
+        "json",
+        "os",
+        "os.path",
+        "pathlib",
+        "py_compile",
+        "re",
+        "sys",
+        "typing",
+        "collections.abc",
+        "pytest",
+        "coverage.exceptions",
+        "coverage.execfile",
+        "coverage.files",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_filereporter.py": {
+      "classes": [
+        {
+          "name": "FileReporterTest",
+          "test_methods": [
+            "test_filenames",
+            "test_odd_filenames",
+            "test_modules",
+            "test_module_files",
+            "test_comparison",
+            "test_zipfile"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 20
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "sys",
+        "coverage.plugin",
+        "coverage.python",
+        "tests.coveragetest",
+        "tests.helpers",
+        "aa",
+        "aa.bb",
+        "aa.bb.cc",
+        "aa.afile",
+        "aa.bb.bfile",
+        "aa.bb.cc.cfile",
+        "zip1",
+        "zip1.zip1"
+      ]
+    },
+    "tests/test_files.py": {
+      "classes": [
+        {
+          "name": "FilesTest",
+          "test_methods": [
+            "test_simple",
+            "test_peer_directories",
+            "test_filepath_contains_absolute_prefix_twice",
+            "test_canonical_filename_ensure_cache_hit",
+            "test_relative_dir_for_root",
+            "test_source_exists"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 38
+        },
+        {
+          "name": "MatcherTest",
+          "test_methods": [
+            "test_tree_matcher",
+            "test_module_matcher",
+            "test_glob_matcher",
+            "test_glob_matcher_overload",
+            "test_glob_windows_paths"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 365
+        },
+        {
+          "name": "PathAliasesTest",
+          "test_methods": [
+            "test_noop",
+            "test_nomatch",
+            "test_wildcard",
+            "test_no_accidental_match",
+            "test_no_map_if_not_exist",
+            "test_no_dotslash",
+            "test_relative_pattern",
+            "test_multiple_patterns",
+            "test_cant_have_wildcard_at_end",
+            "test_no_accidental_munging",
+            "test_paths_are_os_corrected",
+            "test_windows_on_linux",
+            "test_linux_on_windows",
+            "test_relative_windows_on_linux",
+            "test_relative_linux_on_windows",
+            "test_multiple_wildcard",
+            "test_windows_root_paths",
+            "test_leading_wildcard",
+            "test_dot"
+          ],
+          "skipped_methods": [
+            "test_implicit_relative_windows_on_linux",
+            "test_implicit_relative_linux_on_windows"
+          ],
+          "total_test_methods": 21,
+          "line_start": 482
+        },
+        {
+          "name": "PathAliasesRealFilesTest",
+          "test_methods": [
+            "test_aliasing_zip_files"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 737
+        },
+        {
+          "name": "FindPythonFilesTest",
+          "test_methods": [
+            "test_find_python_files",
+            "test_find_python_files_include_namespace_packages"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 750
+        },
+        {
+          "name": "WindowsFileTest",
+          "test_methods": [
+            "test_actual_path"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 798
+        }
+      ],
+      "standalone_tests": [
+        "test_flat_rootname",
+        "test_globs_to_regex",
+        "test_invalid_globs"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/files.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "itertools",
+        "os",
+        "os.path",
+        "re",
+        "typing",
+        "collections.abc",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage.exceptions",
+        "coverage.files",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_goldtest.py": {
+      "classes": [
+        {
+          "name": "CompareTest",
+          "test_methods": [
+            "test_good",
+            "test_bad",
+            "test_good_needs_scrubs",
+            "test_actual_extra",
+            "test_xml_good",
+            "test_xml_bad"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 54
+        },
+        {
+          "name": "ContainsTest",
+          "test_methods": [
+            "test_contains",
+            "test_contains_rx",
+            "test_contains_any",
+            "test_doesnt_contain"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 161
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os.path",
+        "re",
+        "pytest",
+        "tests.coveragetest",
+        "tests.goldtest",
+        "tests.goldtest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_html.py": {
+      "classes": [
+        {
+          "name": "HtmlTestHelpers",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 39
+        },
+        {
+          "name": "HtmlReportParser",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 153
+        },
+        {
+          "name": "FileWriteTracker",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 191
+        },
+        {
+          "name": "HtmlDeltaTest",
+          "test_methods": [
+            "test_html_created",
+            "test_html_delta_from_source_change",
+            "test_html_delta_from_coverage_change",
+            "test_html_delta_from_settings_change",
+            "test_html_delta_from_coverage_version_change",
+            "test_file_becomes_100",
+            "test_status_format_change",
+            "test_dont_overwrite_gitignore",
+            "test_dont_write_gitignore_into_existing_directory"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 204
+        },
+        {
+          "name": "HtmlTitleTest",
+          "test_methods": [
+            "test_default_title",
+            "test_title_set_in_config_file",
+            "test_non_ascii_title_set_in_config_file",
+            "test_title_set_in_args"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 417
+        },
+        {
+          "name": "HtmlWithUnparsableFilesTest",
+          "test_methods": [
+            "test_dotpy_not_python",
+            "test_dotpy_not_python_ignored",
+            "test_dothtml_not_python",
+            "test_execed_liar_ignored",
+            "test_execed_liar_ignored_indentation_error",
+            "test_decode_error",
+            "test_formfeeds",
+            "test_splitlines_special_chars"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 456
+        },
+        {
+          "name": "HtmlTest",
+          "test_methods": [
+            "test_missing_source_file_incorrect_message",
+            "test_extensionless_file_collides_with_extension",
+            "test_has_date_stamp_in_files",
+            "test_reporting_on_unmeasured_file",
+            "test_report_skip_covered",
+            "test_html_skip_covered",
+            "test_report_skip_covered_branches",
+            "test_report_skip_covered_100",
+            "test_report_skip_covered_100_functions",
+            "test_report_skip_empty",
+            "test_html_skip_empty"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 600
+        },
+        {
+          "name": "HtmlGoldTest",
+          "test_methods": [
+            "test_a",
+            "test_b_branch",
+            "test_bom",
+            "test_isolatin1",
+            "test_omit_1",
+            "test_omit_2",
+            "test_omit_3",
+            "test_omit_4",
+            "test_omit_5",
+            "test_other",
+            "test_partial",
+            "test_styled",
+            "test_multiline",
+            "test_tabbed",
+            "test_bug_1828",
+            "test_bug_1836",
+            "test_bug_1980",
+            "test_unicode",
+            "test_accented_dot_py",
+            "test_accented_directory"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 20,
+          "line_start": 823
+        },
+        {
+          "name": "HtmlWithContextsTest",
+          "test_methods": [
+            "test_dynamic_contexts",
+            "test_filtered_dynamic_contexts",
+            "test_no_contexts_warns_no_contexts",
+            "test_dynamic_contexts_relative_files",
+            "test_context_labels_cant_break_out_of_script"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 1445
+        },
+        {
+          "name": "HtmlHelpersTest",
+          "test_methods": [
+            "test_bad_link",
+            "test_bad_anchor"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1571
+        }
+      ],
+      "standalone_tests": [
+        "test_encode_int"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/html.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "collections",
+        "datetime",
+        "glob",
+        "json",
+        "os",
+        "os.path",
+        "re",
+        "sys",
+        "html.parser",
+        "typing",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage.html",
+        "coverage",
+        "coverage.exceptions",
+        "coverage.files",
+        "coverage.misc",
+        "coverage.report_core",
+        "coverage.types",
+        "tests",
+        "tests.coveragetest",
+        "tests.goldtest",
+        "tests.goldtest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_json.py": {
+      "classes": [
+        {
+          "name": "JsonReportTest",
+          "test_methods": [
+            "test_line_and_branch_coverage",
+            "test_regions",
+            "test_empty_file",
+            "test_context_coverage",
+            "test_l1_equals_l2"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 22
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "json",
+        "os",
+        "datetime",
+        "typing",
+        "pytest",
+        "coverage",
+        "coverage",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_lcov.py": {
+      "classes": [
+        {
+          "name": "LcovTest",
+          "test_methods": [
+            "test_lone_file",
+            "test_line_checksums",
+            "test_simple_line_coverage_two_files",
+            "test_branch_coverage_one_file",
+            "test_branch_coverage_two_files",
+            "test_half_covered_branch",
+            "test_empty_init_files",
+            "test_empty_init_file_skipped",
+            "test_excluded_lines",
+            "test_excluded_functions",
+            "test_all_functions_excluded",
+            "test_exit_branches",
+            "test_genexpr_exit_arcs_pruned_full_coverage",
+            "test_genexpr_exit_arcs_pruned_never_true",
+            "test_genexpr_exit_arcs_pruned_always_true",
+            "test_genexpr_exit_arcs_pruned_not_reached",
+            "test_always_raise",
+            "test_multiline_conditions",
+            "test_module_exit"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 19,
+          "line_start": 16
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "math",
+        "textwrap",
+        "coverage",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_misc.py": {
+      "classes": [
+        {
+          "name": "HasherTest",
+          "test_methods": [
+            "test_scrambled_sets",
+            "test_equality_matches_hash"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 33
+        },
+        {
+          "name": "RemoveFileTest",
+          "test_methods": [
+            "test_remove_nonexistent_file",
+            "test_remove_actual_file",
+            "test_actual_errors"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 74
+        },
+        {
+          "name": "ImportThirdPartyTest",
+          "test_methods": [
+            "test_success",
+            "test_failure"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 132
+        }
+      ],
+      "standalone_tests": [
+        "test_substitute_variables",
+        "test_substitute_variables_errors",
+        "test_human_sorted",
+        "test_human_sorted_items",
+        "test_stdout_link_tty",
+        "test_stdout_link_not_tty",
+        "test_stdout_link_with_fake_stdout"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/misc.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "sys",
+        "typing",
+        "unittest",
+        "pytest",
+        "hypothesis",
+        "coverage.exceptions",
+        "coverage.misc",
+        "coverage.misc",
+        "coverage.misc",
+        "tests.coveragetest",
+        "tests.strategies"
+      ]
+    },
+    "tests/test_mixins.py": {
+      "classes": [
+        {
+          "name": "TempDirMixinTest",
+          "test_methods": [
+            "test_make_file",
+            "test_make_file_newline",
+            "test_make_file_non_ascii",
+            "test_make_bytes_file"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 15
+        },
+        {
+          "name": "RestoreModulessMixinTest",
+          "test_methods": [
+            "test_module_independence",
+            "test_cleanup_and_reimport"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 67
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "pytest",
+        "coverage.misc",
+        "tests.mixins",
+        "xyzzy"
+      ]
+    },
+    "tests/test_numbits.py": {
+      "classes": [
+        {
+          "name": "NumbitsOpTest",
+          "test_methods": [
+            "test_conversion",
+            "test_union",
+            "test_intersection",
+            "test_any_intersection",
+            "test_num_in_numbits"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 47
+        },
+        {
+          "name": "NumbitsSqliteFunctionTest",
+          "test_methods": [
+            "test_numbits_union",
+            "test_numbits_intersection",
+            "test_numbits_any_intersection",
+            "test_num_in_numbits",
+            "test_numbits_to_nums"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 105
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/numbits.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "json",
+        "sqlite3",
+        "collections.abc",
+        "hypothesis",
+        "hypothesis.strategies",
+        "coverage",
+        "coverage.numbits",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_oddball.py": {
+      "classes": [
+        {
+          "name": "ThreadingTest",
+          "test_methods": [
+            "test_threading",
+            "test_thread_run"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 26
+        },
+        {
+          "name": "RecursionTest",
+          "test_methods": [
+            "test_short_recursion",
+            "test_long_recursion",
+            "test_long_recursion_recovery"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 75
+        },
+        {
+          "name": "MemoryLeakTest",
+          "test_methods": [],
+          "skipped_methods": [
+            "test_for_leaks",
+            "test_eval_codeobject_leak"
+          ],
+          "total_test_methods": 2,
+          "line_start": 168
+        },
+        {
+          "name": "MemoryFumblingTest",
+          "test_methods": [],
+          "skipped_methods": [
+            "test_dropping_none"
+          ],
+          "total_test_methods": 1,
+          "line_start": 253
+        },
+        {
+          "name": "PyexpatTest",
+          "test_methods": [
+            "test_pyexpat"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 295
+        },
+        {
+          "name": "ExceptionTest",
+          "test_methods": [
+            "test_exception"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 348
+        },
+        {
+          "name": "DoctestTest",
+          "test_methods": [
+            "test_doctest"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 477
+        },
+        {
+          "name": "GettraceTest",
+          "test_methods": [
+            "test_round_trip_in_untraced_function",
+            "test_setting_new_trace_function"
+          ],
+          "skipped_methods": [
+            "test_atexit_gettrace"
+          ],
+          "total_test_methods": 3,
+          "line_start": 526
+        },
+        {
+          "name": "ExecTest",
+          "test_methods": [
+            "test_correct_filename",
+            "test_unencodable_filename"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 649
+        },
+        {
+          "name": "MockingProtectionTest",
+          "test_methods": [
+            "test_isolate_module_os",
+            "test_defend_against_mock_open"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 698
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os.path",
+        "re",
+        "sys",
+        "warnings",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.data",
+        "coverage.files",
+        "coverage.misc",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers",
+        "py_compile"
+      ]
+    },
+    "tests/test_parser.py": {
+      "classes": [
+        {
+          "name": "PythonParserTestBase",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 25
+        },
+        {
+          "name": "PythonParserTest",
+          "test_methods": [
+            "test_exit_counts",
+            "test_try_except",
+            "test_excluded_classes",
+            "test_missing_branch_to_excluded_code",
+            "test_not_python",
+            "test_empty_decorated_function",
+            "test_nested_context_managers",
+            "test_module_docstrings",
+            "test_fuzzed_double_parse",
+            "test_bug_1891",
+            "test_fuzzed_weirdness"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 11,
+          "line_start": 38
+        },
+        {
+          "name": "ExclusionParserTest",
+          "test_methods": [
+            "test_simple",
+            "test_excluding_if_suite",
+            "test_excluding_if_but_not_else_suite",
+            "test_excluding_else_suite",
+            "test_excluding_oneline_if",
+            "test_excluding_a_colon_not_a_suite",
+            "test_excluding_for_suite",
+            "test_excluding_for_else",
+            "test_excluding_while",
+            "test_excluding_while_else",
+            "test_excluding_try_except",
+            "test_excluding_if_pass",
+            "test_multiline_if_no_branch",
+            "test_excluding_function",
+            "test_excluding_bug1713",
+            "test_excluding_method",
+            "test_excluding_class",
+            "test_excludes_non_ascii",
+            "test_no_exclude_at_all",
+            "test_formfeed",
+            "test_decorator_pragmas",
+            "test_decorator_pragmas_with_colons",
+            "test_class_decorator_pragmas",
+            "test_over_exclusion_bug1779",
+            "test_multiline_exclusion_single_line",
+            "test_multiline_exclusion_suite",
+            "test_multiline_exclusion_no_match",
+            "test_multiline_exclusion_no_source",
+            "test_multiline_exclusion_all_lines_must_match",
+            "test_multiline_exclusion_multiple_matches",
+            "test_multiline_exclusion_suite2",
+            "test_multiline_exclusion_match_all",
+            "test_multiline_exclusion_block",
+            "test_multiline_exclusion_block2",
+            "test_multiline_exclusion_block3",
+            "test_multiline_exclusion_whole_source",
+            "test_multiline_exclusion_from_marker"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 37,
+          "line_start": 236
+        },
+        {
+          "name": "ParserMissingArcDescriptionTest",
+          "test_methods": [
+            "test_missing_arc_description",
+            "test_missing_arc_descriptions_for_exceptions"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1100
+        },
+        {
+          "name": "MatchCaseMissingArcDescriptionTest",
+          "test_methods": [
+            "test_match_case",
+            "test_final_wildcard",
+            "test_missing_arc_descriptions_bug1775"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 1157
+        },
+        {
+          "name": "ParserFileTest",
+          "test_methods": [
+            "test_line_endings",
+            "test_encoding",
+            "test_missing_line_ending",
+            "test_os_error"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 1216
+        },
+        {
+          "name": "MultilineMapTest",
+          "test_methods": [
+            "test_single_line_statements_have_no_entries",
+            "test_parenthesized_expression",
+            "test_backslash_continuation",
+            "test_triple_quoted_string",
+            "test_multiline_signature",
+            "test_multiline_if_header",
+            "test_blank_and_comment_lines_inside_statement",
+            "test_statements_map_to_their_own_starts",
+            "test_unparsable_text_raises",
+            "test_agrees_with_python_parser"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 10,
+          "line_start": 1327
+        }
+      ],
+      "standalone_tests": [
+        "test_is_constant_test_expr"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/parser.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "ast",
+        "re",
+        "textwrap",
+        "tokenize",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage.exceptions",
+        "coverage.parser",
+        "coverage.types",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_phystokens.py": {
+      "classes": [
+        {
+          "name": "PhysTokensTest",
+          "test_methods": [
+            "test_simple",
+            "test_missing_final_newline",
+            "test_tab_indentation",
+            "test_bug_822",
+            "test_tokenize_real_file",
+            "test_1828",
+            "test_stress",
+            "test_fstring_middle"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 68
+        },
+        {
+          "name": "SoftKeywordTest",
+          "test_methods": [
+            "test_soft_keywords_match_case"
+          ],
+          "skipped_methods": [
+            "test_soft_keyword_type",
+            "test_soft_keyword_lazy"
+          ],
+          "total_test_methods": 3,
+          "line_start": 185
+        },
+        {
+          "name": "SourceEncodingTest",
+          "test_methods": [
+            "test_detect_source_encoding",
+            "test_detect_source_encoding_not_in_comment",
+            "test_dont_detect_source_encoding_on_third_line",
+            "test_detect_source_encoding_of_empty_file",
+            "test_bom",
+            "test_bom_with_encoding",
+            "test_bom_is_wrong",
+            "test_unknown_encoding"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 262
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/phystokens.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "os.path",
+        "re",
+        "sys",
+        "textwrap",
+        "warnings",
+        "pytest",
+        "coverage",
+        "coverage.phystokens",
+        "coverage.python",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_plugins.py": {
+      "classes": [
+        {
+          "name": "NullConfig",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 34
+        },
+        {
+          "name": "FakeConfig",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 41
+        },
+        {
+          "name": "LoadPluginsTest",
+          "test_methods": [
+            "test_implicit_boolean",
+            "test_importing_and_configuring",
+            "test_importing_and_configuring_more_than_one",
+            "test_cant_import",
+            "test_plugin_must_define_coverage_init"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 68
+        },
+        {
+          "name": "PluginTest",
+          "test_methods": [
+            "test_plugin_imported",
+            "test_missing_plugin_raises_import_error",
+            "test_bad_plugin_isnt_hidden",
+            "test_plugin_sys_info",
+            "test_plugin_with_no_sys_info",
+            "test_local_files_are_importable",
+            "test_coverage_init_plugins"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 7,
+          "line_start": 180
+        },
+        {
+          "name": "PluginWarningOnPyTracerTest",
+          "test_methods": [
+            "test_exception_if_plugins_on_pytracer"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 332
+        },
+        {
+          "name": "FileTracerTest",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 355
+        },
+        {
+          "name": "GoodFileTracerTest",
+          "test_methods": [
+            "test_plugin1",
+            "test_plugin2",
+            "test_plugin2_with_branch",
+            "test_plugin2_with_text_report",
+            "test_plugin2_with_html_report",
+            "test_plugin2_with_xml_report",
+            "test_defer_to_python",
+            "test_find_unexecuted"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 359
+        },
+        {
+          "name": "BadFileTracerTest",
+          "test_methods": [
+            "test_file_tracer_has_no_file_tracer_method",
+            "test_file_tracer_has_inherited_sourcefilename_method",
+            "test_plugin_has_inherited_filereporter_method",
+            "test_file_tracer_fails",
+            "test_file_tracer_fails_eventually",
+            "test_file_tracer_returns_wrong",
+            "test_has_dynamic_source_filename_fails",
+            "test_source_filename_fails",
+            "test_source_filename_returns_wrong",
+            "test_dynamic_source_filename_fails",
+            "test_line_number_range_raises_error",
+            "test_line_number_range_returns_non_tuple",
+            "test_line_number_range_returns_triple",
+            "test_line_number_range_returns_pair_of_strings"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 14,
+          "line_start": 672
+        },
+        {
+          "name": "ConfigurerPluginTest",
+          "test_methods": [
+            "test_configurer_plugin"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1101
+        },
+        {
+          "name": "DynamicContextPluginTest",
+          "test_methods": [
+            "test_plugin_standalone",
+            "test_static_context",
+            "test_plugin_with_test_function",
+            "test_multiple_plugins"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 1118
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "inspect",
+        "io",
+        "math",
+        "os.path",
+        "collections.abc",
+        "typing",
+        "xml.etree",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.plugin_support",
+        "coverage.data",
+        "coverage.exceptions",
+        "coverage.misc",
+        "coverage.types",
+        "coverage.plugin",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_process.py": {
+      "classes": [
+        {
+          "name": "ProcessTest",
+          "test_methods": [
+            "test_save_on_exit",
+            "test_tests_dir_is_importable",
+            "test_coverage_run_envvar_is_in_coveragerun",
+            "test_append_data",
+            "test_append_data_with_different_file",
+            "test_append_can_create_a_data_file",
+            "test_combine_with_rc",
+            "test_combine_with_aliases",
+            "test_erase_parallel",
+            "test_missing_source_file",
+            "test_running_missing_file",
+            "test_code_throws",
+            "test_code_exits",
+            "test_code_exits_no_arg",
+            "test_warnings_during_reporting",
+            "test_warns_if_never_run",
+            "test_warn_preimported",
+            "test_deprecation_warnings",
+            "test_run_twice",
+            "test_module_name"
+          ],
+          "skipped_methods": [
+            "test_fork",
+            "test_os_exit",
+            "test_warnings_trace_function_changed_with_threads",
+            "test_warning_trace_function_changed",
+            "test_timid",
+            "test_lang_c",
+            "test_save_signal_usr1"
+          ],
+          "total_test_methods": 27,
+          "line_start": 37
+        },
+        {
+          "name": "EnvironmentTest",
+          "test_methods": [
+            "test_coverage_run_is_like_python",
+            "test_coverage_run_far_away_is_like_python",
+            "test_coverage_run_dashm_is_like_python_dashm",
+            "test_coverage_run_dir_is_like_python_dir",
+            "test_coverage_run_dashm_dir_no_init_is_like_python",
+            "test_coverage_run_dashm_dir_with_init_is_like_python",
+            "test_coverage_run_dashm_equal_to_doubledashsource",
+            "test_coverage_run_dashm_superset_of_doubledashsource",
+            "test_coverage_run_script_imports_doubledashsource",
+            "test_coverage_run_dashm_is_like_python_dashm_off_path",
+            "test_coverage_run_dashm_is_like_python_dashm_with__main__207",
+            "test_coverage_zip_is_like_python",
+            "test_isolated_dashm_runme",
+            "test_coverage_custom_script",
+            "test_bug_909"
+          ],
+          "skipped_methods": [
+            "test_coverage_run_far_away_is_like_python_windows",
+            "test_coverage_in_symlink_is_like_python",
+            "test_pythonsafepath",
+            "test_pythonsafepath_dashm_runme",
+            "test_pythonsafepath_dashm",
+            "test_bug_862"
+          ],
+          "total_test_methods": 21,
+          "line_start": 825
+        },
+        {
+          "name": "ExcepthookTest",
+          "test_methods": [
+            "test_excepthook"
+          ],
+          "skipped_methods": [
+            "test_excepthook_exit",
+            "test_excepthook_throw"
+          ],
+          "total_test_methods": 3,
+          "line_start": 1117
+        },
+        {
+          "name": "AliasedCommandTest",
+          "test_methods": [
+            "test_major_version_works",
+            "test_wrong_alias_doesnt_work",
+            "test_specific_alias_works",
+            "test_aliases_used_in_messages"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 1204
+        },
+        {
+          "name": "PydocTest",
+          "test_methods": [
+            "test_pydoc_coverage",
+            "test_pydoc_coverage_coverage"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1245
+        },
+        {
+          "name": "FailUnderTest",
+          "test_methods": [
+            "test_report_43_is_ok",
+            "test_report_43_is_not_ok",
+            "test_report_42p86_is_not_ok",
+            "test_report_99p9_is_not_ok"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 1269
+        },
+        {
+          "name": "FailUnderNoFilesTest",
+          "test_methods": [
+            "test_report"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1320
+        },
+        {
+          "name": "FailUnderEmptyFilesTest",
+          "test_methods": [
+            "test_report"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1330
+        },
+        {
+          "name": "YankedDirectoryTest",
+          "test_methods": [
+            "test_removing_directory",
+            "test_removing_directory_with_error"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 1344
+        },
+        {
+          "name": "ProcessStartupTest",
+          "test_methods": [
+            "test_patch_subprocess",
+            "test_subprocess_with_pth_files",
+            "test_subprocess_with_pth_files_and_parallel",
+            "test_subprocess_in_directories",
+            "test_subprocess_dir_with_source"
+          ],
+          "skipped_methods": [
+            "test_subprocess_gets_nonfile_config"
+          ],
+          "total_test_methods": 6,
+          "line_start": 1379
+        },
+        {
+          "name": "ExecvTest",
+          "test_methods": [
+            "test_execv_patch"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1600
+        },
+        {
+          "name": "ProcessStartupWithSourceTest",
+          "test_methods": [
+            "test_pth_and_source_work_together"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1677
+        },
+        {
+          "name": "StdoutStderrTest",
+          "test_methods": [
+            "test_stdout_is_only_json"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 1777
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "csv",
+        "glob",
+        "itertools",
+        "json",
+        "os",
+        "os.path",
+        "platform",
+        "re",
+        "signal",
+        "stat",
+        "sys",
+        "textwrap",
+        "pathlib",
+        "typing",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.data",
+        "coverage.files",
+        "coverage.sqldata",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers",
+        "main"
+      ]
+    },
+    "tests/test_python.py": {
+      "classes": [
+        {
+          "name": "GetZipBytesTest",
+          "test_methods": [
+            "test_get_encoded_zip_files"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 21
+        },
+        {
+          "name": "RunpyTest",
+          "test_methods": [
+            "test_runpy_path"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 69
+        }
+      ],
+      "standalone_tests": [
+        "test_source_for_file",
+        "test_source_for_file_windows"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/python.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "pathlib",
+        "sys",
+        "pytest",
+        "coverage",
+        "coverage.python",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_regions.py": {
+      "classes": [],
+      "standalone_tests": [
+        "test_code_regions",
+        "test_real_code_regions"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/regions.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "collections",
+        "textwrap",
+        "pathlib",
+        "pytest",
+        "coverage.plugin",
+        "coverage.regions",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_report.py": {
+      "classes": [
+        {
+          "name": "SummaryTest",
+          "test_methods": [
+            "test_report",
+            "test_report_just_one",
+            "test_report_wildcard",
+            "test_report_omitting",
+            "test_report_including",
+            "test_report_include_relative_files_and_path",
+            "test_report_include_relative_files_and_wildcard_path",
+            "test_omit_files_here",
+            "test_run_source_vs_report_include",
+            "test_run_omit_vs_report_omit",
+            "test_report_branches",
+            "test_report_show_missing",
+            "test_report_show_missing_branches",
+            "test_report_show_missing_branches_and_lines",
+            "test_report_skip_covered_no_branches",
+            "test_report_skip_covered_branches",
+            "test_report_skip_covered_branches_with_totals",
+            "test_report_skip_covered_all_files_covered",
+            "test_report_skip_covered_longfilename",
+            "test_report_skip_covered_no_data",
+            "test_report_skip_empty",
+            "test_report_skip_empty_no_data",
+            "test_report_precision",
+            "test_report_precision_all_zero",
+            "test_report_module_docstrings",
+            "test_dotpy_not_python",
+            "test_accented_directory",
+            "test_accenteddotpy_not_python",
+            "test_dotpy_not_python_ignored",
+            "test_dothtml_not_python",
+            "test_report_no_extension",
+            "test_report_with_chdir",
+            "test_markdown_escape_filename",
+            "test_bug_156_file_not_run_should_be_zero",
+            "test_bug_203_mixed_case_listed_twice_with_rc",
+            "test_bug_203_mixed_case_listed_twice",
+            "test_tracing_pyc_file",
+            "test_missing_py_file_during_run",
+            "test_empty_files",
+            "test_markdown_with_missing",
+            "test_bug_1524"
+          ],
+          "skipped_methods": [
+            "test_pyw_files"
+          ],
+          "total_test_methods": 42,
+          "line_start": 33
+        },
+        {
+          "name": "ReportingReturnValueTest",
+          "test_methods": [
+            "test_report",
+            "test_html",
+            "test_xml"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 1135
+        },
+        {
+          "name": "SummaryReporterConfigurationTest",
+          "test_methods": [
+            "test_test_data",
+            "test_defaults",
+            "test_print_missing",
+            "test_default_sort_report",
+            "test_sort_report_by_name",
+            "test_sort_report_by_stmts",
+            "test_sort_report_by_missing",
+            "test_sort_report_by_cover",
+            "test_sort_report_by_cover_plus",
+            "test_sort_report_by_cover_reversed",
+            "test_sort_report_by_invalid_option",
+            "test_report_with_invalid_format"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 12,
+          "line_start": 1173
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/report.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "glob",
+        "io",
+        "math",
+        "os",
+        "os.path",
+        "py_compile",
+        "re",
+        "string",
+        "pytest",
+        "coverage",
+        "coverage",
+        "coverage.control",
+        "coverage.data",
+        "coverage.exceptions",
+        "coverage.files",
+        "coverage.report",
+        "coverage.types",
+        "tests.coveragetest",
+        "tests.helpers",
+        "start",
+        "usepkgs"
+      ]
+    },
+    "tests/test_report_common.py": {
+      "classes": [
+        {
+          "name": "ReportMapsPathsTest",
+          "test_methods": [
+            "test_map_paths_during_line_report_without_setting",
+            "test_map_paths_during_line_report",
+            "test_map_paths_during_branch_report_without_setting",
+            "test_map_paths_during_branch_report",
+            "test_map_paths_during_annotate",
+            "test_map_paths_during_html_report",
+            "test_map_paths_during_xml_report",
+            "test_map_paths_during_json_report",
+            "test_map_paths_during_lcov_report"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 9,
+          "line_start": 18
+        },
+        {
+          "name": "ReportWithJinjaTest",
+          "test_methods": [
+            "test_report",
+            "test_html",
+            "test_xml",
+            "test_json",
+            "test_lcov"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 5,
+          "line_start": 174
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "textwrap",
+        "coverage",
+        "coverage.files",
+        "tests.coveragetest",
+        "tests.goldtest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_report_core.py": {
+      "classes": [
+        {
+          "name": "FakeReporter",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 20
+        },
+        {
+          "name": "RenderReportTest",
+          "test_methods": [
+            "test_stdout",
+            "test_file",
+            "test_exception"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 39
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/report_core.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "typing",
+        "collections.abc",
+        "pytest",
+        "coverage.exceptions",
+        "coverage.report_core",
+        "coverage.types",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_results.py": {
+      "classes": [
+        {
+          "name": "NumbersTest",
+          "test_methods": [
+            "test_basic",
+            "test_addition",
+            "test_sum",
+            "test_pc_covered_str",
+            "test_display_covered",
+            "test_covered_ratio"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 22
+        }
+      ],
+      "standalone_tests": [
+        "test_should_fail_under",
+        "test_should_fail_under_invalid_value",
+        "test_format_lines",
+        "test_format_lines_with_arcs"
+      ],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/results.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "math",
+        "typing",
+        "collections.abc",
+        "pytest",
+        "coverage.exceptions",
+        "coverage.results",
+        "coverage.types",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_setup.py": {
+      "classes": [
+        {
+          "name": "SetupPyTest",
+          "test_methods": [
+            "test_metadata"
+          ],
+          "skipped_methods": [
+            "test_more_metadata"
+          ],
+          "total_test_methods": 2,
+          "line_start": 20
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "sys",
+        "typing",
+        "pytest",
+        "coverage",
+        "coverage",
+        "tests.coveragetest",
+        "setup"
+      ]
+    },
+    "tests/test_sqlitedb.py": {
+      "classes": [
+        {
+          "name": "SqliteDbTest",
+          "test_methods": [
+            "test_error_reporting",
+            "test_retry_execute",
+            "test_retry_execute_failure",
+            "test_retry_executemany_void",
+            "test_retry_executemany_void_failure",
+            "test_open_fails_on_bad_db",
+            "test_execute_void_can_allow_failure",
+            "test_execute_void_can_refuse_failure"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 24
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/sqlitedb.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "unittest",
+        "pytest",
+        "coverage.exceptions",
+        "coverage.sqlitedb",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_sysmon.py": {
+      "classes": [
+        {
+          "name": "ComputeMultilineMapTest",
+          "test_methods": [
+            "test_python_file",
+            "test_missing_file",
+            "test_non_python_file",
+            "test_indentation_error"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 21
+        },
+        {
+          "name": "MultilineMapCacheTest",
+          "test_methods": [
+            "test_each_file_computed_at_most_once",
+            "test_cache_dies_with_the_tracer"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 48
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/sysmon.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "unittest",
+        "pytest",
+        "coverage",
+        "coverage.sysmon",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_templite.py": {
+      "classes": [
+        {
+          "name": "TempliteTest",
+          "test_methods": [
+            "test_passthrough",
+            "test_variables",
+            "test_undefined_variables",
+            "test_pipes",
+            "test_reusability",
+            "test_attribute",
+            "test_member_function",
+            "test_item_access",
+            "test_loops",
+            "test_empty_loops",
+            "test_multiline_loops",
+            "test_multiple_loops",
+            "test_comments",
+            "test_if",
+            "test_if_else",
+            "test_complex_if",
+            "test_loop_if",
+            "test_nested_loops",
+            "test_whitespace_handling",
+            "test_eat_whitespace",
+            "test_non_ascii",
+            "test_exception_during_evaluation",
+            "test_bad_names",
+            "test_bogus_tag_syntax",
+            "test_malformed_if",
+            "test_malformed_else",
+            "test_malformed_for",
+            "test_bad_nesting",
+            "test_malformed_end"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 29,
+          "line_start": 22
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/templite.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "re",
+        "types",
+        "typing",
+        "pytest",
+        "coverage.templite",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_testing.py": {
+      "classes": [
+        {
+          "name": "CoverageTestTest",
+          "test_methods": [
+            "test_file_exists",
+            "test_file_count",
+            "test_assert_recent_datetime",
+            "test_assert_warnings",
+            "test_assert_no_warnings",
+            "test_sub_python_is_this_python",
+            "test_run_command_stdout_stderr",
+            "test_stdout"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 45
+        },
+        {
+          "name": "CheckUniqueFilenamesTest",
+          "test_methods": [
+            "test_detect_duplicate"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 226
+        },
+        {
+          "name": "CheckCoverageTest",
+          "test_methods": [
+            "test_check_coverage_possible_branches",
+            "test_check_coverage_missing_branches",
+            "test_check_coverage_mismatched_missing_branches"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 259
+        },
+        {
+          "name": "ReLinesTest",
+          "test_methods": [
+            "test_re_lines",
+            "test_re_lines_inverted",
+            "test_re_line",
+            "test_re_line_bad"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 4,
+          "line_start": 306
+        },
+        {
+          "name": "ArczTest",
+          "test_methods": [
+            "test_arcz_to_arcs"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 383
+        },
+        {
+          "name": "AssertCoverageWarningsTest",
+          "test_methods": [
+            "test_one_warning",
+            "test_many_warnings",
+            "test_wrong_type",
+            "test_wrong_message",
+            "test_wrong_number_too_many",
+            "test_wrong_number_too_few",
+            "test_regex_matches",
+            "test_regex_doesnt_match"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 8,
+          "line_start": 400
+        }
+      ],
+      "standalone_tests": [
+        "test_assert_count_equal",
+        "test_failing_proxy",
+        "test_all_our_source_files"
+      ],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "datetime",
+        "os",
+        "re",
+        "sys",
+        "warnings",
+        "pytest",
+        "coverage",
+        "coverage.exceptions",
+        "coverage.files",
+        "coverage.types",
+        "tests.coveragetest",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_venv.py": {
+      "classes": [
+        {
+          "name": "VirtualenvTest",
+          "test_methods": [
+            "test_third_party_venv_isnt_measured",
+            "test_us_in_venv_isnt_measured",
+            "test_venv_isnt_measured",
+            "test_installed_namespace_packages",
+            "test_bug_888"
+          ],
+          "skipped_methods": [
+            "test_venv_with_dynamic_plugin"
+          ],
+          "total_test_methods": 6,
+          "line_start": 209
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os",
+        "os.path",
+        "shutil",
+        "pathlib",
+        "typing",
+        "collections.abc",
+        "pytest",
+        "coverage",
+        "tests",
+        "tests.coveragetest",
+        "tests.helpers",
+        "tests.helpers"
+      ]
+    },
+    "tests/test_version.py": {
+      "classes": [
+        {
+          "name": "VersionTest",
+          "test_methods": [
+            "test_version_info",
+            "test_make_version"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 2,
+          "line_start": 14
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/version.py"
+      ],
+      "imported_modules": [
+        "__future__",
+        "coverage",
+        "coverage.version",
+        "tests.coveragetest"
+      ]
+    },
+    "tests/test_xml.py": {
+      "classes": [
+        {
+          "name": "XmlTestHelpers",
+          "test_methods": [],
+          "skipped_methods": [],
+          "total_test_methods": 0,
+          "line_start": 30
+        },
+        {
+          "name": "XmlTestHelpersTest",
+          "test_methods": [
+            "test_assert_source"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 1,
+          "line_start": 78
+        },
+        {
+          "name": "XmlReportTest",
+          "test_methods": [
+            "test_default_file_placement",
+            "test_argument_affects_xml_placement",
+            "test_output_directory_does_not_exist",
+            "test_config_affects_xml_placement",
+            "test_no_data",
+            "test_no_source",
+            "test_filename_format_showing_everything",
+            "test_filename_format_including_filename",
+            "test_filename_format_including_module",
+            "test_reporting_on_nothing",
+            "test_empty_file_is_100_not_0",
+            "test_empty_file_is_skipped",
+            "test_curdir_source",
+            "test_deep_source",
+            "test_nonascii_directory",
+            "test_accented_dot_py",
+            "test_accented_directory",
+            "test_no_duplicate_packages",
+            "test_bug_1709"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 19,
+          "line_start": 107
+        },
+        {
+          "name": "XmlPackageStructureTest",
+          "test_methods": [
+            "test_package_names",
+            "test_package_depth_1",
+            "test_package_depth_2",
+            "test_package_depth_3",
+            "test_source_prefix",
+            "test_relative_source"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 6,
+          "line_start": 384
+        },
+        {
+          "name": "XmlGoldTest",
+          "test_methods": [
+            "test_a_xml_1",
+            "test_a_xml_2",
+            "test_y_xml_branch"
+          ],
+          "skipped_methods": [],
+          "total_test_methods": 3,
+          "line_start": 552
+        }
+      ],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os",
+        "os.path",
+        "re",
+        "typing",
+        "collections.abc",
+        "xml.etree",
+        "pytest",
+        "coverage",
+        "coverage.files",
+        "coverage",
+        "coverage.exceptions",
+        "coverage.files",
+        "coverage.misc",
+        "tests.coveragetest",
+        "tests.goldtest",
+        "tests.helpers",
+        "sub.doit"
+      ]
+    },
+    "tests/testenv.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": [
+        "__future__",
+        "os",
+        "coverage"
+      ]
+    },
+    "tests/zipsrc/zip1/__init__.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [
+        "coverage/__init__.py"
+      ],
+      "imported_modules": []
+    },
+    "tests/zipsrc/zip1/zip1.py": {
+      "classes": [],
+      "standalone_tests": [],
+      "parse_error": false,
+      "matched_sources": [],
+      "imported_modules": []
+    }
+  }
+}

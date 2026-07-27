@@ -1,0 +1,55 @@
+{
+  "project_root": "/home/danzin/projects/coveragepy",
+  "scan_root": "/home/danzin/projects/coveragepy/coverage",
+  "status": "OK",
+  "failure_reason": null,
+  "mypy_version": "1.20.0",
+  "config_file": "/home/danzin/projects/coveragepy/pyproject.toml",
+  "uses_project_config": true,
+  "returncode": 0,
+  "stderr": "",
+  "files_checked": 45,
+  "summary": {
+    "total": 0,
+    "defects": 0,
+    "missing_annotations": 0,
+    "other": 0,
+    "by_code": {},
+    "stale_ignores": 0,
+    "phantom_imports": 3,
+    "strict_pass_ran": true
+  },
+  "findings": [],
+  "phantom_import_findings": [
+    {
+      "file": "/home/danzin/projects/coveragepy/coverage/html.py",
+      "line": 134,
+      "column": 0,
+      "severity": "error",
+      "code": "no-any-unimported",
+      "message": "Argument 2 to \"data_for_file\" becomes \"Any\" due to an unfollowed import",
+      "kind": "other",
+      "pass": "disallow-any-unimported"
+    },
+    {
+      "file": "/home/danzin/projects/coveragepy/coverage/html.py",
+      "line": 231,
+      "column": 0,
+      "severity": "error",
+      "code": "no-any-unimported",
+      "message": "Argument 2 to \"__init__\" becomes \"Any\" due to an unfollowed import",
+      "kind": "other",
+      "pass": "disallow-any-unimported"
+    },
+    {
+      "file": "/home/danzin/projects/coveragepy/coverage/html.py",
+      "line": 815,
+      "column": 0,
+      "severity": "error",
+      "code": "no-any-unimported",
+      "message": "Argument 3 to \"can_skip_file\" becomes \"Any\" due to an unfollowed import",
+      "kind": "other",
+      "pass": "disallow-any-unimported"
+    }
+  ]
+}

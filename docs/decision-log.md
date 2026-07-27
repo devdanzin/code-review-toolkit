@@ -720,3 +720,51 @@ tier-1 lint pass reached the ASYNC rules once the version fix landed.
 The plan expected tkinter to stress reachability tiering and the dead-code FP classes hardest. **It
 did not, because this run did not include `find_dead_symbols`** — that pairing needs Phase 4 item 4.3
 (reachability tiering), which is not built. Recorded in the report rather than claimed.
+
+---
+
+## D-18 · 2026-07-27 · Phase 6 — the gates pass, and both caught a defect in the gate
+
+### 6.1 idlelib v2 → v3: a clean FP-regression pass
+
+```
+scan_python_pitfalls  101 -> 101   added 0  gone 0  unchanged 101
+measure_complexity     12 ->   9   (the documented nesting recalibration)
+```
+
+Zero false-positive regression across everything Phases 0-5 shipped: one new shape, three scanner bug
+fixes, a retuned lint pass and a recalibrated complexity metric. First time the gate has been run for
+its actual purpose rather than as a self-test.
+
+### 6.2 coverage.py v1 → v2 at the same commit
+
+`d37859cd` both times, so **every difference is the toolkit, none is the target**. `scan_python_pitfalls`
+`26 -> 26` with zero movement. The large `gone` counts are the previously-recorded fixes finally
+visible as a diff: `find_dead_symbols` `42/9/2 -> 0/0/0`, `analyze_imports.cycles` `20 -> 9`.
+
+### Both gates found a defect in `diff_findings.py` itself
+
+**`message` was part of the key.** Improving a check's wording re-split every finding it produces
+into one `gone` plus one `added` — the identical spurious pair the line-number exclusion exists to
+prevent, arriving through a different field. Caught on idlelib v2 → v3: the `duplicated-guard`
+message dedup reported a regression *and* a fix at the same file, line and shape. `message` is
+explanatory detail, not identity.
+
+**Two runs over different trees were silently diffed.** coverage.py v1's `extract_test_invariants`
+had been captured against `coveragepy/tests` and v2 against `coveragepy/coverage`. The diff reported
+**30 findings "gone"** from a tree the second run never looked at — a completely fabricated
+regression, reported with the same confidence as a real one. Mismatched `scan_root`s are now refused.
+
+**Lesson, and it is the same one as D-13 and D-17:** every one of these was found by *using* the
+artifact rather than reading it. A gate that has never been run is not a gate.
+
+### Still open at the end of this pass
+
+- **6.3** confidence-tier precision measurement, and **6.4** `_pyrepl` under `known-issues`.
+- **Phase 2 items 2.2-2.8** — five shapes plus the ruff-derived harvest. The strongest candidate is
+  **`B905`** (`zip()` without `strict=`), 16 instances across three corpora and no catalogued shape.
+- **Phase 4 items 4.1-4.5, 4.7** — notably **4.3 reachability tiering**, without which the tkinter run
+  could not stress the dead-code false-positive classes as the plan intended (D-17).
+- **Scanner runtime** (plan §9). A full `Lib/` sweep with 38 checks exceeded 20 minutes and was
+  killed; the plan's recorded baseline is 5 minutes with 10 checks. A benchmark nobody can afford to
+  run stops being run.

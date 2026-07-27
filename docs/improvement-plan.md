@@ -370,12 +370,12 @@ produce something useful there, not just on annotated code.
 
 ## 7. Phase 6 — Re-runs and calibration
 
-| # | Item |
-|---|---|
-| 6.1 | idlelib run #4 → diff vs #3 (final FP-regression gate) |
-| 6.2 | coverage.py re-run → diff vs v1; **`known-issues` regression check** against its 60 catalogued findings |
-| 6.3 | Confidence-tier precision measurement |
-| 6.4 | Re-run `_pyrepl` under `known-issues` |
+| # | Item | Status |
+|---|---|---|
+| 6.1 | idlelib run #4 → diff vs #3 (final FP-regression gate) | **DONE** as v2→v3 — `101 → 101, added 0, gone 0`, D-18 |
+| 6.2 | coverage.py re-run → diff vs v1; **`known-issues` regression check** against its 60 catalogued findings | **DONE** — D-18 (diff) and D-15 (known-issues) |
+| 6.3 | Confidence-tier precision measurement | open |
+| 6.4 | Re-run `_pyrepl` under `known-issues` | open |
 
 **6.2 is the first real test of `known-issues`** — 60 findings with locations and shapes, against a
 repo that will have moved on. Expect some `absent` verdicts that are drift, not fixes.

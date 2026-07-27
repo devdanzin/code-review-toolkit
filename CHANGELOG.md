@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-07-27
+
+Phase 6 — the regression gates. Both gates caught a defect in the gate itself.
+
+### Measured — the FP-regression gate passes
+
+- **idlelib v2 → v3: `101 → 101, added 0, gone 0, unchanged 101`.** A clean pass across everything
+  Phases 0–5 shipped: one new shape, three scanner bug fixes, and a retuned lint pass. This is what
+  the gate was built for and it is the first time it has been run in anger.
+- Complexity hotspots `12 → 9` on idlelib and `18 → 14` on coverage.py — the documented `elif`/`if
+  False:` nesting recalibration, not a finding change.
+- **coverage.py v1 → v2 at the same commit (`d37859cd`), so every difference is the toolkit.**
+  `scan_python_pitfalls` `26 → 26` with zero movement. `find_dead_symbols` `42/9/2 → 0/0/0` and
+  `analyze_imports.cycles` `20 → 9`, both the previously-recorded fixes now visible as a diff.
+
+### Fixed — in `diff_findings.py`, both found by running it
+
+- **`message` was part of the finding key.** Improving a check's wording re-split every finding it
+  produces into one `gone` plus one `added` — the same spurious pair the line-number exclusion
+  exists to prevent, arriving by another route. Caught on idlelib v2 → v3, where a message dedup fix
+  reported a regression *and* a fix at the same file, line and shape.
+- **Two runs over different trees were silently diffed.** coverage.py v1's
+  `extract_test_invariants` had been run against `coveragepy/tests` and v2 against
+  `coveragepy/coverage`; the diff reported **30 findings "gone"** from a tree the second run never
+  looked at. Mismatched `scan_root`s are now refused with a note rather than compared.
+- `run_lint_rules`, `check_typing` and `check_known_findings` are now registered finding sources, so
+  the Phase 1 and 3 scanners participate in the gate instead of being silently skipped.
+
 ## [1.10.0] - 2026-07-27
 
 Phase 5 of `docs/improvement-plan.md` — the yield runs. Full reports in

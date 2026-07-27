@@ -176,5 +176,42 @@ class TestAgainstRealReports(unittest.TestCase):
         self.assertEqual(by["unchanged"], 100)
 
 
+
+
+class TestScopeMismatch(unittest.TestCase):
+    """Two runs over different trees are not comparable."""
+
+    def test_different_scan_roots_are_not_compared(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            a, b = Path(tmp) / "v1", Path(tmp) / "v2"
+            _write(
+                a,
+                "scan_python_pitfalls",
+                {"scan_root": "/p/tests", "findings": [_finding("a.py", "s", 1)]},
+            )
+            _write(
+                b,
+                "scan_python_pitfalls",
+                {"scan_root": "/p/src", "findings": []},
+            )
+            result = mod.analyze([str(a), str(b)])
+            self.assertTrue(
+                any("different scan roots" in n for n in result["notes"]),
+                result["notes"],
+            )
+            # And the finding must NOT be reported as gone from a tree the
+            # second run never looked at.
+            self.assertEqual(result["summary"]["gone"], 0)
+
+    def test_same_scan_root_is_compared(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            a, b = Path(tmp) / "v1", Path(tmp) / "v2"
+            for d, findings in ((a, [_finding("a.py", "s", 1)]), (b, [])):
+                _write(
+                    d, "scan_python_pitfalls", {"scan_root": "/p/src", "findings": findings}
+                )
+            result = mod.analyze([str(a), str(b)])
+            self.assertEqual(result["summary"]["gone"], 1)
+
 if __name__ == "__main__":
     unittest.main()
