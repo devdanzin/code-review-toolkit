@@ -1,8 +1,15 @@
 # code-review-toolkit — improvement plan
 
 **Written** 2026-07-26, after the coverage.py benchmark (v1.5.0, 40 shapes, 570 tests).
+**Revised** 2026-07-26 with the maintainer's answers to §10 — see `docs/decision-log.md` D-08.
 **Scope** Toolkit improvement only. Upstream reporting of existing findings is deliberately out of scope.
 **Pacing** Full build-out, phased across sessions. Every phase ends in a measurable checkpoint.
+
+> **Persistence rule (D-09).** Every decision, correction, plan change and benchmark result is written
+> to a file, not left in a conversation. Decisions and corrections go to `docs/decision-log.md` with a
+> `D-nn` id; plan changes are edited here *and* logged there with the reason; runs go to
+> `reports/<target>_v<n>/`; findings go to the findings repo. **Prefer committing a partial artifact
+> over holding a perfect one in context** — context is compacted, files are not.
 
 ---
 
@@ -253,7 +260,8 @@ is `AUDIT-RESULT: FIX=n CONSIDER=n ... -- NEEDS-SIGN-OFF`, and a crashed scanner
 | 4.3 | Reachability tiering (`public` / `protocol` / `internal`) | M |
 | 4.4 | `python_version_matrix.json` + version-compat agent | M |
 | 4.5 | Denominator honesty in the scan envelope | S |
-| 4.6 | Churn × complexity crossing | S |
+| 4.5b | **Create `tools/`** (decided, D-08) — home for the calibration and validation harnesses | XS |
+| 4.6 | **`measure_complexity` ingests git history directly** (decided, D-08) | M |
 | 4.7 | Dataflow-dependent shapes (tracker survey 6-8) | L |
 
 **4.1** fixes a whole *class* of bug rather than an instance. `find_dead_symbols` and `correlate_tests`
@@ -275,10 +283,25 @@ scanner silences them. `analyze_imports.py` already extracts `__all__`/`re_expor
 `code_removal_opportunities` sections — dead compatibility shims are *removable code*, which pays into
 `dead-code-finder` and `tech-debt-inventory` as well.
 
-**4.6** encodes this session's sharpest calibration lesson. On coverage.py churn and complexity were
-**inverted**: `pytracer._trace` scores 10.0 with 2 fixes in two years; `sysmon.py` scores 7.5 with 11.
-High complexity marked *settled* code, and complexity-driven triage would have pointed at exactly the
-wrong files. Rank on `fix_density`, not churn, and surface the inversion explicitly as a verdict.
+**4.6** encodes this session's sharpest calibration lesson, and is now a **build item rather than an
+agent's responsibility** (D-08). On coverage.py churn and complexity were **inverted**:
+`pytracer._trace` scores 10.0 with 2 fix-commits in two years; `sysmon.py` scores 7.5 with 11. High
+complexity marked *settled* code, and complexity-driven triage would have pointed at exactly the wrong
+files.
+
+`measure_complexity.py` gains an optional history pass (reusing `analyze_history.py`'s collection) and
+emits a **fix-density-crossed ranking** as a first-class output, so the crossing cannot be forgotten:
+
+```json
+"hotspots": [{"qualified_name": "...", "score": 10.0,
+              "fix_commits_2y": 2, "fix_density": 0.08,
+              "risk_rank": 14, "verdict": "settled"}]
+```
+
+`verdict ∈ {settled, active-risk, quiet}` — `settled` is high complexity + low fix density
+(deprioritize, and say so), `active-risk` is high on both. Also calibrate `nesting_depth`, which
+currently counts `try`/`else`/`finally` arms and `if 0:` debug blocks as levels and so overstates
+reader-facing depth.
 
 ---
 
@@ -358,14 +381,46 @@ one false finding.
 
 ---
 
-## 10. Open questions
+## 10. Decisions taken, and what remains open
 
-1. **Should `code-review-findings` be pushed?** Still local-only and still your call. It now holds 111
-   findings across 3 projects; `known-issues` (3.3) works against it either way.
-2. **`measure_complexity` ingesting history directly** (4.6) — a real feature, not a fix. Worth
-   building, or should the crossing stay an agent's job?
-3. **`migrate` command** — deferred out of this plan. The Python analogue is rich (`setup.py` →
-   `pyproject.toml`, pydantic v1→v2, `distutils`/`imp` removals) but it is blocked on 4.4, and its
-   value depends on whether you want the toolkit doing migration planning at all.
-4. **Do we want a `tools/` directory?** cpython has one (`sample_scan.py`,
-   `validate_precision.py`); this toolkit has none. 6.3 would naturally live there.
+### Answered (D-08) — folded into the phases above
+
+| Question | Answer | Where it landed |
+|---|---|---|
+| Push `code-review-findings`? | **Yes, private.** Now at `github.com/devdanzin/code-review-findings`, default branch `main` to match the family. | Done. One artifact removed pre-push for embedding local paths; `.gitignore` added. |
+| Should `measure_complexity` ingest history? | **Yes, directly.** | Item 4.6, promoted from question to build item, with a `verdict` field. |
+| `migrate` command? | **No.** Out of scope entirely, not deferred. | Removed. |
+| A `tools/` directory? | **Yes.** | Item 4.5b; home for 6.3's calibration harness. |
+
+### Still open
+
+1. **Ruff versioning policy.** A research pass is underway on ruff's current default rule set, whether
+   it changed recently, and which of the ~60 rules in the tiered selection are preview-gated, renamed
+   or removed. The failure mode that matters: a hardcoded rule code that has been renamed **silently
+   matches nothing**, and the toolkit would report a clean run. Whatever comes back, the plan should
+   adopt a mechanism — validate the configured list against `ruff rule --all` at runtime and surface
+   unknown codes in the JSON envelope — rather than trusting a static list. Also decide whether to
+   pin a ruff version, pin the rule list, or both.
+2. **How far to take `tools/`.** 6.3 (confidence-tier calibration) is the clear first inhabitant.
+   Whether a `sample_scan.py`-style sampling harness or a precision-regression baseline is worth
+   building depends on whether corpora grow past what one run handles.
+3. **Whether the FP taxonomy should become the source of truth for suppression.** Item 4.2 adds a JSON
+   companion with an `fp_class` back-reference so the prose stays authoritative. If scanners start
+   consuming it heavily, that relationship may need inverting — worth revisiting after Phase 4.
+
+---
+
+## 11. Working conventions
+
+Beyond the persistence rule at the top:
+
+- **Never patch-test in a live checkout** (D-07). `git archive HEAD | tar -x -C <scratch>`, or a
+  worktree. Verify the target tree yourself before reporting; do not accept an agent's claim of
+  restoration — one was made falsely this session.
+- **A negative result is a real result.** A plausible finding that dies under a patch-test is worth as
+  much as one that survives, and belongs in the report so it is not re-derived.
+- **Prior-art before novelty** (D-06). `gh api search/issues`, never `gh search issues`.
+- **Bump the plugin version whenever an agent is added** (item 0.6). Two agents were invisible to the
+  registry this session because they were added after the last release was cut.
+- **Report the denominator with every zero** (item 4.5). A check that silently stops firing is
+  currently invisible.
