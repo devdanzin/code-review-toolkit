@@ -902,3 +902,61 @@ with their definition files. Item 0.6's tripwire fires in the repo; nothing can 
 `migrate` (dropped), `reproduce`/OOM sweep, `recursion-guard-auditor`, `parity-checker` as an agent,
 `data/playbooks/`, campaign slice manifests. Upstream reporting of any finding — including the ten
 verified idlelib bugs — is **out of scope by the user's decision**.
+
+---
+
+## D-21 · The idlelib write-back, and what re-verification changed (2026-07-27)
+
+D-20 named this the obvious next step. It is done: `cpython-idlelib` goes **26 → 73 findings**,
+the repo **111 → 158**, coverage **158/158 (100%)**, catalog **96 → 97 shapes**.
+`code-review-findings@39bf9ea`, `code-review-toolkit@242c512`.
+
+### Re-reading every site before writing it was not ceremony
+
+Each of the 47 was re-read at its cited line in the `6080c866096` tree. That changed three:
+
+1. **0059 upgraded from a reading to a reproduction.** The claim was "`_study1` has no f-string
+   state, so a PEP 701 multi-line f-string is read as several statements". A three-way differential
+   settles it: `x = (\n a+b\n)` → `goodlines [0,3,4]`, `x = """\n a+b\n"""` → `[0,3,4]`, and
+   `x = f"{\n a+b\n}"` → **`[0,1,2,3,4]`**. The triple-quoted case IS the guarded twin, and the
+   differential is stronger evidence than the agent's original argument.
+2. **0073 corrects the report.** `FINDINGS.md` said "`exit=2` at 5 sites vs `exit=False` at 42 — the
+   42 return 0 even when their tests fail." Measured: **51 plain, 5 `exit=2`, 4 `exit=False`.**
+   `exit=2` is truthy and behaves as `exit=True`, so it is a harmless oddity; only four files are
+   affected. The report inverted which number was the finding.
+3. Line numbers for `autocomplete_w.py` (363-368, not 362-366) and `format.py` (59, not 57) were off.
+
+**The rule this confirms:** an agent-reported count is the least reliable part of an agent report.
+The *sites* held up under every check — 44 of 47 were exactly where they were said to be — but the
+one figure nobody re-derived was wrong by an order of magnitude and inverted the finding.
+
+### `verified_by`, and why `status` was not overloaded
+
+The schema already distinguishes evidence class (`reproduced` / `confirmed` / `candidate`). It did
+not distinguish evidence *author*, which matters because agent findings reach a briefing as
+"confirm and move on" and an entrenched false finding is expensive. Added `verified_by`, backfilled
+to `orchestrator` on the pass-1 set. Where a consequence rests on a measurement an agent ran and
+this session did not re-run — 0056's 20k-stop memory figure, 0058's per-keystroke timing, 0072's
+mutation survivals — the finding's `note` says so in that many words.
+
+### Shape 97 was written rather than a wrong one reused
+
+One finding (0057, `tree.py:234`, per-redraw `tag_bind` under an XXX correct since 1999) matched
+none of the 96 shapes. The choice was: label it wrongly, or let `shape_coverage.py` fail. Neither —
+`per-redraw-binding-never-released` now exists, with the discriminator that makes it usable:
+**Tk deletes a widget's Tcl commands in `Misc.destroy`, so the common case is a non-issue.** The
+real instance is a container that outlives its elements. The stale XXX is corroboration; the
+measurement is the proof.
+
+Writing the shape from the finding, rather than filing the finding under an approximate shape, is
+the calibration loop working in the direction D-13 said it was broken in.
+
+### A test that had been failing at HEAD on prose
+
+`test_agent_filter_scopes_shapes` asserted `"other" not in briefing` while triage rule 7 says "every
+**other** agent". It failed on wording, not on the filter it exists to check, and had been failing
+since rule 7 landed — **D-20's "671 tests OK" was wrong at the moment it was written**, because the
+suite was run before that wording. Fixture shape renamed to `unrelated-shape`; 671 pass now.
+
+A bare-substring `assertNotIn` against generated text will eventually collide with the generator's
+own boilerplate. Assert on a token that cannot appear by accident.
