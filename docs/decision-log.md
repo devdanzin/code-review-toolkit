@@ -960,3 +960,42 @@ suite was run before that wording. Fixture shape renamed to `unrelated-shape`; 6
 
 A bare-substring `assertNotIn` against generated text will eventually collide with the generator's
 own boilerplate. Assert on a token that cannot appear by accident.
+
+---
+
+## D-22 · Review the branch you intend to report against (2026-07-27)
+
+The idlelib review ran on **3.14**, and the umbrella issue was drafted citing 3.14 line numbers.
+That is the wrong target for a CPython report, and the user caught it.
+
+**3.14 is not an ancestor of main.** `git merge-base --is-ancestor 6080c866096 origin/main` → no.
+They are separate lines, so a defect can be fixed on one and live on the other, and no line number
+transfers. Re-verified against main `993a0c65a7b`: **72 of 73 survive, 1 is fixed there** —
+CRF-IDLELIB-0066, fixed by gh-89520 on 2026-04-11, **which was in the report's "Start here" list**.
+72/73 is a good survival rate; the point is that the one failure was the most prominent row.
+
+### The method that made it cheap
+
+Comparing the **enclosing function** rather than the cited line: a byte-identical function proves the
+defect survives and needs no reading at all. 46 identical, 13 changed (read individually), 11
+module-level (by hand). Roughly ten minutes of judgement instead of seventy re-reads.
+
+### Two traps in the re-anchoring
+
+- **Line remapping must be anchored on the enclosing function.** Keying on "nearest line with
+  matching text" mapped `iomenu.py:333-348` to `360-347` — an end before its start — because `try:`
+  and `except OSError:` repeat many times per file. Function-scoped matching fixed it.
+- **A fingerprint built from one stripped line is too weak.** Six findings first read as GONE purely
+  because `open(fname, 'w')` had gained `encoding='utf-8'`. All six were present.
+
+### Use the build matrix
+
+`~/projects/python_build_matrix` — `source/main` at the current commit, and
+`builds/release-gil-nojit`, a **release** build of that same commit with working tkinter. The ad-hoc
+checkouts under `~/projects/` are mostly ASAN/debug (a Tk reproduction under ASAN exceeded a
+2-minute timeout) and one had a stale build failing on `SRE module mismatch`. Only the matrix records
+which commit each build came from.
+
+**Toolkit implication:** the review commands never ask which branch a finding will be *reported*
+against, and `discover_python_project.py` (plan item 4.1) is the natural place to surface it. A
+review of a maintenance branch is legitimate; silently drafting an upstream report from one is not.
