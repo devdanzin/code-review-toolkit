@@ -542,11 +542,40 @@ def _walk_same_scope(node: ast.AST):
 
 
 def _returns(name: str, body: list[ast.stmt]) -> bool:
-    """True if *name* is returned or yielded from *body*."""
+    """True if the OBJECT bound to *name* escapes via a return or yield.
+
+    Deliberately narrow. Matching any occurrence of the name inside the returned
+    expression treats `return self._configure(index, cnf, kw)` as returning
+    `cnf`, when it passes it to a call and returns that call's result. tkinter
+    has seven of exactly that shape, and every one was reported at HIGH
+    confidence with "the shared object is returned to callers" -- a claim the
+    code does not support.
+
+    A call may of course return its argument, but that is a question about the
+    callee, not something this scope can answer; guessing yes here is what
+    produced the false positives.
+    """
+
+    def escapes(value: ast.expr) -> bool:
+        if isinstance(value, ast.Name):
+            return value.id == name
+        # A container literal built around the name still lets it escape:
+        # `return [cnf]`, `return (cnf, kw)`, `return {"c": cnf}`.
+        if isinstance(value, (ast.Tuple, ast.List, ast.Set)):
+            return any(escapes(e) for e in value.elts)
+        if isinstance(value, ast.Dict):
+            return any(v is not None and escapes(v) for v in value.values)
+        # `return cnf or {}` / `return cnf if x else y`
+        if isinstance(value, ast.BoolOp):
+            return any(escapes(v) for v in value.values)
+        if isinstance(value, ast.IfExp):
+            return escapes(value.body) or escapes(value.orelse)
+        return False
+
     for stmt in body:
         for node in ast.walk(stmt):
             if isinstance(node, (ast.Return, ast.Yield)) and node.value is not None:
-                if name in _names_used(node.value):
+                if escapes(node.value):
                     return True
     return False
 
@@ -3477,12 +3506,17 @@ def _check_unformatted_format_string(tree: ast.AST) -> list[dict]:
                 arg,
                 f"{shown} is a format field in a message nothing formats — the "
                 f"braces reach the reader verbatim"
-                + (f"; {', '.join(resolvable)} is in scope, so an `f` prefix was "
-                   "probably intended" if resolvable else ""),
+                + (
+                    f"; {', '.join(resolvable)} is in scope, so an `f` prefix was "
+                    "probably intended"
+                    if resolvable
+                    else ""
+                ),
                 text[:200],
             )
         )
     return out
+
 
 _PROJECT_CHECKS = {
     "divergent-sentinel-across-parallel-modules": _check_divergent_sentinel,

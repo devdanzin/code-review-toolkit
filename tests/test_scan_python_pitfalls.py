@@ -5,6 +5,7 @@ an edge case. The guarded-twin assertions matter most: a scanner that fires on
 the documented fix is worse than no scanner.
 """
 
+import ast
 import unittest
 
 from helpers import TempProject, import_script
@@ -1466,6 +1467,40 @@ class TestProjectLevelShapes(unittest.TestCase):
         )
 
 
+class TestReturnsIsNarrow(unittest.TestCase):
+    """`_returns` asks whether the OBJECT escapes, not whether the name appears.
+
+    tkinter has seven `return self._configure(index, cnf, kw)` methods. Matching
+    any occurrence of the name inside the returned expression reported every one
+    at HIGH confidence with "the shared object is returned to callers" -- a claim
+    the code does not support.
+    """
+
+    def test_passing_to_a_call_that_is_returned_does_not_escape(self):
+        body = ast.parse("def f(cnf={}):\n    return g(1, cnf, 2)\n").body[0].body
+        self.assertFalse(mod._returns("cnf", body))
+
+    def test_returning_the_name_escapes(self):
+        body = ast.parse("def f(cnf={}):\n    return cnf\n").body[0].body
+        self.assertTrue(mod._returns("cnf", body))
+
+    def test_container_literal_around_the_name_escapes(self):
+        for src in ("return [cnf]", "return (cnf, 1)", "return {'k': cnf}"):
+            with self.subTest(src=src):
+                body = ast.parse(f"def f(cnf={{}}):\n    {src}\n").body[0].body
+                self.assertTrue(mod._returns("cnf", body))
+
+    def test_or_default_and_conditional_escape(self):
+        for src in ("return cnf or {}", "return cnf if x else {}"):
+            with self.subTest(src=src):
+                body = ast.parse(f"def f(cnf={{}}, x=1):\n    {src}\n").body[0].body
+                self.assertTrue(mod._returns("cnf", body))
+
+    def test_attribute_access_on_the_name_does_not_escape(self):
+        body = ast.parse("def f(cnf={}):\n    return cnf.copy()\n").body[0].body
+        self.assertFalse(mod._returns("cnf", body))
+
+
 SHAPE = "unformatted-format-string-literal"
 
 
@@ -1485,7 +1520,9 @@ class TestUnformattedFormatString(unittest.TestCase):
 
     def test_field_naming_nothing_in_scope_is_medium(self):
         f = scan("def f():\n    raise ValueError('bad {wibble}')\n")
-        self.assertEqual([x["confidence"] for x in f if x["shape"] == SHAPE], ["medium"])
+        self.assertEqual(
+            [x["confidence"] for x in f if x["shape"] == SHAPE], ["medium"]
+        )
 
     def test_warning_and_logging_sinks(self):
         for call in (
@@ -1512,9 +1549,7 @@ class TestUnformattedFormatString(unittest.TestCase):
 
     def test_any_extra_argument_is_silent(self):
         # _pyrepl/trace.py -- `trace(line, *k)` formats only `if k or kw`.
-        self.assertNotIn(
-            SHAPE, shapes("def f(x):\n    log.info('saw {count}', x)\n")
-        )
+        self.assertNotIn(SHAPE, shapes("def f(x):\n    log.info('saw {count}', x)\n"))
         self.assertNotIn(
             SHAPE, shapes("def f(x):\n    warnings.warn('{name} gone', remove=x)\n")
         )
@@ -1522,7 +1557,9 @@ class TestUnformattedFormatString(unittest.TestCase):
     def test_fstring_is_silent(self):
         self.assertNotIn(
             SHAPE,
-            shapes("import sys\ndef f():\n    raise ValueError(f'for {sys.platform}')\n"),
+            shapes(
+                "import sys\ndef f():\n    raise ValueError(f'for {sys.platform}')\n"
+            ),
         )
 
     def test_bare_and_numeric_fields_are_silent(self):

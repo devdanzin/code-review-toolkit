@@ -254,8 +254,37 @@ def normalize(
     }
 
 
+def detect_target_version(project_root: Path) -> str:
+    """The Python version to tell ruff to assume.
+
+    `--isolated` is on by default so a project's own ruff config cannot silently
+    change the selection -- but it also discards `requires-python`, and ruff then
+    assumes its oldest supported version. Measured on asyncio: that produced
+    **10 of 14 tier-1 findings as F821 false positives**, every one a builtin
+    added in a later release (`ExceptionGroup`, `BaseExceptionGroup`). Isolation
+    should control the RULE SET, not the language level.
+    """
+    pyproject = project_root / "pyproject.toml"
+    if pyproject.is_file():
+        try:
+            text = pyproject.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            text = ""
+        match = re.search(r'requires-python\s*=\s*["\']>=\s*3\.(\d+)', text)
+        if match:
+            return f"py3{match.group(1)}"
+    # No declaration -- assume the interpreter running the review. For stdlib
+    # targets this is the only correct answer, and it is a far better default
+    # than ruff's floor.
+    return f"py3{sys.version_info.minor}"
+
+
 def _run_ruff(
-    ruff_bin: str, codes: list[str], target: Path, preview: bool
+    ruff_bin: str,
+    codes: list[str],
+    target: Path,
+    preview: bool,
+    target_version: str | None = None,
 ) -> tuple[list[dict], str, str | None]:
     """Run ruff over *target*; return (findings, stderr, error)."""
     cmd = [
@@ -269,6 +298,8 @@ def _run_ruff(
         "--select",
         ",".join(codes),
     ]
+    if target_version:
+        cmd.extend(["--target-version", target_version])
     if preview:
         cmd.append("--preview")
     cmd.append(str(target))
@@ -313,7 +344,10 @@ def analyze(
     # Never send ruff a code it will reject; an unknown code aborts the whole run.
     runnable = [c for c in codes if c not in validation["unknown"]]
 
-    raw, stderr, error = _run_ruff(ruff_bin, runnable, scan_root, preview=False)
+    target_version = detect_target_version(project_root)
+    raw, stderr, error = _run_ruff(
+        ruff_bin, runnable, scan_root, preview=False, target_version=target_version
+    )
     cache: dict[Path, list[str]] = {}
     findings = [normalize(f, project_root, tier, cache) for f in raw[:max_findings]]
 
@@ -321,7 +355,11 @@ def analyze(
     preview_stderr = ""
     if preview_pass:
         praw, preview_stderr, _ = _run_ruff(
-            ruff_bin, list(PREVIEW_ONLY), scan_root, preview=True
+            ruff_bin,
+            list(PREVIEW_ONLY),
+            scan_root,
+            preview=True,
+            target_version=target_version,
         )
         preview_findings = [
             normalize(f, project_root, tier, cache, preview=True)
@@ -344,6 +382,7 @@ def analyze(
         # envelope non-comparable with a calibrated one. Say so.
         "version_matches_pin": version == PINNED_RUFF_VERSION,
         "tier": tier,
+        "target_version": target_version,
         "rules_selected": len(runnable),
         "rule_validation": validation,
         # Remapped and preview-gated codes warn on stderr and nowhere else.

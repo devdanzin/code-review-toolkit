@@ -334,3 +334,38 @@ run that produced it, so the evidence is traceable.
 - **Real bug:** a suppression mypy would now report as unused. For a mypy-gated repository,
   `warn_unused_ignores` is the oracle and marker age carries no signal at all. Check for that setting
   before reporting ignore-debt as actionable.
+
+### 36. The option-dict convention (`cnf={}`) in a Tk-style API
+
+**Looks like:** `mutable-default-argument` / ruff `B006`, at scale — 46 instances across tkinter's
+widget API, every one `def method(self, cnf={}, **kw)`.
+
+**Why it is not a bug:** the dict is read-only on the ordinary path. `_cnfmerge` builds a *fresh*
+dict rather than mutating its argument, and every method routes through it. A convention repeated
+across an entire API surface, where the shared object is never written, is one design decision — not
+46 defects.
+
+**Dismiss with:** "read-only option-dict convention; `_cnfmerge` returns a new dict".
+
+**What the REAL bug looks like:** the same signature where the body *writes* to the parameter —
+`cnf[k] = v`, `del cnf[k]`, `cnf.update(...)` — on a path reachable with the argument omitted. Three
+tkinter `__init__` methods do reach `del cnf[k]`, and are correctly reported at high confidence; they
+are harmless only because the deletion is driven by a comprehension that is empty for an empty dict.
+Note that mutating a dict the *caller* supplied is a different catalogued shape,
+`wrapper-mutates-foreign-collection`.
+
+### 37. `F821` on a name bound in an enclosing function and read in a nested closure
+
+**Looks like:** ruff `F821` "Undefined name `x`" where `x` is plainly assigned a few lines above.
+
+**Why it is not a bug:** a ruff scope-resolution limitation. `asyncio/staggered.py` binds
+`parent_task`, `unhandled_exceptions` and `exceptions` at lines 67-72 and reads all three inside the
+nested `task_done`; ruff reports six `F821` for them.
+
+**Dismiss with:** "bound in the enclosing function scope at line N; closure read".
+
+**What the REAL bug looks like:** a name with no binding on any path into the read — typically a typo,
+or a name bound only inside a conditional branch. Check for an assignment in *any* enclosing scope
+before dismissing, and note that `F821` on a version-gated builtin (`ExceptionGroup`,
+`BaseExceptionGroup`) is a third thing again: it means `--target-version` was not passed, and the fix
+is to pass it rather than to dismiss the finding.

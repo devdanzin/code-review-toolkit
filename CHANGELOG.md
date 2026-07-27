@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-07-27
+
+Phase 5 of `docs/improvement-plan.md` — the yield runs. Full reports in
+`reports/tkinter_v1/` and `reports/asyncio_v1/`.
+
+### Fixed — a toolkit defect each corpus exposed
+
+- **`--isolated` was suppressing the entire `ASYNC` rule family.** It is on by default so a project's
+  ruff config cannot silently change the rule selection — but it also discards `requires-python`, and
+  ruff then assumes its oldest supported version. asyncio's first run reported **zero** ASYNC
+  findings; with `--target-version` derived from the project (or the running interpreter when
+  undeclared), **`ASYNC109` fires 4 times** and four `F821` false positives on `ExceptionGroup` /
+  `BaseExceptionGroup` disappear. *Isolation should control the rule set, not the language level.*
+  This was nearly missed on the one corpus built to validate those rules.
+- **`_returns` matched any occurrence of a name inside a returned expression**, so
+  `return self._grid_configure('columnconfigure', index, cnf, kw)` counted as returning `cnf`. Seven
+  tkinter methods were reported at HIGH confidence with "the shared object is returned to callers", a
+  claim the code does not support. It now asks whether the object actually escapes — directly, or via
+  a container literal, `or`-default, or conditional. High-confidence mutable-default findings on
+  tkinter went **7 → 3**; idlelib unchanged at 101.
+
+### Measured
+
+- **tkinter** (13 files): 62 scanner findings, 52 tier-1 lint. **46 of each are the same idiom** —
+  `def method(self, cnf={}, **kw)` across the widget API — and scanner and ruff `B006` agree
+  exactly on all 46, the clearest validation the merge design has had. Verdict ACCEPTABLE: `_cnfmerge`
+  returns a fresh dict, so the shared default is read-only on the ordinary path.
+- **asyncio** (35 files): 97 scanner findings, 14 tier-1 lint, 11 complexity hotspots (2
+  `active-risk`, 3 `settled`). **`asyncio-fire-and-forget-task` fires twice** — the async shape family
+  validated on the async corpus, which is what the run existed to do.
+
+### Added
+
+- Two false-positive classes (now 37): the Tk-style option-dict convention, and `F821` on a name
+  bound in an enclosing function and read in a nested closure (six instances in
+  `asyncio/staggered.py` — a ruff scope limitation, not a defect).
+
 ## [1.9.0] - 2026-07-27
 
 Phase 4 items 4.6 and 4.5b.

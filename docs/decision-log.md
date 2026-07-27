@@ -667,3 +667,56 @@ project*; `tools/` answers questions about *the toolkit*. Nothing in `plugins/` 
 First inhabitant is `shape_coverage.py`, which measures Phase 0's metric on demand — it decays
 silently otherwise, since every ad-hoc shape name that never reaches the catalog drops the ratio and
 nothing else notices. It carries its own baseline history (36% → 100%).
+
+---
+
+## D-17 · 2026-07-27 · Phase 5 — the yield runs, and the two defects they exposed
+
+Reports: `reports/tkinter_v1/README.md`, `reports/asyncio_v1/README.md`.
+
+### `--isolated` was suppressing the entire ASYNC rule family
+
+asyncio's first tier-1 run reported **zero** ASYNC findings — on the one corpus in the plan chosen
+specifically to validate them. The rules were not broken: three of them fire on a synthetic blocking
+-call fixture and all twelve report `Stable` in `rule_validation`.
+
+The cause was mine. `--isolated` is on by default so a project's ruff config cannot silently change
+the *rule selection* — but it also discards `requires-python`, and ruff falls back to its oldest
+supported version. Passing `--target-version` (from `requires-python`, else the running interpreter):
+
+- **`ASYNC109` fires 4 times** — `base_events.py:595`, `tasks.py:405/440/490`.
+- **Four `F821` false positives vanish** — `ExceptionGroup` / `BaseExceptionGroup`, builtins since
+  3.11 that ruff flagged as undefined under its assumed floor.
+
+**Isolation should control the rule set, not the language level.** Had Phase 5.2 not been run, the
+plan's conclusion would have been "asyncio does not exercise the ASYNC rules", which is false, and
+the rules would have shipped permanently dead.
+
+### `_returns` claimed things the code does not say
+
+`_returns(name, body)` matched any occurrence of the name anywhere inside a returned expression, so
+`return self._grid_configure('columnconfigure', index, cnf, kw)` read as returning `cnf`. Seven
+tkinter methods were reported at **HIGH** confidence with "the shared object is returned to callers".
+
+Now it asks whether the object actually escapes: the name itself, or inside a container literal, an
+`or`-default, or a conditional. A call *may* return its argument, but that is a question about the
+callee and guessing yes is what produced the false positives. tkinter high-confidence
+mutable-default findings **7 → 3**; idlelib unchanged at 101 (no FP regression on the control).
+
+### What the corpora actually measured
+
+**tkinter is one finding, not 46.** 46 of 62 scanner findings and 46 of 52 tier-1 lint findings are
+the same idiom — `def method(self, cnf={}, **kw)` across the widget API. Scanner and ruff `B006`
+agree **exactly** on all 46, which is the strongest validation the merge design has had. Verdict
+ACCEPTABLE: `_cnfmerge` returns a fresh dict, so the shared default is read-only on the ordinary path.
+The scanner already rated 43 of 46 `medium` with "no mutation seen" — the differential was doing its
+job before triage even started.
+
+**asyncio validated the async shape family**: `asyncio-fire-and-forget-task` fires twice, and the
+tier-1 lint pass reached the ASYNC rules once the version fix landed.
+
+### An honest gap
+
+The plan expected tkinter to stress reachability tiering and the dead-code FP classes hardest. **It
+did not, because this run did not include `find_dead_symbols`** — that pairing needs Phase 4 item 4.3
+(reachability tiering), which is not built. Recorded in the report rather than claimed.

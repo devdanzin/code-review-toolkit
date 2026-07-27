@@ -354,10 +354,10 @@ reader-facing depth.
 
 ## 6. Phase 5 — New targets *(yield measurement)*
 
-| # | Target | Why |
-|---|---|---|
-| 5.1 | **tkinter** | Old stdlib. Heavy dynamic dispatch, `**kw` passthrough, C-extension boundary. Stresses reachability tiering and the dead-code FP classes hardest. |
-| 5.2 | **asyncio** | Newer stdlib. The only corpus that will exercise the async shapes and the `ASYNC`/`RUF006` ruff rules — all currently **unvalidated**, because the three benchmark corpora are nearly async-free. |
+| # | Target | Why | Status |
+|---|---|---|---|
+| 5.1 | **tkinter** | Old stdlib. Heavy dynamic dispatch, `**kw` passthrough, C-extension boundary. Stresses reachability tiering and the dead-code FP classes hardest. | **DONE** — `reports/tkinter_v1/`, D-17 |
+| 5.2 | **asyncio** | Newer stdlib. The only corpus that will exercise the async shapes and the `ASYNC`/`RUF006` ruff rules — all currently **unvalidated**, because the three benchmark corpora are nearly async-free. | **DONE** — `reports/asyncio_v1/`, D-17 |
 
 Run the full suite on each, fix whatever toolkit problems they expose, and harvest new shapes. These
 are where **yield** is measured; idlelib cannot serve that role.
