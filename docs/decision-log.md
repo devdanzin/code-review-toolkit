@@ -560,3 +560,54 @@ The plan's risk table records "5 min for a full `Lib/` sweep with 10 checks". Wi
 **64 seconds**, and on a 40-file directory it is ~10% of total runtime — so no single check dominates
 and the cost is broad. This makes Phase 4's profiling item load-bearing rather than housekeeping:
 **a benchmark nobody can afford to run stops being run.**
+
+---
+
+## D-15 · 2026-07-27 · Phase 3 — verification infrastructure
+
+### 3.3 measured its own ceiling on the first run
+
+`check_known_findings.py` against the coverage.py catalog (60 entries):
+
+```
+present 2 | absent_in_qualname 1 | absent 2 | out_of_scope 2 | not_scannable 53
+```
+
+**53 of 60 catalogued findings name an `agent-only` shape.** A scanner cannot see them, so
+`known-issues` can regression-check 7 of coverage.py's 60 findings and no more. That is not a defect
+in the tool — it is the direct consequence of D-12's measurement that 32 of 90 shapes are agent-only,
+and those shapes are exactly the ones the richest agents produce.
+
+The design consequence: **`not_scannable` and `out_of_scope` are counted as `not_checked`, never as
+`absent`.** A summary reading "2 still present, 58 clear" would have been a serious misrepresentation
+of a run that examined 7 entries.
+
+`out_of_scope` was added after the first run showed two `tests/` entries reported `absent` when the
+scope was the package only. `absent` claims we looked; we had not.
+
+### Keying on qualname removes a whole verdict class
+
+Keyed on `(file, shape, qualname)`, so a finding whose line moved is `present`. The sibling C toolkit
+needs a `line_drifted` verdict and a `nearest_line` heuristic to triage; Python's `ast` makes that
+unnecessary. One less class of manual triage per run.
+
+**Two catalog rows were being lost to a location-parsing bug**, both reported `file_missing`:
+`patch.py:56-57, :74-75` (a continuation segment with no filename — `rpartition(":")` read
+`patch.py:56-57, ` as the path) and `tests/a.py:256-259, tests/b.py:290` (two files in one location).
+Real catalogs use four location shapes and the parser handled one. Each is now a test.
+
+### 3.4 — `BLOCKED` is a state, not a severity
+
+`AUDIT-RESULT: FIX=n CONSIDER=n POLICY=n SCANNERS=n/m -- <STATE>` on line 1, where the state is
+`CLEAN` / `NEEDS-SIGN-OFF` / `BLOCKED`. **`BLOCKED` fires on any scanner that failed, timed out,
+crashed, or analyzed zero files — even when every finding it did produce was clean.** An incomplete
+audit reporting clean is the one failure mode that gets shipped; a dirty one gets fixed.
+
+### 3.1 — the recipe is vendored, not summarised
+
+`docs/searching-trackers.md` is copied verbatim from the family rather than paraphrased, because both
+footguns produce a *silent empty result* that reads exactly like "not reported": `gh search issues
+--state all` errors and pipes nothing to `jq`, and quoted multi-word queries mean exact-adjacent
+phrases. The `prior-art` command adds the verdict vocabulary — `none` / `known` / `known-sharper` /
+`partial` / `reverted` / `refuted` — where `reverted` exists because a merged-then-backed-out fix
+reads as closed on the tracker and is live in the code.

@@ -31,7 +31,7 @@ _DATA = _PLUGIN / "data"
 _CHANGELOG = Path(__file__).resolve().parent.parent / "CHANGELOG.md"
 
 # Update these WITH a version bump in plugin.json. See the module docstring.
-_EXPECTED = {"agents": 18, "commands": 5, "scripts": 15}
+_EXPECTED = {"agents": 18, "commands": 8, "scripts": 16}
 
 
 def _frontmatter(path: Path) -> dict[str, str]:

@@ -6,6 +6,50 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-07-27
+
+Phase 3 of `docs/improvement-plan.md` — verification infrastructure. The toolkit can now gate a
+release rather than only explore.
+
+### Added
+
+- **`/prior-art`** (item 3.1) and `docs/searching-trackers.md`, vendored verbatim from the family
+  rather than paraphrased: both of `gh search issues`' footguns produce a *silent empty result* that
+  reads exactly like "not reported". Adds the verdict vocabulary — `none` / `known` / `known-sharper`
+  / `partial` / `reverted` / `refuted`. `reverted` exists because a merged-then-backed-out fix reads
+  as closed on the tracker while being live in the code.
+- **`docs/reproduction-convention.md`** (item 3.2). The status ladder
+  (`candidate` → `confirmed` → `reproduced` → `reported` → `fixed`), and the rule that cost a
+  session: **never patch-test in a live checkout** — `git archive HEAD | tar -x -C /tmp/repro`, and
+  verify the target tree yourself afterwards. Also: prove the repro exercised the tree it thinks it
+  did (editable installs, stale `__pycache__`, `sys.path` order), and **a negative result is a real
+  result**.
+- **`check_known_findings.py` + `/known-issues`** (item 3.3). Keyed on `(file, shape, qualname)`,
+  never on line numbers, so a finding whose line moved is `present` — which removes the sibling C
+  toolkit's whole `line_drifted` triage class.
+- **`/audit`** (item 3.4). `AUDIT-RESULT: FIX=n CONSIDER=n POLICY=n SCANNERS=n/m -- <STATE>` on line
+  1. **`BLOCKED` fires on any scanner that failed, timed out, crashed, or analyzed zero files, even
+  when every finding it did produce was clean** — an incomplete audit reporting clean is the failure
+  mode that gets shipped.
+
+### Measured
+
+- **The known-findings check found its own ceiling on the first run.** Against coverage.py's
+  60-entry catalog: `present 2 | absent_in_qualname 1 | absent 2 | out_of_scope 2 |
+  not_scannable 53`. **53 of 60 catalogued findings name an `agent-only` shape**, so a scanner
+  cannot regression-check them. `not_scannable` and `out_of_scope` are therefore counted as
+  `not_checked`, never as `absent` — a summary reading "2 still present, 58 clear" would have
+  misrepresented a run that examined 7 entries.
+
+### Fixed
+
+- **Two catalog rows were silently lost to a location-parsing bug**, both reported `file_missing`:
+  `patch.py:56-57, :74-75` (a continuation segment with no filename) and
+  `tests/a.py:256-259, tests/b.py:290` (two files in one location). Real catalogs use four location
+  shapes and the parser handled one.
+- `absent` was being reported for files outside the scanned scope. `absent` claims we looked; the new
+  `out_of_scope` verdict says we did not.
+
 ## [1.7.0] - 2026-07-27
 
 Phase 1 of `docs/improvement-plan.md` (external tools) and Phase 2 item 2.1.

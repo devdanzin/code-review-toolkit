@@ -262,12 +262,17 @@ Shapes 6-8 from the tracker survey (`redos-*`, `loop-bound-local-escapes-*`,
 
 ## 4. Phase 3 — Verification infrastructure *(you chose: standard, not opt-in)*
 
-| # | Item | Size |
-|---|---|---|
-| 3.1 | `prior-art` command — tracker search before any novelty claim | S |
-| 3.2 | Repro convention doc + `status` gate in synthesis | S |
-| 3.3 | `known-issues` command + `check_known_findings.py` | M |
-| 3.4 | `audit` command with a machine-readable sign-off line | S |
+| # | Item | Size | Status |
+|---|---|---|---|
+| 3.1 | `prior-art` command — tracker search before any novelty claim | S | **DONE** — D-15 |
+| 3.2 | Repro convention doc + `status` gate in synthesis | S | **DONE** — `docs/reproduction-convention.md` |
+| 3.3 | `known-issues` command + `check_known_findings.py` | M | **DONE** — D-15 |
+| 3.4 | `audit` command with a machine-readable sign-off line | S | **DONE** — D-15 |
+
+**Phase 3 is complete.** The first real run of 3.3 produced a result worth carrying forward:
+**53 of coverage.py's 60 catalogued findings name an `agent-only` shape**, so no scanner can
+regression-check them. `known-issues` covers the scanner shapes and says plainly that it covers
+nothing else — see D-15.
 
 **3.1 is the cheapest high-value item in the entire plan.** It caught a false finding this session (a
 "released changelog contradicts the code" claim that 7.11.3 explicitly refutes) and correctly
