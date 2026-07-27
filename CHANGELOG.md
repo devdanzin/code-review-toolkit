@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **`per-redraw-binding-never-released`** (shape 97) — a binding, callback, or native handle created
+  once per element per redraw with no matching release, so registrations grow with redraws rather
+  than with elements. Written from the last un-shaped finding of the idlelib migration
+  (CRF-IDLELIB-0057, `tree.py:234`, under an XXX that has been correct since 1999). The
+  differential is what makes it usable: Tk deletes a widget's Tcl commands in `Misc.destroy`, so the
+  common case is a non-issue — the real instance is a **container that outlives its elements**, and
+  the measurement, not the stale XXX, is the proof.
+
+### Fixed
+
+- `test_agent_filter_scopes_shapes` asserted `"other" not in briefing` while triage rule 7's own
+  prose says "every **other** agent", so it failed on wording rather than on the filter it exists to
+  check. The excluded fixture shape is now `unrelated-shape`. This had been failing at HEAD since
+  rule 7 landed.
+
 ## [1.13.0] - 2026-07-27
 
 The write-back from the idlelib run. Catalog **90 → 96 shapes**, FP taxonomy **37 → 47 classes**.

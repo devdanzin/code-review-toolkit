@@ -1935,6 +1935,27 @@
       "differential": "A stub is correct when the test's subject is the CALL, not the guard -- verifying an argument was forwarded needs no ability to raise. The shape requires a guard, branch or sentinel handler whose condition the stub cannot produce. Distinct from `test-cannot-fail`, where the assertion is tautological or absent; here the assertion is real and the FIXTURE is what cannot fail.",
       "detected_by": null,
       "detectability": "agent-only"
+    },
+    {
+      "id": "per-redraw-binding-never-released",
+      "title": "A binding, callback, or handle created inside a redraw is never released",
+      "agent": "silent-failure-hunter",
+      "severity": "CONSIDER",
+      "pattern": "A render/redraw/refresh routine creates a per-element registration -- a widget event binding, a signal connection, an observer, a scheduled callback, a native handle -- once per element per pass, and there is no matching release. The routine is called again on every expand, scroll, resize or refresh, so registrations accumulate linearly with redraws rather than with elements. Each one usually captures the element, so the retained set pins application objects too.",
+      "guarded_twin": "A sibling view in the same package that binds ONCE at construction, or that explicitly unbinds before rebinding. Frameworks that auto-release on widget destruction (Tk deletes a widget's Tcl commands in `Misc.destroy`) make some instances harmless -- the twin worth citing is one that survives destruction of the individual element but not of the container.",
+      "hunt": "Find the redraw entry point and every registration call inside it (`tag_bind`, `bind`, `connect`, `addObserver`, `after`, `register`), then grep the whole class for the matching release (`tag_unbind`, `unbind`, `disconnect`, `after_cancel`). Absence of the release verb anywhere in the file is the signal. MEASURE it: drive N redraws and count registrations (in Tk, `len(widget.tk.call('info','commands'))`), and confirm growth is linear in redraws, not in elements.",
+      "expected": "registrations track live elements, not cumulative redraws.",
+      "caught_as": "SILENT. Nothing raises; the window is simply slower and larger the longer it is open, and the objects it displayed are not collected. Frequently already documented by a stale in-code TODO/XXX that has outlived several maintainers.",
+      "confirmed_examples": [
+        "CRF-IDLELIB-0057 -- idlelib tree.py:234 calls canvas.tag_bind twice per node on every redraw, under a comment reading 'XXX This leaks bindings until canvas is deleted' that has been correct since 1999"
+      ],
+      "validation": "confirmed",
+      "references": [
+        "Tk: bindings created with tag_bind persist until the canvas item or the canvas is destroyed"
+      ],
+      "differential": "Not this shape if the framework releases on element destruction AND elements are destroyed per redraw -- measure before reporting, because that is the common case and it is a non-issue. The real instance is a container that outlives its elements: the container is destroyed rarely (a browser window open for a session) while elements are re-rendered constantly. A long-lived XXX naming the leak is corroboration, not proof; the measurement is the proof.",
+      "detected_by": null,
+      "detectability": "agent-only"
     }
   ]
 }

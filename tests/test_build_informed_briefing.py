@@ -104,10 +104,16 @@ class TestBuildBriefing(unittest.TestCase):
             self.assertIn(token, out)
 
     def test_agent_filter_scopes_shapes(self):
-        shapes = [self._shape(), self._shape(id="other", agent="dead-code-finder")]
+        # The excluded shape's id must not be a substring of the static triage
+        # rules: "other" used to be, via rule 7's "every other agent", so this
+        # test failed on prose rather than on the filter it exists to check.
+        shapes = [
+            self._shape(),
+            self._shape(id="unrelated-shape", agent="dead-code-finder"),
+        ]
         out = mod.build_briefing(shapes, "", [], agent="silent-failure-hunter")
         self.assertIn("demo-shape", out)
-        self.assertNotIn("other", out)
+        self.assertNotIn("unrelated-shape", out)
 
     def test_unknown_agent_yields_empty_notice(self):
         out = mod.build_briefing([self._shape()], "", [], agent="nope")
