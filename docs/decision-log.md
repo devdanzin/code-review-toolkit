@@ -178,3 +178,68 @@ recorded in a file so it survives compaction.
 - A **toolkit gap we are not fixing yet** → `CLAUDE.md` § *Known gaps*, so it stays visible.
 - Prefer committing a partial artifact over holding it in context. A committed draft survives
   compaction; a perfect unwritten one does not.
+
+---
+
+## D-10 · 2026-07-26 · ruff pinning policy — the default set moved 59 → 413 three days ago
+
+**Verified independently** (not just reported): `B006` on a mutable-default fixture, `--isolated`, no
+`--select`:
+
+```
+ruff 0.15.10: 0 findings -> []
+ruff 0.16.0:  1 findings -> ['B006']
+```
+
+**Facts, from the changelog and measurement:**
+
+- ruff **0.16.0** (2026-07-23) took the default rule set from **59 to 413**, listed under
+  `### Breaking changes`. It shipped preview-gated in 0.15.2 (412) and was promoted to stable default.
+- It is **not a superset** — 18 rules were *dropped* from the default (`E401 E402 E701 E702 E703 E711
+  E712 E713 E714 E721 E731 E741 E742 E743 F403 F405 F406 F722`). Only `E722` and `E902` survive from
+  the `E` family.
+- **27 of the 59 codes in our tiered selection are NOT in the 0.16.0 default** — including every
+  security rule (`S101 S301 S302 S307 S608`), every complexity rule (`C901 PLR0912 PLR0915`), plus
+  `B904`, `B905`, `PGH003`, `PLR2004`, `PLC0415`. Exactly the rules a review tool wants.
+- **Nothing in our list was renamed or removed.** The failure mode we feared did not fire.
+- **Correction to the earlier design pass:** `PLW1641` was reported as preview-gated. It is
+  **Stable since 0.12.0** and fires without `--preview`. Only 4 of our codes are preview-gated:
+  `B909`, `PLE1141`, `RUF027`, `RUF069`.
+
+**Decision — pin both version and rule list.**
+
+1. Pin `ruff==0.16.0`; record `ruff --version` in every envelope. A ruff bump is a **calibration
+   event** requiring a fixture-corpus re-run, not a routine dependency update.
+2. Always pass an explicit `--select`. **Never `--extend-select`** — it composes with a default that
+   just changed 7×.
+3. Always `--output-format json`, read `code`. Concise output changed shape between versions *and*
+   between preview modes, and **0.16.0 preview omits the rule code entirely**. JSON also gained a
+   `name` field; note `filename`/`location` "may now be null".
+4. **Capture stderr.** Two staleness classes are warning-only and appear nowhere else:
+   `'PGH001' has been remapped to 'S307'` and
+   `Selection 'B909' has no effect because preview is not enabled`.
+5. **Do not run `--preview` by default.** It is not additive — it mutates already-stable rules
+   (`UP019` fires only under preview on 0.15.10, stabilised in 0.16.0), carries no deprecation policy,
+   and breaks reproducibility. If `RUF069`/`B909` are wanted, run a **separate preview pass** with only
+   those codes and label the findings preview-derived.
+
+**The validation trap, verified:**
+
+```
+total rules in `ruff rule --all`: 968
+  RUF076   present  status=Removed   <- naive membership test PASSES
+  UP038    present  status=Removed   <- naive membership test PASSES
+  ANN101   present  status=Removed   <- naive membership test PASSES
+```
+
+**Removed rules still appear in `ruff rule --all`.** A "is this code known?" membership check passes
+for a rule that was deleted. Validation must inspect the `status` field:
+`{"Removed": {"since": …}}` / `{"Preview": {"since": …}}` / `{"Stable": {"since": …}}`.
+
+Emit the result as `rule_validation` in the envelope — `{unknown, removed, preview_gated, ok}` — so
+every staleness class becomes a visible machine-readable fact rather than a missing finding. One
+subprocess call per run. A prototype exists at `scratchpad/validate_rules.py`.
+
+**Unresolved:** the 0.16.0 changelog claims `BLE001` is now suppressed when the exception is logged via
+`logging` methods other than `critical`/`error`/`exception`; this could not be reproduced
+(`logging.info(e)` still fires). Do not rely on `BLE001` suppression semantics without a local fixture.

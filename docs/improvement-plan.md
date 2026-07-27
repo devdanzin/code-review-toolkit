@@ -163,6 +163,7 @@ measurable rise in shape coverage (`findings mapping to a catalogued shape`, cur
 |---|---|---|
 | 1.1 | `run_lint_rules.py` + `lint-rule-triager` agent | S |
 | 1.2 | Retune or retire `run_external_tools.py`'s ruff selection | XS |
+| 1.4 | **Pin `ruff==0.16.0` + `rule_validation` in the envelope** (decided, D-10) | S |
 | 1.3 | `check_typing.py` + `typing-integrity-auditor` agent | M |
 
 **1.1** ships the measured tier-1/tier-2/tier-3 selection, `--isolated` by default so results are
@@ -177,6 +178,25 @@ currently have no shape.
 
 **1.2 is mandatory, not optional.** Leaving both selections in place ships two contradictory ruff
 configurations in one toolkit.
+
+**1.4 — the ruff default set moved 59 → 413 in 0.16.0, released three days before this plan** (D-10).
+Verified: `B006` fires with no `--select` on 0.16.0 and not on 0.15.10. It is **not a superset** — 18
+rules were dropped — and **27 of our 59 tiered codes are outside the new default**, including every
+security and complexity rule. Nothing we use was renamed or removed, and one earlier claim is
+corrected: `PLW1641` is Stable, not preview-gated.
+
+Consequences for the design, all measured:
+
+- **Pin the version and the rule list.** Always explicit `--select`, never `--extend-select` (it
+  composes with a default that just changed 7×). A ruff bump is a calibration event.
+- **JSON only.** Concise output changed shape between versions *and* modes; 0.16.0 preview drops the
+  rule code entirely.
+- **Capture stderr** — remapped codes and preview-gated codes warn there and nowhere else.
+- **No `--preview` by default.** It mutates already-stable rules and carries no deprecation policy.
+  Run a separate, labelled preview pass if `RUF069`/`B909` are wanted.
+- **`rule_validation` must inspect `status`, not membership.** Verified trap: removed rules
+  (`RUF076`, `UP038`, `ANN101`) are still present in `ruff rule --all`, so a membership test passes
+  for a deleted rule.
 
 **1.3** defaults to mypy with the project's own config (`--config-file`, never overridden), runs
 `--disallow-any-unimported` as a labelled second pass so the baseline count stays honest, and emits
@@ -394,14 +414,7 @@ one false finding.
 
 ### Still open
 
-1. **Ruff versioning policy.** A research pass is underway on ruff's current default rule set, whether
-   it changed recently, and which of the ~60 rules in the tiered selection are preview-gated, renamed
-   or removed. The failure mode that matters: a hardcoded rule code that has been renamed **silently
-   matches nothing**, and the toolkit would report a clean run. Whatever comes back, the plan should
-   adopt a mechanism — validate the configured list against `ruff rule --all` at runtime and surface
-   unknown codes in the JSON envelope — rather than trusting a static list. Also decide whether to
-   pin a ruff version, pin the rule list, or both.
-2. **How far to take `tools/`.** 6.3 (confidence-tier calibration) is the clear first inhabitant.
+1. **How far to take `tools/`.** 6.3 (confidence-tier calibration) is the clear first inhabitant.
    Whether a `sample_scan.py`-style sampling harness or a precision-regression baseline is worth
    building depends on whether corpora grow past what one run handles.
 3. **Whether the FP taxonomy should become the source of truth for suppression.** Item 4.2 adds a JSON
