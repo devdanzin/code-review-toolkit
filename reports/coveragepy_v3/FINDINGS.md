@@ -1,7 +1,7 @@
 # coverage.py informed-explore v3 — findings
 
 `coverage/` @ `6b3259abb64a3cb80b4800f58fe1c71b24970110` (main, 2026-07-26) · 44 files / 16,426 lines
-· toolkit v1.13.0 · 16 agents + 12 scanners · **13 of 16 agents landed at time of writing**
+· toolkit v1.13.0 · 16 agents + 12 scanners · **14 of 16 agents landed at time of writing**
 
 **This is a re-review at an unchanged tree.** `git diff d37859cd HEAD -- coverage/` is **empty** — only
 CI workflow files moved since the v1/v2 review. So every new finding here is informed-pass yield, not
@@ -133,6 +133,26 @@ under-reports coverage, since that is the failure mode that matters most in this
 | CONSIDER | `control.py:654` | `atexit.register(self._atexit)` with `atexit.unregister` nowhere; 5/5 `Coverage` objects survive `del` + `gc.collect()`. Twin eight lines below saves and restores the SIGTERM handler |
 | FIX | `sysmon.py:410,413,440,466,476` | 8 unscoped `# type: ignore` suppress 16 diagnostics, including 6 `union-attr` that are the **machine proof of CRF-COVPY-0022** — the guarded twin sits 13 lines below at `sysmon.py:426`, commented *"somehow code_info can be None here"*. Each ignore also swallows an unrelated `arg-type`, so fixing the None bug will not free the ignore: `unused-ignore` stays silent and the proof stays erased |
 | CONSIDER | `control.py:803-848` | `clear_exclude(which="partial_branches")` silently creates a phantom `config.partial_branches_list`; you can add regexes and read them back and coverage.py never uses it — fully consistent fictional feedback |
+
+## API surface — 11 novel, and 12 directions verified EMPTY
+
+The exhaustive set-differences across 53 config options, 33 CLI dests, the Sphinx-published API and
+the plugin hooks came back **clean in 12 directions**: no dead config option, no dangling
+`config.<attr>` read, no unread CLI dest, no missing parser getter, no unwired plugin hook, no
+`set_option`/`get_option` skew. Those are recorded as negative results so the next reviewer does not
+redo them — and one trap is recorded with them: `CoveragePlugin.dynamic_context` looks dead to grep
+but is wired as a bound-method reference at `control.py:587`.
+
+What is *not* empty clusters at the newest surfaces — features that landed on one surface and never
+propagated:
+
+| Sev | Site | Failure |
+|---|---|---|
+| CONSIDER | `control.py` `process_startup` | A re-exported, **Sphinx-published** API parameter (`slug=`) that no code reads; dead since `49a19928`, and the name collides with two load-bearing `slug` parameters elsewhere |
+| CONSIDER | `[report] precision`, `skip_empty` | Both reach the json and lcov backends, but neither the CLI nor the API can set them there. Reproduced: `precision=3` yields `"100.000"` in JSON while `coverage json --precision` is *no such option* |
+| CONSIDER | `[run] sigterm` / `--save-signal` | Two halves of one feature on disjoint surfaces, neither reachable from the library API |
+| CONSIDER | `control.py:803-848` `exclude(which=)` | The only closed vocabulary in coverage.py with no validation — a typo raises `AttributeError` where the seven other vocabularies raise `ConfigError`. Its third valid value `partial_always` is documented nowhere |
+| CONSIDER | region reports | `function_index.html`, `class_index.html` and the JSON `"functions"`/`"classes"` keys ship, documented only on the plugin-author page — three siblings of catalogued CRF-COVPY-0057 |
 
 ## Systemic root
 
