@@ -292,3 +292,46 @@ The pattern-consistency agent reported that `agent-architecture-mapper.md` **did
 point during its run**. Phase 1 output is supposed to feed Phase 2, and dispatching them in parallel
 to save wall-clock silently removed that input. Either serialise Phase 1, or stop telling Phase 2
 agents to read it.
+
+
+---
+
+## WRITE-BACK COMPLETE (2026-07-27)
+
+**Catalog 97 → 101 shapes.** Four added, each instance verified by me before the shape was written:
+`env-flag-parsed-as-strict-int`, `naive-datetime-in-a-persisted-artifact`,
+`diagnostic-channel-controlled-by-the-subject-under-observation`,
+`atexit-registration-never-unregistered`. Two agent-proposed shapes were **not** added because I
+could not verify their instances.
+
+`assertion-against-a-stub-that-cannot-fail` gains a second confirmed example on a second codebase,
+found by mutation where idlelib's was found by reading.
+
+**Findings repo: coveragepy 60 → 75**, repo 158 → 183, still 100% shape-covered. Only
+orchestrator-verified findings migrated.
+
+### Prior art — 2,235 tracker items
+
+| Verdict | n | |
+|---|---|---|
+| novel | 8 | |
+| residue | 3 | 0065 ← PR #1403, 0066 ← #1513, 0073 ← PR #1543/#1544 |
+| adjacent-open | 3 | 0061 → #2087, 0064 → #2139, 0074 → #1991 |
+| **duplicate** | **1** | **0067 → PR #2226** |
+
+**0067 was independently found by someone else fifteen days before this run.** PR #2226
+(rajath201, 2026-07-12, open) states the LCOV escaping defect in nearly our words — *"unlike the
+html, markdown, xml, and json reports which each neutralize untrusted values"* — with the same
+newline-forges-its-own-records reachability. Two independent reviewers converging is the strongest
+evidence a finding is real, and the clearest possible reason not to file it again.
+
+### One further claim that did not reproduce
+
+`cov.report(contexts='abcq')` vs `contexts=['abcq']` giving different totals: **both returned 0.0%**
+in my setup. Not migrated. That makes **five** agent claims refuted or unreproduced across the run,
+out of roughly thirty.
+
+### Not done
+
+`coverage/` is at `6b3259ab`; nothing has been reported upstream and no gists exist for this project.
+The 0061–0075 set is ready for an umbrella if wanted, minus 0067.
