@@ -307,7 +307,7 @@ could not verify their instances.
 `assertion-against-a-stub-that-cannot-fail` gains a second confirmed example on a second codebase,
 found by mutation where idlelib's was found by reading.
 
-**Findings repo: coveragepy 60 → 75**, repo 158 → 183, still 100% shape-covered. Only
+**Findings repo: coveragepy 60 → 75**, repo 158 → 173 (75 coveragepy + 73 idlelib + 25 pyrepl), still 100% shape-covered. Only
 orchestrator-verified findings migrated.
 
 ### Prior art — 2,235 tracker items
